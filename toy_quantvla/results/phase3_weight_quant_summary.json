@@ -1,0 +1,3706 @@
+{
+  "model_dir": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "index": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain/model.safetensors.index.json",
+  "group_summaries": {
+    "llm_selected": {
+      "layers": 84,
+      "params": 603979776,
+      "fp16_mib": 1152.0,
+      "w4_mib_ideal": 288.0,
+      "ideal_saving_ratio": 0.75,
+      "mse": {
+        "mean": 3.3729633287293836e-05,
+        "median": 3.3254018489969894e-05,
+        "max": 5.194783807382919e-05
+      },
+      "nmse": {
+        "mean": 0.029866548255085945,
+        "median": 0.028182122856378555,
+        "max": 0.04427793249487877
+      },
+      "cosine": {
+        "mean": 0.9855221509933472,
+        "median": 0.9861759543418884,
+        "max": 0.9883953928947449
+      },
+      "rms": {
+        "mean": 0.03369857743382454,
+        "median": 0.03300843760371208,
+        "max": 0.04569576680660248
+      },
+      "max_abs": {
+        "mean": 0.531122088432312,
+        "median": 0.5234375,
+        "max": 0.97265625
+      },
+      "p99_9_abs": {
+        "mean": 0.134980708360672,
+        "median": 0.12890625,
+        "max": 0.1923828125
+      },
+      "tail_ratio_max_over_p99_9": {
+        "mean": 4.011460304260254,
+        "median": 3.9178082942962646,
+        "max": 8.623376846313477
+      }
+    },
+    "dit_mlp_selected": {
+      "layers": 32,
+      "params": 301989888,
+      "fp16_mib": 576.0,
+      "w4_mib_ideal": 144.0,
+      "ideal_saving_ratio": 0.75,
+      "mse": {
+        "mean": 2.898618004110176e-05,
+        "median": 2.6875766707235016e-05,
+        "max": 7.753123645670712e-05
+      },
+      "nmse": {
+        "mean": 0.037272822111845016,
+        "median": 0.03133871406316757,
+        "max": 0.1897500604391098
+      },
+      "cosine": {
+        "mean": 0.9822904467582703,
+        "median": 0.9835371971130371,
+        "max": 0.9893825054168701
+      },
+      "rms": {
+        "mean": 0.02950831688940525,
+        "median": 0.029864627867937088,
+        "max": 0.0359552726149559
+      },
+      "max_abs": {
+        "mean": 0.5842660665512085,
+        "median": 0.47300273180007935,
+        "max": 1.5650420188903809
+      },
+      "p99_9_abs": {
+        "mean": 0.11195462197065353,
+        "median": 0.11035054177045822,
+        "max": 0.15444578230381012
+      },
+      "tail_ratio_max_over_p99_9": {
+        "mean": 5.303081035614014,
+        "median": 3.4834811687469482,
+        "max": 13.252320289611816
+      }
+    },
+    "dit_attention_excluded": {
+      "layers": 64,
+      "params": 163577856,
+      "fp16_mib": 312.0,
+      "w4_mib_ideal": 78.0,
+      "ideal_saving_ratio": 0.75,
+      "mse": {
+        "mean": 2.0625377146643586e-05,
+        "median": 2.070907794404775e-05,
+        "max": 3.938587542506866e-05
+      },
+      "nmse": {
+        "mean": 0.02353312447667122,
+        "median": 0.02287697046995163,
+        "max": 0.027627702802419662
+      },
+      "cosine": {
+        "mean": 0.9884881973266602,
+        "median": 0.9887589812278748,
+        "max": 0.9894364476203918
+      },
+      "rms": {
+        "mean": 0.029452195391058922,
+        "median": 0.029922761023044586,
+        "max": 0.03844742476940155
+      },
+      "max_abs": {
+        "mean": 0.25428467988967896,
+        "median": 0.20645029842853546,
+        "max": 0.8536942601203918
+      },
+      "p99_9_abs": {
+        "mean": 0.10454211384057999,
+        "median": 0.10374139249324799,
+        "max": 0.17555274069309235
+      },
+      "tail_ratio_max_over_p99_9": {
+        "mean": 2.4011902809143066,
+        "median": 2.059295177459717,
+        "max": 7.172443866729736
+      }
+    }
+  },
+  "worst_selected_by_nmse": [
+    {
+      "name": "action_head.model.transformer_blocks.15.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 7.753123645670712e-05,
+      "nmse": 0.1897500604391098,
+      "cosine": 0.9115971326828003,
+      "rms": 0.020213773474097252,
+      "max_abs": 1.5650420188903809,
+      "p99_9_abs": 0.15444578230381012,
+      "tail_ratio_max_over_p99_9": 10.133277893066406
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.7130752641824074e-05,
+      "nmse": 0.072210393846035,
+      "cosine": 0.9655826687812805,
+      "rms": 0.019383449107408524,
+      "max_abs": 1.4999668598175049,
+      "p99_9_abs": 0.11318522691726685,
+      "tail_ratio_max_over_p99_9": 13.252320289611816
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 4.0225975681096315e-05,
+      "nmse": 0.0498473159968853,
+      "cosine": 0.9764260649681091,
+      "rms": 0.02840746007859707,
+      "max_abs": 0.47300273180007935,
+      "p99_9_abs": 0.13578449189662933,
+      "tail_ratio_max_over_p99_9": 3.4834811687469482
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.506917735445313e-05,
+      "nmse": 0.048350740224123,
+      "cosine": 0.9768858551979065,
+      "rms": 0.022770285606384277,
+      "max_abs": 1.2153518199920654,
+      "p99_9_abs": 0.09245286881923676,
+      "tail_ratio_max_over_p99_9": 13.145636558532715
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.647712946985848e-05,
+      "nmse": 0.04427793249487877,
+      "cosine": 0.9792630672454834,
+      "rms": 0.028702298179268837,
+      "max_abs": 0.60546875,
+      "p99_9_abs": 0.11279296875,
+      "tail_ratio_max_over_p99_9": 5.367965221405029
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 4.455077578313649e-05,
+      "nmse": 0.04361064359545708,
+      "cosine": 0.9792196750640869,
+      "rms": 0.03196180984377861,
+      "max_abs": 0.6953125,
+      "p99_9_abs": 0.12255859375,
+      "tail_ratio_max_over_p99_9": 5.673306941986084
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.9456219635903835e-05,
+      "nmse": 0.04163086786866188,
+      "cosine": 0.9801735877990723,
+      "rms": 0.0265999473631382,
+      "max_abs": 0.5912357568740845,
+      "p99_9_abs": 0.10102317482233047,
+      "tail_ratio_max_over_p99_9": 5.852476596832275
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.3414659153786488e-05,
+      "nmse": 0.04157789424061775,
+      "cosine": 0.9801331162452698,
+      "rms": 0.023730816319584846,
+      "max_abs": 1.0676157474517822,
+      "p99_9_abs": 0.09448938071727753,
+      "tail_ratio_max_over_p99_9": 11.29879093170166
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.555628088884987e-05,
+      "nmse": 0.04148610681295395,
+      "cosine": 0.9801177978515625,
+      "rms": 0.0248197540640831,
+      "max_abs": 1.050478458404541,
+      "p99_9_abs": 0.09383201599121094,
+      "tail_ratio_max_over_p99_9": 11.19530963897705
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.715107959578745e-05,
+      "nmse": 0.04085777327418327,
+      "cosine": 0.9807319045066833,
+      "rms": 0.030154239386320114,
+      "max_abs": 0.8515625,
+      "p99_9_abs": 0.109375,
+      "tail_ratio_max_over_p99_9": 7.785714149475098
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.5165245208190754e-05,
+      "nmse": 0.04026991128921509,
+      "cosine": 0.9802801609039307,
+      "rms": 0.029550611972808838,
+      "max_abs": 0.6640625,
+      "p99_9_abs": 0.16796875,
+      "tail_ratio_max_over_p99_9": 3.953488349914551
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 4.1771938413148746e-05,
+      "nmse": 0.04014767333865166,
+      "cosine": 0.9808397889137268,
+      "rms": 0.032256118953228,
+      "max_abs": 0.40250709652900696,
+      "p99_9_abs": 0.12456255406141281,
+      "tail_ratio_max_over_p99_9": 3.231365203857422
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 4.010573684354313e-05,
+      "nmse": 0.039531297981739044,
+      "cosine": 0.980799674987793,
+      "rms": 0.03185170888900757,
+      "max_abs": 0.54296875,
+      "p99_9_abs": 0.1494140625,
+      "tail_ratio_max_over_p99_9": 3.6339869499206543
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.456767080933787e-05,
+      "nmse": 0.03875751420855522,
+      "cosine": 0.9814118146896362,
+      "rms": 0.029864627867937088,
+      "max_abs": 0.8623569011688232,
+      "p99_9_abs": 0.10926146060228348,
+      "tail_ratio_max_over_p99_9": 7.892599105834961
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.882385135511868e-05,
+      "nmse": 0.03873848170042038,
+      "cosine": 0.9814702868461609,
+      "rms": 0.03165760263800621,
+      "max_abs": 0.859375,
+      "p99_9_abs": 0.11572265625,
+      "tail_ratio_max_over_p99_9": 7.4261603355407715
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.2476746127940714e-05,
+      "nmse": 0.038469403982162476,
+      "cosine": 0.9816985726356506,
+      "rms": 0.029055511578917503,
+      "max_abs": 0.5888742804527283,
+      "p99_9_abs": 0.1240217536687851,
+      "tail_ratio_max_over_p99_9": 4.748153209686279
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.9478811231674626e-05,
+      "nmse": 0.038408614695072174,
+      "cosine": 0.9813361763954163,
+      "rms": 0.03206031024456024,
+      "max_abs": 0.66015625,
+      "p99_9_abs": 0.1142578125,
+      "tail_ratio_max_over_p99_9": 5.777777671813965
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.938132067560218e-05,
+      "nmse": 0.03789510577917099,
+      "cosine": 0.9819236993789673,
+      "rms": 0.03223692253232002,
+      "max_abs": 0.7890625,
+      "p99_9_abs": 0.11962890625,
+      "tail_ratio_max_over_p99_9": 6.59591817855835
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 4.1161110857501626e-05,
+      "nmse": 0.037657253444194794,
+      "cosine": 0.9821301698684692,
+      "rms": 0.03306124731898308,
+      "max_abs": 0.79296875,
+      "p99_9_abs": 0.12451171875,
+      "tail_ratio_max_over_p99_9": 6.368627548217773
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.768807800952345e-05,
+      "nmse": 0.03718065097928047,
+      "cosine": 0.9818471670150757,
+      "rms": 0.0318378321826458,
+      "max_abs": 0.84375,
+      "p99_9_abs": 0.1474609375,
+      "tail_ratio_max_over_p99_9": 5.721854209899902
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.797055978793651e-05,
+      "nmse": 0.0368940569460392,
+      "cosine": 0.9824775457382202,
+      "rms": 0.03208080679178238,
+      "max_abs": 0.6321237087249756,
+      "p99_9_abs": 0.11872341483831406,
+      "tail_ratio_max_over_p99_9": 5.324338912963867
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.782182830036618e-05,
+      "nmse": 0.036838363856077194,
+      "cosine": 0.9822032451629639,
+      "rms": 0.03204210847616196,
+      "max_abs": 0.6171875,
+      "p99_9_abs": 0.1171875,
+      "tail_ratio_max_over_p99_9": 5.266666889190674
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.4290166038554162e-05,
+      "nmse": 0.03681812807917595,
+      "cosine": 0.9824633002281189,
+      "rms": 0.02568528614938259,
+      "max_abs": 0.6685467958450317,
+      "p99_9_abs": 0.0963311642408371,
+      "tail_ratio_max_over_p99_9": 6.940088272094727
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.3254018489969894e-05,
+      "nmse": 0.03677792847156525,
+      "cosine": 0.9825147390365601,
+      "rms": 0.030069652944803238,
+      "max_abs": 0.61328125,
+      "p99_9_abs": 0.107421875,
+      "tail_ratio_max_over_p99_9": 5.709090709686279
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.537567317835055e-05,
+      "nmse": 0.03643783926963806,
+      "cosine": 0.982479453086853,
+      "rms": 0.031158465892076492,
+      "max_abs": 0.97265625,
+      "p99_9_abs": 0.11279296875,
+      "tail_ratio_max_over_p99_9": 8.623376846313477
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.539661338436417e-05,
+      "nmse": 0.03619647026062012,
+      "cosine": 0.9828803539276123,
+      "rms": 0.03127143159508705,
+      "max_abs": 0.890359103679657,
+      "p99_9_abs": 0.13687503337860107,
+      "tail_ratio_max_over_p99_9": 6.5049052238464355
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.0013030482223257e-05,
+      "nmse": 0.03613956645131111,
+      "cosine": 0.9829174280166626,
+      "rms": 0.028817975893616676,
+      "max_abs": 0.6011136174201965,
+      "p99_9_abs": 0.10622724890708923,
+      "tail_ratio_max_over_p99_9": 5.658751487731934
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.745342110050842e-05,
+      "nmse": 0.0355139784514904,
+      "cosine": 0.9826647043228149,
+      "rms": 0.03247477114200592,
+      "max_abs": 0.478515625,
+      "p99_9_abs": 0.162109375,
+      "tail_ratio_max_over_p99_9": 2.9518072605133057
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.7536831112229265e-05,
+      "nmse": 0.0354464165866375,
+      "cosine": 0.9830402135848999,
+      "rms": 0.027872171252965927,
+      "max_abs": 0.5134827494621277,
+      "p99_9_abs": 0.10250429064035416,
+      "tail_ratio_max_over_p99_9": 5.009377956390381
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.112332706223242e-05,
+      "nmse": 0.034473806619644165,
+      "cosine": 0.9836385250091553,
+      "rms": 0.03004681132733822,
+      "max_abs": 0.6484375,
+      "p99_9_abs": 0.1064453125,
+      "tail_ratio_max_over_p99_9": 6.091742992401123
+    }
+  ],
+  "all_rows": [
+    {
+      "name": "action_head.model.transformer_blocks.0.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.8875465684686787e-05,
+      "nmse": 0.021527813747525215,
+      "cosine": 0.9894364476203918,
+      "rms": 0.029610713943839073,
+      "max_abs": 0.14902091026306152,
+      "p99_9_abs": 0.09640491753816605,
+      "tail_ratio_max_over_p99_9": 1.5457812547683716
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.2602980859810486e-05,
+      "nmse": 0.023574979975819588,
+      "cosine": 0.9884682893753052,
+      "rms": 0.02312123216688633,
+      "max_abs": 0.493070125579834,
+      "p99_9_abs": 0.1057329922914505,
+      "tail_ratio_max_over_p99_9": 4.663351535797119
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.4528565770888235e-05,
+      "nmse": 0.02342582866549492,
+      "cosine": 0.9885502457618713,
+      "rms": 0.02490369975566864,
+      "max_abs": 0.1845359355211258,
+      "p99_9_abs": 0.08503380417823792,
+      "tail_ratio_max_over_p99_9": 2.1701478958129883
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.3157510693417862e-05,
+      "nmse": 0.022947147488594055,
+      "cosine": 0.9887803792953491,
+      "rms": 0.02394542284309864,
+      "max_abs": 0.14307555556297302,
+      "p99_9_abs": 0.08002597838640213,
+      "tail_ratio_max_over_p99_9": 1.787863850593567
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.161698830605019e-05,
+      "nmse": 0.03133871406316757,
+      "cosine": 0.9849366545677185,
+      "rms": 0.02626376785337925,
+      "max_abs": 0.7075591683387756,
+      "p99_9_abs": 0.0950351133942604,
+      "tail_ratio_max_over_p99_9": 7.445239543914795
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.7130752641824074e-05,
+      "nmse": 0.072210393846035,
+      "cosine": 0.9655826687812805,
+      "rms": 0.019383449107408524,
+      "max_abs": 1.4999668598175049,
+      "p99_9_abs": 0.11318522691726685,
+      "tail_ratio_max_over_p99_9": 13.252320289611816
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0684636183432303e-05,
+      "nmse": 0.026698101311922073,
+      "cosine": 0.9869256615638733,
+      "rms": 0.027834521606564522,
+      "max_abs": 0.26818451285362244,
+      "p99_9_abs": 0.10750287771224976,
+      "tail_ratio_max_over_p99_9": 2.4946727752685547
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.055209370155353e-05,
+      "nmse": 0.026531673967838287,
+      "cosine": 0.9870392680168152,
+      "rms": 0.02783208340406418,
+      "max_abs": 0.8536942601203918,
+      "p99_9_abs": 0.11902417987585068,
+      "tail_ratio_max_over_p99_9": 7.172443866729736
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.9763388991123065e-05,
+      "nmse": 0.027239017188549042,
+      "cosine": 0.986732006072998,
+      "rms": 0.026936117559671402,
+      "max_abs": 0.2518690228462219,
+      "p99_9_abs": 0.10393090546131134,
+      "tail_ratio_max_over_p99_9": 2.4234275817871094
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.5692006854806095e-05,
+      "nmse": 0.025610441341996193,
+      "cosine": 0.9874981641769409,
+      "rms": 0.024753162637352943,
+      "max_abs": 0.21228168904781342,
+      "p99_9_abs": 0.09322921186685562,
+      "tail_ratio_max_over_p99_9": 2.276986837387085
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 1.8355429347138852e-05,
+      "nmse": 0.02327973023056984,
+      "cosine": 0.9888278841972351,
+      "rms": 0.02807975374162197,
+      "max_abs": 0.32461631298065186,
+      "p99_9_abs": 0.09586308151483536,
+      "tail_ratio_max_over_p99_9": 3.386249542236328
+    },
+    {
+      "name": "action_head.model.transformer_blocks.1.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.506917735445313e-05,
+      "nmse": 0.048350740224123,
+      "cosine": 0.9768858551979065,
+      "rms": 0.022770285606384277,
+      "max_abs": 1.2153518199920654,
+      "p99_9_abs": 0.09245286881923676,
+      "tail_ratio_max_over_p99_9": 13.145636558532715
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.244278039142955e-05,
+      "nmse": 0.022768350318074226,
+      "cosine": 0.9888951778411865,
+      "rms": 0.03139587119221687,
+      "max_abs": 0.16348226368427277,
+      "p99_9_abs": 0.10445478558540344,
+      "tail_ratio_max_over_p99_9": 1.5651007890701294
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.4987746908445843e-05,
+      "nmse": 0.02255561575293541,
+      "cosine": 0.9889217615127563,
+      "rms": 0.025777501985430717,
+      "max_abs": 0.3365757465362549,
+      "p99_9_abs": 0.09244921803474426,
+      "tail_ratio_max_over_p99_9": 3.640655517578125
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.1220270355115645e-05,
+      "nmse": 0.022117802873253822,
+      "cosine": 0.9892134666442871,
+      "rms": 0.030974511057138443,
+      "max_abs": 0.17398737370967865,
+      "p99_9_abs": 0.10340157151222229,
+      "tail_ratio_max_over_p99_9": 1.6826375722885132
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.6685300579410978e-05,
+      "nmse": 0.022841963917016983,
+      "cosine": 0.9887999296188354,
+      "rms": 0.027027152478694916,
+      "max_abs": 0.15983200073242188,
+      "p99_9_abs": 0.08991274237632751,
+      "tail_ratio_max_over_p99_9": 1.777634620666504
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.7347188733983785e-05,
+      "nmse": 0.022870145738124847,
+      "cosine": 0.9891359806060791,
+      "rms": 0.03457975387573242,
+      "max_abs": 0.30073028802871704,
+      "p99_9_abs": 0.11711431294679642,
+      "tail_ratio_max_over_p99_9": 2.567835569381714
+    },
+    {
+      "name": "action_head.model.transformer_blocks.10.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.797055978793651e-05,
+      "nmse": 0.0368940569460392,
+      "cosine": 0.9824775457382202,
+      "rms": 0.03208080679178238,
+      "max_abs": 0.6321237087249756,
+      "p99_9_abs": 0.11872341483831406,
+      "tail_ratio_max_over_p99_9": 5.324338912963867
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0491788745857775e-05,
+      "nmse": 0.022648245096206665,
+      "cosine": 0.9889066815376282,
+      "rms": 0.030079642310738564,
+      "max_abs": 0.245650976896286,
+      "p99_9_abs": 0.10125048458576202,
+      "tail_ratio_max_over_p99_9": 2.426170825958252
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.909995055233594e-05,
+      "nmse": 0.02312486432492733,
+      "cosine": 0.9886993169784546,
+      "rms": 0.03547370433807373,
+      "max_abs": 0.3833630084991455,
+      "p99_9_abs": 0.13243228197097778,
+      "tail_ratio_max_over_p99_9": 2.894785165786743
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0483390471781604e-05,
+      "nmse": 0.02287697046995163,
+      "cosine": 0.9887589812278748,
+      "rms": 0.029922761023044586,
+      "max_abs": 0.2117975354194641,
+      "p99_9_abs": 0.10181112587451935,
+      "tail_ratio_max_over_p99_9": 2.08029842376709
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.4539178411941975e-05,
+      "nmse": 0.023136593401432037,
+      "cosine": 0.9886781573295593,
+      "rms": 0.03256719186902046,
+      "max_abs": 0.17565977573394775,
+      "p99_9_abs": 0.11141372472047806,
+      "tail_ratio_max_over_p99_9": 1.576643943786621
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.4560904421377927e-05,
+      "nmse": 0.023554855957627296,
+      "cosine": 0.988798201084137,
+      "rms": 0.03229103237390518,
+      "max_abs": 0.28209733963012695,
+      "p99_9_abs": 0.11035054177045822,
+      "tail_ratio_max_over_p99_9": 2.5563747882843018
+    },
+    {
+      "name": "action_head.model.transformer_blocks.11.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 4.1771938413148746e-05,
+      "nmse": 0.04014767333865166,
+      "cosine": 0.9808397889137268,
+      "rms": 0.032256118953228,
+      "max_abs": 0.40250709652900696,
+      "p99_9_abs": 0.12456255406141281,
+      "tail_ratio_max_over_p99_9": 3.231365203857422
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.2191177777131088e-05,
+      "nmse": 0.02253688871860504,
+      "cosine": 0.9889601469039917,
+      "rms": 0.031379297375679016,
+      "max_abs": 0.15884734690189362,
+      "p99_9_abs": 0.10384581983089447,
+      "tail_ratio_max_over_p99_9": 1.5296460390090942
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0330769984866492e-05,
+      "nmse": 0.022134197875857353,
+      "cosine": 0.9891201853752136,
+      "rms": 0.030307143926620483,
+      "max_abs": 0.18802325427532196,
+      "p99_9_abs": 0.10140933096408844,
+      "tail_ratio_max_over_p99_9": 1.8541021347045898
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.9745866666198708e-05,
+      "nmse": 0.02249867282807827,
+      "cosine": 0.9890062212944031,
+      "rms": 0.02962508797645569,
+      "max_abs": 0.14798623323440552,
+      "p99_9_abs": 0.09828406572341919,
+      "tail_ratio_max_over_p99_9": 1.5056991577148438
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.1539040972129442e-05,
+      "nmse": 0.022390618920326233,
+      "cosine": 0.9890520572662354,
+      "rms": 0.03101559728384018,
+      "max_abs": 0.16530868411064148,
+      "p99_9_abs": 0.10261265933513641,
+      "tail_ratio_max_over_p99_9": 1.610996961593628
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.3066400242678355e-05,
+      "nmse": 0.022563356906175613,
+      "cosine": 0.9889829754829407,
+      "rms": 0.024064460769295692,
+      "max_abs": 0.3970016539096832,
+      "p99_9_abs": 0.08456762135028839,
+      "tail_ratio_max_over_p99_9": 4.694487571716309
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.7867474525701255e-05,
+      "nmse": 0.02230539359152317,
+      "cosine": 0.9890587329864502,
+      "rms": 0.028302619233727455,
+      "max_abs": 0.20622985064983368,
+      "p99_9_abs": 0.09491739422082901,
+      "tail_ratio_max_over_p99_9": 2.172729730606079
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.4832020497124176e-05,
+      "nmse": 0.022577259689569473,
+      "cosine": 0.9889218807220459,
+      "rms": 0.02563093975186348,
+      "max_abs": 0.13417331874370575,
+      "p99_9_abs": 0.084752157330513,
+      "tail_ratio_max_over_p99_9": 1.5831257104873657
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.0514495190582238e-05,
+      "nmse": 0.023074142634868622,
+      "cosine": 0.9889277815818787,
+      "rms": 0.029817253351211548,
+      "max_abs": 0.33264535665512085,
+      "p99_9_abs": 0.10125459730625153,
+      "tail_ratio_max_over_p99_9": 3.2852370738983154
+    },
+    {
+      "name": "action_head.model.transformer_blocks.2.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.3414659153786488e-05,
+      "nmse": 0.04157789424061775,
+      "cosine": 0.9801331162452698,
+      "rms": 0.023730816319584846,
+      "max_abs": 1.0676157474517822,
+      "p99_9_abs": 0.09448938071727753,
+      "tail_ratio_max_over_p99_9": 11.29879093170166
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.209319245594088e-05,
+      "nmse": 0.027627702802419662,
+      "cosine": 0.9865037202835083,
+      "rms": 0.0282785315066576,
+      "max_abs": 0.3603297173976898,
+      "p99_9_abs": 0.10540850460529327,
+      "tail_ratio_max_over_p99_9": 3.418412208557129
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.4273140297736973e-05,
+      "nmse": 0.024708520621061325,
+      "cosine": 0.9878926277160645,
+      "rms": 0.03134293109178543,
+      "max_abs": 0.37029021978378296,
+      "p99_9_abs": 0.12125961482524872,
+      "tail_ratio_max_over_p99_9": 3.0536978244781494
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.070907794404775e-05,
+      "nmse": 0.02680986002087593,
+      "cosine": 0.9869154095649719,
+      "rms": 0.027792852371931076,
+      "max_abs": 0.21406671404838562,
+      "p99_9_abs": 0.10605944693088531,
+      "tail_ratio_max_over_p99_9": 2.0183653831481934
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.293547549925279e-05,
+      "nmse": 0.027232997119426727,
+      "cosine": 0.9866847991943359,
+      "rms": 0.029020583257079124,
+      "max_abs": 0.23038095235824585,
+      "p99_9_abs": 0.11041447520256042,
+      "tail_ratio_max_over_p99_9": 2.086510419845581
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.115936513291672e-05,
+      "nmse": 0.022478735074400902,
+      "cosine": 0.9892072081565857,
+      "rms": 0.030680708587169647,
+      "max_abs": 0.2810991406440735,
+      "p99_9_abs": 0.10359065979719162,
+      "tail_ratio_max_over_p99_9": 2.7135567665100098
+    },
+    {
+      "name": "action_head.model.transformer_blocks.3.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.555628088884987e-05,
+      "nmse": 0.04148610681295395,
+      "cosine": 0.9801177978515625,
+      "rms": 0.0248197540640831,
+      "max_abs": 1.050478458404541,
+      "p99_9_abs": 0.09383201599121094,
+      "tail_ratio_max_over_p99_9": 11.19530963897705
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.2175212507136166e-05,
+      "nmse": 0.02249135822057724,
+      "cosine": 0.9890312552452087,
+      "rms": 0.031399741768836975,
+      "max_abs": 0.16871079802513123,
+      "p99_9_abs": 0.10374139249324799,
+      "tail_ratio_max_over_p99_9": 1.62626314163208
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.3528901035897434e-05,
+      "nmse": 0.022343521937727928,
+      "cosine": 0.9890576601028442,
+      "rms": 0.024606818333268166,
+      "max_abs": 0.3771040439605713,
+      "p99_9_abs": 0.08496242016553879,
+      "tail_ratio_max_over_p99_9": 4.438480377197266
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.962346868822351e-05,
+      "nmse": 0.02178582362830639,
+      "cosine": 0.9893118143081665,
+      "rms": 0.03001241199672222,
+      "max_abs": 0.1763346642255783,
+      "p99_9_abs": 0.09967795014381409,
+      "tail_ratio_max_over_p99_9": 1.7690438032150269
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.5307827197830193e-05,
+      "nmse": 0.02258904092013836,
+      "cosine": 0.9889503717422485,
+      "rms": 0.026032021269202232,
+      "max_abs": 0.13500170409679413,
+      "p99_9_abs": 0.08631590008735657,
+      "tail_ratio_max_over_p99_9": 1.564042091369629
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.2733007426722907e-05,
+      "nmse": 0.022520385682582855,
+      "cosine": 0.9891670942306519,
+      "rms": 0.0317717045545578,
+      "max_abs": 0.238168865442276,
+      "p99_9_abs": 0.10744600743055344,
+      "tail_ratio_max_over_p99_9": 2.21663761138916
+    },
+    {
+      "name": "action_head.model.transformer_blocks.4.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.4290166038554162e-05,
+      "nmse": 0.03681812807917595,
+      "cosine": 0.9824633002281189,
+      "rms": 0.02568528614938259,
+      "max_abs": 0.6685467958450317,
+      "p99_9_abs": 0.0963311642408371,
+      "tail_ratio_max_over_p99_9": 6.940088272094727
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.164072975574527e-05,
+      "nmse": 0.02430965192615986,
+      "cosine": 0.988116979598999,
+      "rms": 0.029836410656571388,
+      "max_abs": 0.23514103889465332,
+      "p99_9_abs": 0.1045064926147461,
+      "tail_ratio_max_over_p99_9": 2.250013589859009
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.3990818590391427e-05,
+      "nmse": 0.023694390431046486,
+      "cosine": 0.9884114265441895,
+      "rms": 0.03181996941566467,
+      "max_abs": 0.3427969217300415,
+      "p99_9_abs": 0.12382207810878754,
+      "tail_ratio_max_over_p99_9": 2.768463611602783
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.220456735813059e-05,
+      "nmse": 0.025187404826283455,
+      "cosine": 0.9877223968505859,
+      "rms": 0.029691316187381744,
+      "max_abs": 0.21941113471984863,
+      "p99_9_abs": 0.10654671490192413,
+      "tail_ratio_max_over_p99_9": 2.059295177459717
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.2120311768958345e-05,
+      "nmse": 0.024556558579206467,
+      "cosine": 0.9879790544509888,
+      "rms": 0.03001317009329796,
+      "max_abs": 0.21718870103359222,
+      "p99_9_abs": 0.10628195852041245,
+      "tail_ratio_max_over_p99_9": 2.0435142517089844
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.3937816877150908e-05,
+      "nmse": 0.023027142509818077,
+      "cosine": 0.9889530539512634,
+      "rms": 0.03224201872944832,
+      "max_abs": 0.2918655574321747,
+      "p99_9_abs": 0.1100340336561203,
+      "tail_ratio_max_over_p99_9": 2.6525025367736816
+    },
+    {
+      "name": "action_head.model.transformer_blocks.5.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.9456219635903835e-05,
+      "nmse": 0.04163086786866188,
+      "cosine": 0.9801735877990723,
+      "rms": 0.0265999473631382,
+      "max_abs": 0.5912357568740845,
+      "p99_9_abs": 0.10102317482233047,
+      "tail_ratio_max_over_p99_9": 5.852476596832275
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.2190150048118085e-05,
+      "nmse": 0.022698042914271355,
+      "cosine": 0.9888795018196106,
+      "rms": 0.03126697987318039,
+      "max_abs": 0.16329218447208405,
+      "p99_9_abs": 0.10367909073829651,
+      "tail_ratio_max_over_p99_9": 1.5749770402908325
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.4700079191243276e-05,
+      "nmse": 0.022544309496879578,
+      "cosine": 0.9889267086982727,
+      "rms": 0.025535322725772858,
+      "max_abs": 0.35324332118034363,
+      "p99_9_abs": 0.08938980847597122,
+      "tail_ratio_max_over_p99_9": 3.9517180919647217
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0107621821807697e-05,
+      "nmse": 0.022037247195839882,
+      "cosine": 0.989189863204956,
+      "rms": 0.03020658902823925,
+      "max_abs": 0.17750808596611023,
+      "p99_9_abs": 0.10087011754512787,
+      "tail_ratio_max_over_p99_9": 1.7597688436508179
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.6077703548944555e-05,
+      "nmse": 0.022547898814082146,
+      "cosine": 0.9889590740203857,
+      "rms": 0.02670293301343918,
+      "max_abs": 0.13376569747924805,
+      "p99_9_abs": 0.08854183554649353,
+      "tail_ratio_max_over_p99_9": 1.5107626914978027
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.518498877179809e-05,
+      "nmse": 0.023014387115836143,
+      "cosine": 0.9891306757926941,
+      "rms": 0.03308043256402016,
+      "max_abs": 0.23956091701984406,
+      "p99_9_abs": 0.11270155757665634,
+      "tail_ratio_max_over_p99_9": 2.125622034072876
+    },
+    {
+      "name": "action_head.model.transformer_blocks.6.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 2.7536831112229265e-05,
+      "nmse": 0.0354464165866375,
+      "cosine": 0.9830402135848999,
+      "rms": 0.027872171252965927,
+      "max_abs": 0.5134827494621277,
+      "p99_9_abs": 0.10250429064035416,
+      "tail_ratio_max_over_p99_9": 5.009377956390381
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.3914519260870293e-05,
+      "nmse": 0.024160495027899742,
+      "cosine": 0.9881861209869385,
+      "rms": 0.03146139159798622,
+      "max_abs": 0.32317548990249634,
+      "p99_9_abs": 0.1109512522816658,
+      "tail_ratio_max_over_p99_9": 2.9127700328826904
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.3216924091684632e-05,
+      "nmse": 0.024077381938695908,
+      "cosine": 0.9882508516311646,
+      "rms": 0.03105258196592331,
+      "max_abs": 0.5341301560401917,
+      "p99_9_abs": 0.12068139761686325,
+      "tail_ratio_max_over_p99_9": 4.425952911376953
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.347802546864841e-05,
+      "nmse": 0.023763904348015785,
+      "cosine": 0.9883776903152466,
+      "rms": 0.03143199160695076,
+      "max_abs": 0.3041062653064728,
+      "p99_9_abs": 0.1126120314002037,
+      "tail_ratio_max_over_p99_9": 2.7004776000976562
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.1595518774120137e-05,
+      "nmse": 0.02435305528342724,
+      "cosine": 0.9880816340446472,
+      "rms": 0.029778655618429184,
+      "max_abs": 0.20645029842853546,
+      "p99_9_abs": 0.10508668422698975,
+      "tail_ratio_max_over_p99_9": 1.964571475982666
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.5966717657865956e-05,
+      "nmse": 0.023008061572909355,
+      "cosine": 0.9891331791877747,
+      "rms": 0.0335945263504982,
+      "max_abs": 0.290306031703949,
+      "p99_9_abs": 0.1147792637348175,
+      "tail_ratio_max_over_p99_9": 2.5292551517486572
+    },
+    {
+      "name": "action_head.model.transformer_blocks.7.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.0013030482223257e-05,
+      "nmse": 0.03613956645131111,
+      "cosine": 0.9829174280166626,
+      "rms": 0.028817975893616676,
+      "max_abs": 0.6011136174201965,
+      "p99_9_abs": 0.10622724890708923,
+      "tail_ratio_max_over_p99_9": 5.658751487731934
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.207466786785517e-05,
+      "nmse": 0.022544195875525475,
+      "cosine": 0.9889952540397644,
+      "rms": 0.031291741877794266,
+      "max_abs": 0.1623179316520691,
+      "p99_9_abs": 0.10389216989278793,
+      "tail_ratio_max_over_p99_9": 1.5623692274093628
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.4939516404410824e-05,
+      "nmse": 0.022159548476338387,
+      "cosine": 0.9891633987426758,
+      "rms": 0.025964969769120216,
+      "max_abs": 0.1974903792142868,
+      "p99_9_abs": 0.09252004325389862,
+      "tail_ratio_max_over_p99_9": 2.134568691253662
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.1344079868867993e-05,
+      "nmse": 0.02266683802008629,
+      "cosine": 0.9889533519744873,
+      "rms": 0.030686210840940475,
+      "max_abs": 0.1998906433582306,
+      "p99_9_abs": 0.10379394888877869,
+      "tail_ratio_max_over_p99_9": 1.925840973854065
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.6842344848555513e-05,
+      "nmse": 0.022746616974473,
+      "cosine": 0.9888813495635986,
+      "rms": 0.027210896834731102,
+      "max_abs": 0.15347400307655334,
+      "p99_9_abs": 0.09021107852458954,
+      "tail_ratio_max_over_p99_9": 1.7012766599655151
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.718240830290597e-05,
+      "nmse": 0.023130347952246666,
+      "cosine": 0.9890968203544617,
+      "rms": 0.03428095206618309,
+      "max_abs": 0.277387797832489,
+      "p99_9_abs": 0.11722800880670547,
+      "tail_ratio_max_over_p99_9": 2.366224527359009
+    },
+    {
+      "name": "action_head.model.transformer_blocks.8.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.456767080933787e-05,
+      "nmse": 0.03875751420855522,
+      "cosine": 0.9814118146896362,
+      "rms": 0.029864627867937088,
+      "max_abs": 0.8623569011688232,
+      "p99_9_abs": 0.10926146060228348,
+      "tail_ratio_max_over_p99_9": 7.892599105834961
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.405278974038083e-05,
+      "nmse": 0.024175845086574554,
+      "cosine": 0.9882327318191528,
+      "rms": 0.03154219314455986,
+      "max_abs": 0.3138393461704254,
+      "p99_9_abs": 0.11197342723608017,
+      "tail_ratio_max_over_p99_9": 2.802802085876465
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.4031834982451983e-05,
+      "nmse": 0.023106437176465988,
+      "cosine": 0.9887316823005676,
+      "rms": 0.03224979713559151,
+      "max_abs": 0.32383739948272705,
+      "p99_9_abs": 0.12410027533769608,
+      "tail_ratio_max_over_p99_9": 2.6094818115234375
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.2952244762564078e-05,
+      "nmse": 0.023204362019896507,
+      "cosine": 0.9886478185653687,
+      "rms": 0.03145051375031471,
+      "max_abs": 0.27226579189300537,
+      "p99_9_abs": 0.11131744086742401,
+      "tail_ratio_max_over_p99_9": 2.445850372314453
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.2608088329434395e-05,
+      "nmse": 0.023956913501024246,
+      "cosine": 0.9882810115814209,
+      "rms": 0.030719665810465813,
+      "max_abs": 0.19533903896808624,
+      "p99_9_abs": 0.10742604732513428,
+      "tail_ratio_max_over_p99_9": 1.818358302116394
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.667901571840048e-05,
+      "nmse": 0.022577783092856407,
+      "cosine": 0.9893825054168701,
+      "rms": 0.03437512367963791,
+      "max_abs": 0.28808605670928955,
+      "p99_9_abs": 0.11604097485542297,
+      "tail_ratio_max_over_p99_9": 2.48262357711792
+    },
+    {
+      "name": "action_head.model.transformer_blocks.9.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.2824944355525076e-05,
+      "nmse": 0.034106384962797165,
+      "cosine": 0.9835371971130371,
+      "rms": 0.031023025512695312,
+      "max_abs": 0.5476686358451843,
+      "p99_9_abs": 0.11312757432460785,
+      "tail_ratio_max_over_p99_9": 4.841159343719482
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.582655335776508e-05,
+      "nmse": 0.03329968824982643,
+      "cosine": 0.9839863181114197,
+      "rms": 0.03280064836144447,
+      "max_abs": 0.625,
+      "p99_9_abs": 0.119140625,
+      "tail_ratio_max_over_p99_9": 5.245901584625244
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 4.167854422121309e-05,
+      "nmse": 0.028809433802962303,
+      "cosine": 0.9864174127578735,
+      "rms": 0.03803547844290733,
+      "max_abs": 0.6328125,
+      "p99_9_abs": 0.1484375,
+      "tail_ratio_max_over_p99_9": 4.263157844543457
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.4782792024780065e-05,
+      "nmse": 0.025721801444888115,
+      "cosine": 0.9876376390457153,
+      "rms": 0.031040193513035774,
+      "max_abs": 0.40625,
+      "p99_9_abs": 0.107421875,
+      "tail_ratio_max_over_p99_9": 3.781818151473999
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.4508982935221866e-05,
+      "nmse": 0.02769319899380207,
+      "cosine": 0.9864436984062195,
+      "rms": 0.03530039265751839,
+      "max_abs": 0.79296875,
+      "p99_9_abs": 0.1484375,
+      "tail_ratio_max_over_p99_9": 5.342105388641357
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.334057691972703e-05,
+      "nmse": 0.032566651701927185,
+      "cosine": 0.9840108752250671,
+      "rms": 0.03199631720781326,
+      "max_abs": 0.5,
+      "p99_9_abs": 0.1640625,
+      "tail_ratio_max_over_p99_9": 3.047619104385376
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.8411293644458055e-05,
+      "nmse": 0.03187116980552673,
+      "cosine": 0.9844216108322144,
+      "rms": 0.03471606224775314,
+      "max_abs": 0.6484375,
+      "p99_9_abs": 0.1435546875,
+      "tail_ratio_max_over_p99_9": 4.517006874084473
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.8784277674276382e-05,
+      "nmse": 0.026147399097681046,
+      "cosine": 0.987098217010498,
+      "rms": 0.033179011195898056,
+      "max_abs": 0.2197265625,
+      "p99_9_abs": 0.1162109375,
+      "tail_ratio_max_over_p99_9": 1.8907562494277954
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.647712946985848e-05,
+      "nmse": 0.04427793249487877,
+      "cosine": 0.9792630672454834,
+      "rms": 0.028702298179268837,
+      "max_abs": 0.60546875,
+      "p99_9_abs": 0.11279296875,
+      "tail_ratio_max_over_p99_9": 5.367965221405029
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 5.157990744919516e-05,
+      "nmse": 0.02638646401464939,
+      "cosine": 0.9876900911331177,
+      "rms": 0.04421297088265419,
+      "max_abs": 0.51171875,
+      "p99_9_abs": 0.1611328125,
+      "tail_ratio_max_over_p99_9": 3.175757646560669
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.1594098143395968e-05,
+      "nmse": 0.027190253138542175,
+      "cosine": 0.9872964024543762,
+      "rms": 0.028181292116642,
+      "max_abs": 0.50390625,
+      "p99_9_abs": 0.11083984375,
+      "tail_ratio_max_over_p99_9": 4.546255588531494
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.238977660657838e-05,
+      "nmse": 0.02920953370630741,
+      "cosine": 0.9856563806533813,
+      "rms": 0.033299803733825684,
+      "max_abs": 0.48828125,
+      "p99_9_abs": 0.142578125,
+      "tail_ratio_max_over_p99_9": 3.4246575832366943
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 2.9698534490307793e-05,
+      "nmse": 0.02888212725520134,
+      "cosine": 0.9858399629592896,
+      "rms": 0.032066598534584045,
+      "max_abs": 0.3671875,
+      "p99_9_abs": 0.12353515625,
+      "tail_ratio_max_over_p99_9": 2.972332000732422
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.407954500289634e-05,
+      "nmse": 0.029378632083535194,
+      "cosine": 0.9856403470039368,
+      "rms": 0.034058939665555954,
+      "max_abs": 0.5859375,
+      "p99_9_abs": 0.15625,
+      "tail_ratio_max_over_p99_9": 3.75
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.1.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.966145439131651e-05,
+      "nmse": 0.02549637295305729,
+      "cosine": 0.9874332547187805,
+      "rms": 0.03410806134343147,
+      "max_abs": 0.251953125,
+      "p99_9_abs": 0.11962890625,
+      "tail_ratio_max_over_p99_9": 2.1061224937438965
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 4.455077578313649e-05,
+      "nmse": 0.04361064359545708,
+      "cosine": 0.9792196750640869,
+      "rms": 0.03196180984377861,
+      "max_abs": 0.6953125,
+      "p99_9_abs": 0.12255859375,
+      "tail_ratio_max_over_p99_9": 5.673306941986084
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.7683643313357607e-05,
+      "nmse": 0.027239661663770676,
+      "cosine": 0.9869058728218079,
+      "rms": 0.037194233387708664,
+      "max_abs": 0.71484375,
+      "p99_9_abs": 0.150390625,
+      "tail_ratio_max_over_p99_9": 4.753246784210205
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.153193756588735e-05,
+      "nmse": 0.02748209610581398,
+      "cosine": 0.9866659641265869,
+      "rms": 0.03387274593114853,
+      "max_abs": 0.60546875,
+      "p99_9_abs": 0.1240234375,
+      "tail_ratio_max_over_p99_9": 4.881889820098877
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.7679063350660726e-05,
+      "nmse": 0.02630970999598503,
+      "cosine": 0.9870373010635376,
+      "rms": 0.032435283064842224,
+      "max_abs": 0.26171875,
+      "p99_9_abs": 0.1328125,
+      "tail_ratio_max_over_p99_9": 1.970588207244873
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.05671346723102e-05,
+      "nmse": 0.03160993754863739,
+      "cosine": 0.9845527410507202,
+      "rms": 0.031096788123250008,
+      "max_abs": 0.55078125,
+      "p99_9_abs": 0.1279296875,
+      "tail_ratio_max_over_p99_9": 4.3053436279296875
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.181067586410791e-05,
+      "nmse": 0.027937250211834908,
+      "cosine": 0.9862422347068787,
+      "rms": 0.03374384716153145,
+      "max_abs": 0.41015625,
+      "p99_9_abs": 0.1533203125,
+      "tail_ratio_max_over_p99_9": 2.675159215927124
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.10.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.914560172939673e-05,
+      "nmse": 0.025773119181394577,
+      "cosine": 0.9873500466346741,
+      "rms": 0.033628154546022415,
+      "max_abs": 0.2158203125,
+      "p99_9_abs": 0.1201171875,
+      "tail_ratio_max_over_p99_9": 1.7967479228973389
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 4.1161110857501626e-05,
+      "nmse": 0.037657253444194794,
+      "cosine": 0.9821301698684692,
+      "rms": 0.03306124731898308,
+      "max_abs": 0.79296875,
+      "p99_9_abs": 0.12451171875,
+      "tail_ratio_max_over_p99_9": 6.368627548217773
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.353667489136569e-05,
+      "nmse": 0.026831332594156265,
+      "cosine": 0.9871406555175781,
+      "rms": 0.03535402566194534,
+      "max_abs": 0.55859375,
+      "p99_9_abs": 0.138671875,
+      "tail_ratio_max_over_p99_9": 4.02816915512085
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.144648144370876e-05,
+      "nmse": 0.02619505487382412,
+      "cosine": 0.987366795539856,
+      "rms": 0.034647855907678604,
+      "max_abs": 0.40625,
+      "p99_9_abs": 0.1259765625,
+      "tail_ratio_max_over_p99_9": 3.224806308746338
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.325357465655543e-05,
+      "nmse": 0.031158261001110077,
+      "cosine": 0.9847047328948975,
+      "rms": 0.03266875445842743,
+      "max_abs": 0.388671875,
+      "p99_9_abs": 0.14453125,
+      "tail_ratio_max_over_p99_9": 2.6891891956329346
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.5165245208190754e-05,
+      "nmse": 0.04026991128921509,
+      "cosine": 0.9802801609039307,
+      "rms": 0.029550611972808838,
+      "max_abs": 0.6640625,
+      "p99_9_abs": 0.16796875,
+      "tail_ratio_max_over_p99_9": 3.953488349914551
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.593821020331234e-05,
+      "nmse": 0.028066545724868774,
+      "cosine": 0.9862381219863892,
+      "rms": 0.03578357771039009,
+      "max_abs": 0.498046875,
+      "p99_9_abs": 0.1923828125,
+      "tail_ratio_max_over_p99_9": 2.588832378387451
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.11.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.0320459700305946e-05,
+      "nmse": 0.029603345319628716,
+      "cosine": 0.9854444265365601,
+      "rms": 0.0320034995675087,
+      "max_abs": 0.29296875,
+      "p99_9_abs": 0.12255859375,
+      "tail_ratio_max_over_p99_9": 2.3904383182525635
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.715107959578745e-05,
+      "nmse": 0.04085777327418327,
+      "cosine": 0.9807319045066833,
+      "rms": 0.030154239386320114,
+      "max_abs": 0.8515625,
+      "p99_9_abs": 0.109375,
+      "tail_ratio_max_over_p99_9": 7.785714149475098
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 5.194783807382919e-05,
+      "nmse": 0.02487800642848015,
+      "cosine": 0.9882649183273315,
+      "rms": 0.04569576680660248,
+      "max_abs": 0.484375,
+      "p99_9_abs": 0.162109375,
+      "tail_ratio_max_over_p99_9": 2.9879517555236816
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.178404974984005e-05,
+      "nmse": 0.0255720317363739,
+      "cosine": 0.9873898029327393,
+      "rms": 0.029186813160777092,
+      "max_abs": 0.6796875,
+      "p99_9_abs": 0.10595703125,
+      "tail_ratio_max_over_p99_9": 6.4147467613220215
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.998983472934924e-05,
+      "nmse": 0.02752479538321495,
+      "cosine": 0.9864797592163086,
+      "rms": 0.03300843760371208,
+      "max_abs": 0.34765625,
+      "p99_9_abs": 0.1416015625,
+      "tail_ratio_max_over_p99_9": 2.455172300338745
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.0668918043375015e-05,
+      "nmse": 0.03150321915745735,
+      "cosine": 0.9846220016479492,
+      "rms": 0.031201232224702835,
+      "max_abs": 0.421875,
+      "p99_9_abs": 0.130859375,
+      "tail_ratio_max_over_p99_9": 3.2238805294036865
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.623882366809994e-05,
+      "nmse": 0.03162473067641258,
+      "cosine": 0.9845497608184814,
+      "rms": 0.03385116532444954,
+      "max_abs": 0.61328125,
+      "p99_9_abs": 0.15625,
+      "tail_ratio_max_over_p99_9": 3.924999952316284
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.2.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.854545891750604e-05,
+      "nmse": 0.024594135582447052,
+      "cosine": 0.987877607345581,
+      "rms": 0.034068480134010315,
+      "max_abs": 0.2412109375,
+      "p99_9_abs": 0.125,
+      "tail_ratio_max_over_p99_9": 1.9296875
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.112332706223242e-05,
+      "nmse": 0.034473806619644165,
+      "cosine": 0.9836385250091553,
+      "rms": 0.03004681132733822,
+      "max_abs": 0.6484375,
+      "p99_9_abs": 0.1064453125,
+      "tail_ratio_max_over_p99_9": 6.091742992401123
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 5.063774369773455e-05,
+      "nmse": 0.02481328509747982,
+      "cosine": 0.9883953928947449,
+      "rms": 0.045174676924943924,
+      "max_abs": 0.52734375,
+      "p99_9_abs": 0.158203125,
+      "tail_ratio_max_over_p99_9": 3.3333332538604736
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.2367174096871167e-05,
+      "nmse": 0.025061341002583504,
+      "cosine": 0.9879423379898071,
+      "rms": 0.029874689877033234,
+      "max_abs": 0.455078125,
+      "p99_9_abs": 0.10546875,
+      "tail_ratio_max_over_p99_9": 4.314815044403076
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.861028380924836e-05,
+      "nmse": 0.034039050340652466,
+      "cosine": 0.9833477735519409,
+      "rms": 0.033679280430078506,
+      "max_abs": 0.7734375,
+      "p99_9_abs": 0.1474609375,
+      "tail_ratio_max_over_p99_9": 5.245033264160156
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.3123109460575506e-05,
+      "nmse": 0.030449381098151207,
+      "cosine": 0.985097348690033,
+      "rms": 0.03298195078969002,
+      "max_abs": 0.4296875,
+      "p99_9_abs": 0.1279296875,
+      "tail_ratio_max_over_p99_9": 3.358778715133667
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.589726111385971e-05,
+      "nmse": 0.030510006472468376,
+      "cosine": 0.9850841164588928,
+      "rms": 0.034301213920116425,
+      "max_abs": 0.65625,
+      "p99_9_abs": 0.1630859375,
+      "tail_ratio_max_over_p99_9": 4.023952007293701
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.3.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.500256207189523e-05,
+      "nmse": 0.026901058852672577,
+      "cosine": 0.9867794513702393,
+      "rms": 0.03607158362865448,
+      "max_abs": 0.470703125,
+      "p99_9_abs": 0.130859375,
+      "tail_ratio_max_over_p99_9": 3.597014904022217
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.3254018489969894e-05,
+      "nmse": 0.03677792847156525,
+      "cosine": 0.9825147390365601,
+      "rms": 0.030069652944803238,
+      "max_abs": 0.61328125,
+      "p99_9_abs": 0.107421875,
+      "tail_ratio_max_over_p99_9": 5.709090709686279
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 4.79726841149386e-05,
+      "nmse": 0.024967778474092484,
+      "cosine": 0.9881615042686462,
+      "rms": 0.04383359104394913,
+      "max_abs": 0.6171875,
+      "p99_9_abs": 0.1552734375,
+      "tail_ratio_max_over_p99_9": 3.9748427867889404
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.2883052224642597e-05,
+      "nmse": 0.025209669023752213,
+      "cosine": 0.987633466720581,
+      "rms": 0.03012821450829506,
+      "max_abs": 0.458984375,
+      "p99_9_abs": 0.10693359375,
+      "tail_ratio_max_over_p99_9": 4.292237281799316
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.134815051453188e-05,
+      "nmse": 0.029505562037229538,
+      "cosine": 0.9855813980102539,
+      "rms": 0.032595228403806686,
+      "max_abs": 0.55859375,
+      "p99_9_abs": 0.142578125,
+      "tail_ratio_max_over_p99_9": 3.9178082942962646
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.4709777537500486e-05,
+      "nmse": 0.03329217806458473,
+      "cosine": 0.9838147759437561,
+      "rms": 0.032289016991853714,
+      "max_abs": 0.6328125,
+      "p99_9_abs": 0.126953125,
+      "tail_ratio_max_over_p99_9": 4.984615325927734
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.217827179469168e-05,
+      "nmse": 0.028182122856378555,
+      "cosine": 0.9861759543418884,
+      "rms": 0.03379049152135849,
+      "max_abs": 0.4765625,
+      "p99_9_abs": 0.1552734375,
+      "tail_ratio_max_over_p99_9": 3.0691823959350586
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.4.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.1839987059356645e-05,
+      "nmse": 0.02523193322122097,
+      "cosine": 0.987593948841095,
+      "rms": 0.035523127764463425,
+      "max_abs": 0.24609375,
+      "p99_9_abs": 0.1279296875,
+      "tail_ratio_max_over_p99_9": 1.9236640930175781
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.9478811231674626e-05,
+      "nmse": 0.038408614695072174,
+      "cosine": 0.9813361763954163,
+      "rms": 0.03206031024456024,
+      "max_abs": 0.66015625,
+      "p99_9_abs": 0.1142578125,
+      "tail_ratio_max_over_p99_9": 5.777777671813965
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.9501341234426945e-05,
+      "nmse": 0.02598368003964424,
+      "cosine": 0.9876897931098938,
+      "rms": 0.03899021074175835,
+      "max_abs": 0.73046875,
+      "p99_9_abs": 0.14453125,
+      "tail_ratio_max_over_p99_9": 5.054054260253906
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.6761344997794367e-05,
+      "nmse": 0.025628045201301575,
+      "cosine": 0.9877869486808777,
+      "rms": 0.03231440857052803,
+      "max_abs": 0.65234375,
+      "p99_9_abs": 0.11181640625,
+      "tail_ratio_max_over_p99_9": 5.834061145782471
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.964986560982652e-05,
+      "nmse": 0.027132518589496613,
+      "cosine": 0.9866757392883301,
+      "rms": 0.03305721655488014,
+      "max_abs": 0.5625,
+      "p99_9_abs": 0.1328125,
+      "tail_ratio_max_over_p99_9": 4.235294342041016
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.745342110050842e-05,
+      "nmse": 0.0355139784514904,
+      "cosine": 0.9826647043228149,
+      "rms": 0.03247477114200592,
+      "max_abs": 0.478515625,
+      "p99_9_abs": 0.162109375,
+      "tail_ratio_max_over_p99_9": 2.9518072605133057
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.45653788826894e-05,
+      "nmse": 0.028425544500350952,
+      "cosine": 0.9860394597053528,
+      "rms": 0.03487114980816841,
+      "max_abs": 0.50390625,
+      "p99_9_abs": 0.158203125,
+      "tail_ratio_max_over_p99_9": 3.185185194015503
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.5.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.5766701330430806e-05,
+      "nmse": 0.030285434797406197,
+      "cosine": 0.9852021932601929,
+      "rms": 0.034365490078926086,
+      "max_abs": 0.27734375,
+      "p99_9_abs": 0.1376953125,
+      "tail_ratio_max_over_p99_9": 2.0141844749450684
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.882385135511868e-05,
+      "nmse": 0.03873848170042038,
+      "cosine": 0.9814702868461609,
+      "rms": 0.03165760263800621,
+      "max_abs": 0.859375,
+      "p99_9_abs": 0.11572265625,
+      "tail_ratio_max_over_p99_9": 7.4261603355407715
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.883346289512701e-05,
+      "nmse": 0.026273610070347786,
+      "cosine": 0.9875627756118774,
+      "rms": 0.03844529390335083,
+      "max_abs": 0.6796875,
+      "p99_9_abs": 0.1455078125,
+      "tail_ratio_max_over_p99_9": 4.671141147613525
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.6754796635941602e-05,
+      "nmse": 0.025390274822711945,
+      "cosine": 0.987869143486023,
+      "rms": 0.032461389899253845,
+      "max_abs": 0.474609375,
+      "p99_9_abs": 0.1142578125,
+      "tail_ratio_max_over_p99_9": 4.153846263885498
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.348631435073912e-05,
+      "nmse": 0.031971246004104614,
+      "cosine": 0.9843131899833679,
+      "rms": 0.03236338123679161,
+      "max_abs": 0.58984375,
+      "p99_9_abs": 0.150390625,
+      "tail_ratio_max_over_p99_9": 3.9220778942108154
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.179925261065364e-05,
+      "nmse": 0.0325242355465889,
+      "cosine": 0.9841597080230713,
+      "rms": 0.031268347054719925,
+      "max_abs": 0.73046875,
+      "p99_9_abs": 0.1259765625,
+      "tail_ratio_max_over_p99_9": 5.798449516296387
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.335570727358572e-05,
+      "nmse": 0.028726069256663322,
+      "cosine": 0.9858930706977844,
+      "rms": 0.03407587110996246,
+      "max_abs": 0.5625,
+      "p99_9_abs": 0.1845703125,
+      "tail_ratio_max_over_p99_9": 3.047619104385376
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.6.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.105920768575743e-05,
+      "nmse": 0.025131773203611374,
+      "cosine": 0.9876258969306946,
+      "rms": 0.03515471890568733,
+      "max_abs": 0.2138671875,
+      "p99_9_abs": 0.12890625,
+      "tail_ratio_max_over_p99_9": 1.6590908765792847
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.537567317835055e-05,
+      "nmse": 0.03643783926963806,
+      "cosine": 0.982479453086853,
+      "rms": 0.031158465892076492,
+      "max_abs": 0.97265625,
+      "p99_9_abs": 0.11279296875,
+      "tail_ratio_max_over_p99_9": 8.623376846313477
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.838944758172147e-05,
+      "nmse": 0.024425504729151726,
+      "cosine": 0.9882867932319641,
+      "rms": 0.03964461013674736,
+      "max_abs": 0.49609375,
+      "p99_9_abs": 0.146484375,
+      "tail_ratio_max_over_p99_9": 3.386666774749756
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.575085272837896e-05,
+      "nmse": 0.0251152440905571,
+      "cosine": 0.9879024028778076,
+      "rms": 0.03202042728662491,
+      "max_abs": 0.5234375,
+      "p99_9_abs": 0.11474609375,
+      "tail_ratio_max_over_p99_9": 4.561702251434326
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.6259289370500483e-05,
+      "nmse": 0.027100197970867157,
+      "cosine": 0.9866704940795898,
+      "rms": 0.0311282891780138,
+      "max_abs": 0.3125,
+      "p99_9_abs": 0.12890625,
+      "tail_ratio_max_over_p99_9": 2.4242424964904785
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.0016399250598624e-05,
+      "nmse": 0.030456455424427986,
+      "cosine": 0.985077440738678,
+      "rms": 0.031393490731716156,
+      "max_abs": 0.5546875,
+      "p99_9_abs": 0.12158203125,
+      "tail_ratio_max_over_p99_9": 4.562249183654785
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.168695548083633e-05,
+      "nmse": 0.029109571129083633,
+      "cosine": 0.9857610464096069,
+      "rms": 0.03299304097890854,
+      "max_abs": 0.416015625,
+      "p99_9_abs": 0.1494140625,
+      "tail_ratio_max_over_p99_9": 2.784313678741455
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.7.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.121466943412088e-05,
+      "nmse": 0.026857571676373482,
+      "cosine": 0.9867767095565796,
+      "rms": 0.034091491252183914,
+      "max_abs": 0.3125,
+      "p99_9_abs": 0.1240234375,
+      "tail_ratio_max_over_p99_9": 2.5196850299835205
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.782182830036618e-05,
+      "nmse": 0.036838363856077194,
+      "cosine": 0.9822032451629639,
+      "rms": 0.03204210847616196,
+      "max_abs": 0.6171875,
+      "p99_9_abs": 0.1171875,
+      "tail_ratio_max_over_p99_9": 5.266666889190674
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.643898162408732e-05,
+      "nmse": 0.02543426677584648,
+      "cosine": 0.9877249002456665,
+      "rms": 0.03785066306591034,
+      "max_abs": 0.85546875,
+      "p99_9_abs": 0.142578125,
+      "tail_ratio_max_over_p99_9": 6.0
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.682846570678521e-05,
+      "nmse": 0.025536634027957916,
+      "cosine": 0.9876229763031006,
+      "rms": 0.03241276741027832,
+      "max_abs": 0.486328125,
+      "p99_9_abs": 0.115234375,
+      "tail_ratio_max_over_p99_9": 4.220338821411133
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.768807800952345e-05,
+      "nmse": 0.03718065097928047,
+      "cosine": 0.9818471670150757,
+      "rms": 0.0318378321826458,
+      "max_abs": 0.84375,
+      "p99_9_abs": 0.1474609375,
+      "tail_ratio_max_over_p99_9": 5.721854209899902
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 2.6195633836323395e-05,
+      "nmse": 0.02756185084581375,
+      "cosine": 0.9865055084228516,
+      "rms": 0.030829058960080147,
+      "max_abs": 0.4921875,
+      "p99_9_abs": 0.11572265625,
+      "tail_ratio_max_over_p99_9": 4.253164768218994
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.383214061614126e-05,
+      "nmse": 0.029582150280475616,
+      "cosine": 0.9855155348777771,
+      "rms": 0.03381815180182457,
+      "max_abs": 0.4296875,
+      "p99_9_abs": 0.16796875,
+      "tail_ratio_max_over_p99_9": 2.5581395626068115
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.8.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 2.9150231057428755e-05,
+      "nmse": 0.024516304954886436,
+      "cosine": 0.9879189133644104,
+      "rms": 0.03448208421468735,
+      "max_abs": 0.2255859375,
+      "p99_9_abs": 0.12060546875,
+      "tail_ratio_max_over_p99_9": 1.8704453706741333
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        6144
+      ],
+      "numel": 12582912,
+      "mse": 3.938132067560218e-05,
+      "nmse": 0.03789510577917099,
+      "cosine": 0.9819236993789673,
+      "rms": 0.03223692253232002,
+      "max_abs": 0.7890625,
+      "p99_9_abs": 0.11962890625,
+      "tail_ratio_max_over_p99_9": 6.59591817855835
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 3.607674079830758e-05,
+      "nmse": 0.025464104488492012,
+      "cosine": 0.9877673983573914,
+      "rms": 0.03763998672366142,
+      "max_abs": 0.55859375,
+      "p99_9_abs": 0.14453125,
+      "tail_ratio_max_over_p99_9": 3.8648648262023926
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        6144,
+        2048
+      ],
+      "numel": 12582912,
+      "mse": 2.9211414585006423e-05,
+      "nmse": 0.025677194818854332,
+      "cosine": 0.9876251816749573,
+      "rms": 0.03372892737388611,
+      "max_abs": 0.466796875,
+      "p99_9_abs": 0.1201171875,
+      "tail_ratio_max_over_p99_9": 3.886178970336914
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.self_attn.k_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.287003346486017e-05,
+      "nmse": 0.03279503062367439,
+      "cosine": 0.983946681022644,
+      "rms": 0.03165891766548157,
+      "max_abs": 0.53515625,
+      "p99_9_abs": 0.138671875,
+      "tail_ratio_max_over_p99_9": 3.8591549396514893
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 4.010573684354313e-05,
+      "nmse": 0.039531297981739044,
+      "cosine": 0.980799674987793,
+      "rms": 0.03185170888900757,
+      "max_abs": 0.54296875,
+      "p99_9_abs": 0.1494140625,
+      "tail_ratio_max_over_p99_9": 3.6339869499206543
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.self_attn.q_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        2048,
+        2048
+      ],
+      "numel": 4194304,
+      "mse": 3.620706411311403e-05,
+      "nmse": 0.03080184943974018,
+      "cosine": 0.9850123524665833,
+      "rms": 0.034285325556993484,
+      "max_abs": 0.484375,
+      "p99_9_abs": 0.1708984375,
+      "tail_ratio_max_over_p99_9": 2.8342857360839844
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.9.self_attn.v_proj.weight",
+      "group": "llm_selected",
+      "shard": "model-00001-of-00002.safetensors",
+      "shape": [
+        1024,
+        2048
+      ],
+      "numel": 2097152,
+      "mse": 3.162113353027962e-05,
+      "nmse": 0.027694810181856155,
+      "cosine": 0.986407458782196,
+      "rms": 0.03379010409116745,
+      "max_abs": 0.32421875,
+      "p99_9_abs": 0.12890625,
+      "tail_ratio_max_over_p99_9": 2.5151515007019043
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.9447268641670235e-05,
+      "nmse": 0.022161664441227913,
+      "cosine": 0.9891848564147949,
+      "rms": 0.029622938483953476,
+      "max_abs": 0.33481132984161377,
+      "p99_9_abs": 0.10536438226699829,
+      "tail_ratio_max_over_p99_9": 3.177651882171631
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.93048178718891e-05,
+      "nmse": 0.022668035700917244,
+      "cosine": 0.9892137050628662,
+      "rms": 0.0359552726149559,
+      "max_abs": 0.31130844354629517,
+      "p99_9_abs": 0.1219407171010971,
+      "tail_ratio_max_over_p99_9": 2.5529491901397705
+    },
+    {
+      "name": "action_head.model.transformer_blocks.12.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.539661338436417e-05,
+      "nmse": 0.03619647026062012,
+      "cosine": 0.9828803539276123,
+      "rms": 0.03127143159508705,
+      "max_abs": 0.890359103679657,
+      "p99_9_abs": 0.13687503337860107,
+      "tail_ratio_max_over_p99_9": 6.5049052238464355
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.302873326698318e-05,
+      "nmse": 0.024727782234549522,
+      "cosine": 0.9878988265991211,
+      "rms": 0.03051704168319702,
+      "max_abs": 0.33507946133613586,
+      "p99_9_abs": 0.1051439419388771,
+      "tail_ratio_max_over_p99_9": 3.186864137649536
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 3.1670628231950104e-05,
+      "nmse": 0.023828202858567238,
+      "cosine": 0.9882954359054565,
+      "rms": 0.03645714744925499,
+      "max_abs": 0.3948770761489868,
+      "p99_9_abs": 0.1432604342699051,
+      "tail_ratio_max_over_p99_9": 2.7563581466674805
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.0562216377584264e-05,
+      "nmse": 0.022685864940285683,
+      "cosine": 0.9889028668403625,
+      "rms": 0.03010629303753376,
+      "max_abs": 0.1833600401878357,
+      "p99_9_abs": 0.10309438407421112,
+      "tail_ratio_max_over_p99_9": 1.7785648107528687
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.4108019715640694e-05,
+      "nmse": 0.023283248767256737,
+      "cosine": 0.9885780215263367,
+      "rms": 0.03217799589037895,
+      "max_abs": 0.19256751239299774,
+      "p99_9_abs": 0.11166016757488251,
+      "tail_ratio_max_over_p99_9": 1.7245855331420898
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.7597665393841453e-05,
+      "nmse": 0.02256995625793934,
+      "cosine": 0.9892523884773254,
+      "rms": 0.034967999905347824,
+      "max_abs": 0.23993940651416779,
+      "p99_9_abs": 0.11904799193143845,
+      "tail_ratio_max_over_p99_9": 2.0154848098754883
+    },
+    {
+      "name": "action_head.model.transformer_blocks.13.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 3.2476746127940714e-05,
+      "nmse": 0.038469403982162476,
+      "cosine": 0.9816985726356506,
+      "rms": 0.029055511578917503,
+      "max_abs": 0.5888742804527283,
+      "p99_9_abs": 0.1240217536687851,
+      "tail_ratio_max_over_p99_9": 4.748153209686279
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 2.1383164494181983e-05,
+      "nmse": 0.022612739354372025,
+      "cosine": 0.9889343976974487,
+      "rms": 0.03075101226568222,
+      "max_abs": 0.16091607511043549,
+      "p99_9_abs": 0.10244468599557877,
+      "tail_ratio_max_over_p99_9": 1.5707606077194214
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.7436886992072687e-05,
+      "nmse": 0.021977564319968224,
+      "cosine": 0.9892503619194031,
+      "rms": 0.02816726639866829,
+      "max_abs": 0.2200283706188202,
+      "p99_9_abs": 0.10161074995994568,
+      "tail_ratio_max_over_p99_9": 2.1654045581817627
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.9916777091566473e-05,
+      "nmse": 0.022867856547236443,
+      "cosine": 0.9888064861297607,
+      "rms": 0.02951187454164028,
+      "max_abs": 0.17606382071971893,
+      "p99_9_abs": 0.10082817822694778,
+      "tail_ratio_max_over_p99_9": 1.7461767196655273
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        2048
+      ],
+      "numel": 3145728,
+      "mse": 1.8423546862322837e-05,
+      "nmse": 0.02270432747900486,
+      "cosine": 0.9888776540756226,
+      "rms": 0.02848605439066887,
+      "max_abs": 0.16337668895721436,
+      "p99_9_abs": 0.09533347934484482,
+      "tail_ratio_max_over_p99_9": 1.7137389183044434
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 2.6875766707235016e-05,
+      "nmse": 0.022631943225860596,
+      "cosine": 0.9891067147254944,
+      "rms": 0.03446033596992493,
+      "max_abs": 0.32026150822639465,
+      "p99_9_abs": 0.11731144785881042,
+      "tail_ratio_max_over_p99_9": 2.730010747909546
+    },
+    {
+      "name": "action_head.model.transformer_blocks.14.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 4.0225975681096315e-05,
+      "nmse": 0.0498473159968853,
+      "cosine": 0.9764260649681091,
+      "rms": 0.02840746007859707,
+      "max_abs": 0.47300273180007935,
+      "p99_9_abs": 0.13578449189662933,
+      "tail_ratio_max_over_p99_9": 3.4834811687469482
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.attn1.to_k.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.1628742615575902e-05,
+      "nmse": 0.02402108907699585,
+      "cosine": 0.9882218837738037,
+      "rms": 0.03000677190721035,
+      "max_abs": 0.32566148042678833,
+      "p99_9_abs": 0.10308244079351425,
+      "tail_ratio_max_over_p99_9": 3.159233331680298
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.attn1.to_out.0.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 3.938587542506866e-05,
+      "nmse": 0.026644403114914894,
+      "cosine": 0.986976146697998,
+      "rms": 0.03844742476940155,
+      "max_abs": 0.5585914254188538,
+      "p99_9_abs": 0.17555274069309235,
+      "tail_ratio_max_over_p99_9": 3.181900978088379
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.attn1.to_q.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 1.9675564544741064e-05,
+      "nmse": 0.023593416437506676,
+      "cosine": 0.9884433746337891,
+      "rms": 0.028878072276711464,
+      "max_abs": 0.17389482259750366,
+      "p99_9_abs": 0.10028208792209625,
+      "tail_ratio_max_over_p99_9": 1.7340567111968994
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.attn1.to_v.weight",
+      "group": "dit_attention_excluded",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        1536
+      ],
+      "numel": 2359296,
+      "mse": 2.3248176148626953e-05,
+      "nmse": 0.024300049990415573,
+      "cosine": 0.9881519675254822,
+      "rms": 0.0309307798743248,
+      "max_abs": 0.19045720994472504,
+      "p99_9_abs": 0.10859427601099014,
+      "tail_ratio_max_over_p99_9": 1.7538421154022217
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.ff.net.0.proj.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        6144,
+        1536
+      ],
+      "numel": 9437184,
+      "mse": 1.3308374036569148e-05,
+      "nmse": 0.02315688505768776,
+      "cosine": 0.9888429641723633,
+      "rms": 0.023973003029823303,
+      "max_abs": 0.8011552095413208,
+      "p99_9_abs": 0.10596213489770889,
+      "tail_ratio_max_over_p99_9": 7.560769081115723
+    },
+    {
+      "name": "action_head.model.transformer_blocks.15.ff.net.2.weight",
+      "group": "dit_mlp_selected",
+      "shard": "model-00002-of-00002.safetensors",
+      "shape": [
+        1536,
+        6144
+      ],
+      "numel": 9437184,
+      "mse": 7.753123645670712e-05,
+      "nmse": 0.1897500604391098,
+      "cosine": 0.9115971326828003,
+      "rms": 0.020213773474097252,
+      "max_abs": 1.5650420188903809,
+      "p99_9_abs": 0.15444578230381012,
+      "tail_ratio_max_over_p99_9": 10.133277893066406
+    }
+  ]
+}
