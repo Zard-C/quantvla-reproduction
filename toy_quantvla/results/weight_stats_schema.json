@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "required": [
+    "layers"
+  ],
+  "properties": {
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "shape",
+          "mean",
+          "std",
+          "max_abs",
+          "p99_abs",
+          "p99_9_abs",
+          "tail_ratio_max_over_p99_9",
+          "per_output_channel_max_abs_mean",
+          "per_output_channel_max_abs_p99",
+          "top_outlier_channels"
+        ]
+      }
+    }
+  }
+}

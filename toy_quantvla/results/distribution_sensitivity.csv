@@ -1,0 +1,9 @@
+distribution,metric_group,mlp_only_final_output_mse,attention_only_final_output_mse,both_final_output_mse,attention_vs_mlp_mse_ratio,attention_js_attention_only,none_logits_std_mae,multiply_logits_std_mae,divide_logits_std_mae,multiply_improvement,divide_delta,none_rms_abs_error,multiply_rms_abs_error,divide_rms_abs_error,naive_output_mse,smoothed_output_mse,smoothing_improvement,naive_saturation_ratio,smoothed_saturation_ratio
+standard_normal,selective_quantization,0.014132020995020866,0.007112756371498108,0.021179912611842155,0.5033077982267465,0.003106405958533287,,,,,,,,,,,,,
+standard_normal,atm_direction,,,,,,0.0041964054107666016,0.0041964054107666016,0.0041964054107666016,0.0,0.0,,,,,,,,
+standard_normal,ohb_direction,,,,,,,,,0.0,0.0,0.0025301575660705566,0.0025301575660705566,0.0025301575660705566,,,,,
+vla_like,selective_quantization,43900.2265625,108262.65625,111861.4609375,2.4661070050713363,0.38414904475212097,,,,,,,,,,,,,
+vla_like,atm_direction,,,,,,14.721822738647461,2.8168506622314453,30.706758499145508,11.904972076416016,15.984935760498047,,,,,,,,
+vla_like,ohb_direction,,,,,,,,,2.4226303100585938,2.2832717895507812,2.4226303100585938,0.0,4.705902099609375,,,,,
+standard_normal,linear_smoothing,,,,,,,,,,,,,,0.013545138761401176,0.013246158137917519,0.00029898062348365784,0.001007080078125,0.001007080078125
+vla_like,linear_smoothing,,,,,,,,,,,,,,33.84564971923828,26.12885093688965,7.716798782348633,0.001007080078125,0.001007080078125
