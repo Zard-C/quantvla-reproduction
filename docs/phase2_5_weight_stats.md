@@ -4,11 +4,17 @@ Date: 2026-06-04
 
 Model path:
 
-
+```text
+/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+```
 
 Input files:
 
-
+```text
+model-00001-of-00002.safetensors 4999367032 bytes
+model-00002-of-00002.safetensors 2586705312 bytes
+model.safetensors.index.json 104606 bytes
+```
 
 Boundary: this phase only reads safetensors weights and metadata. It does not start the GR00T inference server and does not run LIBERO.
 
@@ -16,7 +22,16 @@ Boundary: this phase only reads safetensors weights and metadata. It does not st
 
 Using the Phase 1 selector:
 
+```text
+LLM selected:
+  backbone.eagle_model.language_model.model.layers.*.{self_attn q/k/v/o, mlp gate/up/down}.weight
 
+DiT MLP selected:
+  action_head.model.transformer_blocks.*.ff.net.{0.proj,2}.weight
+
+DiT attention excluded:
+  action_head.model.transformer_blocks.*.attn1.{to_q,to_k,to_v,to_out.0}.weight
+```
 
 Observed counts:
 
@@ -38,8 +53,8 @@ Interpretation: this GR00T N1.5 LIBERO-long checkpoint has 12 LLM layers and 16 
 
 Definitions:
 
-- ==> / <== per weight tensor.
--  is the p99 of per-output-channel max absolute values.
+- `tail ratio = max_abs / p99.9_abs` per weight tensor.
+- `per-output p99` is the p99 of per-output-channel max absolute values.
 
 ## Highest Tail-Ratio Layers
 
@@ -60,14 +75,14 @@ Definitions:
 
 ## Interpretation
 
-The real GR00T weights support the outlier-channel premise, especially in DiT MLP and LLM MLP down-projection weights. The DiT MLP group has the strongest tail behavior among the three groups: tail-ratio mean  and max .
+The real GR00T weights support the outlier-channel premise, especially in DiT MLP and LLM MLP down-projection weights. The DiT MLP group has the strongest tail behavior among the three groups: tail-ratio mean `5.30` and max `13.25`.
 
-However, the first synthetic VLA-like toy distribution was much harsher in absolute weight scale. Its sampled  weight max_abs was about , while the real checkpoint max is about . Therefore, large absolute toy MSE values should not be interpreted literally. Normalized metrics remain the correct primary signal.
+However, the first synthetic VLA-like toy distribution was much harsher in absolute weight scale. Its sampled `vla_like_dit_mlp` weight max_abs was about `26.2`, while the real checkpoint max is about `1.56`. Therefore, large absolute toy MSE values should not be interpreted literally. Normalized metrics remain the correct primary signal.
 
 The real weights also clarify the selective layout: DiT MLP weights are actually more outlier-heavy than DiT attention weights, so smoothing and W4A8 robustness matter there. DiT attention is still kept floating point in QuantVLA not because its weights have the worst static outliers, but because Q/K/V/O determine attention temperature and residual injection, making them sensitive to upstream activation drift.
 
 ## Status
 
- was generated from the downloaded checkpoint. After rerunning Phase 2 toy experiments, , , and  in .
+`toy_quantvla/results/weight_stats.json` was generated from the downloaded checkpoint. After rerunning Phase 2 toy experiments, `empirical_weight_stats_available=True`, `normalized_metric_gate=True`, and `phase3_ready=True` in `toy_quantvla/results/summary.json`.
 
 This readiness means: proceed to Phase 3 offline GR00T module inspection and fake-quant forward checks. It does not mean we should start LIBERO evaluation yet.
