@@ -14,9 +14,9 @@
 - vla_attention_quantization_more_fragile_than_mlp_nmse: True
 - smoothing_gain_larger_under_vla_like: True
 - smoothing_nmse_gain_larger_under_vla_like: True
-- empirical_weight_stats_available: False
+- empirical_weight_stats_available: True
 - normalized_metric_gate: True
-- phase3_ready: False
+- phase3_ready: True
 
 ## W4A8 Linear Smoothing
 
