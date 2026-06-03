@@ -141,6 +141,23 @@ def mse(a: torch.Tensor, b: torch.Tensor) -> float:
     return float(torch.mean((a.detach().float() - b.detach().float()) ** 2).item())
 
 
+def nmse(reference: torch.Tensor, estimate: torch.Tensor) -> float:
+    """Mean-square error normalized by reference energy."""
+    ref = reference.detach().float()
+    err = estimate.detach().float() - ref
+    return float((torch.mean(err**2) / torch.mean(ref**2).clamp_min(EPS)).item())
+
+
+def rms_error(reference: torch.Tensor, estimate: torch.Tensor) -> float:
+    ref = reference.detach().float()
+    err = estimate.detach().float() - ref
+    return float(torch.sqrt(torch.mean(err**2).clamp_min(EPS)).item())
+
+
+def relative_rms_error(reference: torch.Tensor, estimate: torch.Tensor) -> float:
+    return float(rms_error(reference, estimate) / float(rms(reference).item()))
+
+
 def rms(x: torch.Tensor) -> torch.Tensor:
     return torch.sqrt(torch.mean(x.float() ** 2).clamp_min(EPS))
 

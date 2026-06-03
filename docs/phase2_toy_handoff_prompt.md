@@ -8,6 +8,8 @@ Read the local Phase 1 analysis first:
 sed -n '1,260p' docs/phase1_local_analysis.md
 ```
 
+If this is a rerun after the first toy results, read and follow `docs/phase2_rerun_prompt.md` as the controlling protocol.
+
 Goal: validate the QuantVLA method mechanics with toy experiments before running GR00T/LIBERO.
 
 Important: the toy model must not use only standard-normal random weights. It should include VLA-like weight and activation distributions, because QuantVLA is mainly about scale drift, outlier channels, and heavy-tailed activation behavior.

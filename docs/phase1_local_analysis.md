@@ -361,6 +361,8 @@ Toy experiments should validate the method before GR00T.
 
 Important: toy weights and activations should not be plain standard-normal tensors only. They should approximate the distributional pathologies that make VLA quantization difficult: layerwise scale variation, channel-wise outliers, heavy-tailed activations, and different behavior across LLM attention/MLP layers and DiT attention/MLP layers.
 
+Also important: absolute MSE can become very large under VLA-like heavy-tailed synthetic distributions because the teacher output scale itself can be large. Phase 2 conclusions should use normalized MSE, cosine similarity, relative RMS error, and relative logits-std error as primary metrics. Absolute MSE remains useful for debugging scale, but it should not be the sole decision metric.
+
 Use two toy distribution modes:
 
 1. `synthetic_vla_like`: self-contained synthetic distributions that imitate VLA weight/activation statistics.

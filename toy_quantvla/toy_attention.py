@@ -7,7 +7,7 @@ import torch
 import torch.nn.functional as F
 
 from distributions import apply_student_drift, sample_weight
-from quant import entropy, fake_quant_linear, js_divergence, mse, rms
+from quant import entropy, fake_quant_linear, js_divergence, mse, nmse, relative_rms_error, rms
 
 
 @dataclass
@@ -240,7 +240,11 @@ def compare_attention_outputs(teacher: AttentionOutput, student: AttentionOutput
         "post_o_rms_teacher": float(rms(teacher.post_o).item()),
         "post_o_rms_student": float(rms(student.post_o).item()),
         "post_o_rms_abs_error": abs(float(rms(teacher.post_o).item()) - float(rms(student.post_o).item())),
+        "post_o_rms_relative_error": abs(float(rms(teacher.post_o).item()) - float(rms(student.post_o).item()))
+        / max(float(rms(teacher.post_o).item()), 1e-8),
         "output_mse": mse(teacher.output, student.output),
+        "output_nmse": nmse(teacher.output, student.output),
+        "output_relative_rms_error": relative_rms_error(teacher.output, student.output),
     }
 
 

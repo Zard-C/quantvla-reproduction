@@ -25,7 +25,10 @@ from quant import (
     fake_quant_linear,
     js_divergence,
     mse,
+    nmse,
+    relative_rms_error,
     rms,
+    rms_error,
     smooth_linear_pair,
 )
 from toy_attention import (
@@ -111,6 +114,11 @@ def linear_quantization_experiment(device: torch.device) -> list[dict[str, Any]]
                     "distribution": label,
                     "method": method,
                     "output_mse": mse(teacher, output),
+                    "output_nmse": nmse(teacher, output),
+                    "output_rms": float(rms(output).item()),
+                    "teacher_rms": float(rms(teacher).item()),
+                    "error_rms": rms_error(teacher, output),
+                    "relative_rms_error": relative_rms_error(teacher, output),
                     "cosine": cosine_similarity(teacher, output),
                     "activation_saturation_ratio": stats["activation"].saturation_ratio,
                     "weight_scale_max": stats["weight"].scale_max,
@@ -166,6 +174,11 @@ def selective_quantization_experiment(device: torch.device) -> list[dict[str, An
                     "quantize_attention": q_attn,
                     "quantize_mlp": q_mlp,
                     "final_output_mse": mse(teacher_out, student_out),
+                    "final_output_nmse": nmse(teacher_out, student_out),
+                    "final_output_cosine": cosine_similarity(teacher_out, student_out),
+                    "teacher_final_rms": float(rms(teacher_out).item()),
+                    "student_final_rms": float(rms(student_out).item()),
+                    "final_relative_rms_error": relative_rms_error(teacher_out, student_out),
                     **metrics,
                 }
             )
@@ -194,6 +207,7 @@ def atm_direction_experiment(device: torch.device) -> list[dict[str, Any]]:
             probs = torch.softmax(calibrated, dim=-1)
             std_t = per_head_logits_std(teacher.logits)
             std_s = per_head_logits_std(calibrated)
+            logits_std_mae = float(torch.mean(torch.abs(std_t - std_s)).item())
             rows.append(
                 {
                     "distribution": label,
@@ -201,7 +215,9 @@ def atm_direction_experiment(device: torch.device) -> list[dict[str, Any]]:
                     "alpha_mean": float(alpha.mean().item()),
                     "alpha_min": float(alpha.min().item()),
                     "alpha_max": float(alpha.max().item()),
-                    "logits_std_mae": float(torch.mean(torch.abs(std_t - std_s)).item()),
+                    "teacher_logits_std_mean": float(std_t.mean().item()),
+                    "logits_std_mae": logits_std_mae,
+                    "logits_std_relative_mae": logits_std_mae / max(float(std_t.mean().item()), 1e-8),
                     "attention_js": js_divergence(teacher_probs, probs),
                     "entropy_abs_error": float(
                         torch.abs(entropy(teacher_probs).mean() - entropy(probs).mean()).item()
@@ -229,15 +245,21 @@ def ohb_direction_experiment(device: torch.device) -> list[dict[str, Any]]:
                 calibrated = student.post_o * beta.to(device)
             else:
                 calibrated = student.post_o / beta.to(device).clamp_min(1e-6)
+            teacher_rms = float(rms(teacher.post_o).item())
+            student_rms = float(rms(calibrated).item())
+            rms_abs_error = abs(teacher_rms - student_rms)
             rows.append(
                 {
                     "distribution": label,
                     "direction": direction,
                     "beta": float(beta.item()),
-                    "teacher_rms": float(rms(teacher.post_o).item()),
-                    "student_rms": float(rms(calibrated).item()),
-                    "rms_abs_error": abs(float(rms(teacher.post_o).item()) - float(rms(calibrated).item())),
+                    "teacher_rms": teacher_rms,
+                    "student_rms": student_rms,
+                    "rms_abs_error": rms_abs_error,
+                    "rms_relative_error": rms_abs_error / max(teacher_rms, 1e-8),
                     "post_o_mse": mse(teacher.post_o, calibrated),
+                    "post_o_nmse": nmse(teacher.post_o, calibrated),
+                    "post_o_relative_rms_error": relative_rms_error(teacher.post_o, calibrated),
                 }
             )
     return rows
@@ -260,7 +282,9 @@ def calibration_noise_experiment(device: torch.device) -> list[dict[str, Any]]:
         base_std_error = float(
             torch.mean(torch.abs(per_head_logits_std(eval_teacher.logits) - per_head_logits_std(eval_student.logits))).item()
         )
+        teacher_std_mean = float(per_head_logits_std(eval_teacher.logits).mean().item())
         base_rms_error = abs(float(rms(eval_teacher.post_o).item()) - float(rms(eval_student.post_o).item()))
+        teacher_post_o_rms = float(rms(eval_teacher.post_o).item())
 
         for count in sample_counts:
             teacher_cal = attention_forward(x[:count], weights, heads=4)
@@ -271,6 +295,12 @@ def calibration_noise_experiment(device: torch.device) -> list[dict[str, Any]]:
             eval_logits = eval_student.logits * alpha.reshape(1, -1, 1, 1).to(device)
             eval_post_o = eval_student.post_o * beta.to(device)
             alpha_log = torch.log(alpha)
+            calibrated_std_error = float(
+                torch.mean(
+                    torch.abs(per_head_logits_std(eval_teacher.logits) - per_head_logits_std(eval_logits))
+                ).item()
+            )
+            calibrated_rms_error = abs(float(rms(eval_teacher.post_o).item()) - float(rms(eval_post_o).item()))
             rows.append(
                 {
                     "distribution": label,
@@ -282,15 +312,13 @@ def calibration_noise_experiment(device: torch.device) -> list[dict[str, Any]]:
                     "beta": float(beta.item()),
                     "beta_is_neutral": bool(beta.item() == 1.0),
                     "base_logits_std_mae": base_std_error,
-                    "calibrated_logits_std_mae": float(
-                        torch.mean(
-                            torch.abs(per_head_logits_std(eval_teacher.logits) - per_head_logits_std(eval_logits))
-                        ).item()
-                    ),
+                    "base_logits_std_relative_mae": base_std_error / max(teacher_std_mean, 1e-8),
+                    "calibrated_logits_std_mae": calibrated_std_error,
+                    "calibrated_logits_std_relative_mae": calibrated_std_error / max(teacher_std_mean, 1e-8),
                     "base_post_o_rms_abs_error": base_rms_error,
-                    "calibrated_post_o_rms_abs_error": abs(
-                        float(rms(eval_teacher.post_o).item()) - float(rms(eval_post_o).item())
-                    ),
+                    "base_post_o_rms_relative_error": base_rms_error / max(teacher_post_o_rms, 1e-8),
+                    "calibrated_post_o_rms_abs_error": calibrated_rms_error,
+                    "calibrated_post_o_rms_relative_error": calibrated_rms_error / max(teacher_post_o_rms, 1e-8),
                 }
             )
     return rows
@@ -315,9 +343,13 @@ def distribution_sensitivity_rows(
                     "distribution": distribution,
                     "metric_group": "selective_quantization",
                     "mlp_only_final_output_mse": mlp["final_output_mse"],
+                    "mlp_only_final_output_nmse": mlp["final_output_nmse"],
                     "attention_only_final_output_mse": attn["final_output_mse"],
+                    "attention_only_final_output_nmse": attn["final_output_nmse"],
                     "both_final_output_mse": both["final_output_mse"],
+                    "both_final_output_nmse": both["final_output_nmse"],
                     "attention_vs_mlp_mse_ratio": attn["final_output_mse"] / max(mlp["final_output_mse"], 1e-12),
+                    "attention_vs_mlp_nmse_ratio": attn["final_output_nmse"] / max(mlp["final_output_nmse"], 1e-12),
                     "attention_js_attention_only": attn["attention_js"],
                 }
             )
@@ -332,8 +364,11 @@ def distribution_sensitivity_rows(
                     "distribution": distribution,
                     "metric_group": "atm_direction",
                     "none_logits_std_mae": none["logits_std_mae"],
+                    "none_logits_std_relative_mae": none["logits_std_relative_mae"],
                     "multiply_logits_std_mae": mult["logits_std_mae"],
+                    "multiply_logits_std_relative_mae": mult["logits_std_relative_mae"],
                     "divide_logits_std_mae": div["logits_std_mae"],
+                    "divide_logits_std_relative_mae": div["logits_std_relative_mae"],
                     "multiply_improvement": none["logits_std_mae"] - mult["logits_std_mae"],
                     "divide_delta": div["logits_std_mae"] - none["logits_std_mae"],
                 }
@@ -349,8 +384,11 @@ def distribution_sensitivity_rows(
                     "distribution": distribution,
                     "metric_group": "ohb_direction",
                     "none_rms_abs_error": none["rms_abs_error"],
+                    "none_rms_relative_error": none["rms_relative_error"],
                     "multiply_rms_abs_error": mult["rms_abs_error"],
+                    "multiply_rms_relative_error": mult["rms_relative_error"],
                     "divide_rms_abs_error": div["rms_abs_error"],
+                    "divide_rms_relative_error": div["rms_relative_error"],
                     "multiply_improvement": none["rms_abs_error"] - mult["rms_abs_error"],
                     "divide_delta": div["rms_abs_error"] - none["rms_abs_error"],
                 }
@@ -366,8 +404,11 @@ def distribution_sensitivity_rows(
                     "distribution": distribution,
                     "metric_group": "linear_smoothing",
                     "naive_output_mse": naive["output_mse"],
+                    "naive_output_nmse": naive["output_nmse"],
                     "smoothed_output_mse": smooth["output_mse"],
+                    "smoothed_output_nmse": smooth["output_nmse"],
                     "smoothing_improvement": naive["output_mse"] - smooth["output_mse"],
+                    "smoothing_nmse_improvement": naive["output_nmse"] - smooth["output_nmse"],
                     "naive_saturation_ratio": naive["activation_saturation_ratio"],
                     "smoothed_saturation_ratio": smooth["activation_saturation_ratio"],
                 }
@@ -430,7 +471,9 @@ def make_markdown(summary: dict[str, Any]) -> str:
                     "distribution",
                     "method",
                     "output_mse",
+                    "output_nmse",
                     "cosine",
+                    "relative_rms_error",
                     "activation_saturation_ratio",
                     "weight_scale_max",
                 ],
@@ -444,9 +487,12 @@ def make_markdown(summary: dict[str, Any]) -> str:
                     "distribution",
                     "variant",
                     "final_output_mse",
+                    "final_output_nmse",
+                    "final_output_cosine",
                     "logits_std_abs_error",
                     "attention_js",
                     "post_o_rms_abs_error",
+                    "post_o_rms_relative_error",
                 ],
             ),
             "",
@@ -459,6 +505,7 @@ def make_markdown(summary: dict[str, Any]) -> str:
                     "direction",
                     "alpha_mean",
                     "logits_std_mae",
+                    "logits_std_relative_mae",
                     "attention_js",
                     "entropy_abs_error",
                 ],
@@ -475,7 +522,9 @@ def make_markdown(summary: dict[str, Any]) -> str:
                     "teacher_rms",
                     "student_rms",
                     "rms_abs_error",
+                    "rms_relative_error",
                     "post_o_mse",
+                    "post_o_nmse",
                 ],
             ),
             "",
@@ -492,7 +541,9 @@ def make_markdown(summary: dict[str, Any]) -> str:
                     "alpha_clamp_hits",
                     "beta",
                     "calibrated_logits_std_mae",
+                    "calibrated_logits_std_relative_mae",
                     "calibrated_post_o_rms_abs_error",
+                    "calibrated_post_o_rms_relative_error",
                 ],
             ),
             "",
@@ -518,16 +569,17 @@ def main() -> None:
     sensitivity = distribution_sensitivity_rows(selective_rows, atm_rows, ohb_rows, linear_rows)
 
     atm_multiply_ok = all(
-        best_direction(atm_rows, distribution, "logits_std_mae") == "multiply"
+        best_direction(atm_rows, distribution, "logits_std_relative_mae") == "multiply"
         for distribution in ["standard_normal", "vla_like"]
     )
     ohb_multiply_ok = all(
-        best_direction(ohb_rows, distribution, "rms_abs_error") == "multiply"
+        best_direction(ohb_rows, distribution, "rms_relative_error") == "multiply"
         for distribution in ["standard_normal", "vla_like"]
     )
     vla_selective = [r for r in selective_rows if r["distribution"] == "vla_like"]
     vla_mlp = next(r for r in vla_selective if r["variant"] == "mlp_only")
     vla_attn = next(r for r in vla_selective if r["variant"] == "attention_only")
+    empirical_stats_available = (RESULTS / "weight_stats.json").exists()
 
     standard_linear = [r for r in linear_rows if r["distribution"] == "standard_normal"]
     vla_linear = [r for r in linear_rows if r["distribution"] == "vla_like_dit_mlp"]
@@ -537,6 +589,18 @@ def main() -> None:
     vla_smoothing_gain = next(r for r in vla_linear if r["method"] == "naive_w4a8")["output_mse"] - next(
         r for r in vla_linear if r["method"] == "smoothed_w4a8"
     )["output_mse"]
+    standard_smoothing_nmse_gain = next(r for r in standard_linear if r["method"] == "naive_w4a8")[
+        "output_nmse"
+    ] - next(r for r in standard_linear if r["method"] == "smoothed_w4a8")["output_nmse"]
+    vla_smoothing_nmse_gain = next(r for r in vla_linear if r["method"] == "naive_w4a8")["output_nmse"] - next(
+        r for r in vla_linear if r["method"] == "smoothed_w4a8"
+    )["output_nmse"]
+    normalized_metric_gate = (
+        atm_multiply_ok
+        and ohb_multiply_ok
+        and vla_attn["final_output_nmse"] > vla_mlp["final_output_nmse"]
+        and vla_smoothing_nmse_gain > standard_smoothing_nmse_gain
+    )
 
     env = {
         "command": "python toy_quantvla/run_toy_experiments.py",
@@ -584,8 +648,12 @@ def main() -> None:
             "atm_multiply_direction_wins": atm_multiply_ok,
             "ohb_multiply_direction_wins": ohb_multiply_ok,
             "vla_attention_quantization_more_fragile_than_mlp": vla_attn["final_output_mse"] > vla_mlp["final_output_mse"],
+            "vla_attention_quantization_more_fragile_than_mlp_nmse": vla_attn["final_output_nmse"] > vla_mlp["final_output_nmse"],
             "smoothing_gain_larger_under_vla_like": vla_smoothing_gain > standard_smoothing_gain,
-            "phase3_ready": atm_multiply_ok and ohb_multiply_ok,
+            "smoothing_nmse_gain_larger_under_vla_like": vla_smoothing_nmse_gain > standard_smoothing_nmse_gain,
+            "empirical_weight_stats_available": empirical_stats_available,
+            "normalized_metric_gate": normalized_metric_gate,
+            "phase3_ready": empirical_stats_available and normalized_metric_gate,
         },
     }
 
