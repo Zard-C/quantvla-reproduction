@@ -25,10 +25,12 @@ Python 3.12 required a temporary fail-fast `pytorch3d.transforms` stub because `
 - `docs/phase3_gr00t_smoke.md`
 - `docs/phase3_activation_capture.md`
 - `docs/phase3_fake_quant_forward.md`
+- `docs/phase3_atm_ohb_forward.md`
 - `toy_quantvla/phase3_weight_quant_analysis.py`
 - `toy_quantvla/phase3_gr00t_smoke.py`
 - `toy_quantvla/phase3_activation_capture.py`
 - `toy_quantvla/phase3_fake_quant_forward.py`
+- `toy_quantvla/phase3_atm_ohb_forward.py`
 
 ## Checkpoint And Selector
 
@@ -129,6 +131,39 @@ Interpretation:
 - For the combined selected set, LLM drift dominates, so the best tested combined setting is still naive dynamic absmax A8.
 - This does not disprove QuantVLA. It tells us that the real bottleneck in this GR00T synthetic probe is the LLM activation outlier path, and that a faithful reproduction needs stronger LLM calibration, real calibration observations, or the paper's exact scale policies before benchmark evaluation.
 
+## ATM/OHB Probe
+
+We added a DiT attention processor probe for ATM/OHB:
+
+- ATM: multiply DiT attention query by `alpha = std_teacher(logits) / std_student(logits)`, which scales attention logits.
+- OHB: multiply DiT attention output before residual addition by `beta = rms_teacher(output) / rms_student(output)`.
+- Scale ratios are log-clamped with `log_clamp=0.3`.
+- Calibration uses the same three synthetic variants and matched action-denoising RNG seeds.
+
+Results with naive W4A8, dynamic absmax A8, no smoothing:
+
+| config | mode | action NMSE mean | relative RMSE mean | cosine mean |
+|---|---|---:|---:|---:|
+| `llm_only` | none | 0.25209 | 0.45488 | 0.86544 |
+| `llm_only` | ATM | 0.28921 | 0.48294 | 0.83935 |
+| `llm_only` | OHB | 0.24704 | 0.44842 | 0.87077 |
+| `llm_only` | ATM+OHB | 0.28651 | 0.47220 | 0.83638 |
+| `dit_mlp_only` | none | 0.01576 | 0.12071 | 0.99262 |
+| `dit_mlp_only` | ATM | 0.01687 | 0.12265 | 0.99200 |
+| `dit_mlp_only` | OHB | 0.01435 | 0.11246 | 0.99316 |
+| `dit_mlp_only` | ATM+OHB | 0.01401 | 0.11150 | 0.99324 |
+| `llm_dit_mlp` | none | 0.24829 | 0.46892 | 0.88366 |
+| `llm_dit_mlp` | ATM | 0.27229 | 0.48645 | 0.86415 |
+| `llm_dit_mlp` | OHB | 0.24806 | 0.47059 | 0.88290 |
+| `llm_dit_mlp` | ATM+OHB | 0.26035 | 0.46650 | 0.86442 |
+
+Interpretation:
+
+- OHB gives a small but consistent improvement for `llm_only` and `dit_mlp_only` in this synthetic probe.
+- ATM does not help in this setting; it generally worsens NMSE/cosine.
+- For the combined selected set, LLM drift still dominates. OHB alone is nearly neutral, and ATM+OHB slightly improves relative RMSE but worsens NMSE/cosine.
+- This means ATM/OHB are implemented and testable, but they are not sufficient to rescue the current synthetic naive W4A8 student. Real calibration data and the exact paper scale policy remain important before benchmark evaluation.
+
 ## Phase 3 Conclusion
 
 Phase 3 supports several method-level claims:
@@ -137,6 +172,7 @@ Phase 3 supports several method-level claims:
 2. DiT attention Q/K/V/O modules are easy to identify and remain excluded in the main QuantVLA layout.
 3. Real forward activations, not just weights, are the main risk.
 4. DiT MLP W4A8 is relatively stable and benefits from smoothing.
-5. LLM W4A8 is the dominant synthetic-output drift source; naive W4A8 is not sufficient.
+5. OHB can reduce attention-output energy mismatch modestly; ATM did not help under this synthetic setup.
+6. LLM W4A8 is the dominant synthetic-output drift source; naive W4A8 is not sufficient.
 
 Phase 3 does not establish benchmark-level performance. The next stage should move from synthetic probes to real calibration/evaluation observations, and then test ATM/OHB or equivalent output-balancing mechanisms on real student/teacher rollouts.
