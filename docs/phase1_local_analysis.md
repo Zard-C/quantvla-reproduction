@@ -359,14 +359,46 @@ This may be an incomplete or older calibration path. A separate Simpler script i
 
 Toy experiments should validate the method before GR00T.
 
+Important: toy weights and activations should not be plain standard-normal tensors only. They should approximate the distributional pathologies that make VLA quantization difficult: layerwise scale variation, channel-wise outliers, heavy-tailed activations, and different behavior across LLM attention/MLP layers and DiT attention/MLP layers.
+
+Use two toy distribution modes:
+
+1. `synthetic_vla_like`: self-contained synthetic distributions that imitate VLA weight/activation statistics.
+2. `empirical_stats`: optional mode that loads available VLA checkpoints only to collect tensor statistics, then instantiates small toy layers from matched statistics. This must not start an inference server or LIBERO evaluation.
+
+Recommended synthetic VLA-like construction:
+
+- Per-layer weight scale sampled from a log-normal distribution.
+- Per-output-channel weight scale sampled from a wider log-normal distribution.
+- Sparse outlier channels or columns with 4x to 12x larger magnitude.
+- Student activation drift created by upstream quantization noise plus channel-wise scale shifts.
+- Activation distribution as Gaussian core plus Student-t or Laplace tail.
+- Separate presets for:
+  - LLM attention projections.
+  - LLM MLP gate/up/down projections.
+  - DiT attention projections.
+  - DiT MLP projections.
+
+Recommended empirical-stat extraction, if checkpoints are available on the 5090 machine:
+
+```text
+for selected real VLA layers:
+  record shape, mean, std, max_abs, p99, p99.9
+  record per-channel max_abs distribution
+  record kurtosis or tail ratio max_abs / p99.9
+  record top outlier channel indices and magnitudes
+```
+
+Then sample toy tensors from these recorded statistics rather than copying or storing large model weights. Save only small JSON summaries.
+
 ### 4.1 Linear Quantization Toy
 
 Goal: confirm W4A8 fake quantization and smoothing behavior.
 
 Experiment:
 
-- Generate random activation tensors with controlled outliers.
-- Generate Linear weights.
+- Generate activation tensors from both standard-normal and VLA-like heavy-tailed presets.
+- Generate Linear weights from both standard-normal and VLA-like layer/channel-scale presets.
 - Compare:
   - FP baseline
   - naive W4A8
@@ -606,6 +638,7 @@ Required outputs:
 
 - alpha multiply vs divide comparison table
 - beta multiply vs divide comparison table
+- distribution summary comparing standard-normal toy vs VLA-like toy
 - plots or JSON showing logits std and output RMS before and after calibration
 - summary saying whether the paper's equations are internally consistent
 
