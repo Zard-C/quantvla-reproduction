@@ -1,0 +1,13 @@
+{
+  "mode": "import",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "embodiment_tag": "new_embodiment",
+  "import_seconds": 4.351008415222168
+}

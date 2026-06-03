@@ -1,0 +1,107 @@
+{
+  "mode": "forward",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "embodiment_tag": "new_embodiment",
+  "import_seconds": 4.252912759780884,
+  "load_seconds": 9.644113063812256,
+  "policy_denoising_steps": 1,
+  "action_horizon": 16,
+  "action_dim": 32,
+  "video_delta_indices": [
+    0
+  ],
+  "state_delta_indices": [
+    0
+  ],
+  "cuda_memory_allocated_mib": 5214.9404296875,
+  "cuda_memory_reserved_mib": 5300.0,
+  "forward_seconds": 0.4298980236053467,
+  "action_summary": {
+    "action.x": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": -0.18324261903762817,
+      "std": 0.1029336005449295,
+      "min": -0.30050909519195557,
+      "max": 0.06243479251861572
+    },
+    "action.y": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": 0.47433850169181824,
+      "std": 0.13118207454681396,
+      "min": 0.23063600063323975,
+      "max": 0.6340080499649048
+    },
+    "action.z": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": -0.0701962262392044,
+      "std": 0.1684945523738861,
+      "min": -0.27529555559158325,
+      "max": 0.2735164165496826
+    },
+    "action.roll": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": 0.010737920179963112,
+      "std": 0.005055797286331654,
+      "min": 0.0012238770723342896,
+      "max": 0.020450666546821594
+    },
+    "action.pitch": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": -0.013982675969600677,
+      "std": 0.009758353233337402,
+      "min": -0.029575318098068237,
+      "max": -0.00026109814643859863
+    },
+    "action.yaw": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": 0.002412920817732811,
+      "std": 0.009068471379578114,
+      "min": -0.012325882911682129,
+      "max": 0.01950395107269287
+    },
+    "action.gripper": {
+      "shape": [
+        16,
+        1
+      ],
+      "dtype": "float32",
+      "mean": 0.11852098256349564,
+      "std": 0.06802093237638474,
+      "min": 0.02213379740715027,
+      "max": 0.23266011476516724
+    }
+  },
+  "cuda_memory_allocated_after_forward_mib": 5223.0654296875,
+  "cuda_memory_reserved_after_forward_mib": 5508.0
+}
