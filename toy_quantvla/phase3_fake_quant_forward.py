@@ -51,7 +51,9 @@ def fake_quant_symmetric(
         clip_abs = torch.quantile(xf.abs().reshape(-1), percentile).clamp_min(EPS)
     else:
         raise ValueError(f"Unknown activation scale: {activation_scale}")
-    q = torch.clamp(torch.round(torch.clamp(xf, -clip_abs, clip_abs) / (clip_abs / qmax)), -qmax, qmax)
+    q = torch.clamp(
+        torch.round(torch.clamp(xf, -clip_abs, clip_abs) / (clip_abs / qmax)), -qmax, qmax
+    )
     y = q * (clip_abs / qmax)
     clip_frac = (xf.abs() > clip_abs).float().mean()
     return y.to(dtype=x.dtype), {
@@ -106,6 +108,8 @@ class FakeQuantLinear:
                 activation_bits: int,
                 activation_scale: str,
                 activation_percentile: float,
+                smooth_scale: Any | None,
+                smooth_alpha: float | None,
             ):
                 super().__init__()
                 self.base = base
@@ -116,6 +120,8 @@ class FakeQuantLinear:
                 self.activation_bits = activation_bits
                 self.activation_scale = activation_scale
                 self.activation_percentile = activation_percentile
+                self.smooth_scale = smooth_scale
+                self.smooth_alpha = smooth_alpha
                 self.in_features = base.in_features
                 self.out_features = base.out_features
 
@@ -130,20 +136,27 @@ class FakeQuantLinear:
             def forward(self, x: Any) -> Any:
                 import torch.nn.functional as F
 
+                weight = self.base.weight
+                if self.smooth_scale is not None:
+                    scale = self.smooth_scale.to(device=x.device, dtype=x.dtype).clamp_min(EPS)
+                    x = x / scale
+                    weight = weight * scale.to(dtype=weight.dtype).unsqueeze(0)
+
                 x_q, act_stats = fake_quant_symmetric(
                     x,
                     self.activation_bits,
                     activation_scale=self.activation_scale,
                     percentile=self.activation_percentile,
                 )
-                w_q, _ = fake_quant_symmetric(self.base.weight, self.weight_bits, scale_dim=1)
+                w_q, _ = fake_quant_symmetric(weight, self.weight_bits, scale_dim=1)
                 self.record.add_activation(act_stats)
                 return F.linear(x_q, w_q.to(dtype=self.base.weight.dtype), self.base.bias)
 
             def extra_repr(self) -> str:
+                smooth = "none" if self.smooth_alpha is None else f"{self.smooth_alpha:.3g}"
                 return (
                     f"{self.in_features}, {self.out_features}, bias={self.bias is not None}, "
-                    f"group={self.group}, W{self.weight_bits}A{self.activation_bits}"
+                    f"group={self.group}, W{self.weight_bits}A{self.activation_bits}, smooth={smooth}"
                 )
 
         return _FakeQuantLinear(*args, **kwargs)
@@ -174,6 +187,8 @@ def patch_modules(
     activation_bits: int,
     activation_scale: str,
     activation_percentile: float,
+    smooth_scales: dict[str, Any] | None = None,
+    smooth_alpha: float | None = None,
 ) -> tuple[dict[str, Any], dict[str, QuantRecord]]:
     import torch.nn as nn
 
@@ -198,6 +213,8 @@ def patch_modules(
                 activation_bits=activation_bits,
                 activation_scale=activation_scale,
                 activation_percentile=activation_percentile,
+                smooth_scale=smooth_scales.get(name) if smooth_scales else None,
+                smooth_alpha=smooth_alpha,
             ),
         )
     return originals, records
@@ -206,6 +223,59 @@ def patch_modules(
 def restore_modules(model: Any, originals: dict[str, Any]) -> None:
     for name, module in originals.items():
         set_submodule(model, name, module)
+
+
+def collect_activation_max(
+    policy: Any,
+    observations: list[dict[str, Any]],
+    groups_to_collect: set[str],
+) -> dict[str, Any]:
+    import torch
+    import torch.nn as nn
+
+    act_max: dict[str, Any] = {}
+    handles: list[Any] = []
+
+    def make_hook(name: str) -> Any:
+        def hook(module: Any, inputs: tuple[Any, ...], output: Any) -> None:
+            if not inputs or not torch.is_tensor(inputs[0]) or not torch.is_floating_point(inputs[0]):
+                return
+            x = inputs[0].detach().float()
+            x = x.reshape(-1, x.shape[-1]).abs().amax(dim=0).cpu()
+            if name in act_max:
+                act_max[name] = torch.maximum(act_max[name], x)
+            else:
+                act_max[name] = x
+
+        return hook
+
+    for name, module in policy.model.named_modules():
+        group = group_for_module(name)
+        if group is None or group not in groups_to_collect or not isinstance(module, nn.Linear):
+            continue
+        handles.append(module.register_forward_hook(make_hook(name)))
+
+    try:
+        for item in observations:
+            set_seed(int(item["seed"]))
+            policy.get_action(item["obs"])
+    finally:
+        for handle in handles:
+            handle.remove()
+    return act_max
+
+
+def make_smooth_scales(model: Any, act_max: dict[str, Any], alpha: float) -> dict[str, Any]:
+    import torch
+
+    scales: dict[str, Any] = {}
+    for name, activation_max in act_max.items():
+        module = get_submodule(model, name)
+        weight_max = module.weight.detach().float().abs().amax(dim=0).cpu().clamp_min(EPS)
+        activation_max = activation_max.float().clamp_min(EPS)
+        scale = activation_max.pow(alpha) / weight_max.pow(1.0 - alpha)
+        scales[name] = scale.clamp_min(EPS)
+    return scales
 
 
 def action_to_vector(action: dict[str, Any]) -> np.ndarray:
@@ -292,6 +362,25 @@ def aggregate_records(records: dict[str, QuantRecord]) -> dict[str, Any]:
     return {"modules": rows, "group_summary": group_summary}
 
 
+def parse_smoothing_alphas(value: str) -> list[float | None]:
+    out: list[float | None] = []
+    for raw in value.split(","):
+        raw = raw.strip()
+        if not raw:
+            continue
+        if raw.lower() in {"none", "off", "naive"}:
+            out.append(None)
+        else:
+            out.append(float(raw))
+    if not out:
+        raise ValueError("--smoothing-alphas must include at least one value")
+    return out
+
+
+def smooth_label(alpha: float | None) -> str:
+    return "none" if alpha is None else f"sq_alpha_{alpha:g}"
+
+
 def config_groups(config_name: str) -> set[str]:
     if config_name == "llm_only":
         return {"llm_selected"}
@@ -316,18 +405,20 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
         f"- Denoising steps: `{result['denoising_steps']}`",
         f"- Weight bits: `{result['weight_bits']}`",
         f"- Activation bits: `{result['activation_bits']}`",
+        f"- Smoothing alphas: `{', '.join(result['smoothing_labels'])}`",
         f"- Seeds: `{result['base_seed']} + observation_index`",
         "",
         "## Output Drift",
         "",
-        "| config | act scale | quantized modules | NMSE mean | NMSE max | rel RMSE mean | cosine mean | max abs diff |",
-        "|---|---|---:|---:|---:|---:|---:|---:|",
+        "| config | smoothing | act scale | quantized modules | NMSE mean | NMSE max | rel RMSE mean | cosine mean | max abs diff |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in result["config_results"]:
         s = row["summary"]
         lines.append(
-            "| {config} | {scale} | {modules} | {nmse:.6g} | {nmse_max:.6g} | {rrmse:.6g} | {cos:.6g} | {mad:.6g} |".format(
+            "| {config} | {smooth} | {scale} | {modules} | {nmse:.6g} | {nmse_max:.6g} | {rrmse:.6g} | {cos:.6g} | {mad:.6g} |".format(
                 config=row["config"],
+                smooth=row["smoothing"],
                 scale=row["activation_scale"],
                 modules=row["quantized_modules"],
                 nmse=s["nmse"]["mean"],
@@ -346,7 +437,8 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
             "- The comparison uses matched RNG seeds because GR00T action denoising starts from random Gaussian actions.",
             "- `llm_only` quantizes all selected LLM attention and MLP linears; `dit_mlp_only` quantizes only DiT feed-forward linears; `llm_dit_mlp` is the intended QuantVLA selected set.",
             "- `absmax` activation scale is conservative dynamic A8. `p999` clips roughly 0.1% of activation values per module call and is included to expose outlier sensitivity.",
-            "- These are fake-quant output-drift probes. They do not yet include SmoothQuant-style scale migration, ATM, or OHB.",
+            "- `sq_alpha_*` applies calibration-based SmoothQuant-style scale migration using input-channel activation maxima from the same synthetic calibration set.",
+            "- These are fake-quant output-drift probes. They do not yet include ATM or OHB.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -366,6 +458,7 @@ def main() -> None:
     parser.add_argument("--configs", default="llm_only,dit_mlp_only,llm_dit_mlp")
     parser.add_argument("--activation-scale-modes", default="absmax,p999")
     parser.add_argument("--activation-percentile", type=float, default=0.999)
+    parser.add_argument("--smoothing-alphas", default="none")
     parser.add_argument("--weight-bits", type=int, default=4)
     parser.add_argument("--activation-bits", type=int, default=8)
     parser.add_argument("--base-seed", type=int, default=260203)
@@ -393,6 +486,7 @@ def main() -> None:
     variants = [v.strip() for v in args.synthetic_variants.split(",") if v.strip()]
     configs = [v.strip() for v in args.configs.split(",") if v.strip()]
     activation_scales = [v.strip() for v in args.activation_scale_modes.split(",") if v.strip()]
+    smoothing_alphas = parse_smoothing_alphas(args.smoothing_alphas)
 
     data_config = LiberoDataConfig()
     load_started = time.time()
@@ -424,42 +518,59 @@ def main() -> None:
         teacher_actions.append(policy.get_action(item["obs"]))
     teacher_seconds = time.time() - teacher_started
 
+    smoothing_groups = set().union(*(config_groups(config) for config in configs))
+    smoothing_groups.discard("dit_attention_excluded")
+    calibration_started = time.time()
+    activation_max = collect_activation_max(policy, observations, smoothing_groups)
+    calibration_seconds = time.time() - calibration_started
+    smooth_scales_by_alpha = {
+        alpha: make_smooth_scales(policy.model, activation_max, alpha)
+        for alpha in smoothing_alphas
+        if alpha is not None
+    }
+
     config_results = []
-    for activation_scale in activation_scales:
-        for config in configs:
-            groups = config_groups(config)
-            originals, records = patch_modules(
-                policy.model,
-                groups,
-                weight_bits=args.weight_bits,
-                activation_bits=args.activation_bits,
-                activation_scale=activation_scale,
-                activation_percentile=args.activation_percentile,
-            )
-            rows = []
-            started = time.time()
-            try:
-                for idx, item in enumerate(observations):
-                    set_seed(int(item["seed"]))
-                    student = policy.get_action(item["obs"])
-                    metrics = compare_actions(teacher_actions[idx], student)
-                    metrics.update({"variant": item["variant"], "seed": item["seed"]})
-                    rows.append(metrics)
-            finally:
-                restore_modules(policy.model, originals)
-            record_summary = aggregate_records(records)
-            config_results.append(
-                {
-                    "config": config,
-                    "activation_scale": activation_scale,
-                    "groups": sorted(groups),
-                    "quantized_modules": len(originals),
-                    "seconds": time.time() - started,
-                    "summary": aggregate_metrics(rows),
-                    "per_observation": rows,
-                    "quant_records": record_summary,
-                }
-            )
+    for smooth_alpha in smoothing_alphas:
+        smooth_scales = smooth_scales_by_alpha.get(smooth_alpha) if smooth_alpha is not None else None
+        for activation_scale in activation_scales:
+            for config in configs:
+                groups = config_groups(config)
+                originals, records = patch_modules(
+                    policy.model,
+                    groups,
+                    weight_bits=args.weight_bits,
+                    activation_bits=args.activation_bits,
+                    activation_scale=activation_scale,
+                    activation_percentile=args.activation_percentile,
+                    smooth_scales=smooth_scales,
+                    smooth_alpha=smooth_alpha,
+                )
+                rows = []
+                started = time.time()
+                try:
+                    for idx, item in enumerate(observations):
+                        set_seed(int(item["seed"]))
+                        student = policy.get_action(item["obs"])
+                        metrics = compare_actions(teacher_actions[idx], student)
+                        metrics.update({"variant": item["variant"], "seed": item["seed"]})
+                        rows.append(metrics)
+                finally:
+                    restore_modules(policy.model, originals)
+                record_summary = aggregate_records(records)
+                config_results.append(
+                    {
+                        "config": config,
+                        "smoothing": smooth_label(smooth_alpha),
+                        "smooth_alpha": smooth_alpha,
+                        "activation_scale": activation_scale,
+                        "groups": sorted(groups),
+                        "quantized_modules": len(originals),
+                        "seconds": time.time() - started,
+                        "summary": aggregate_metrics(rows),
+                        "per_observation": rows,
+                        "quant_records": record_summary,
+                    }
+                )
 
     result = {
         "model_path": str(args.model_path),
@@ -470,6 +581,7 @@ def main() -> None:
         "weight_bits": args.weight_bits,
         "activation_bits": args.activation_bits,
         "activation_percentile": args.activation_percentile,
+        "smoothing_labels": [smooth_label(alpha) for alpha in smoothing_alphas],
         "base_seed": args.base_seed,
         "torch_version": torch.__version__,
         "torch_cuda": torch.version.cuda,
@@ -478,6 +590,8 @@ def main() -> None:
         ),
         "load_seconds": load_seconds,
         "teacher_seconds": teacher_seconds,
+        "calibration_seconds": calibration_seconds,
+        "calibration_modules": len(activation_max),
         "config_results": config_results,
     }
     if torch.cuda.is_available() and str(args.device).startswith("cuda"):
@@ -491,11 +605,13 @@ def main() -> None:
     compact = {
         "load_seconds": result["load_seconds"],
         "teacher_seconds": result["teacher_seconds"],
+        "calibration_seconds": result["calibration_seconds"],
         "output_json": str(args.output_json),
         "output_md": str(args.output_md),
         "config_results": [
             {
                 "config": row["config"],
+                "smoothing": row["smoothing"],
                 "activation_scale": row["activation_scale"],
                 "quantized_modules": row["quantized_modules"],
                 "nmse_mean": row["summary"]["nmse"]["mean"],
