@@ -79,4 +79,20 @@ For this 5090 environment, `torchcodec` was not installed and `decord`/`opencv` 
 
 ## Next Gate
 
-If real-data offline drift is acceptable, run the same validation with more samples and denoising steps 8. Only then move to LIBERO simulator rollouts for success rate.
+The denoising-steps 8, 8-sample follow-up is recorded in:
+
+```bash
+docs/phase4_real_data_validation_d8_n8.md
+toy_quantvla/results/phase4_real_data_validation_d8_n8.json
+```
+
+For the intended `llm_dit_mlp` selected QuantVLA scope, `atm_ohb` improves real-data action drift versus `none`:
+
+| mode | NMSE mean | rel RMSE mean | cosine mean |
+|---|---:|---:|---:|
+| none | 0.00508872 | 0.0640329 | 0.997771 |
+| atm_ohb | 0.00301077 | 0.04486 | 0.998726 |
+
+This clears the offline Phase 4 gate for a small LIBERO simulator smoke rollout. Do not treat this as benchmark evidence. First run a FP16 official-server baseline to validate the simulator environment, then add the quantized student path.
+
+Current blocker: `/root/autodl-tmp/envs/gr00t-py312-cu128` does not import `libero`, so the simulator environment is not ready in that venv. Phase 5 should use a LIBERO-capable Python environment with real `pytorch3d` instead of the Phase 3/4 import stub.
