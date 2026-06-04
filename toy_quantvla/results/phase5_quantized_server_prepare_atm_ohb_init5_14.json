@@ -1,0 +1,72 @@
+{
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "config": "llm_dit_mlp",
+  "mode": "atm_ohb",
+  "weight_bits": 4,
+  "activation_bits": 8,
+  "activation_scale": "absmax",
+  "activation_percentile": 0.999,
+  "log_clamp": 0.3,
+  "video_backend": "torchvision_av",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 10.073382139205933,
+  "calibration_dataset_indices": [
+    115,
+    462,
+    632,
+    1063,
+    1273,
+    1482,
+    1823,
+    2034,
+    2406,
+    2536,
+    3053,
+    3198,
+    3492,
+    3824,
+    3980,
+    4299
+  ],
+  "calibration_base_seed": 360204,
+  "calibration_load_seconds": 1.4884614944458008,
+  "teacher_attention_calibration_seconds": 2.483484983444214,
+  "quantized_modules": 116,
+  "quantized_groups": [
+    "dit_mlp_selected",
+    "llm_selected"
+  ],
+  "patch_seconds": 0.024609804153442383,
+  "student_attention_calibration_seconds": 4.504699945449829,
+  "scale_summary": {
+    "modules": 16,
+    "alpha": {
+      "mean": 1.211410715865083,
+      "min": 1.0008392923087253,
+      "max": 1.3498588075760032
+    },
+    "beta": {
+      "mean": 1.1779373772397204,
+      "min": 1.015534911694594,
+      "max": 1.3498588075760032
+    },
+    "alpha_raw": {
+      "mean": 1.2286960993080005,
+      "min": 1.0008392923087253,
+      "max": 1.398817779539
+    },
+    "beta_raw": {
+      "mean": 1.187881906132382,
+      "min": 1.015534911694594,
+      "max": 1.4184566851146925
+    }
+  },
+  "prepare_seconds": 18.578460693359375
+}
