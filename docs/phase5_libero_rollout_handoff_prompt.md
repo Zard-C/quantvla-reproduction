@@ -9,31 +9,38 @@ Read first:
 ```bash
 sed -n '1,260p' docs/phase4_real_data_validation.md
 sed -n '1,220p' docs/phase4_real_data_validation_d8_n8.md
+sed -n '1,220p' docs/phase4_real_data_validation_d8_n8_identity.md
+sed -n '1,220p' docs/phase4_real_data_validation_d8_cal16_eval32.md
 sed -n '1,220p' /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/README.md
 sed -n '1,320p' /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/eval/run_libero_eval.py
 ```
 
 ## Status
 
-Phase 4 cleared the offline real-data action-drift gate for a small simulator smoke rollout. The strongest current evidence is the denoising-steps 8, 8-observation run:
+Phase 4 cleared the offline real-data action-drift gate for a small simulator smoke rollout. The strongest current evidence is the denoising-steps 8 real-observation path:
 
-| config | mode | NMSE mean | rel RMSE mean | cosine mean |
-|---|---|---:|---:|---:|
-| `llm_dit_mlp` | none | 0.00508872 | 0.0640329 | 0.997771 |
-| `llm_dit_mlp` | `atm_ohb` | 0.00301077 | 0.04486 | 0.998726 |
+| run | config | mode | NMSE mean | rel RMSE mean | cosine mean |
+|---|---|---|---:|---:|---:|
+| d8 n8 | `llm_dit_mlp` | none | 0.00508872 | 0.0640329 | 0.997771 |
+| d8 n8 | `llm_dit_mlp` | identity | 0.00508872 | 0.0640329 | 0.997771 |
+| d8 n8 | `llm_dit_mlp` | `atm_ohb` | 0.00301077 | 0.04486 | 0.998726 |
+| d8 cal16/eval32 | `llm_dit_mlp` | none | 0.00294977 | 0.0500502 | 0.998968 |
+| d8 cal16/eval32 | `llm_dit_mlp` | identity | 0.00294977 | 0.0500502 | 0.998968 |
+| d8 cal16/eval32 | `llm_dit_mlp` | `atm_ohb` | 0.00199345 | 0.0407359 | 0.999044 |
 
-Important caveat: `dit_mlp_only + atm_ohb` regressed on this same run (`NMSE mean 0.00982088`, `max abs diff 0.971985`). Treat ATM/OHB as a configuration-specific balancing path, not a universally safe per-module improvement.
+The `identity` control installs the same custom DiT attention processor with `alpha = 1` and `beta = 1`. It matches `none`, so the observed `atm_ohb` improvement is not processor replacement drift.
+
+Important caveat: `dit_mlp_only + atm_ohb` regressed on the d8 n8 run (`NMSE mean 0.00982088`, `max abs diff 0.971985`), with dataset index `30` as the outlier. Treat ATM/OHB as a configuration-specific balancing path for `llm_dit_mlp`, not a universally safe per-module improvement. The 16/32 split is frame-held-out within local episode 0 because the downloaded subset currently contains only one parquet episode.
 
 ## Environment Gate
 
-Current blocker:
+Use the Phase 5 environment prepared at:
 
-```text
-/root/autodl-tmp/envs/gr00t-py312-cu128/bin/python -c "import libero, robosuite"
-ModuleNotFoundError: No module named 'libero'
+```bash
+/root/autodl-tmp/envs/gr00t-libero-py310
 ```
 
-Before running Phase 5, create or select a LIBERO-capable environment. The Phase 3/4 Python 3.12 setup uses a local `pytorch3d.transforms` import stub, which is acceptable for offline LIBERO smoke paths because the checkpoint metadata has `rotation_type: null`. A simulator rollout should use the official LIBERO/robosuite stack and real `pytorch3d`, preferably Python 3.10 as recommended by GR00T.
+Readiness check passed with Python 3.10, `torch 2.8.0+cu128`, CUDA available on RTX 5090, `flash-attn 2.8.3`, real `pytorch3d.transforms`, `libero 0.1.1`, and `robosuite 1.4.0`. The Phase 3/4 Python 3.12 environment remains useful for offline probes but should not be used for simulator rollout.
 
 ## Objective
 
@@ -76,8 +83,8 @@ In a second shell, run a tiny `libero_10` smoke evaluation:
 ```bash
 cd /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/eval
 python run_libero_eval.py \
-  --task_suite_name libero_10 \
-  --num_trials_per_task 1 \
+  --task-suite-name libero_10 \
+  --num-trials-per-task 1 \
   --headless \
   --port 5555
 ```

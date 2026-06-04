@@ -259,8 +259,13 @@ def scale_summary(scales: dict[str, dict[str, float]]) -> dict[str, Any]:
 
 def select_scales(scales: dict[str, dict[str, float]], mode: str) -> dict[str, dict[str, float]]:
     selected: dict[str, dict[str, float]] = {}
+    identity_modes = {"identity", "identity_processor"}
     for name, value in scales.items():
         selected[name] = {}
+        if mode in identity_modes:
+            selected[name]["alpha"] = 1.0
+            selected[name]["beta"] = 1.0
+            continue
         if "atm" in mode:
             selected[name]["alpha"] = value["alpha"]
         if "ohb" in mode:

@@ -79,20 +79,41 @@ For this 5090 environment, `torchcodec` was not installed and `decord`/`opencv` 
 
 ## Next Gate
 
-The denoising-steps 8, 8-sample follow-up is recorded in:
+The denoising-steps 8 follow-ups are recorded in:
 
 ```bash
 docs/phase4_real_data_validation_d8_n8.md
 toy_quantvla/results/phase4_real_data_validation_d8_n8.json
+docs/phase4_real_data_validation_d8_n8_identity.md
+toy_quantvla/results/phase4_real_data_validation_d8_n8_identity.json
+docs/phase4_real_data_validation_d8_cal16_eval32.md
+toy_quantvla/results/phase4_real_data_validation_d8_cal16_eval32.json
 ```
 
-For the intended `llm_dit_mlp` selected QuantVLA scope, `atm_ohb` improves real-data action drift versus `none`:
+For the intended `llm_dit_mlp` selected QuantVLA scope, `atm_ohb` improves real-data action drift versus `none` on the original 8-observation d8 run:
 
 | mode | NMSE mean | rel RMSE mean | cosine mean |
 |---|---:|---:|---:|
 | none | 0.00508872 | 0.0640329 | 0.997771 |
+| identity | 0.00508872 | 0.0640329 | 0.997771 |
 | atm_ohb | 0.00301077 | 0.04486 | 0.998726 |
 
-This clears the offline Phase 4 gate for a small LIBERO simulator smoke rollout. Do not treat this as benchmark evidence. First run a FP16 official-server baseline to validate the simulator environment, then add the quantized student path.
+The `identity` row installs the same custom DiT attention processor with `alpha = 1` and `beta = 1`. It exactly matches `none` in the printed metrics, so the `atm_ohb` gain is not explained by processor replacement drift.
 
-Current blocker: `/root/autodl-tmp/envs/gr00t-py312-cu128` does not import `libero`, so the simulator environment is not ready in that venv. Phase 5 should use a LIBERO-capable Python environment with real `pytorch3d` instead of the Phase 3/4 import stub.
+A 16-calibration / 32-evaluation split inside the locally downloaded episode keeps the same direction for the main configuration:
+
+| mode | NMSE mean | rel RMSE mean | cosine mean |
+|---|---:|---:|---:|
+| none | 0.00294977 | 0.0500502 | 0.998968 |
+| identity | 0.00294977 | 0.0500502 | 0.998968 |
+| atm_ohb | 0.00199345 | 0.0407359 | 0.999044 |
+
+Important caveats:
+
+- The local downloaded subset currently contains only `episode_000000.parquet` with 214 frames, so the 16/32 split is frame-held-out inside one episode, not a cross-episode held-out split.
+- `dit_mlp_only + atm_ohb` still regresses on the original d8 n8 run. The worst observation is dataset index `30` (`NMSE 0.0770986`, `max_abs_diff 0.971985`). Since `identity` equals `none`, this looks like ATM/OHB over-compensation for that state rather than custom processor replacement error.
+- These are offline teacher/student action-drift probes. They do not establish LIBERO simulator success rate, packed-int-kernel speedup, latency, memory, or throughput claims.
+
+This clears the offline Phase 4 gate for a small LIBERO simulator smoke rollout, with `llm_dit_mlp + atm_ohb` as the only main quantized student configuration. First run a FP16 official-server baseline to validate the simulator environment, then add the quantized student path.
+
+Phase 5 environment note: `/root/autodl-tmp/envs/gr00t-libero-py310` has been prepared with Python 3.10, `torch 2.8.0+cu128`, `flash-attn 2.8.3`, real `pytorch3d.transforms`, `libero 0.1.1`, and `robosuite 1.4.0`. The older `/root/autodl-tmp/envs/gr00t-py312-cu128` environment remains suitable for Phase 3/4 offline probes but not for simulator rollout.

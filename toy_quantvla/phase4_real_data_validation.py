@@ -169,7 +169,9 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
         "",
         f"- Dataset: `{result['dataset_path']}`",
         f"- Dataset length: `{result['dataset_length']}`",
-        f"- Dataset indices: `{', '.join(str(i) for i in result['dataset_indices'])}`",
+        f"- Evaluation dataset indices: `{', '.join(str(i) for i in result['dataset_indices'])}`",
+        f"- Calibration dataset indices: `{', '.join(str(i) for i in result['calibration_dataset_indices'])}`",
+        f"- Calibration/evaluation overlap: `{', '.join(str(i) for i in result['calibration_eval_overlap']) or 'none'}`",
         f"- Model: `{result['model_path']}`",
         f"- Data config: `{result['data_config']}`",
         f"- Video backend: `{result['video_backend']}`",
@@ -221,7 +223,8 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
             "",
             "- Teacher and student calls use matched RNG seeds because GR00T denoising starts from random Gaussian actions.",
             "- `llm_only` quantizes selected LLM linears; `dit_mlp_only` quantizes DiT feed-forward linears; `llm_dit_mlp` is the intended selected QuantVLA scope.",
-            "- ATM/OHB are applied only to DiT attention processors after calibrating teacher/student attention statistics on the selected validation samples.",
+            "- ATM/OHB are applied only to DiT attention processors after calibrating teacher/student attention statistics on calibration samples.",
+            "- `identity` installs the same custom DiT attention processor with `alpha = 1` and `beta = 1`; it measures processor replacement drift without ATM/OHB rescaling.",
             "- This real-data validation is the bridge between synthetic Phase 3 probes and full LIBERO rollout success-rate evaluation.",
         ]
     )
@@ -247,6 +250,11 @@ def main() -> None:
     parser.add_argument("--start-index", type=int, default=0)
     parser.add_argument("--sample-stride", type=int, default=100)
     parser.add_argument("--indices")
+    parser.add_argument("--num-calibration-observations", type=int)
+    parser.add_argument("--calibration-start-index", type=int)
+    parser.add_argument("--calibration-sample-stride", type=int)
+    parser.add_argument("--calibration-indices")
+    parser.add_argument("--calibration-base-seed", type=int)
     parser.add_argument("--configs", default="llm_only,dit_mlp_only,llm_dit_mlp")
     parser.add_argument("--activation-scale-modes", default="absmax")
     parser.add_argument("--activation-percentile", type=float, default=0.999)
@@ -305,6 +313,45 @@ def main() -> None:
     )
     observations = load_observations(dataset, indices, base_seed=args.base_seed)
 
+    calibration_requested = any(
+        value is not None
+        for value in [
+            args.num_calibration_observations,
+            args.calibration_start_index,
+            args.calibration_sample_stride,
+            args.calibration_indices,
+            args.calibration_base_seed,
+        ]
+    )
+    if calibration_requested:
+        calibration_indices = sample_indices(
+            len(dataset),
+            num_observations=args.num_calibration_observations or args.num_observations,
+            start_index=(
+                args.calibration_start_index
+                if args.calibration_start_index is not None
+                else args.start_index
+            ),
+            stride=(
+                args.calibration_sample_stride
+                if args.calibration_sample_stride is not None
+                else args.sample_stride
+            ),
+            explicit_indices=parse_indices(args.calibration_indices),
+        )
+        calibration_base_seed = (
+            args.calibration_base_seed
+            if args.calibration_base_seed is not None
+            else args.base_seed + 100000
+        )
+        calibration_observations = load_observations(
+            dataset, calibration_indices, base_seed=calibration_base_seed
+        )
+    else:
+        calibration_indices = list(indices)
+        calibration_base_seed = args.base_seed
+        calibration_observations = observations
+
     load_started = time.time()
     policy = Gr00tPolicy(
         model_path=str(args.model_path),
@@ -323,8 +370,13 @@ def main() -> None:
         teacher_actions.append(policy.get_action(item["obs"]))
     teacher_seconds = time.time() - teacher_started
 
-    need_atm_ohb = any(mode != "none" for mode in atm_ohb_modes)
-    teacher_stats = collect_attention_stats(policy, observations) if need_atm_ohb else {}
+    need_attention_processor = any(mode != "none" for mode in atm_ohb_modes)
+    attention_teacher_calibration_seconds = 0.0
+    teacher_stats = {}
+    if need_attention_processor:
+        attention_started = time.time()
+        teacher_stats = collect_attention_stats(policy, calibration_observations)
+        attention_teacher_calibration_seconds = time.time() - attention_started
 
     smoothing_groups = set().union(*(config_groups(config) for config in configs))
     smoothing_groups.discard("dit_attention_excluded")
@@ -332,7 +384,7 @@ def main() -> None:
     calibration_seconds = 0.0
     if smoothing_alpha is not None:
         calibration_started = time.time()
-        activation_max = collect_activation_max(policy, observations, smoothing_groups)
+        activation_max = collect_activation_max(policy, calibration_observations, smoothing_groups)
         smooth_scales = make_smooth_scales(policy.model, activation_max, smoothing_alpha)
         calibration_seconds = time.time() - calibration_started
 
@@ -352,8 +404,11 @@ def main() -> None:
             )
             try:
                 scales: dict[str, dict[str, float]] = {}
-                if need_atm_ohb:
-                    student_stats = collect_attention_stats(policy, observations)
+                student_attention_calibration_seconds = 0.0
+                if need_attention_processor:
+                    attention_started = time.time()
+                    student_stats = collect_attention_stats(policy, calibration_observations)
+                    student_attention_calibration_seconds = time.time() - attention_started
                     scales = compute_atm_ohb_scales(
                         teacher_stats, student_stats, log_clamp=args.log_clamp
                     )
@@ -388,6 +443,7 @@ def main() -> None:
                             "groups": sorted(groups),
                             "quantized_modules": len(originals),
                             "seconds": time.time() - started,
+                            "student_attention_calibration_seconds": student_attention_calibration_seconds,
                             "summary": aggregate_metrics(rows),
                             "per_observation": rows,
                             "scale_summary": scale_summary(scales) if scales else None,
@@ -401,6 +457,9 @@ def main() -> None:
         "dataset_path": str(args.dataset_path),
         "dataset_length": len(dataset),
         "dataset_indices": indices,
+        "calibration_dataset_indices": calibration_indices,
+        "calibration_uses_evaluation_observations": not calibration_requested,
+        "calibration_eval_overlap": sorted(set(indices).intersection(calibration_indices)),
         "dataset_seconds": dataset_seconds,
         "model_path": str(args.model_path),
         "data_config": args.data_config,
@@ -416,6 +475,7 @@ def main() -> None:
         "log_clamp": args.log_clamp,
         "smoothing": "none" if smoothing_alpha is None else f"sq_alpha_{smoothing_alpha:g}",
         "base_seed": args.base_seed,
+        "calibration_base_seed": calibration_base_seed,
         "torch_version": torch.__version__,
         "torch_cuda": torch.version.cuda,
         "cuda_device_capability": (
@@ -423,6 +483,7 @@ def main() -> None:
         ),
         "model_load_seconds": model_load_seconds,
         "teacher_seconds": teacher_seconds,
+        "attention_teacher_calibration_seconds": attention_teacher_calibration_seconds,
         "calibration_seconds": calibration_seconds,
         "teacher_vs_ground_truth": compare_to_ground_truth(teacher_actions, observations),
         "config_results": config_results,
@@ -438,6 +499,7 @@ def main() -> None:
     compact = {
         "dataset_length": result["dataset_length"],
         "dataset_indices": result["dataset_indices"],
+        "calibration_dataset_indices": result["calibration_dataset_indices"],
         "output_json": str(args.output_json),
         "output_md": str(args.output_md),
         "config_results": [
