@@ -4,7 +4,7 @@ Boundary: this is the matched simulator rollout for the fake-quantized `llm_dit_
 
 ## Status
 
-Current state at snapshot `2026-06-04T11:23:00Z`: the matched quantized rollout is running on the RTX 5090 machine.
+Final state at snapshot `2026-06-04T12:10:00Z`: the matched quantized rollout completed all `50` episodes on the RTX 5090 machine.
 
 - Quantized server PID: `407691`
 - Eval PID: `414689`
@@ -14,15 +14,19 @@ Current state at snapshot `2026-06-04T11:23:00Z`: the matched quantized rollout 
 - Eval official log: `/tmp/logs/libero_eval_libero_10.log`
 - FP16 baseline log backup: `/tmp/logs/libero_eval_libero_10_fp16_5trial_20260604_172710.log`
 - Rollout directory: `/root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/eval/rollouts/2026_06_04`
-- Quantized rollout prefix observed so far: `2026_06_04-19_20_51`
+- Quantized rollout prefix: `2026_06_04-19_20_51`
 
-Early sanity check:
+Final result:
 
-- Episodes completed at snapshot: `1`
-- Successes at snapshot: `1`
-- First episode result: success on task `put both the alphabet soup and the tomato sauce in the basket`
+- Episodes completed: `50/50`
+- Successes: `38/50`
+- Success rate: `76.0%`
+- Failures: `12`
+- `executing action in terminated episode` exceptions: `12`
+- FP16 baseline: `38/50` (`76.0%`)
+- Aggregate delta vs FP16: `0`
 
-Do not interrupt the run unless explicitly deciding to abort the quantized comparison.
+The aggregate success rate matches the accepted FP16 baseline exactly, but the per-task distribution differs. The quantized run improves task ids `1` and `2`, regresses task ids `6`, `7`, and `8`, and matches the remaining tasks.
 
 ## Quantized Server
 
@@ -92,6 +96,31 @@ This matches the accepted FP16 baseline protocol:
 - Headless EGL
 - Official task order
 
+Per-task result:
+
+| task id | quant successes / trials | quant rate | FP16 successes / trials | delta | task |
+|---:|---:|---:|---:|---:|---|
+| 0 | 5/5 | 100% | 5/5 | 0 | put both the alphabet soup and the tomato sauce in the basket |
+| 1 | 4/5 | 80% | 3/5 | +1 | put both the cream cheese box and the butter in the basket |
+| 2 | 5/5 | 100% | 3/5 | +2 | turn on the stove and put the moka pot on it |
+| 3 | 5/5 | 100% | 5/5 | 0 | put the black bowl in the bottom drawer of the cabinet and close it |
+| 4 | 4/5 | 80% | 4/5 | 0 | put the white mug on the left plate and put the yellow and white mug on the right plate |
+| 5 | 5/5 | 100% | 5/5 | 0 | pick up the book and place it in the back compartment of the caddy |
+| 6 | 2/5 | 40% | 3/5 | -1 | put the white mug on the plate and put the chocolate pudding to the right of the plate |
+| 7 | 3/5 | 60% | 4/5 | -1 | put both the alphabet soup and the cream cheese box in the basket |
+| 8 | 0/5 | 0% | 1/5 | -1 | put both moka pots on the stove |
+| 9 | 5/5 | 100% | 5/5 | 0 | put the yellow and white mug in the microwave and close it |
+
+## Interpretation
+
+The `llm_dit_mlp + atm_ohb` student preserves the FP16 simulator success rate on this matched `libero_10` 5-trial run. It does not establish a packed-kernel acceleration result, but it does clear the key method-level simulator gate: selective W4A8 fake quantization plus ATM/OHB did not reduce aggregate success relative to the accepted FP16 baseline.
+
+The distribution shift is important:
+
+- The student improves task id `2` by `+2/5`, suggesting the quantized and balanced policy can change rollout behavior in a beneficial direction for some initial states.
+- The student loses the already-fragile task id `8`, going from FP16 `1/5` to quantized `0/5`.
+- Aggregate equality hides task-specific movement, so future reports should keep per-task success rates and not only the total.
+
 ## Progress Commands
 
 ```bash
@@ -105,12 +134,11 @@ pgrep -af "run_libero_eval.py"
 
 ## Cleanup After Completion
 
-After the 50-episode eval completes:
+Cleanup was completed after the 50-episode eval:
 
-1. Parse per-task success rates from `/tmp/logs/libero_eval_libero_10.log`.
-2. Save or summarize the final result in this document.
-3. Stop the quantized server if still running.
-4. Verify port `5555` returns `111`.
-5. Commit and push the final report.
+- `run_libero_eval.py` exited after all `50` episodes.
+- The quantized server was stopped with `SIGTERM`.
+- Port `5555` returned `111`.
+- GPU memory returned to about `2 MiB`.
 
 Do not commit rollout videos, model weights, datasets, generated checkpoints, or large tensor dumps.
