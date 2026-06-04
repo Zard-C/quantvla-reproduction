@@ -13,6 +13,7 @@ sed -n '1,220p' docs/phase4_real_data_validation_d8_n8_identity.md
 sed -n '1,220p' docs/phase4_real_data_validation_d8_cal16_eval32.md
 sed -n '1,220p' docs/phase4_real_data_validation_d8_cal16_eval128_random.md
 sed -n '1,260p' docs/phase4_real_data_validation_d8_cal16_eval128_random_regressions.md
+sed -n '1,260p' docs/phase5_fp16_official_libero_baseline.md
 sed -n '1,220p' /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/README.md
 sed -n '1,320p' /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/eval/run_libero_eval.py
 ```
@@ -48,6 +49,12 @@ Important caveat: `dit_mlp_only + atm_ohb` regressed on the d8 n8 run (`NMSE mea
 - ATM/OHB are calibration and balancing operations applied to DiT attention processors. They do not mean DiT attention weights are quantized.
 - `identity` mode installs the same custom DiT attention processor with `alpha = 1` and `beta = 1`; it is only a processor-replacement control.
 
+## FP16 Baseline Gate
+
+The official FP16 `libero_10` 5-trial baseline is accepted. It completed `50` episodes with `38/50` successes (`76.0%`), matching the official README reference for the Long LIBERO checkpoint. The earlier one-trial smoke run ended at `6/10`, but the accepted 5-trial result indicates the checkpoint, data config, task order, denoising steps, and simulator setup are aligned. See `docs/phase5_fp16_official_libero_baseline.md`.
+
+Use this FP16 baseline as the simulator comparison reference for quantized student runs. Keep the same task suite, `5` trials per task, denoising steps `8`, and headless EGL setup.
+
 ## Environment Gate
 
 Use the Phase 5 environment prepared at:
@@ -60,11 +67,11 @@ Readiness check passed with Python 3.10, `torch 2.8.0+cu128`, CUDA available on 
 
 ## Objective
 
-Run a very small LIBERO simulator success-rate smoke test before any full benchmark:
+Run matched quantized LIBERO simulator comparisons against the accepted FP16 baseline:
 
-1. Validate the official FP16 GR00T server and LIBERO eval loop.
-2. Record exact environment versions, command lines, task suite, trials, logs, and video paths.
-3. Only after FP16 works, wire in the quantized student path for `llm_dit_mlp + atm_ohb`.
+1. Wire in the quantized student path for `llm_dit_mlp + atm_ohb`.
+2. Run the same `libero_10`, `5` trials per task, denoising steps `8`, headless EGL protocol.
+3. Keep `llm_dit_mlp + ohb` as the second candidate if `atm_ohb` is unstable.
 4. Keep offline action drift, simulator smoke success, and full benchmark success rate separate in the report.
 
 ## Official Baseline Commands
