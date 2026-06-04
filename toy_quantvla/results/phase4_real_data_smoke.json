@@ -1,0 +1,204 @@
+{
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "dataset_length": 101469,
+  "dataset_indices": [
+    0
+  ],
+  "dataset_seconds": 0.009914875030517578,
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "video_backend": "torchvision_av",
+  "denoising_steps": 1,
+  "weight_bits": 4,
+  "activation_bits": 8,
+  "activation_percentile": 0.999,
+  "activation_scale_modes": [
+    "absmax"
+  ],
+  "configs": [
+    "dit_mlp_only"
+  ],
+  "atm_ohb_modes": [
+    "none"
+  ],
+  "log_clamp": 0.3,
+  "smoothing": "none",
+  "base_seed": 260203,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "model_load_seconds": 9.437376022338867,
+  "teacher_seconds": 0.422147274017334,
+  "calibration_seconds": 0.0,
+  "teacher_vs_ground_truth": {
+    "observations": 1,
+    "mse": {
+      "mean": 0.00017350680253674762,
+      "max": 0.00017350680253674762,
+      "min": 0.00017350680253674762
+    },
+    "nmse": {
+      "mean": 0.0010210800035476448,
+      "max": 0.0010210800035476448,
+      "min": 0.0010210800035476448
+    },
+    "rmse": {
+      "mean": 0.013172198090552223,
+      "max": 0.013172198090552223,
+      "min": 0.013172198090552223
+    },
+    "relative_rmse": {
+      "mean": 0.031954342483419135,
+      "max": 0.031954342483419135,
+      "min": 0.031954342483419135
+    },
+    "cosine": {
+      "mean": 0.9994893296283626,
+      "max": 0.9994893296283626,
+      "min": 0.9994893296283626
+    },
+    "max_abs_diff": {
+      "mean": 0.04343026876449585,
+      "max": 0.04343026876449585,
+      "min": 0.04343026876449585
+    },
+    "teacher_rms": {
+      "mean": 0.412219343814919,
+      "max": 0.412219343814919,
+      "min": 0.412219343814919
+    },
+    "student_rms": {
+      "mean": 0.4120228446527794,
+      "max": 0.4120228446527794,
+      "min": 0.4120228446527794
+    }
+  },
+  "config_results": [
+    {
+      "config": "dit_mlp_only",
+      "mode": "none",
+      "activation_scale": "absmax",
+      "groups": [
+        "dit_mlp_selected"
+      ],
+      "quantized_modules": 32,
+      "seconds": 0.06267213821411133,
+      "summary": {
+        "observations": 1,
+        "mse": {
+          "mean": 3.8906349013739794e-05,
+          "max": 3.8906349013739794e-05,
+          "min": 3.8906349013739794e-05
+        },
+        "nmse": {
+          "mean": 0.00022918061786917303,
+          "max": 0.00022918061786917303,
+          "min": 0.00022918061786917303
+        },
+        "rmse": {
+          "mean": 0.0062374954119213425,
+          "max": 0.0062374954119213425,
+          "min": 0.0062374954119213425
+        },
+        "relative_rmse": {
+          "mean": 0.015138712556527819,
+          "max": 0.015138712556527819,
+          "min": 0.015138712556527819
+        },
+        "cosine": {
+          "mean": 0.9999190187095468,
+          "max": 0.9999190187095468,
+          "min": 0.9999190187095468
+        },
+        "max_abs_diff": {
+          "mean": 0.02197265625,
+          "max": 0.02197265625,
+          "min": 0.02197265625
+        },
+        "teacher_rms": {
+          "mean": 0.4120228446527794,
+          "max": 0.4120228446527794,
+          "min": 0.4120228446527794
+        },
+        "student_rms": {
+          "mean": 0.40861125166884127,
+          "max": 0.40861125166884127,
+          "min": 0.40861125166884127
+        }
+      },
+      "per_observation": [
+        {
+          "mse": 3.8906349013739794e-05,
+          "nmse": 0.00022918061786917303,
+          "rmse": 0.0062374954119213425,
+          "relative_rmse": 0.015138712556527819,
+          "cosine": 0.9999190187095468,
+          "max_abs_diff": 0.02197265625,
+          "teacher_rms": 0.4120228446527794,
+          "student_rms": 0.40861125166884127,
+          "per_key": {
+            "action.gripper": {
+              "mse": 2.9221060686257516e-05,
+              "nmse": 2.9272731792172666e-05,
+              "max_abs_diff": 0.0078125,
+              "teacher_rms": 0.9991170293159918,
+              "student_rms": 0.9944546879144812
+            },
+            "action.pitch": {
+              "mse": 2.044975659198922e-06,
+              "nmse": 0.027238931128879203,
+              "max_abs_diff": 0.002339571714401245,
+              "teacher_rms": 0.008664610421672192,
+              "student_rms": 0.008831499622768146
+            },
+            "action.roll": {
+              "mse": 3.6567645355367606e-06,
+              "nmse": 0.004444193523571938,
+              "max_abs_diff": 0.004190847277641296,
+              "teacher_rms": 0.0286848126108559,
+              "student_rms": 0.028257513753930767
+            },
+            "action.x": {
+              "mse": 3.825552994385362e-05,
+              "nmse": 0.048582720722350294,
+              "max_abs_diff": 0.0146484375,
+              "teacher_rms": 0.028061197151523987,
+              "student_rms": 0.027235113646119066
+            },
+            "action.y": {
+              "mse": 0.00016973353922367096,
+              "nmse": 0.0009505321738403308,
+              "max_abs_diff": 0.02197265625,
+              "teacher_rms": 0.4225717137712658,
+              "student_rms": 0.410415138332529
+            },
+            "action.yaw": {
+              "mse": 4.643599186948677e-06,
+              "nmse": 0.1918695587412849,
+              "max_abs_diff": 0.005800783634185791,
+              "teacher_rms": 0.004919538060198475,
+              "student_rms": 0.0050876871393554755
+            },
+            "action.z": {
+              "mse": 2.4788973860712105e-05,
+              "nmse": 0.002522138576018233,
+              "max_abs_diff": 0.010986328125,
+              "teacher_rms": 0.0991390612876697,
+              "student_rms": 0.09857613504371847
+            }
+          },
+          "dataset_index": 0,
+          "seed": 260203
+        }
+      ],
+      "scale_summary": null,
+      "scales": {}
+    }
+  ],
+  "cuda_memory_allocated_mib": 5223.0654296875,
+  "cuda_memory_reserved_mib": 5512.0
+}

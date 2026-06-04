@@ -33,7 +33,7 @@ def build_allow_patterns(start_episode: int, num_episodes: int) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--repo-id", default="IPEC-COMMUNITY/libero_10_no_noops_lerobot")
+    parser.add_argument("--repo-id", default="IPEC-COMMUNITY/libero_10_no_noops_1.0.0_lerobot")
     parser.add_argument("--repo-type", default="dataset")
     parser.add_argument("--local-dir", type=Path, required=True)
     parser.add_argument("--start-episode", type=int, default=0)

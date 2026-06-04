@@ -8,11 +8,13 @@ Phase 3 used synthetic observations. That was enough to test GR00T loading, modu
 
 ## Dataset
 
-For the downloaded checkpoint `/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain`, the matching GR00T README points to:
+For the downloaded checkpoint `/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain`, the visible Hugging Face dataset is:
 
 ```bash
-IPEC-COMMUNITY/libero_10_no_noops_lerobot
+IPEC-COMMUNITY/libero_10_no_noops_1.0.0_lerobot
 ```
+
+The GR00T README omits the `1.0.0` component for LIBERO-10; that older name returned 404 on 2026-06-04.
 
 The GR00T LIBERO `modality.json` must be present at:
 
@@ -31,19 +33,16 @@ If HF auth/proxy is available on the 5090, download only a few episodes first:
 
 ```bash
 cd /root/autodl-tmp/quantvla-reproduction
+source /etc/network_turbo
 /root/autodl-tmp/envs/gr00t-py312-cu128/bin/python toy_quantvla/download_lerobot_subset.py \
-  --repo-id IPEC-COMMUNITY/libero_10_no_noops_lerobot \
+  --repo-id IPEC-COMMUNITY/libero_10_no_noops_1.0.0_lerobot \
   --local-dir /root/autodl-tmp/datasets/libero_10_subset \
   --start-episode 0 \
   --num-episodes 4 \
   --modality-json /root/autodl-tmp/Isaac-GR00T-n1.5/examples/Libero/modality.json
 ```
 
-If the mirror works, add:
-
-```bash
---hf-endpoint https://hf-mirror.com
-```
+Use the official Hugging Face endpoint with `/etc/network_turbo`. Do not send a Hugging Face token to a third-party mirror.
 
 ## Validation Command
 
@@ -54,7 +53,7 @@ cd /root/autodl-tmp/quantvla-reproduction
   --compat-stubs toy_quantvla/compat_stubs \
   --model-path /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain \
   --dataset-path /root/autodl-tmp/datasets/libero_10_subset \
-  --video-backend torchcodec \
+  --video-backend torchvision_av \
   --denoising-steps 1 \
   --num-observations 8 \
   --sample-stride 50 \
@@ -75,6 +74,8 @@ The main metric is teacher/student action-chunk drift:
 - per-action-key metrics in the JSON
 
 The script also reports teacher-vs-demonstration action drift as a diagnostic, but that is not a success-rate metric.
+
+For this 5090 environment, `torchcodec` was not installed and `decord`/`opencv` could not decode the downloaded AV1 videos. `torchvision_av` successfully decoded the validation subset.
 
 ## Next Gate
 
