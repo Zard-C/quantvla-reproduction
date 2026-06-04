@@ -44,6 +44,8 @@ source /etc/network_turbo
 
 Use the official Hugging Face endpoint with `/etc/network_turbo`. Do not send a Hugging Face token to a third-party mirror.
 
+For the cross-episode held-out follow-up, the local subset was expanded to 64 parquet episodes with the same script by setting `--num-episodes 64`.
+
 ## Validation Command
 
 ```bash
@@ -88,6 +90,10 @@ docs/phase4_real_data_validation_d8_n8_identity.md
 toy_quantvla/results/phase4_real_data_validation_d8_n8_identity.json
 docs/phase4_real_data_validation_d8_cal16_eval32.md
 toy_quantvla/results/phase4_real_data_validation_d8_cal16_eval32.json
+docs/phase4_real_data_validation_d8_cal16_eval128_random.md
+toy_quantvla/results/phase4_real_data_validation_d8_cal16_eval128_random.json
+docs/phase4_real_data_validation_d8_cal16_eval128_random_regressions.md
+toy_quantvla/results/phase4_real_data_validation_d8_cal16_eval128_random_regressions.json
 ```
 
 For the intended `llm_dit_mlp` selected QuantVLA scope, `atm_ohb` improves real-data action drift versus `none` on the original 8-observation d8 run:
@@ -108,12 +114,35 @@ A 16-calibration / 32-evaluation split inside the locally downloaded episode kee
 | identity | 0.00294977 | 0.0500502 | 0.998968 |
 | atm_ohb | 0.00199345 | 0.0407359 | 0.999044 |
 
+A stronger random held-out run uses 16 calibration observations sampled from episodes 0-15 and 128 evaluation observations sampled from episodes 16-63 with fixed seed `260204`. This run adds separate `atm` and `ohb` modes:
+
+| mode | NMSE mean | NMSE change vs none | rel RMSE mean | rel RMSE change vs none | cosine mean |
+|---|---:|---:|---:|---:|---:|
+| none | 0.0178962 | 0.0% | 0.0981458 | 0.0% | 0.992492 |
+| identity | 0.0178962 | 0.0% | 0.0981458 | 0.0% | 0.992492 |
+| atm | 0.0159471 | -10.9% | 0.0904183 | -7.9% | 0.993101 |
+| ohb | 0.0160919 | -10.1% | 0.0853958 | -13.0% | 0.992769 |
+| atm_ohb | 0.0153168 | -14.4% | 0.0838784 | -14.5% | 0.993048 |
+
+The random held-out run keeps the main direction while making the claim less dependent on contiguous frames. `atm` contributes more of the NMSE gain than `ohb`; `ohb` contributes more of the relative-RMSE gain; the combined `atm_ohb` mode is best on both mean NMSE and mean relative RMSE.
+
+The regression pass compares each mode against `none` on the 128 held-out observations:
+
+| mode | worse by NMSE | mean delta NMSE | mean delta rel RMSE | mean delta max abs |
+|---|---:|---:|---:|---:|
+| identity | 0/128 | 0 | 0 | 0 |
+| atm | 37/128 | -0.00194913 | -0.00772748 | -0.0140478 |
+| ohb | 24/128 | -0.00180429 | -0.01275 | -0.0119415 |
+| atm_ohb | 34/128 | -0.00257947 | -0.0142674 | -0.019289 |
+
+For the top seven `atm_ohb` regressions, the largest per-key NMSE deltas are distributed across `action.x`, `action.yaw`, `action.gripper`, `action.roll`, and `action.z`. Several large NMSE regressions occur on low-RMS rotation or gripper components, so the max-absolute-difference view is needed alongside NMSE to separate normalized error from physically larger deviations.
+
 Important caveats:
 
-- The local downloaded subset currently contains only `episode_000000.parquet` with 214 frames, so the 16/32 split is frame-held-out inside one episode, not a cross-episode held-out split.
+- The earlier 16/32 split is frame-held-out inside local episode 0. The random 128 run is the current held-out offline gate because it samples evaluation observations from episodes 16-63 after calibrating on episodes 0-15.
 - `dit_mlp_only + atm_ohb` still regresses on the original d8 n8 run. The worst observation is dataset index `30` (`NMSE 0.0770986`, `max_abs_diff 0.971985`). Since `identity` equals `none`, this looks like ATM/OHB over-compensation for that state rather than custom processor replacement error.
 - These are offline teacher/student action-drift probes. They do not establish LIBERO simulator success rate, packed-int-kernel speedup, latency, memory, or throughput claims.
 
-This clears the offline Phase 4 gate for a small LIBERO simulator smoke rollout, with `llm_dit_mlp + atm_ohb` as the only main quantized student configuration. First run a FP16 official-server baseline to validate the simulator environment, then add the quantized student path.
+This clears the offline Phase 4 gate for a small LIBERO simulator smoke rollout, with `llm_dit_mlp + atm_ohb` as the main quantized student configuration. First run a FP16 official-server baseline to validate the simulator environment, then add the quantized student path.
 
 Phase 5 environment note: `/root/autodl-tmp/envs/gr00t-libero-py310` has been prepared with Python 3.10, `torch 2.8.0+cu128`, `flash-attn 2.8.3`, real `pytorch3d.transforms`, `libero 0.1.1`, and `robosuite 1.4.0`. The older `/root/autodl-tmp/envs/gr00t-py312-cu128` environment remains suitable for Phase 3/4 offline probes but not for simulator rollout.
