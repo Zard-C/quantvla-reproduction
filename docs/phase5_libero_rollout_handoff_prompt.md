@@ -39,6 +39,15 @@ The `identity` control installs the same custom DiT attention processor with `al
 
 Important caveat: `dit_mlp_only + atm_ohb` regressed on the d8 n8 run (`NMSE mean 0.00982088`, `max abs diff 0.971985`), with dataset index `30` as the outlier. Treat ATM/OHB as a configuration-specific balancing path for `llm_dit_mlp`, not a universally safe per-module improvement. In the random 128 held-out run, `atm_ohb` still worsens NMSE on 34/128 observations even though its mean delta is favorable; the top-seven regression analysis is in `docs/phase4_real_data_validation_d8_cal16_eval128_random_regressions.md`.
 
+## Quantization Config Glossary
+
+- `llm_only`: quantizes selected LLM `nn.Linear` layers, including self-attention projections `q_proj`, `k_proj`, `v_proj`, `o_proj`, and MLP projections `gate_proj`, `up_proj`, `down_proj`.
+- `dit_mlp_only`: quantizes only DiT action-head feed-forward/MLP linear layers matching `action_head.model.transformer_blocks.*.ff.net.(0.proj|2)`.
+- `llm_dit_mlp`: union of `llm_selected` and `dit_mlp_selected`; on the current GR00T N1.5 LIBERO checkpoint this is `84 + 32 = 116` quantized modules.
+- DiT attention projections matching `action_head.model.transformer_blocks.*.attn1.(to_q|to_k|to_v|to_out.0)` are intentionally excluded from quantization and remain floating point.
+- ATM/OHB are calibration and balancing operations applied to DiT attention processors. They do not mean DiT attention weights are quantized.
+- `identity` mode installs the same custom DiT attention processor with `alpha = 1` and `beta = 1`; it is only a processor-replacement control.
+
 ## Environment Gate
 
 Use the Phase 5 environment prepared at:
