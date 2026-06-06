@@ -1,0 +1,156 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 GEMM with real GR00T weights and synthetic activations",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "load_seconds": 10.912647724151611,
+  "selected_modules": 116,
+  "captured_modules": 116,
+  "representative_cases": 3,
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    }
+  ],
+  "summary": {
+    "dit_mlp": {
+      "cases": 2,
+      "cutlass_fp4_ms_mean": 0.015816185623407364,
+      "torch_fp16_ms_mean": 0.0390881672501564,
+      "speedup_vs_torch_fp16_mean": 2.8033885170357955,
+      "quant_relative_rmse_vs_fp32_mean": 0.14675180613994598,
+      "kernel_relative_rmse_vs_decoded_ref_mean": 0.00020878889336017892
+    },
+    "llm_attn": {
+      "cases": 1,
+      "cutlass_fp4_ms_mean": 0.010832026600837708,
+      "torch_fp16_ms_mean": 0.03715064376592636,
+      "speedup_vs_torch_fp16_mean": 3.4297038896722496,
+      "quant_relative_rmse_vs_fp32_mean": 0.14030659198760986,
+      "kernel_relative_rmse_vs_decoded_ref_mean": 0.0002076809760183096
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ],
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "compile_seconds": 23.94476805254817,
+      "cutlass_fp4_ms": 0.010210834443569183,
+      "torch_fp16_ms": 0.03818981349468231,
+      "speedup_vs_torch_fp16": 3.740126598442146,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020841638615820557,
+      "quant_relative_rmse_vs_fp32": 0.1431497186422348,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00029502130928449333,
+      "max_abs_diff_vs_decoded_ref": 4.9591064453125e-05
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ],
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "compile_seconds": 23.819631930440664,
+      "cutlass_fp4_ms": 0.021421536803245544,
+      "torch_fp16_ms": 0.03998652100563049,
+      "speedup_vs_torch_fp16": 1.8666504356294453,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020916140056215227,
+      "quant_relative_rmse_vs_fp32": 0.15035389363765717,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00035435587051324546,
+      "max_abs_diff_vs_decoded_ref": 0.00012111663818359375
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "compile_seconds": 23.889061383903027,
+      "cutlass_fp4_ms": 0.010832026600837708,
+      "torch_fp16_ms": 0.03715064376592636,
+      "speedup_vs_torch_fp16": 3.4297038896722496,
+      "kernel_relative_rmse_vs_decoded_ref": 0.0002076809760183096,
+      "quant_relative_rmse_vs_fp32": 0.14030659198760986,
+      "torch_fp16_relative_rmse_vs_fp32": 0.000293210381641984,
+      "max_abs_diff_vs_decoded_ref": 0.00011539459228515625
+    }
+  ]
+}

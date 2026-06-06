@@ -1,0 +1,31 @@
+{
+  "boundary": "real torch tensor -> blockscaled FP4 CUTLASS GEMM smoke; conversion uses CUTLASS helper pack path",
+  "m": 49,
+  "k": 1536,
+  "n": 6144,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "compile_seconds": 8.334302745759487,
+  "cutlass_fp4_ms": 0.009636829296747843,
+  "torch_fp16_einsum_ms": 0.03949726621309916,
+  "torch_decoded_fp4_ref_ms": 0.10106811920801799,
+  "speedup_vs_torch_fp16_einsum": 4.098574852459861,
+  "max_abs_diff_vs_decoded_fp4_decoded_scale_ref": 3.0517578125e-05,
+  "mean_abs_diff_vs_decoded_fp4_decoded_scale_ref": 3.5624227621156024e-06,
+  "relative_rmse_vs_decoded_fp4_decoded_scale_ref": 0.00020764220971614122,
+  "relative_rmse_vs_decoded_fp4_raw_scale_ref": 0.09155051410198212,
+  "relative_rmse_vs_original_fp32": 0.14060063660144806,
+  "a_scale_min": 0.003714362159371376,
+  "a_scale_max": 0.019413072615861893,
+  "b_scale_min": 0.0021127425134181976,
+  "b_scale_max": 0.024174867197871208
+}
