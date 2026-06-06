@@ -121,6 +121,74 @@ Therefore, the strongest current claim is:
 
 This experiment still does not demonstrate packed integer kernel speed, memory savings, or deployment efficiency.
 
+## Mechanistic Analysis
+
+The main result should not be read as "ATM/OHB rescue a broken quantized policy." The `none` result is already `113/150`, which means the selected W4A8 path is behaviorally robust before attention compensation is applied.
+
+The most important design choice is that `llm_dit_mlp` quantizes selected LLM linear layers and DiT feed-forward linears while leaving DiT attention projections floating point. This avoids the most fragile part of the action head. Attention logits pass through:
+
+```text
+softmax(QK^T / sqrt(d))
+```
+
+A small perturbation in Q/K scale can change attention entropy and routing. MLP quantization is more like an additive residual perturbation:
+
+```text
+y_student = y_teacher + epsilon
+```
+
+That error is partially absorbed by normalization, residual connections, the diffusion denoising process, and closed-loop replanning across observations. This explains why pure W4A8 can remain close to FP16.
+
+The fact that quantized variants can exceed FP16 does not imply that quantization is intrinsically better. LIBERO success is a discontinuous closed-loop event. A small action perturbation can push a rollout into a different contact sequence:
+
+```text
+small action drift
+-> changed object contact
+-> changed next observation
+-> different policy trajectory
+-> success/failure flip
+```
+
+Therefore, the right analysis unit is not only output MSE or aggregate success. The paired flip counts are more informative: compensation modes repair some FP16/quantized failures and introduce new failures elsewhere.
+
+ATM is a temperature-style correction for DiT attention. In this implementation it computes:
+
+```text
+alpha = std_teacher(attention_logits) / std_student(attention_logits)
+query <- alpha * query
+```
+
+Scaling the query changes the attention logit distribution before softmax. This can restore teacher-like attention sharpness when the student is too soft or too sharp, but it also directly changes token routing. A single per-module calibration scale, estimated from 16 calibration observations, cannot be optimal for every LIBERO task and initial state. This explains the high-variance ATM behavior: it improves task id `4` by `+5`, but regresses task id `8` by `-5`.
+
+OHB is an output-energy correction for the same attention blocks. It computes:
+
+```text
+beta = rms_teacher(attention_output) / rms_student(attention_output)
+attention_output <- beta * attention_output
+```
+
+Unlike ATM, OHB does not directly alter the softmax routing. It changes how strongly the attention branch contributes before residual addition. This is a more conservative intervention, which is consistent with the ablation: OHB has the best single-mode aggregate score (`116/150`) and hurts task id `8` less than ATM (`6/15` vs `4/15`). It still regresses task ids `3`, `8`, and `9`, because residual energy changes are enough to shift closed-loop trajectories.
+
+ATM and OHB should also not be expected to add linearly. ATM changes attention probabilities, which changes the output whose RMS OHB later rescales. The two operations are coupled within the same DiT attention block:
+
+```text
+ATM changes "where attention looks"
+OHB changes "how loudly attention output enters the residual stream"
+```
+
+Applying both can overcorrect, partially cancel, or move the policy into a different trajectory basin. This explains why `atm_ohb` (`114/150`) does not exceed standalone OHB (`116/150`) in the current aggregate.
+
+From a statistical standpoint, small aggregate gaps should be treated cautiously. The difference between `none`, `atm`, and `atm_ohb` is only `1/150`, while OHB is `3/150` above `none`. The stronger evidence is the structured task-level pattern:
+
+- Selective W4A8 is robust: all quantized variants remain near or above FP16.
+- ATM is high-variance: it strongly helps task id `4` and strongly hurts task id `8`.
+- OHB is the best single compensation here, but still introduces regressions.
+- Compensation changes the distribution of successes rather than monotonically improving all task-init pairs.
+
+The current mechanistic conclusion is:
+
+> Selective W4A8 over LLM/DiT MLP layers is viable because it avoids quantizing the most attention-sensitive DiT projections. ATM and OHB are calibration-based trajectory-redistribution mechanisms. OHB behaves like a more stable residual-energy correction, while ATM behaves like a higher-risk attention-temperature correction.
+
 ## Commands
 
 Server command template:
