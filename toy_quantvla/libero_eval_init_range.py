@@ -10,6 +10,7 @@ without repeating the accepted Phase 5 baseline inits.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import pprint
 import sys
@@ -73,9 +74,13 @@ class GR00TPolicy:
         self.headless = headless
 
     def get_action(self, observation_dict, lang: str):
+        action_array, _trace = self.get_action_with_trace(observation_dict, lang)
+        return action_array
+
+    def get_action_with_trace(self, observation_dict, lang: str):
         obs_dict = self._process_observation(observation_dict, lang)
         action_chunk = self.policy.get_action(obs_dict)
-        return self._convert_to_libero_action(action_chunk, 0)
+        return self._convert_to_libero_action(action_chunk, 0), self._trace_action(action_chunk, 0)
 
     def _process_observation(self, obs, lang: str):
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
@@ -111,6 +116,12 @@ class GR00TPolicy:
         assert len(action_array) == 7, f"Expected 7-dim action, got {len(action_array)}"
         return action_array
 
+    def _trace_action(self, action_chunk: dict[str, np.array], idx: int = 0) -> dict[str, float]:
+        return {
+            f"action.{key}": float(np.atleast_1d(action_chunk[f"action.{key}"][idx])[0])
+            for key in self.action_keys
+        }
+
 
 def max_steps_for_suite(task_suite_name: str) -> int:
     if task_suite_name == "libero_spatial":
@@ -126,6 +137,59 @@ def max_steps_for_suite(task_suite_name: str) -> int:
     raise ValueError(f"Unknown task suite: {task_suite_name}")
 
 
+def parse_case_list(case_list: str | None) -> list[tuple[int, int]] | None:
+    if not case_list:
+        return None
+    pairs = []
+    for item in case_list.split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if ":" not in item:
+            raise ValueError(f"Expected case item 'task_id:init_index', got {item!r}")
+        task_id, init_index = item.split(":", 1)
+        pairs.append((int(task_id), int(init_index)))
+    return pairs
+
+
+def as_float_list(value) -> list[float]:
+    return np.asarray(value, dtype=np.float64).reshape(-1).tolist()
+
+
+def write_episode_trace(
+    trace_dir: Path | None,
+    *,
+    task_suite_name: str,
+    task_id: int,
+    task_description: str,
+    init_index: int,
+    episode_index: int,
+    success: bool,
+    exception: str | None,
+    steps: list[dict],
+) -> None:
+    if trace_dir is None:
+        return
+    trace_dir.mkdir(parents=True, exist_ok=True)
+    safe_task = "".join(ch if ch.isalnum() or ch in {"_", "-"} else "_" for ch in task_description)[:80]
+    path = trace_dir / (
+        f"task={task_id:02d}--init={init_index:02d}--episode={episode_index:03d}"
+        f"--success={success}--task={safe_task}.json"
+    )
+    payload = {
+        "task_suite_name": task_suite_name,
+        "task_id": task_id,
+        "task_description": task_description,
+        "init_index": init_index,
+        "episode_index": episode_index,
+        "success": bool(success),
+        "exception": exception,
+        "num_steps": len(steps),
+        "steps": steps,
+    }
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
 def eval_libero(args: argparse.Namespace) -> None:
     from examples.Libero.eval.utils import (
         get_libero_dummy_action,
@@ -138,19 +202,34 @@ def eval_libero(args: argparse.Namespace) -> None:
     task_suite = benchmark_dict[args.task_suite_name]()
     num_tasks_in_suite = task_suite.n_tasks
     init_indices = list(range(args.init_start, args.init_start + args.num_inits))
+    requested_cases = parse_case_list(args.case_list)
+    cases_by_task: dict[int, list[int]] | None = None
+    if requested_cases is not None:
+        cases_by_task = {}
+        for task_id, init_index in requested_cases:
+            cases_by_task.setdefault(task_id, []).append(init_index)
+        for task_id in cases_by_task:
+            cases_by_task[task_id] = sorted(set(cases_by_task[task_id]))
 
     args.log_file.parent.mkdir(parents=True, exist_ok=True)
     with args.log_file.open("w", encoding="utf-8") as log_file:
         print(f"Task suite: {args.task_suite_name}")
         print(f"Init indices: {init_indices}")
+        if requested_cases is not None:
+            print(f"Case list: {requested_cases}")
         log_file.write(f"Task suite: {args.task_suite_name}\n")
         log_file.write(f"Init indices: {init_indices}\n")
+        if requested_cases is not None:
+            log_file.write(f"Case list: {requested_cases}\n")
 
         total_episodes, total_successes = 0, 0
         for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
+            if cases_by_task is not None and task_id not in cases_by_task:
+                continue
             task = task_suite.get_task(task_id)
             initial_states = task_suite.get_task_init_states(task_id)
-            max_init = max(init_indices)
+            task_init_indices = cases_by_task[task_id] if cases_by_task is not None else init_indices
+            max_init = max(task_init_indices)
             if max_init >= len(initial_states):
                 raise IndexError(
                     f"Task {task_id} requested init {max_init}, "
@@ -161,7 +240,7 @@ def eval_libero(args: argparse.Namespace) -> None:
             gr00t_policy = GR00TPolicy(host="localhost", port=args.port, headless=args.headless)
 
             task_episodes, task_successes = 0, 0
-            for init_index in tqdm.tqdm(init_indices):
+            for init_index in tqdm.tqdm(task_init_indices):
                 print(f"\nTask: {task_description}")
                 print(f"Init index: {init_index}")
                 log_file.write(f"\nTask: {task_description}\n")
@@ -176,6 +255,8 @@ def eval_libero(args: argparse.Namespace) -> None:
                 top_view = []
                 wrist_view = []
                 max_steps = max_steps_for_suite(args.task_suite_name)
+                trace_steps: list[dict] = []
+                exception_message = None
 
                 print(f"Starting episode {task_episodes + 1}...")
                 log_file.write(f"Starting episode {task_episodes + 1}...\n")
@@ -190,20 +271,51 @@ def eval_libero(args: argparse.Namespace) -> None:
                         top_view.append(img)
                         wrist_view.append(wrist_img)
 
-                        action = gr00t_policy.get_action(obs, task.language)
+                        pre_eef_pos = as_float_list(obs.get("robot0_eef_pos", []))
+                        pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
+                        pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
+                        action, raw_action_trace = gr00t_policy.get_action_with_trace(obs, task.language)
                         obs, reward, done, info = env.step(action.tolist())
+                        trace_steps.append(
+                            {
+                                "step": int(t),
+                                "policy_step": int(t - args.num_steps_wait),
+                                "pre_robot0_eef_pos": pre_eef_pos,
+                                "pre_robot0_eef_quat": pre_eef_quat,
+                                "pre_robot0_gripper_qpos": pre_gripper_qpos,
+                                "post_robot0_eef_pos": as_float_list(obs.get("robot0_eef_pos", [])),
+                                "post_robot0_eef_quat": as_float_list(obs.get("robot0_eef_quat", [])),
+                                "post_robot0_gripper_qpos": as_float_list(obs.get("robot0_gripper_qpos", [])),
+                                "raw_action": raw_action_trace,
+                                "libero_action": as_float_list(action),
+                                "reward": float(reward),
+                                "done": bool(done),
+                            }
+                        )
                         if done:
                             task_successes += 1
                             total_successes += 1
                             break
                         t += 1
                     except Exception as exc:
+                        exception_message = str(exc)
                         print(f"Caught exception: {exc}")
                         log_file.write(f"Caught exception: {exc}\n")
                         break
 
                 task_episodes += 1
                 total_episodes += 1
+                write_episode_trace(
+                    args.trace_dir,
+                    task_suite_name=args.task_suite_name,
+                    task_id=task_id,
+                    task_description=task_description,
+                    init_index=init_index,
+                    episode_index=total_episodes,
+                    success=done,
+                    exception=exception_message,
+                    steps=trace_steps,
+                )
 
                 save_rollout_video(
                     top_view,
@@ -248,6 +360,11 @@ def main() -> None:
     parser.add_argument("--num-inits", type=int, default=10)
     parser.add_argument("--port", type=int, default=5555)
     parser.add_argument("--headless", action="store_true")
+    parser.add_argument(
+        "--case-list",
+        help="Comma-separated task:init pairs, for example '8:7,8:9,4:10'.",
+    )
+    parser.add_argument("--trace-dir", type=Path, help="Optional directory for per-episode JSON traces.")
     parser.add_argument(
         "--log-file",
         type=Path,
