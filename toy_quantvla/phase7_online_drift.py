@@ -24,6 +24,15 @@ import torch
 import tqdm
 from libero.libero import benchmark
 
+from phase3_activation_capture import build_variant_observation
+from phase3_atm_ohb_forward import (
+    ATMOHBProcessor,
+    collect_attention_stats,
+    compute_atm_ohb_scales,
+    install_attention_processors,
+    scale_summary,
+    select_scales,
+)
 from phase3_fake_quant_forward import compare_actions, set_seed, set_submodule
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, include_module_for_scope, module_family, scope_description
@@ -72,6 +81,11 @@ def relative_rmse_tensor(x: Any, y: Any) -> float:
     xf = x.detach().float()
     yf = y.detach().float()
     return float(torch.sqrt(torch.mean((yf - xf).square()) / torch.mean(xf.square()).clamp_min(EPS)).item())
+
+
+def synchronize_if_cuda(device: str) -> None:
+    if str(device).startswith("cuda") and torch.cuda.is_available():
+        torch.cuda.synchronize()
 
 
 def fp4_e2m1_codebook(device: Any, dtype: Any) -> Any:
@@ -169,6 +183,34 @@ class FP4LikeLinear:
         return _FP4LikeLinear(*args, **kwargs)
 
 
+class StudentOnlyATMOHBProcessor(ATMOHBProcessor):
+    """Apply ATM/OHB scales only while the FP4-like student path is enabled."""
+
+    def __init__(
+        self,
+        *,
+        name: str,
+        state: FP4RuntimeState,
+        alpha: float | None = None,
+        beta: float | None = None,
+    ):
+        super().__init__(name=name, alpha=alpha, beta=beta)
+        self.state = state
+        self.student_alpha = alpha
+        self.student_beta = beta
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
+        old_alpha, old_beta = self.alpha, self.beta
+        if self.state.enabled:
+            self.alpha, self.beta = self.student_alpha, self.student_beta
+        else:
+            self.alpha, self.beta = None, None
+        try:
+            return super().__call__(*args, **kwargs)
+        finally:
+            self.alpha, self.beta = old_alpha, old_beta
+
+
 def patch_fp4_like_modules(model: Any, scope: str, block_size: int) -> tuple[FP4RuntimeState, dict[str, Any], dict[str, FP4Record]]:
     import torch.nn as nn
 
@@ -188,6 +230,74 @@ def patch_fp4_like_modules(model: Any, scope: str, block_size: int) -> tuple[FP4
             FP4LikeLinear(module, name=name, family=family, state=state, record=record, block_size=block_size),
         )
     return state, originals, records
+
+
+def get_submodule(root: Any, name: str) -> Any:
+    current = root
+    for part in name.split("."):
+        current = current[int(part)] if part.isdigit() else getattr(current, part)
+    return current
+
+
+def install_student_only_attention_processors(
+    model: Any,
+    *,
+    state: FP4RuntimeState,
+    mode: str,
+    scales: dict[str, dict[str, float]],
+) -> dict[str, Any]:
+    originals, _stats = install_attention_processors(model, mode="collect")
+    selected = select_scales(scales, mode)
+    for name in list(originals):
+        module = get_submodule(model, name)
+        scale = selected.get(name, {})
+        module.set_processor(
+            StudentOnlyATMOHBProcessor(
+                name=name,
+                state=state,
+                alpha=scale.get("alpha"),
+                beta=scale.get("beta"),
+            )
+        )
+    return originals
+
+
+def build_synthetic_calibration_observations(
+    *,
+    model_path: Path,
+    embodiment_tag: str,
+    variants: list[str],
+    num_observations: int,
+    base_seed: int,
+) -> list[dict[str, Any]]:
+    return [
+        {
+            "variant": variants[idx % len(variants)],
+            "seed": base_seed + idx,
+            "obs": build_variant_observation(
+                model_path,
+                embodiment_tag,
+                variants[idx % len(variants)],
+                idx,
+            ),
+        }
+        for idx in range(num_observations)
+    ]
+
+
+def collect_attention_stats_with_state(
+    policy: Any,
+    observations: list[dict[str, Any]],
+    state: FP4RuntimeState,
+    *,
+    enabled: bool,
+) -> Any:
+    old_enabled = state.enabled
+    state.enabled = enabled
+    try:
+        return collect_attention_stats(policy, observations)
+    finally:
+        state.enabled = old_enabled
 
 
 def aggregate_records(records: dict[str, FP4Record]) -> dict[str, Any]:
@@ -219,10 +329,11 @@ def show_obs_images_cv2(new_obs: dict[str, Any]) -> None:
 class LocalGR00TPolicy:
     action_keys = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
 
-    def __init__(self, policy: Any, *, headless: bool, state: FP4RuntimeState):
+    def __init__(self, policy: Any, *, headless: bool, state: FP4RuntimeState, device: str):
         self.policy = policy
         self.headless = headless
         self.state = state
+        self.device = device
 
     def process_observation(self, obs: dict[str, Any], lang: str) -> dict[str, Any]:
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
@@ -234,28 +345,40 @@ class LocalGR00TPolicy:
         new_obs = {
             "video.image": np.expand_dims(img, axis=0),
             "video.wrist_image": np.expand_dims(wrist_img, axis=0),
-            "state.x": np.array([[xyz[0]]]),
-            "state.y": np.array([[xyz[1]]]),
-            "state.z": np.array([[xyz[2]]]),
-            "state.roll": np.array([[rpy[0]]]),
-            "state.pitch": np.array([[rpy[1]]]),
-            "state.yaw": np.array([[rpy[2]]]),
-            "state.gripper": np.expand_dims(gripper, axis=0),
+            "state.x": np.array([[xyz[0]]], dtype=np.float32),
+            "state.y": np.array([[xyz[1]]], dtype=np.float32),
+            "state.z": np.array([[xyz[2]]], dtype=np.float32),
+            "state.roll": np.array([[rpy[0]]], dtype=np.float32),
+            "state.pitch": np.array([[rpy[1]]], dtype=np.float32),
+            "state.yaw": np.array([[rpy[2]]], dtype=np.float32),
+            "state.gripper": np.expand_dims(np.asarray(gripper, dtype=np.float32), axis=0),
             "annotation.human.action.task_description": [lang],
         }
         if not self.headless:
             show_obs_images_cv2(new_obs)
         return new_obs
 
-    def get_teacher_student(self, processed_obs: dict[str, Any], seed: int) -> tuple[dict[str, Any], dict[str, Any]]:
+    def get_teacher_student(self, processed_obs: dict[str, Any], seed: int) -> tuple[dict[str, Any], dict[str, Any], dict[str, float]]:
         self.state.enabled = False
         set_seed(seed)
+        synchronize_if_cuda(self.device)
+        teacher_started = time.perf_counter()
         teacher = self.policy.get_action(processed_obs)
+        synchronize_if_cuda(self.device)
+        teacher_seconds = time.perf_counter() - teacher_started
         self.state.enabled = True
         set_seed(seed)
+        synchronize_if_cuda(self.device)
+        student_started = time.perf_counter()
         student = self.policy.get_action(processed_obs)
+        synchronize_if_cuda(self.device)
+        student_seconds = time.perf_counter() - student_started
         self.state.enabled = False
-        return teacher, student
+        return teacher, student, {
+            "teacher_get_action_seconds": float(teacher_seconds),
+            "student_get_action_seconds": float(student_seconds),
+            "student_over_teacher_time": float(student_seconds / max(teacher_seconds, EPS)),
+        }
 
     def convert_to_libero_action(self, action_chunk: dict[str, Any], idx: int = 0) -> np.ndarray:
         from examples.Libero.eval.utils import normalize_gripper_action
@@ -322,17 +445,33 @@ def compare_libero_actions(teacher: np.ndarray, student: np.ndarray) -> dict[str
 
 def aggregate_step_metrics(steps: list[dict[str, Any]]) -> dict[str, Any]:
     if not steps:
-        return {"policy_steps": 0}
+        empty = {"mean": 0.0, "max": 0.0, "min": 0.0}
+        return {
+            "policy_steps": 0,
+            "raw_relative_rmse": empty,
+            "raw_cosine": empty,
+            "libero_action_rmse": empty,
+            "libero_action_max_abs_diff": empty,
+            "teacher_get_action_seconds": empty,
+            "student_get_action_seconds": empty,
+            "student_over_teacher_time": empty,
+        }
     raw_rrmse = [float(step["raw_action_metrics"]["relative_rmse"]) for step in steps]
     raw_cos = [float(step["raw_action_metrics"]["cosine"]) for step in steps]
     libero_rmse = [float(step["libero_action_metrics"]["rmse"]) for step in steps]
     libero_max = [float(step["libero_action_metrics"]["max_abs_diff"]) for step in steps]
+    teacher_seconds = [float(step["timing"]["teacher_get_action_seconds"]) for step in steps]
+    student_seconds = [float(step["timing"]["student_get_action_seconds"]) for step in steps]
+    student_over_teacher = [float(step["timing"]["student_over_teacher_time"]) for step in steps]
     return {
         "policy_steps": len(steps),
         "raw_relative_rmse": summarize_floats(raw_rrmse),
         "raw_cosine": summarize_floats(raw_cos),
         "libero_action_rmse": summarize_floats(libero_rmse),
         "libero_action_max_abs_diff": summarize_floats(libero_max),
+        "teacher_get_action_seconds": summarize_floats(teacher_seconds),
+        "student_get_action_seconds": summarize_floats(student_seconds),
+        "student_over_teacher_time": summarize_floats(student_over_teacher),
     }
 
 
@@ -350,6 +489,7 @@ def write_summary(result: dict[str, Any], path: Path) -> None:
         "## Run",
         "",
         f"- Scope: `{result['scope']}` ({result['scope_description']})",
+        f"- Mode: `{result['mode']}`",
         f"- Quant format: `{result['quant_format']}`",
         f"- FP4 block size: `{result['fp4_block_size']}`",
         f"- Cases: `{result['case_list']}`",
@@ -358,13 +498,13 @@ def write_summary(result: dict[str, Any], path: Path) -> None:
         "",
         "## Episodes",
         "",
-        "| task | init | success | steps | raw rel RMSE mean | raw cosine mean | LIBERO action RMSE mean | max action diff | exception |",
-        "|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| task | init | success | steps | raw rel RMSE mean | raw cosine mean | LIBERO action RMSE mean | max action diff | student/teacher time | exception |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
     for row in result["episode_summaries"]:
         metrics = row["drift_summary"]
         lines.append(
-            "| {task} | {init} | {success} | {steps} | {rrmse:.6g} | {cos:.6g} | {lrmse:.6g} | {maxdiff:.6g} | {exc} |".format(
+            "| {task} | {init} | {success} | {steps} | {rrmse:.6g} | {cos:.6g} | {lrmse:.6g} | {maxdiff:.6g} | {ratio:.4g} | {exc} |".format(
                 task=row["task_id"],
                 init=row["init_index"],
                 success=str(row["success"]),
@@ -373,8 +513,22 @@ def write_summary(result: dict[str, Any], path: Path) -> None:
                 cos=metrics["raw_cosine"]["mean"],
                 lrmse=metrics["libero_action_rmse"]["mean"],
                 maxdiff=metrics["libero_action_max_abs_diff"]["max"],
+                ratio=metrics["student_over_teacher_time"]["mean"],
                 exc=row.get("exception") or "",
             )
+        )
+    if result.get("attention_scale_summary"):
+        sc = result["attention_scale_summary"]
+        lines.extend(
+            [
+                "",
+                "## ATM/OHB Scale Summary",
+                "",
+                f"- Attention processors: `{result['attention_processors']}`",
+                f"- Calibration observations: `{result['num_calibration_observations']}`",
+                f"- Alpha mean/min/max: `{sc['alpha']['mean']:.6g}` / `{sc['alpha']['min']:.6g}` / `{sc['alpha']['max']:.6g}`",
+                f"- Beta mean/min/max: `{sc['beta']['mean']:.6g}` / `{sc['beta']['min']:.6g}` / `{sc['beta']['max']:.6g}`",
+            ]
         )
     lines.extend(
         [
@@ -408,7 +562,39 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
     model_load_seconds = time.time() - load_started
 
     state, _originals, records = patch_fp4_like_modules(policy.model, args.scope, args.fp4_block_size)
-    local_policy = LocalGR00TPolicy(policy, headless=args.headless, state=state)
+    attention_originals: dict[str, Any] = {}
+    attention_scales: dict[str, dict[str, float]] = {}
+    attention_scale_summary = None
+    calibration_seconds = 0.0
+    if args.mode != "none":
+        calibration_started = time.time()
+        calibration_variants = [item.strip() for item in args.calibration_variants.split(",") if item.strip()]
+        calibration_observations = build_synthetic_calibration_observations(
+            model_path=args.model_path,
+            embodiment_tag=args.embodiment_tag,
+            variants=calibration_variants,
+            num_observations=args.num_calibration_observations,
+            base_seed=args.calibration_base_seed,
+        )
+        teacher_stats = collect_attention_stats_with_state(
+            policy, calibration_observations, state, enabled=False
+        )
+        student_stats = collect_attention_stats_with_state(
+            policy, calibration_observations, state, enabled=True
+        )
+        attention_scales = compute_atm_ohb_scales(
+            teacher_stats, student_stats, log_clamp=args.log_clamp
+        )
+        attention_scale_summary = scale_summary(attention_scales)
+        attention_originals = install_student_only_attention_processors(
+            policy.model,
+            state=state,
+            mode=args.mode,
+            scales=attention_scales,
+        )
+        calibration_seconds = time.time() - calibration_started
+
+    local_policy = LocalGR00TPolicy(policy, headless=args.headless, state=state, device=args.device)
     cases = parse_case_list(args.case_list)
 
     benchmark_dict = benchmark.get_benchmark_dict()
@@ -424,8 +610,18 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
         "case_list": args.case_list,
         "scope": args.scope,
         "scope_description": scope_description(args.scope),
+        "mode": args.mode,
         "quant_format": "fp4_e2m1_blockscaled_fake",
         "fp4_block_size": args.fp4_block_size,
+        "calibration_source": "synthetic" if args.mode != "none" else None,
+        "num_calibration_observations": args.num_calibration_observations if args.mode != "none" else 0,
+        "calibration_variants": args.calibration_variants if args.mode != "none" else None,
+        "calibration_base_seed": args.calibration_base_seed if args.mode != "none" else None,
+        "log_clamp": args.log_clamp if args.mode != "none" else None,
+        "attention_scale_summary": attention_scale_summary,
+        "attention_scales": attention_scales,
+        "attention_processors": len(attention_originals),
+        "calibration_seconds": calibration_seconds,
         "denoising_steps": args.denoising_steps,
         "num_steps_wait": args.num_steps_wait,
         "max_policy_steps": args.max_policy_steps,
@@ -488,7 +684,7 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
                         pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
                         pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
 
-                        teacher_chunk, student_chunk = local_policy.get_teacher_student(processed_obs, seed)
+                        teacher_chunk, student_chunk, timing = local_policy.get_teacher_student(processed_obs, seed)
                         teacher_action = local_policy.convert_to_libero_action(teacher_chunk)
                         student_action = local_policy.convert_to_libero_action(student_chunk)
                         raw_metrics = compare_actions(teacher_chunk, student_chunk)
@@ -512,6 +708,7 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
                                 "student_libero_action": as_float_list(student_action),
                                 "raw_action_metrics": raw_metrics,
                                 "libero_action_metrics": libero_metrics,
+                                "timing": timing,
                                 "reward": float(reward),
                                 "done": bool(done),
                             }
@@ -539,6 +736,7 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
                     "num_steps": len(trace_steps),
                     "elapsed_seconds": time.time() - started,
                     "scope": args.scope,
+                    "mode": args.mode,
                     "quant_format": result["quant_format"],
                     "fp4_block_size": args.fp4_block_size,
                     "drift_summary": drift_summary,
@@ -582,7 +780,12 @@ def main() -> None:
     parser.add_argument("--task-suite-name", default="libero_10")
     parser.add_argument("--case-list", default="8:7,8:9,4:10,0:3")
     parser.add_argument("--scope", choices=SCOPE_CHOICES, default="dit_mlp_only")
+    parser.add_argument("--mode", choices=["none", "identity", "atm", "ohb", "atm_ohb"], default="none")
     parser.add_argument("--fp4-block-size", type=int, default=32)
+    parser.add_argument("--num-calibration-observations", type=int, default=3)
+    parser.add_argument("--calibration-variants", default="zero,midgray,noise")
+    parser.add_argument("--calibration-base-seed", type=int, default=470104)
+    parser.add_argument("--log-clamp", type=float, default=0.3)
     parser.add_argument("--embodiment-tag", default="new_embodiment")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--denoising-steps", type=int, default=8)
@@ -612,6 +815,8 @@ def main() -> None:
         "episodes": result["episodes"],
         "teacher_successes": result["teacher_successes"],
         "patched_modules": result["patched_modules"],
+        "mode": result["mode"],
+        "attention_processors": result["attention_processors"],
     }, indent=2))
 
 

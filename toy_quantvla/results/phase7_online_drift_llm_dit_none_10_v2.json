@@ -1,0 +1,1910 @@
+{
+  "boundary": "online teacher-controlled drift diagnostic, not quantized closed-loop benchmark",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "task_suite_name": "libero_10",
+  "case_list": "8:7,8:9",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "mode": "none",
+  "quant_format": "fp4_e2m1_blockscaled_fake",
+  "fp4_block_size": 32,
+  "calibration_source": null,
+  "num_calibration_observations": 0,
+  "calibration_variants": null,
+  "calibration_base_seed": null,
+  "log_clamp": null,
+  "attention_scale_summary": null,
+  "attention_scales": {},
+  "attention_processors": 0,
+  "calibration_seconds": 0.0,
+  "denoising_steps": 8,
+  "num_steps_wait": 10,
+  "max_policy_steps": 10,
+  "matched_denoising_seed": true,
+  "base_seed": 470204,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "device": "cuda",
+  "model_load_seconds": 11.136352300643921,
+  "patched_modules": 116,
+  "episode_summaries": [
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 8,
+      "task_description": "put both moka pots on the stove",
+      "init_index": 7,
+      "success": false,
+      "exception": null,
+      "num_steps": 10,
+      "elapsed_seconds": 10.950379371643066,
+      "scope": "llm_dit_mlp",
+      "mode": "none",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 10,
+        "raw_relative_rmse": {
+          "mean": 0.024554095507318276,
+          "max": 0.032123419114503816,
+          "min": 0.015824860493985637
+        },
+        "raw_cosine": {
+          "mean": 0.9996878165338081,
+          "max": 0.9998813418242313,
+          "min": 0.9994845875881511
+        },
+        "libero_action_rmse": {
+          "mean": 0.0058644353502365154,
+          "max": 0.012906373122376578,
+          "min": 0.0029962224517319533
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.011875393986701965,
+          "max": 0.02838134765625,
+          "min": 0.005800783634185791
+        },
+        "teacher_get_action_seconds": {
+          "mean": 0.1530716460198164,
+          "max": 0.6244776025414467,
+          "min": 0.09066887944936752
+        },
+        "student_get_action_seconds": {
+          "mean": 0.9116143692284823,
+          "max": 0.9861864484846592,
+          "min": 0.8782981745898724
+        },
+        "student_over_teacher_time": {
+          "mean": 8.508521300768793,
+          "max": 10.667760425376729,
+          "min": 1.4408835774902788
+        }
+      }
+    },
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 8,
+      "task_description": "put both moka pots on the stove",
+      "init_index": 9,
+      "success": false,
+      "exception": null,
+      "num_steps": 10,
+      "elapsed_seconds": 10.279191970825195,
+      "scope": "llm_dit_mlp",
+      "mode": "none",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 10,
+        "raw_relative_rmse": {
+          "mean": 0.027877496612273185,
+          "max": 0.05118176563817034,
+          "min": 0.014446990345856746
+        },
+        "raw_cosine": {
+          "mean": 0.9995524592565982,
+          "max": 0.9999015234458212,
+          "min": 0.9987618989954116
+        },
+        "libero_action_rmse": {
+          "mean": 0.008435162161237405,
+          "max": 0.013636737509772946,
+          "min": 0.0036157552686321218
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.015911126136779787,
+          "max": 0.029754698276519775,
+          "min": 0.004844844341278076
+        },
+        "teacher_get_action_seconds": {
+          "mean": 0.10831627324223518,
+          "max": 0.21972879022359848,
+          "min": 0.09062252193689346
+        },
+        "student_get_action_seconds": {
+          "mean": 0.8925088718533516,
+          "max": 0.9306864775717258,
+          "min": 0.8774250075221062
+        },
+        "student_over_teacher_time": {
+          "mean": 8.77116191795179,
+          "max": 9.71100376136918,
+          "min": 4.23561462576046
+        }
+      }
+    }
+  ],
+  "episode_trace_files": [
+    "/tmp/quantvla_phase7_online_drift_llm_dit_none_10_v2/task=08--init=07--success=False--task=put_both_moka_pots_on_the_stove.json",
+    "/tmp/quantvla_phase7_online_drift_llm_dit_none_10_v2/task=08--init=09--success=False--task=put_both_moka_pots_on_the_stove.json"
+  ],
+  "episodes": 2,
+  "teacher_successes": 0,
+  "quant_records": {
+    "modules": [
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10915647484362126,
+          "max": 0.10925741493701935,
+          "min": 0.10903263092041016
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10111243277788162,
+          "max": 0.10111243277788162,
+          "min": 0.10111243277788162
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10915647484362126,
+          "max": 0.10925741493701935,
+          "min": 0.10903263092041016
+        },
+        "weight_relative_rmse": {
+          "mean": 0.101059190928936,
+          "max": 0.101059190928936,
+          "min": 0.101059190928936
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10915647484362126,
+          "max": 0.10925741493701935,
+          "min": 0.10903263092041016
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106530040502548,
+          "max": 0.10106530040502548,
+          "min": 0.10106530040502548
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10236633941531181,
+          "max": 0.10248487442731857,
+          "min": 0.1022769883275032
+        },
+        "weight_relative_rmse": {
+          "mean": 0.101192407310009,
+          "max": 0.101192407310009,
+          "min": 0.101192407310009
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1031178180128336,
+          "max": 0.10324939340353012,
+          "min": 0.10298551619052887
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1011609360575676,
+          "max": 0.1011609360575676,
+          "min": 0.1011609360575676
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1031178180128336,
+          "max": 0.10324939340353012,
+          "min": 0.10298551619052887
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10115937888622284,
+          "max": 0.10115937888622284,
+          "min": 0.10115937888622284
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10524182803928853,
+          "max": 0.10537545382976532,
+          "min": 0.10511062294244766
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10105311870574951,
+          "max": 0.10105311870574951,
+          "min": 0.10105311870574951
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10700746290385724,
+          "max": 0.10708297789096832,
+          "min": 0.10689360648393631
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10098432749509811,
+          "max": 0.10098432749509811,
+          "min": 0.10098432749509811
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10700746290385724,
+          "max": 0.10708297789096832,
+          "min": 0.10689360648393631
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102271288633347,
+          "max": 0.10102271288633347,
+          "min": 0.10102271288633347
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10700746290385724,
+          "max": 0.10708297789096832,
+          "min": 0.10689360648393631
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108483582735062,
+          "max": 0.10108483582735062,
+          "min": 0.10108483582735062
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10302840657532215,
+          "max": 0.10320562869310379,
+          "min": 0.10282913595438004
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104483366012573,
+          "max": 0.10104483366012573,
+          "min": 0.10104483366012573
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11205560863018035,
+          "max": 0.11221939325332642,
+          "min": 0.11196339130401611
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10115192830562592,
+          "max": 0.10115192830562592,
+          "min": 0.10115192830562592
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11205560863018035,
+          "max": 0.11221939325332642,
+          "min": 0.11196339130401611
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10107634961605072,
+          "max": 0.10107634961605072,
+          "min": 0.10107634961605072
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.09580766893923283,
+          "max": 0.09599427878856659,
+          "min": 0.09557172656059265
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1014980897307396,
+          "max": 0.1014980897307396,
+          "min": 0.1014980897307396
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.106266313418746,
+          "max": 0.1064499095082283,
+          "min": 0.10615675151348114
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010223850607872,
+          "max": 0.1010223850607872,
+          "min": 0.1010223850607872
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.106266313418746,
+          "max": 0.1064499095082283,
+          "min": 0.10615675151348114
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10103621333837509,
+          "max": 0.10103621333837509,
+          "min": 0.10103621333837509
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.106266313418746,
+          "max": 0.1064499095082283,
+          "min": 0.10615675151348114
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1012459471821785,
+          "max": 0.1012459471821785,
+          "min": 0.1012459471821785
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1010408915579319,
+          "max": 0.10147222131490707,
+          "min": 0.10072894394397736
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106509178876877,
+          "max": 0.10106509178876877,
+          "min": 0.10106509178876877
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1111336551606655,
+          "max": 0.11134347319602966,
+          "min": 0.11095983535051346
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10111439228057861,
+          "max": 0.10111439228057861,
+          "min": 0.10111439228057861
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1111336551606655,
+          "max": 0.11134347319602966,
+          "min": 0.11095983535051346
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10122422873973846,
+          "max": 0.10122422873973846,
+          "min": 0.10122422873973846
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.001186785369645804,
+          "max": 0.001191960065625608,
+          "min": 0.0011815124889835715
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106867551803589,
+          "max": 0.10106867551803589,
+          "min": 0.10106867551803589
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10850451923906804,
+          "max": 0.10865956544876099,
+          "min": 0.10834688693284988
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109401494264603,
+          "max": 0.10109401494264603,
+          "min": 0.10109401494264603
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10850451923906804,
+          "max": 0.10865956544876099,
+          "min": 0.10834688693284988
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1012621596455574,
+          "max": 0.1012621596455574,
+          "min": 0.1012621596455574
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10850451923906804,
+          "max": 0.10865956544876099,
+          "min": 0.10834688693284988
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010928824543953,
+          "max": 0.1010928824543953,
+          "min": 0.1010928824543953
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1019895240664482,
+          "max": 0.10288376361131668,
+          "min": 0.10161886364221573
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010776162147522,
+          "max": 0.1010776162147522,
+          "min": 0.1010776162147522
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11414765827357769,
+          "max": 0.1143297627568245,
+          "min": 0.11402210593223572
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108260065317154,
+          "max": 0.10108260065317154,
+          "min": 0.10108260065317154
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11414765827357769,
+          "max": 0.1143297627568245,
+          "min": 0.11402210593223572
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010981947183609,
+          "max": 0.1010981947183609,
+          "min": 0.1010981947183609
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10229171104729176,
+          "max": 0.10253511369228363,
+          "min": 0.1019715741276741
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102161765098572,
+          "max": 0.10102161765098572,
+          "min": 0.10102161765098572
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11270031221210956,
+          "max": 0.11281438916921616,
+          "min": 0.11257001757621765
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10103880614042282,
+          "max": 0.10103880614042282,
+          "min": 0.10103880614042282
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11270031221210956,
+          "max": 0.11281438916921616,
+          "min": 0.11257001757621765
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10124702751636505,
+          "max": 0.10124702751636505,
+          "min": 0.10124702751636505
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11270031221210956,
+          "max": 0.11281438916921616,
+          "min": 0.11257001757621765
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1011318489909172,
+          "max": 0.1011318489909172,
+          "min": 0.1011318489909172
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10225596204400063,
+          "max": 0.10259135812520981,
+          "min": 0.10190732777118683
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10105790197849274,
+          "max": 0.10105790197849274,
+          "min": 0.10105790197849274
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1141895443201065,
+          "max": 0.11443471908569336,
+          "min": 0.11400550603866577
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10112271457910538,
+          "max": 0.10112271457910538,
+          "min": 0.10112271457910538
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1141895443201065,
+          "max": 0.11443471908569336,
+          "min": 0.11400550603866577
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10114506632089615,
+          "max": 0.10114506632089615,
+          "min": 0.10114506632089615
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10135942064225674,
+          "max": 0.10192547738552094,
+          "min": 0.1008952334523201
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10100147128105164,
+          "max": 0.10100147128105164,
+          "min": 0.10100147128105164
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11333844475448132,
+          "max": 0.11353861540555954,
+          "min": 0.11309393495321274
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010887399315834,
+          "max": 0.1010887399315834,
+          "min": 0.1010887399315834
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11333844475448132,
+          "max": 0.11353861540555954,
+          "min": 0.11309393495321274
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10115664452314377,
+          "max": 0.10115664452314377,
+          "min": 0.10115664452314377
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11333844475448132,
+          "max": 0.11353861540555954,
+          "min": 0.11309393495321274
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10123372077941895,
+          "max": 0.10123372077941895,
+          "min": 0.10123372077941895
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10131833963096142,
+          "max": 0.10161225497722626,
+          "min": 0.1011665090918541
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10123510658740997,
+          "max": 0.10123510658740997,
+          "min": 0.10123510658740997
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10537721663713455,
+          "max": 0.10562203824520111,
+          "min": 0.10521705448627472
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10110075026750565,
+          "max": 0.10110075026750565,
+          "min": 0.10110075026750565
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10537721663713455,
+          "max": 0.10562203824520111,
+          "min": 0.10521705448627472
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10114652663469315,
+          "max": 0.10114652663469315,
+          "min": 0.10114652663469315
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10575820505619049,
+          "max": 0.10608434677124023,
+          "min": 0.10550420731306076
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010822132229805,
+          "max": 0.1010822132229805,
+          "min": 0.1010822132229805
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11131369136273861,
+          "max": 0.11146781593561172,
+          "min": 0.1110898032784462
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10099649429321289,
+          "max": 0.10099649429321289,
+          "min": 0.10099649429321289
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11131369136273861,
+          "max": 0.11146781593561172,
+          "min": 0.1110898032784462
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10116752982139587,
+          "max": 0.10116752982139587,
+          "min": 0.10116752982139587
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11131369136273861,
+          "max": 0.11146781593561172,
+          "min": 0.1110898032784462
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10123494267463684,
+          "max": 0.10123494267463684,
+          "min": 0.10123494267463684
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10172112621366977,
+          "max": 0.1019906997680664,
+          "min": 0.1014593243598938
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10107781738042831,
+          "max": 0.10107781738042831,
+          "min": 0.10107781738042831
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10740431435406209,
+          "max": 0.10757812857627869,
+          "min": 0.10726867616176605
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10112990438938141,
+          "max": 0.10112990438938141,
+          "min": 0.10112990438938141
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10740431435406209,
+          "max": 0.10757812857627869,
+          "min": 0.10726867616176605
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10113805532455444,
+          "max": 0.10113805532455444,
+          "min": 0.10113805532455444
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10382703691720963,
+          "max": 0.10439074784517288,
+          "min": 0.10340019315481186
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10110253095626831,
+          "max": 0.10110253095626831,
+          "min": 0.10110253095626831
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11206149533391,
+          "max": 0.11223039776086807,
+          "min": 0.111839160323143
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10103807598352432,
+          "max": 0.10103807598352432,
+          "min": 0.10103807598352432
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11206149533391,
+          "max": 0.11223039776086807,
+          "min": 0.111839160323143
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104655474424362,
+          "max": 0.10104655474424362,
+          "min": 0.10104655474424362
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11206149533391,
+          "max": 0.11223039776086807,
+          "min": 0.111839160323143
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010470911860466,
+          "max": 0.1010470911860466,
+          "min": 0.1010470911860466
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10205580964684487,
+          "max": 0.1023152694106102,
+          "min": 0.10176766663789749
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106504708528519,
+          "max": 0.10106504708528519,
+          "min": 0.10106504708528519
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11005785502493382,
+          "max": 0.11034584790468216,
+          "min": 0.109778992831707
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10112381726503372,
+          "max": 0.10112381726503372,
+          "min": 0.10112381726503372
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11005785502493382,
+          "max": 0.11034584790468216,
+          "min": 0.109778992831707
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10105367749929428,
+          "max": 0.10105367749929428,
+          "min": 0.10105367749929428
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.09649409130215644,
+          "max": 0.09681782126426697,
+          "min": 0.09592844545841217
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010015532374382,
+          "max": 0.1010015532374382,
+          "min": 0.1010015532374382
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11214240677654744,
+          "max": 0.11227066814899445,
+          "min": 0.11184569448232651
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10122449696063995,
+          "max": 0.10122449696063995,
+          "min": 0.10122449696063995
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11214240677654744,
+          "max": 0.11227066814899445,
+          "min": 0.11184569448232651
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10135141760110855,
+          "max": 0.10135141760110855,
+          "min": 0.10135141760110855
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11214240677654744,
+          "max": 0.11227066814899445,
+          "min": 0.11184569448232651
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10116459429264069,
+          "max": 0.10116459429264069,
+          "min": 0.10116459429264069
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10192369259893894,
+          "max": 0.10220001637935638,
+          "min": 0.10173052549362183
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108069330453873,
+          "max": 0.10108069330453873,
+          "min": 0.10108069330453873
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10786777921020985,
+          "max": 0.10799939930438995,
+          "min": 0.10769501328468323
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108393430709839,
+          "max": 0.10108393430709839,
+          "min": 0.10108393430709839
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10786777921020985,
+          "max": 0.10799939930438995,
+          "min": 0.10769501328468323
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104977339506149,
+          "max": 0.10104977339506149,
+          "min": 0.10104977339506149
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10579356215894223,
+          "max": 0.10611914843320847,
+          "min": 0.10541103780269623
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10098415613174438,
+          "max": 0.10098415613174438,
+          "min": 0.10098415613174438
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11402348689734935,
+          "max": 0.11425948143005371,
+          "min": 0.11391103267669678
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102926194667816,
+          "max": 0.10102926194667816,
+          "min": 0.10102926194667816
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11402348689734935,
+          "max": 0.11425948143005371,
+          "min": 0.11391103267669678
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10130521655082703,
+          "max": 0.10130521655082703,
+          "min": 0.10130521655082703
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11402348689734935,
+          "max": 0.11425948143005371,
+          "min": 0.11391103267669678
+        },
+        "weight_relative_rmse": {
+          "mean": 0.101180799305439,
+          "max": 0.101180799305439,
+          "min": 0.101180799305439
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10195602253079414,
+          "max": 0.10222773998975754,
+          "min": 0.10173295438289642
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10113509744405746,
+          "max": 0.10113509744405746,
+          "min": 0.10113509744405746
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10883594155311585,
+          "max": 0.10902949422597885,
+          "min": 0.1086227148771286
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10113539546728134,
+          "max": 0.10113539546728134,
+          "min": 0.10113539546728134
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10883594155311585,
+          "max": 0.10902949422597885,
+          "min": 0.1086227148771286
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10112065821886063,
+          "max": 0.10112065821886063,
+          "min": 0.10112065821886063
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.1007203709334135,
+          "max": 0.10127536207437515,
+          "min": 0.10000768303871155
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10096915066242218,
+          "max": 0.10096915066242218,
+          "min": 0.10096915066242218
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11465139016509056,
+          "max": 0.11484724283218384,
+          "min": 0.11445864289999008
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010207086801529,
+          "max": 0.1010207086801529,
+          "min": 0.1010207086801529
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11465139016509056,
+          "max": 0.11484724283218384,
+          "min": 0.11445864289999008
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10099068284034729,
+          "max": 0.10099068284034729,
+          "min": 0.10099068284034729
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11465139016509056,
+          "max": 0.11484724283218384,
+          "min": 0.11445864289999008
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10120272636413574,
+          "max": 0.10120272636413574,
+          "min": 0.10120272636413574
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.102269746363163,
+          "max": 0.10248623043298721,
+          "min": 0.10203206539154053
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109849274158478,
+          "max": 0.10109849274158478,
+          "min": 0.10109849274158478
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10849440023303032,
+          "max": 0.10876070708036423,
+          "min": 0.10825618356466293
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10121679306030273,
+          "max": 0.10121679306030273,
+          "min": 0.10121679306030273
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10849440023303032,
+          "max": 0.10876070708036423,
+          "min": 0.10825618356466293
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10116790980100632,
+          "max": 0.10116790980100632,
+          "min": 0.10116790980100632
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10057715438306332,
+          "max": 0.10079657286405563,
+          "min": 0.1003250777721405
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10111414641141891,
+          "max": 0.10111414641141891,
+          "min": 0.10111414641141891
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.q_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11227411478757858,
+          "max": 0.1126209944486618,
+          "min": 0.11207527667284012
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1012723371386528,
+          "max": 0.1012723371386528,
+          "min": 0.1012723371386528
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.k_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11227411478757858,
+          "max": 0.1126209944486618,
+          "min": 0.11207527667284012
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10113318264484406,
+          "max": 0.10113318264484406,
+          "min": 0.10113318264484406
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.v_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.11227411478757858,
+          "max": 0.1126209944486618,
+          "min": 0.11207527667284012
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10123944282531738,
+          "max": 0.10123944282531738,
+          "min": 0.10123944282531738
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj",
+        "family": "llm_attn",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.103017508238554,
+          "max": 0.10324351489543915,
+          "min": 0.1027589812874794
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10131572186946869,
+          "max": 0.10131572186946869,
+          "min": 0.10131572186946869
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10757950730621815,
+          "max": 0.10774946957826614,
+          "min": 0.10734797269105911
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10107136517763138,
+          "max": 0.10107136517763138,
+          "min": 0.10107136517763138
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10757950730621815,
+          "max": 0.10774946957826614,
+          "min": 0.10734797269105911
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108346492052078,
+          "max": 0.10108346492052078,
+          "min": 0.10108346492052078
+        }
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj",
+        "family": "llm_mlp",
+        "calls": 20,
+        "input_relative_rmse": {
+          "mean": 0.10593352429568767,
+          "max": 0.10629910230636597,
+          "min": 0.10559196025133133
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1008811742067337,
+          "max": 0.1008811742067337,
+          "min": 0.1008811742067337
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11441596560180187,
+          "max": 0.11516255885362625,
+          "min": 0.11371846497058868
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010456308722496,
+          "max": 0.1010456308722496,
+          "min": 0.1010456308722496
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.05122958042193204,
+          "max": 0.05672404542565346,
+          "min": 0.04505116865038872
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1015610471367836,
+          "max": 0.1015610471367836,
+          "min": 0.1015610471367836
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.1154259281232953,
+          "max": 0.11664450168609619,
+          "min": 0.11382880061864853
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108465701341629,
+          "max": 0.10108465701341629,
+          "min": 0.10108465701341629
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.06873962720856071,
+          "max": 0.07454274594783783,
+          "min": 0.06467663496732712
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10136907547712326,
+          "max": 0.10136907547712326,
+          "min": 0.10136907547712326
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11449253680184483,
+          "max": 0.11619459092617035,
+          "min": 0.11296099424362183
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010904312133789,
+          "max": 0.1010904312133789,
+          "min": 0.1010904312133789
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.07958739888854324,
+          "max": 0.08158781379461288,
+          "min": 0.07750990241765976
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10121040791273117,
+          "max": 0.10121040791273117,
+          "min": 0.10121040791273117
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11448960015550255,
+          "max": 0.11657539010047913,
+          "min": 0.11224733293056488
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10107302665710449,
+          "max": 0.10107302665710449,
+          "min": 0.10107302665710449
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.08350514718331396,
+          "max": 0.0849308967590332,
+          "min": 0.08166245371103287
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109540075063705,
+          "max": 0.10109540075063705,
+          "min": 0.10109540075063705
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11513702138327062,
+          "max": 0.11806759983301163,
+          "min": 0.11305870115756989
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10111261904239655,
+          "max": 0.10111261904239655,
+          "min": 0.10111261904239655
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09329515397548675,
+          "max": 0.09566303342580795,
+          "min": 0.09072010964155197
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10095839202404022,
+          "max": 0.10095839202404022,
+          "min": 0.10095839202404022
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11610836335457861,
+          "max": 0.11895062029361725,
+          "min": 0.1138591393828392
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106243193149567,
+          "max": 0.10106243193149567,
+          "min": 0.10106243193149567
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09476139694452286,
+          "max": 0.09645544737577438,
+          "min": 0.0933409333229065
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10098917037248611,
+          "max": 0.10098917037248611,
+          "min": 0.10098917037248611
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11544909486547113,
+          "max": 0.11784233152866364,
+          "min": 0.11359697580337524
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104801505804062,
+          "max": 0.10104801505804062,
+          "min": 0.10104801505804062
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09654984017834067,
+          "max": 0.09883445501327515,
+          "min": 0.0948994904756546
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10103190690279007,
+          "max": 0.10103190690279007,
+          "min": 0.10103190690279007
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11491329409182072,
+          "max": 0.11844576895236969,
+          "min": 0.11219136416912079
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010328009724617,
+          "max": 0.1010328009724617,
+          "min": 0.1010328009724617
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09789801905862987,
+          "max": 0.10085753351449966,
+          "min": 0.09553897380828857
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10101879388093948,
+          "max": 0.10101879388093948,
+          "min": 0.10101879388093948
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11509249042719602,
+          "max": 0.11847119778394699,
+          "min": 0.11281029134988785
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010247990489006,
+          "max": 0.1010247990489006,
+          "min": 0.1010247990489006
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09875825759954751,
+          "max": 0.10157826542854309,
+          "min": 0.09638148546218872
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102414339780807,
+          "max": 0.10102414339780807,
+          "min": 0.10102414339780807
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11517912475392222,
+          "max": 0.11781132221221924,
+          "min": 0.11289776116609573
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109058022499084,
+          "max": 0.10109058022499084,
+          "min": 0.10109058022499084
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09845791878178715,
+          "max": 0.1019221693277359,
+          "min": 0.09535384923219681
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1009574681520462,
+          "max": 0.1009574681520462,
+          "min": 0.1009574681520462
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11510768909938633,
+          "max": 0.11730704456567764,
+          "min": 0.11300871521234512
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108361393213272,
+          "max": 0.10108361393213272,
+          "min": 0.10108361393213272
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09749443810433149,
+          "max": 0.09999622404575348,
+          "min": 0.09375137090682983
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1009802371263504,
+          "max": 0.1009802371263504,
+          "min": 0.1009802371263504
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11508298395201563,
+          "max": 0.11728344857692719,
+          "min": 0.11265958845615387
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104205459356308,
+          "max": 0.10104205459356308,
+          "min": 0.10104205459356308
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09782799822278321,
+          "max": 0.10081274062395096,
+          "min": 0.09457755088806152
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10097438097000122,
+          "max": 0.10097438097000122,
+          "min": 0.10097438097000122
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.1136307867243886,
+          "max": 0.11523961275815964,
+          "min": 0.11198711395263672
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109056532382965,
+          "max": 0.10109056532382965,
+          "min": 0.10109056532382965
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09093056758865714,
+          "max": 0.09459136426448822,
+          "min": 0.08689361065626144
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10205645114183426,
+          "max": 0.10205645114183426,
+          "min": 0.10205645114183426
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11180057572200894,
+          "max": 0.11349933594465256,
+          "min": 0.11015178263187408
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108928382396698,
+          "max": 0.10108928382396698,
+          "min": 0.10108928382396698
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.10068287048488855,
+          "max": 0.10342302918434143,
+          "min": 0.09760043770074844
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102123767137527,
+          "max": 0.10102123767137527,
+          "min": 0.10102123767137527
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.11081048217602074,
+          "max": 0.11258291453123093,
+          "min": 0.10925857722759247
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108168423175812,
+          "max": 0.10108168423175812,
+          "min": 0.10108168423175812
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09733157106675208,
+          "max": 0.09981943666934967,
+          "min": 0.09381137788295746
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10101048648357391,
+          "max": 0.10101048648357391,
+          "min": 0.10101048648357391
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.1109644319396466,
+          "max": 0.11264395713806152,
+          "min": 0.1091119572520256
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10117203742265701,
+          "max": 0.10117203742265701,
+          "min": 0.10117203742265701
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 160,
+        "input_relative_rmse": {
+          "mean": 0.09019013210199774,
+          "max": 0.09197712689638138,
+          "min": 0.08824650943279266
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10489624738693237,
+          "max": 0.10489624738693237,
+          "min": 0.10489624738693237
+        }
+      }
+    ],
+    "family_summary": {
+      "llm_attn": {
+        "modules": 48,
+        "calls": 960,
+        "input_relative_rmse_mean": 0.1088596605618174,
+        "weight_relative_rmse_mean": 0.10112647029260795
+      },
+      "llm_mlp": {
+        "modules": 36,
+        "calls": 720,
+        "input_relative_rmse_mean": 0.10404205434768098,
+        "weight_relative_rmse_mean": 0.10110376982225312
+      },
+      "dit_mlp": {
+        "modules": 32,
+        "calls": 5120,
+        "input_relative_rmse_mean": 0.10204188396819518,
+        "weight_relative_rmse_mean": 0.10123059619218111
+      }
+    }
+  }
+}

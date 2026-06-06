@@ -300,3 +300,44 @@ success / failure flip
 2. paired closed-loop smoke 通过
 3. 再开始 CUTLASS extension
 ```
+
+## 8. ATM/OHB Follow-up
+
+ATM/OHB 已接入 online drift：
+
+```text
+docs/phase7_online_atm_ohb_report.md
+```
+
+新增能力：
+
+```text
+mode:
+  none
+  identity
+  atm
+  ohb
+  atm_ohb
+```
+
+初步 `llm_dit_mlp` task8/init7,9 对照显示：
+
+```text
+atm_ohb 对 init7 略有改善
+atm_ohb 对 init9 略有恶化
+ohb 单独没有稳定收益
+```
+
+当前判断：
+
+```text
+ATM/OHB mechanism 能在线测试，
+但 synthetic calibration 还不能保证 FP4-like online drift 单调下降。
+```
+
+同时，脚本已经记录 teacher/student `get_action` timing。需要注意：
+
+```text
+当前 student timing 是 PyTorch fake quant timing，
+不能代表 CUTLASS FP4 backend 的最终推理速度。
+```
