@@ -330,3 +330,52 @@ We should not run actual rollouts for full `llm_dit_mlp` until a backend is both
 2. accurate enough in offline forward drift
 ```
 
+## 7. Update: CUTLASS SM120 Blockscaled FP4 Result
+
+The CUTLASS/CuTe prototype benchmark has now been run on the RTX 5090 using the
+Blackwell GeForce `sm_120` examples.
+
+New script:
+
+```text
+toy_quantvla/phase7_cutlass_sm120_blockscaled_bench.py
+```
+
+Result:
+
+```text
+toy_quantvla/results/phase7_cutlass_sm120_blockscaled_bench.json
+docs/phase7_cutlass_sm120_fp4_report.md
+```
+
+Best per-shape result:
+
+| family | M | K | N | CUTLASS FP4 ms | speed vs torch fp16 |
+|---|---:|---:|---:|---:|---:|
+| DiT MLP | 49 | 1536 | 6144 | 0.00958 | 1.60x |
+| DiT MLP | 49 | 6144 | 1536 | 0.02105 | 1.49x |
+| LLM attn | 551 | 2048 | 1024 | 0.01021 | 1.64x |
+| LLM attn | 551 | 2048 | 2048 | 0.01014 | 2.66x |
+| LLM MLP | 551 | 2048 | 6144 | 0.01847 | 4.12x |
+| LLM MLP | 551 | 6144 | 2048 | 0.02258 | 3.20x |
+
+Updated decision:
+
+```text
+CUTLASS SM120 blockscaled FP4 is the first backend that beats torch fp16
+on every representative GR00T shape.
+```
+
+Caveat:
+
+```text
+This is not strict W4A16 weight-only yet.
+The CUTLASS GeForce blockscaled example uses Float4E2M1FN for both A and B.
+```
+
+So the next task is numerical, not rollout:
+
+```text
+Run offline drift for Blackwell-native blockscaled FP4-like activation + weight.
+If drift is acceptable, then package the CUTLASS path as a PyTorch extension.
+```

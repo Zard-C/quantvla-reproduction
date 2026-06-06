@@ -1,0 +1,876 @@
+{
+  "backend": "CUTLASS CuTe SM120 Blackwell GeForce blockscaled FP4",
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "python_bin": "/root/autodl-tmp/envs/gr00t-libero-py310/bin/python",
+  "warmup": 10,
+  "iterations": 50,
+  "tile_shapes": [
+    [
+      128,
+      128,
+      128
+    ],
+    [
+      128,
+      128,
+      256
+    ]
+  ],
+  "epi_tiles": [
+    [
+      128,
+      128
+    ],
+    [
+      64,
+      32
+    ]
+  ],
+  "sf_vec_sizes": [
+    32
+  ],
+  "rows": [
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "torch_fp16_ms": 0.0153,
+      "bnb_nf4_ms": 0.107,
+      "mnkl": "49,6144,1536,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.640671730041504,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.711679458618164 microseconds per iteration\nGFLOPS: 86339.77851679547\nPASS",
+      "cutlass_fp4_ms": 0.010711679458618164,
+      "gflops": 86339.77851679547,
+      "speedup_vs_torch_fp16": 1.4283474462718604,
+      "speedup_vs_bnb_nf4": 9.989096519679023,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "torch_fp16_ms": 0.0153,
+      "bnb_nf4_ms": 0.107,
+      "mnkl": "49,6144,1536,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.757812261581421,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 9.57759976387024 microseconds per iteration\nGFLOPS: 96563.23659387048\nPASS",
+      "cutlass_fp4_ms": 0.009577599763870239,
+      "gflops": 96563.23659387048,
+      "speedup_vs_torch_fp16": 1.5974774867620256,
+      "speedup_vs_bnb_nf4": 11.171901378008938,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "torch_fp16_ms": 0.0153,
+      "bnb_nf4_ms": 0.107,
+      "mnkl": "49,6144,1536,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.47313117980957,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.629760026931763 microseconds per iteration\nGFLOPS: 87005.16565348583\nPASS",
+      "cutlass_fp4_ms": 0.010629760026931763,
+      "gflops": 87005.16565348583,
+      "speedup_vs_torch_fp16": 1.439355165237562,
+      "speedup_vs_bnb_nf4": 10.066078606563343,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "torch_fp16_ms": 0.0153,
+      "bnb_nf4_ms": 0.107,
+      "mnkl": "49,6144,1536,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.70644211769104,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.83840012550354 microseconds per iteration\nGFLOPS: 85330.30902077282\nPASS",
+      "cutlass_fp4_ms": 0.01083840012550354,
+      "gflops": 85330.30902077282,
+      "speedup_vs_torch_fp16": 1.411647459295952,
+      "speedup_vs_bnb_nf4": 9.872305761089338,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "torch_fp16_ms": 0.0313,
+      "bnb_nf4_ms": 0.1052,
+      "mnkl": "49,1536,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.430029392242432,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.568960189819336 microseconds per iteration\nGFLOPS: 40978.58404735851\nPASS",
+      "cutlass_fp4_ms": 0.022568960189819336,
+      "gflops": 40978.58404735851,
+      "speedup_vs_torch_fp16": 1.3868605259944213,
+      "speedup_vs_bnb_nf4": 4.661269243917352,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "torch_fp16_ms": 0.0313,
+      "bnb_nf4_ms": 0.1052,
+      "mnkl": "49,1536,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.616236448287964,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.609920501708984 microseconds per iteration\nGFLOPS: 40904.3469184288\nPASS",
+      "cutlass_fp4_ms": 0.022609920501708985,
+      "gflops": 40904.3469184288,
+      "speedup_vs_torch_fp16": 1.3843480784301816,
+      "speedup_vs_bnb_nf4": 4.652824851465019,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "torch_fp16_ms": 0.0313,
+      "bnb_nf4_ms": 0.1052,
+      "mnkl": "49,1536,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.415875673294067,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 30.760960578918457 microseconds per iteration\nGFLOPS: 30065.512083970076\nPASS",
+      "cutlass_fp4_ms": 0.03076096057891846,
+      "gflops": 30065.512083970076,
+      "speedup_vs_torch_fp16": 1.0175234911698747,
+      "speedup_vs_bnb_nf4": 3.419919209938365,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "torch_fp16_ms": 0.0313,
+      "bnb_nf4_ms": 0.1052,
+      "mnkl": "49,1536,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.694137573242188,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 21.0534405708313 microseconds per iteration\nGFLOPS: 43928.403478210326\nPASS",
+      "cutlass_fp4_ms": 0.0210534405708313,
+      "gflops": 43928.403478210326,
+      "speedup_vs_torch_fp16": 1.4866928706828517,
+      "speedup_vs_bnb_nf4": 4.996807987087412,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "torch_fp16_ms": 0.0167,
+      "bnb_nf4_ms": 0.0985,
+      "mnkl": "551,1024,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.507183313369751,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.712319612503052 microseconds per iteration\nGFLOPS: 215738.66236240827\nPASS",
+      "cutlass_fp4_ms": 0.010712319612503051,
+      "gflops": 215738.66236240827,
+      "speedup_vs_torch_fp16": 1.5589527389108455,
+      "speedup_vs_bnb_nf4": 9.195020645671754,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "torch_fp16_ms": 0.0167,
+      "bnb_nf4_ms": 0.0985,
+      "mnkl": "551,1024,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.6949942111969,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.341119766235352 microseconds per iteration\nGFLOPS: 223482.71330787748\nPASS",
+      "cutlass_fp4_ms": 0.010341119766235352,
+      "gflops": 223482.71330787748,
+      "speedup_vs_torch_fp16": 1.614912154342022,
+      "speedup_vs_bnb_nf4": 9.525080670819712,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "torch_fp16_ms": 0.0167,
+      "bnb_nf4_ms": 0.0985,
+      "mnkl": "551,1024,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.394604921340942,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 12.636159658432007 microseconds per iteration\nGFLOPS: 182892.7115888289\nPASS",
+      "cutlass_fp4_ms": 0.012636159658432006,
+      "gflops": 182892.7115888289,
+      "speedup_vs_torch_fp16": 1.3216040673288127,
+      "speedup_vs_bnb_nf4": 7.7950898581968895,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "torch_fp16_ms": 0.0167,
+      "bnb_nf4_ms": 0.0985,
+      "mnkl": "551,1024,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.536011695861816,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.207359790802002 microseconds per iteration\nGFLOPS: 226411.29061430073\nPASS",
+      "cutlass_fp4_ms": 0.010207359790802001,
+      "gflops": 226411.29061430073,
+      "speedup_vs_torch_fp16": 1.6360743955600163,
+      "speedup_vs_bnb_nf4": 9.64989987800369,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "torch_fp16_ms": 0.027,
+      "bnb_nf4_ms": 0.0996,
+      "mnkl": "551,2048,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.252945423126221,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.135680437088013 microseconds per iteration\nGFLOPS: 456024.93455564574\nPASS",
+      "cutlass_fp4_ms": 0.010135680437088013,
+      "gflops": 456024.93455564574,
+      "speedup_vs_torch_fp16": 2.6638566761835594,
+      "speedup_vs_bnb_nf4": 9.826671294366019,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "torch_fp16_ms": 0.027,
+      "bnb_nf4_ms": 0.0996,
+      "mnkl": "551,2048,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.517805576324463,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.306559801101685 microseconds per iteration\nGFLOPS: 448464.1914662867\nPASS",
+      "cutlass_fp4_ms": 0.010306559801101685,
+      "gflops": 448464.1914662867,
+      "speedup_vs_torch_fp16": 2.6196908106149954,
+      "speedup_vs_bnb_nf4": 9.663748323601983,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "torch_fp16_ms": 0.027,
+      "bnb_nf4_ms": 0.0996,
+      "mnkl": "551,2048,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.51432728767395,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 14.253439903259277 microseconds per iteration\nGFLOPS: 324281.2289083337\nPASS",
+      "cutlass_fp4_ms": 0.014253439903259278,
+      "gflops": 324281.2289083337,
+      "speedup_vs_torch_fp16": 1.8942795692305838,
+      "speedup_vs_bnb_nf4": 6.9877868553839315,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "torch_fp16_ms": 0.027,
+      "bnb_nf4_ms": 0.0996,
+      "mnkl": "551,2048,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.46967887878418,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.61184048652649 microseconds per iteration\nGFLOPS: 435562.8049506172\nPASS",
+      "cutlass_fp4_ms": 0.01061184048652649,
+      "gflops": 435562.8049506172,
+      "speedup_vs_torch_fp16": 2.544327728472834,
+      "speedup_vs_bnb_nf4": 9.385742287255344,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "torch_fp16_ms": 0.0762,
+      "bnb_nf4_ms": 0.1016,
+      "mnkl": "551,6144,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.602414608001709,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 18.4934401512146 microseconds per iteration\nGFLOPS: 749799.3294173174\nPASS",
+      "cutlass_fp4_ms": 0.0184934401512146,
+      "gflops": 749799.3294173174,
+      "speedup_vs_torch_fp16": 4.120379949697752,
+      "speedup_vs_bnb_nf4": 5.493839932930336,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "torch_fp16_ms": 0.0762,
+      "bnb_nf4_ms": 0.1016,
+      "mnkl": "551,6144,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.638097763061523,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 18.472959995269775 microseconds per iteration\nGFLOPS: 750630.5988618311\nPASS",
+      "cutlass_fp4_ms": 0.018472959995269777,
+      "gflops": 750630.5988618311,
+      "speedup_vs_torch_fp16": 4.124948033207018,
+      "speedup_vs_bnb_nf4": 5.499930710942691,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "torch_fp16_ms": 0.0762,
+      "bnb_nf4_ms": 0.1016,
+      "mnkl": "551,6144,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.671533823013306,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 24.698879718780518 microseconds per iteration\nGFLOPS: 561416.921815134\nPASS",
+      "cutlass_fp4_ms": 0.024698879718780518,
+      "gflops": 561416.921815134,
+      "speedup_vs_torch_fp16": 3.0851601719433086,
+      "speedup_vs_bnb_nf4": 4.1135468959244115,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "torch_fp16_ms": 0.0762,
+      "bnb_nf4_ms": 0.1016,
+      "mnkl": "551,6144,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.517693996429443,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 18.472959995269775 microseconds per iteration\nGFLOPS: 750630.5988618311\nPASS",
+      "cutlass_fp4_ms": 0.018472959995269777,
+      "gflops": 750630.5988618311,
+      "speedup_vs_torch_fp16": 4.124948033207018,
+      "speedup_vs_bnb_nf4": 5.499930710942691,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "torch_fp16_ms": 0.0722,
+      "bnb_nf4_ms": 0.1003,
+      "mnkl": "551,2048,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.514250755310059,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.63040065765381 microseconds per iteration\nGFLOPS: 612731.9278949782\nPASS",
+      "cutlass_fp4_ms": 0.02263040065765381,
+      "gflops": 612731.9278949782,
+      "speedup_vs_torch_fp16": 3.1903986629410954,
+      "speedup_vs_bnb_nf4": 4.432091217354459,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "torch_fp16_ms": 0.0722,
+      "bnb_nf4_ms": 0.1003,
+      "mnkl": "551,2048,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.367452621459961,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.5817608833313 microseconds per iteration\nGFLOPS: 614051.716145637\nPASS",
+      "cutlass_fp4_ms": 0.0225817608833313,
+      "gflops": 614051.716145637,
+      "speedup_vs_torch_fp16": 3.1972705925379956,
+      "speedup_vs_bnb_nf4": 4.441637679107493,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "torch_fp16_ms": 0.0722,
+      "bnb_nf4_ms": 0.1003,
+      "mnkl": "551,2048,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.638044834136963,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 32.78847932815552 microseconds per iteration\nGFLOPS: 422903.6938621587\nPASS",
+      "cutlass_fp4_ms": 0.03278847932815552,
+      "gflops": 422903.6938621587,
+      "speedup_vs_torch_fp16": 2.201992940184992,
+      "speedup_vs_bnb_nf4": 3.0590012728608684,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "torch_fp16_ms": 0.0722,
+      "bnb_nf4_ms": 0.1003,
+      "mnkl": "551,2048,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.672178506851196,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.58944034576416 microseconds per iteration\nGFLOPS: 613842.9643123116\nPASS",
+      "cutlass_fp4_ms": 0.02258944034576416,
+      "gflops": 613842.9643123116,
+      "speedup_vs_torch_fp16": 3.1961836546135824,
+      "speedup_vs_bnb_nf4": 4.440127708555988,
+      "error": null
+    }
+  ],
+  "best_by_shape": [
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "torch_fp16_ms": 0.0153,
+      "bnb_nf4_ms": 0.107,
+      "mnkl": "49,6144,1536,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.757812261581421,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 9.57759976387024 microseconds per iteration\nGFLOPS: 96563.23659387048\nPASS",
+      "cutlass_fp4_ms": 0.009577599763870239,
+      "gflops": 96563.23659387048,
+      "speedup_vs_torch_fp16": 1.5974774867620256,
+      "speedup_vs_bnb_nf4": 11.171901378008938,
+      "error": null
+    },
+    {
+      "family": "DiT MLP",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "torch_fp16_ms": 0.0313,
+      "bnb_nf4_ms": 0.1052,
+      "mnkl": "49,1536,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.694137573242188,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 21.0534405708313 microseconds per iteration\nGFLOPS: 43928.403478210326\nPASS",
+      "cutlass_fp4_ms": 0.0210534405708313,
+      "gflops": 43928.403478210326,
+      "speedup_vs_torch_fp16": 1.4866928706828517,
+      "speedup_vs_bnb_nf4": 4.996807987087412,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "torch_fp16_ms": 0.0167,
+      "bnb_nf4_ms": 0.0985,
+      "mnkl": "551,1024,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        256
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 9.536011695861816,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 256)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.207359790802002 microseconds per iteration\nGFLOPS: 226411.29061430073\nPASS",
+      "cutlass_fp4_ms": 0.010207359790802001,
+      "gflops": 226411.29061430073,
+      "speedup_vs_torch_fp16": 1.6360743955600163,
+      "speedup_vs_bnb_nf4": 9.64989987800369,
+      "error": null
+    },
+    {
+      "family": "LLM attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "torch_fp16_ms": 0.027,
+      "bnb_nf4_ms": 0.0996,
+      "mnkl": "551,2048,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        128,
+        128
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 7.252945423126221,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (128, 128)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 10.135680437088013 microseconds per iteration\nGFLOPS: 456024.93455564574\nPASS",
+      "cutlass_fp4_ms": 0.010135680437088013,
+      "gflops": 456024.93455564574,
+      "speedup_vs_torch_fp16": 2.6638566761835594,
+      "speedup_vs_bnb_nf4": 9.826671294366019,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "torch_fp16_ms": 0.0762,
+      "bnb_nf4_ms": 0.1016,
+      "mnkl": "551,6144,2048,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.638097763061523,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 18.472959995269775 microseconds per iteration\nGFLOPS: 750630.5988618311\nPASS",
+      "cutlass_fp4_ms": 0.018472959995269777,
+      "gflops": 750630.5988618311,
+      "speedup_vs_torch_fp16": 4.124948033207018,
+      "speedup_vs_bnb_nf4": 5.499930710942691,
+      "error": null
+    },
+    {
+      "family": "LLM MLP",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "torch_fp16_ms": 0.0722,
+      "bnb_nf4_ms": 0.1003,
+      "mnkl": "551,2048,6144,1",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "sf_vec_size": 32,
+      "sf_dtype": "Float8E8M0FNU",
+      "returncode": 0,
+      "wall_seconds": 8.367452621459961,
+      "raw_output_tail": "A dtype: Float4E2M1FN, B dtype: Float4E2M1FN, A/B scale factor dtype: Float8E8M0FNU, C dtype: Float16, Acc dtype: Float32\nMatrix majors - A: k, B: k, C: n\nTile Shape: (128, 128, 128)\nEpilogue tile: (64, 32)\nTolerance: 0.1\nWarmup iterations: 10\nIterations: 50\nSkip reference checking: True\nUse cold L2: False\nExecution time: 22.5817608833313 microseconds per iteration\nGFLOPS: 614051.716145637\nPASS",
+      "cutlass_fp4_ms": 0.0225817608833313,
+      "gflops": 614051.716145637,
+      "speedup_vs_torch_fp16": 3.1972705925379956,
+      "speedup_vs_bnb_nf4": 4.441637679107493,
+      "error": null
+    }
+  ]
+}
