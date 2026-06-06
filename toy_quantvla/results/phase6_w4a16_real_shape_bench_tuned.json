@@ -1,0 +1,1434 @@
+{
+  "torch_version": "2.8.0+cu128",
+  "cuda_available": true,
+  "device": "cuda",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "selected_modules": 116,
+  "captured_modules": 116,
+  "representative_cases": 6,
+  "denoising_steps": 1,
+  "num_observations": 1,
+  "load_seconds": 11.211236953735352,
+  "kernel_configs": [
+    "bm16_bn32_bk64_w4",
+    "bm16_bn64_bk64_w4",
+    "bm16_bn64_bk128_w4",
+    "bm32_bn32_bk64_w4",
+    "bm32_bn64_bk64_w4",
+    "bm32_bn64_bk128_w4",
+    "bm32_bn64_bk256_w4",
+    "bm32_bn128_bk64_w4",
+    "bm32_bn128_bk128_w4",
+    "bm32_bn128_bk256_w4",
+    "bm32_bn256_bk64_w4",
+    "bm32_bn256_bk128_w4",
+    "bm64_bn64_bk64_w4",
+    "bm64_bn64_bk128_w4",
+    "bm64_bn64_bk256_w4",
+    "bm64_bn128_bk64_w4",
+    "bm64_bn128_bk128_w4",
+    "bm64_bn128_bk256_w4",
+    "bm64_bn256_bk64_w4",
+    "bm64_bn256_bk128_w4",
+    "bm64_bn256_bk256_w4",
+    "bm64_bn128_bk64_w8",
+    "bm64_bn128_bk128_w8",
+    "bm64_bn256_bk64_w8"
+  ],
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ]
+    }
+  ],
+  "summary": {
+    "dit_mlp": {
+      "cases": 2,
+      "best_speedup_vs_torch_fp16_mean": 0.4376672711631574,
+      "packed_ratio_mean": 0.2508138020833333
+    },
+    "llm_attn": {
+      "cases": 2,
+      "best_speedup_vs_torch_fp16_mean": 0.4956756284946112,
+      "packed_ratio_mean": 0.2509765625
+    },
+    "llm_mlp": {
+      "cases": 2,
+      "best_speedup_vs_torch_fp16_mean": 0.6179877996187422,
+      "packed_ratio_mean": 0.25065104166666663
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ],
+      "fp16_weight_bytes": 18874368,
+      "packed_weight_bytes": 4718592,
+      "scale_bytes": 24576,
+      "packed_plus_scale_ratio_vs_fp16": 0.2513020833333333,
+      "torch_fp16_ms": 0.019654259085655212,
+      "dense_dequant_ref_ms": 0.01964755356311798,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.041763484477996826,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04123792052268982,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07223308086395264,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04156842827796936,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04239276051521301,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06481334567070007,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.058347731828689575,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12620925903320312,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06446681916713715,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.11711195111274719,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2038184553384781,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.18206335604190826,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04156261682510376,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06259791553020477,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04184894263744354,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09985953569412231,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0833941251039505,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.24905584752559662,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.26073843240737915,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07493190467357635,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.13606667518615723,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10481424629688263,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm16_bn64_bk64_w4",
+        "max_abs_diff": 0.0001220703125,
+        "relative_rmse": 0.00017570002819411457,
+        "cosine": 1.0,
+        "w4a16_ms": 0.04123792052268982,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.476606454363796
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ],
+      "fp16_weight_bytes": 18874368,
+      "packed_weight_bytes": 4718592,
+      "scale_bytes": 6144,
+      "packed_plus_scale_ratio_vs_fp16": 0.2503255208333333,
+      "torch_fp16_ms": 0.031279176473617554,
+      "dense_dequant_ref_ms": 0.031175687909126282,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09469792246818542,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08094578981399536,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07930465042591095,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07926464080810547,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0784473866224289,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07972978055477142,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10610654950141907,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.262090340256691,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.22330038249492645,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.4357238858938217,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.7879617065191269,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.68597711622715,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09335242211818695,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10756440460681915,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.1423226296901703,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.37582606077194214,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.30480988323688507,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.9392975270748138,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.9479717910289764,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.1504797488451004,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2709205448627472,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3889738768339157,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm32_bn64_bk64_w4",
+        "max_abs_diff": 0.00048828125,
+        "relative_rmse": 0.00030849355971440673,
+        "cosine": 1.0,
+        "w4a16_ms": 0.0784473866224289,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.39872808796251885
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 4194304,
+      "packed_weight_bytes": 1048576,
+      "scale_bytes": 4096,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.020245611667633057,
+      "dense_dequant_ref_ms": 0.020169690251350403,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.05413085222244263,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.056183263659477234,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06930135190486908,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04048749804496765,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07513605058193207,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06503857672214508,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07698729634284973,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08785873651504517,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09109586477279663,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.15498213469982147,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.26943422853946686,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2392955869436264,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.03958895802497864,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0769372284412384,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.05433499813079834,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12381330132484436,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.11612080037593842,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3296203911304474,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.33927910029888153,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.054195672273635864,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09518153965473175,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.1560986042022705,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.1497890227474272e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.03958895802497864,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.5113954162385151
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 8388608,
+      "packed_weight_bytes": 2097152,
+      "scale_bytes": 8192,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.026949644088745117,
+      "dense_dequant_ref_ms": 0.026933401823043823,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09786374866962433,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0983496755361557,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08819036185741425,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 1.3308090716600418,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07760785520076752,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07794857025146484,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.14686234295368195,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09816572070121765,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.13312272727489471,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.30104346573352814,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28048016130924225,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3311289846897125,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06114855408668518,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.060440897941589355,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10386630892753601,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12709222733974457,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.126417875289917,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.331675186753273,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3427594155073166,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.05615025758743286,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10768689215183258,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.14459997415542603,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn128_bk64_w8",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.1940377589780837e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.05615025758743286,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.47995584075070724
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 25165824,
+      "packed_weight_bytes": 6291456,
+      "scale_bytes": 24576,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.07789082825183868,
+      "dense_dequant_ref_ms": 0.07776975631713867,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2657732367515564,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 1.4358633011579514,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.23880884051322937,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.15554971992969513,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.16316741704940796,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.17965048551559448,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3808648884296417,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2762952446937561,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3757467120885849,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.8234094828367233,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.6908039748668671,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.8632297813892365,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12204430997371674,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.15812702476978302,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28876595199108124,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28630688786506653,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.37320002913475037,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.5878785252571106,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.8458837866783142,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.16013294458389282,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.31759314239025116,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3306993842124939,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 0.0001220703125,
+        "relative_rmse": 1.2070094271621201e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.12204430997371674,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.6382176134931086
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ],
+      "fp16_weight_bytes": 25165824,
+      "packed_weight_bytes": 6291456,
+      "scale_bytes": 8192,
+      "packed_plus_scale_ratio_vs_fp16": 0.2503255208333333,
+      "torch_fp16_ms": 0.07311716675758362,
+      "dense_dequant_ref_ms": 0.07212109863758087,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 1.6670072078704834,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28490640223026276,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2567482739686966,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.16509950160980225,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.17338231205940247,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.18383093178272247,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.41116252541542053,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.27588747441768646,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3612806648015976,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.8755756914615631,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.817151814699173,
+          "error": null
+        },
+        {
+          "config": "bm32_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.9404196590185165,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12231901288032532,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.14714233577251434,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk256_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28779640793800354,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3716167062520981,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.35170115530490875,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk256_w4",
+          "error": "OutOfResources(131072, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn256_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.9808477759361267,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 1.0002859681844711,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk256_w4",
+          "error": "OutOfResources(196608, 101376, 'shared memory')"
+        },
+        {
+          "config": "bm64_bn128_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.15893034636974335,
+          "error": null
+        },
+        {
+          "config": "bm64_bn128_bk128_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2941776067018509,
+          "error": null
+        },
+        {
+          "config": "bm64_bn256_bk64_w8",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.4247376322746277,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.5028298548713792e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.12231901288032532,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.5977579857443758
+    }
+  ]
+}

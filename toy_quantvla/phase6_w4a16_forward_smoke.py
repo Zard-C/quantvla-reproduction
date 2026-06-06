@@ -11,21 +11,21 @@ from typing import Any
 
 import numpy as np
 
-from phase3_activation_capture import build_variant_observation, group_for_module
+from phase3_activation_capture import build_variant_observation
 from phase3_fake_quant_forward import (
     action_to_vector,
     compare_actions,
-    config_groups,
     set_seed,
     set_submodule,
 )
 from phase3_gr00t_smoke import _insert_paths
+from phase6_w4a16_scopes import SCOPE_CHOICES, include_module_for_scope, module_family, scope_description
 from triton_w4a16 import PackedW4A16Linear
 
 
 def patch_w4a16_modules(
     model: Any,
-    groups_to_quantize: set[str],
+    scope: str,
     *,
     prefer_triton: bool,
 ) -> dict[str, Any]:
@@ -34,15 +34,15 @@ def patch_w4a16_modules(
     records: dict[str, Any] = {}
     targets: list[tuple[str, nn.Linear, str]] = []
     for name, module in list(model.named_modules()):
-        group = group_for_module(name)
-        if group in groups_to_quantize and isinstance(module, nn.Linear):
-            targets.append((name, module, group))
+        family = module_family(name)
+        if family is not None and include_module_for_scope(name, scope) and isinstance(module, nn.Linear):
+            targets.append((name, module, family))
 
     for name, module, group in targets:
         packed = PackedW4A16Linear.from_linear(module, prefer_triton=prefer_triton)
         records[name] = {
             "module": name,
-            "group": group,
+            "family": group,
             "in_features": int(module.in_features),
             "out_features": int(module.out_features),
             "bias": module.bias is not None,
@@ -58,7 +58,7 @@ def patch_w4a16_modules(
 def summarize_patch(records: dict[str, Any]) -> dict[str, Any]:
     by_group: dict[str, list[dict[str, Any]]] = {}
     for row in records.values():
-        by_group.setdefault(row["group"], []).append(row)
+        by_group.setdefault(row["family"], []).append(row)
 
     def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         fp16 = sum(int(row["fp16_weight_bytes"]) for row in rows)
@@ -101,7 +101,7 @@ def main() -> None:
     parser.add_argument("--embodiment-tag", default="new_embodiment")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--denoising-steps", type=int, default=1)
-    parser.add_argument("--config", default="llm_dit_mlp")
+    parser.add_argument("--scope", choices=SCOPE_CHOICES, default="llm_dit_mlp")
     parser.add_argument("--num-observations", type=int, default=1)
     parser.add_argument("--synthetic-variants", default="zero,midgray,noise")
     parser.add_argument("--base-seed", type=int, default=20260606)
@@ -152,7 +152,7 @@ def main() -> None:
     patch_started = time.time()
     records = patch_w4a16_modules(
         policy.model,
-        config_groups(args.config),
+        args.scope,
         prefer_triton=not args.force_reference,
     )
     if args.device == "cuda":
@@ -180,7 +180,8 @@ def main() -> None:
         "torch_version": torch.__version__,
         "cuda_available": bool(torch.cuda.is_available()),
         "device": args.device,
-        "config": args.config,
+        "scope": args.scope,
+        "scope_description": scope_description(args.scope),
         "prefer_triton": not args.force_reference,
         "denoising_steps": args.denoising_steps,
         "num_observations": args.num_observations,

@@ -14,6 +14,9 @@ synthetic matrix shapes. This step connects it more tightly to GR00T:
 
 This is still offline engineering validation, not simulator rollout.
 
+Follow-up status: patch-scope contraction and expanded tile tuning are reported
+in `docs/phase6_w4a16_scope_perf_report.md`.
+
 ## 2. New Files
 
 ```text
@@ -216,4 +219,3 @@ Recommended order:
 The most important engineering lesson from this step is that the deployment
 problem is now concrete: we have a working path, and the remaining work is
 performance tuning plus scope selection.
-

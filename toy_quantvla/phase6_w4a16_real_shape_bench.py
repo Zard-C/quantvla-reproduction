@@ -17,9 +17,10 @@ from typing import Any
 
 import numpy as np
 
-from phase3_activation_capture import build_variant_observation, group_for_module
-from phase3_fake_quant_forward import config_groups, set_seed
+from phase3_activation_capture import build_variant_observation
+from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
+from phase6_w4a16_scopes import SCOPE_CHOICES, include_module_for_scope, module_family, scope_description
 from triton_w4a16 import (
     cosine_similarity,
     dequantize_w4_weight,
@@ -32,13 +33,28 @@ from triton_w4a16 import (
 DEFAULT_CONFIGS = (
     "16x32x64x4",
     "16x64x64x4",
+    "16x64x128x4",
     "32x32x64x4",
     "32x64x64x4",
     "32x64x128x4",
+    "32x64x256x4",
     "32x128x64x4",
     "32x128x128x4",
+    "32x128x256x4",
+    "32x256x64x4",
+    "32x256x128x4",
     "64x64x64x4",
     "64x64x128x4",
+    "64x64x256x4",
+    "64x128x64x4",
+    "64x128x128x4",
+    "64x128x256x4",
+    "64x256x64x4",
+    "64x256x128x4",
+    "64x256x256x4",
+    "64x128x64x8",
+    "64x128x128x8",
+    "64x256x64x8",
 )
 
 
@@ -88,13 +104,12 @@ def time_ms(fn: Any, device: Any, repeats: int, warmup: int) -> float:
     return (time.perf_counter() - start) * 1000.0 / repeats
 
 
-def collect_selected_modules(model: Any, groups: set[str]) -> dict[str, Any]:
+def collect_selected_modules(model: Any, scope: str) -> dict[str, Any]:
     import torch.nn as nn
 
     selected: dict[str, Any] = {}
     for name, module in model.named_modules():
-        group = group_for_module(name)
-        if group in groups and isinstance(module, nn.Linear):
+        if include_module_for_scope(name, scope) and isinstance(module, nn.Linear):
             selected[name] = module
     return selected
 
@@ -152,7 +167,7 @@ def representative_cases(
         cap = captured.get(name)
         if not cap:
             continue
-        group = group_for_module(name) or "unknown"
+        group = module_family(name) or "unknown"
         m = int(max(cap["m_values"]))
         key = (group, int(module.in_features), int(module.out_features), m)
         if key in seen:
@@ -281,7 +296,7 @@ def main() -> None:
     parser.add_argument("--embodiment-tag", default="new_embodiment")
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--denoising-steps", type=int, default=1)
-    parser.add_argument("--config", default="llm_dit_mlp")
+    parser.add_argument("--scope", choices=SCOPE_CHOICES, default="llm_dit_mlp")
     parser.add_argument("--num-observations", type=int, default=1)
     parser.add_argument("--synthetic-variants", default="zero,midgray,noise")
     parser.add_argument("--base-seed", type=int, default=20260606)
@@ -315,8 +330,7 @@ def main() -> None:
     )
     load_seconds = time.time() - load_started
 
-    groups = config_groups(args.config)
-    selected = collect_selected_modules(policy.model, groups)
+    selected = collect_selected_modules(policy.model, args.scope)
     observations = [
         {
             "variant": variants[idx % len(variants)],
@@ -363,8 +377,8 @@ def main() -> None:
         "torch_version": torch.__version__,
         "cuda_available": bool(torch.cuda.is_available()),
         "device": args.device,
-        "config": args.config,
-        "groups": sorted(groups),
+        "scope": args.scope,
+        "scope_description": scope_description(args.scope),
         "selected_modules": len(selected),
         "captured_modules": len(captured),
         "representative_cases": len(cases),
@@ -383,4 +397,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
