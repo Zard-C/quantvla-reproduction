@@ -1,0 +1,184 @@
+{
+  "boundary": "CUTLASS dense fp16 backend op benchmark on real GR00T Linear shapes; not FP4 quantized yet",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "selected_modules": 116,
+  "captured_modules": 116,
+  "representative_cases": 3,
+  "denoising_steps": 1,
+  "num_observations": 1,
+  "load_seconds": 12.165099382400513,
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "tile_shape_mnk": [
+    64,
+    128,
+    64
+  ],
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    }
+  ],
+  "summary": {
+    "dit_mlp": {
+      "cases": 2,
+      "torch_fp16_ms_mean": 0.022932514548301697,
+      "cutlass_dense_ms_mean": 0.05276699860890706,
+      "speedup_vs_torch_fp16_mean": 0.4476295426115882,
+      "speedup_vs_torch_fp16_min": 0.4159795825151114,
+      "speedup_vs_torch_fp16_max": 0.479279502708065,
+      "relative_rmse_vs_torch_mean": 0.0002891047770390287
+    },
+    "llm_attn": {
+      "cases": 1,
+      "torch_fp16_ms_mean": 0.016762564579645794,
+      "cutlass_dense_ms_mean": 0.02742732564608256,
+      "speedup_vs_torch_fp16_mean": 0.6111629254688193,
+      "speedup_vs_torch_fp16_min": 0.6111629254688193,
+      "speedup_vs_torch_fp16_max": 0.6111629254688193,
+      "relative_rmse_vs_torch_mean": 0.0
+    }
+  },
+  "cutlass_cache": {
+    "compiled_shapes": 3,
+    "keys": [
+      [
+        49,
+        1536,
+        6144,
+        64,
+        128,
+        "64"
+      ],
+      [
+        49,
+        6144,
+        1536,
+        64,
+        128,
+        "64"
+      ],
+      [
+        551,
+        2048,
+        1024,
+        64,
+        128,
+        "64"
+      ]
+    ],
+    "compile_seconds": {
+      "(49, 1536, 6144, 64, 128, 64, 'torch.float16')": 15.319100357592106,
+      "(49, 6144, 1536, 64, 128, 64, 'torch.float16')": 15.041908163577318,
+      "(551, 2048, 1024, 64, 128, 64, 'torch.float16')": 15.232290506362915
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ],
+      "torch_fp16_ms": 0.014878436923027039,
+      "cutlass_dense_ms": 0.031043340762456257,
+      "cutlass_cold_first_call_ms": 15913.982290774584,
+      "speedup_vs_torch_fp16": 0.479279502708065,
+      "max_abs_diff_vs_torch": 0.0001220703125,
+      "relative_rmse_vs_torch": 0.0002491435152478516,
+      "cosine_vs_torch": 0.9999998807907104
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ],
+      "torch_fp16_ms": 0.030986592173576355,
+      "cutlass_dense_ms": 0.07449065645535786,
+      "cutlass_cold_first_call_ms": 15101.645320653915,
+      "speedup_vs_torch_fp16": 0.4159795825151114,
+      "max_abs_diff_vs_torch": 0.00048828125,
+      "relative_rmse_vs_torch": 0.0003290660388302058,
+      "cosine_vs_torch": 1.0
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "torch_fp16_ms": 0.016762564579645794,
+      "cutlass_dense_ms": 0.02742732564608256,
+      "cutlass_cold_first_call_ms": 15287.160355597734,
+      "speedup_vs_torch_fp16": 0.6111629254688193,
+      "max_abs_diff_vs_torch": 0.0,
+      "relative_rmse_vs_torch": 0.0,
+      "cosine_vs_torch": 1.0
+    }
+  ]
+}

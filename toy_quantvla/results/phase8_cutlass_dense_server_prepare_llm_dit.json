@@ -1,0 +1,31 @@
+{
+  "boundary": "CUTLASS dense fp16/bf16 inference server; validates backend op integration, not FP4 quantization",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "tile_shape_mnk": [
+    64,
+    128,
+    64
+  ],
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.226710319519043,
+  "patch_seconds": 0.00777888298034668,
+  "patched_modules": 116,
+  "patch_summary": {
+    "modules": 116,
+    "by_family": {
+      "dit_mlp": 32,
+      "llm_attn": 48,
+      "llm_mlp": 36
+    }
+  },
+  "prepare_seconds": 11.23451566696167
+}
