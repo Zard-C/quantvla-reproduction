@@ -1,0 +1,670 @@
+{
+  "boundary": "online teacher-controlled drift diagnostic, not quantized closed-loop benchmark",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "task_suite_name": "libero_10",
+  "case_list": "8:7,8:9,4:10,0:3",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "quant_format": "fp4_e2m1_blockscaled_fake",
+  "fp4_block_size": 32,
+  "denoising_steps": 8,
+  "num_steps_wait": 10,
+  "max_policy_steps": 40,
+  "matched_denoising_seed": true,
+  "base_seed": 470204,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "device": "cuda",
+  "model_load_seconds": 11.136889934539795,
+  "patched_modules": 32,
+  "episode_summaries": [
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 0,
+      "task_description": "put both the alphabet soup and the tomato sauce in the basket",
+      "init_index": 3,
+      "success": false,
+      "exception": null,
+      "num_steps": 40,
+      "elapsed_seconds": 36.223182916641235,
+      "scope": "dit_mlp_only",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 40,
+        "raw_relative_rmse": {
+          "mean": 0.007639304433507842,
+          "max": 0.011615554887972227,
+          "min": 0.004859552341842849
+        },
+        "raw_cosine": {
+          "mean": 0.9999727596146524,
+          "max": 0.999988291398403,
+          "min": 0.9999328554372391
+        },
+        "libero_action_rmse": {
+          "mean": 0.002233448792239116,
+          "max": 0.0062861697465491344,
+          "min": 0.0005531523314135475
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.004933667182922363,
+          "max": 0.0128173828125,
+          "min": 0.00091552734375
+        }
+      }
+    },
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 4,
+      "task_description": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "init_index": 10,
+      "success": false,
+      "exception": null,
+      "num_steps": 40,
+      "elapsed_seconds": 36.18786287307739,
+      "scope": "dit_mlp_only",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 40,
+        "raw_relative_rmse": {
+          "mean": 0.007483137547808475,
+          "max": 0.010010316993608322,
+          "min": 0.005266060553484266
+        },
+        "raw_cosine": {
+          "mean": 0.999972839288662,
+          "max": 0.9999869828188855,
+          "min": 0.9999511716643334
+        },
+        "libero_action_rmse": {
+          "mean": 0.0024343556251849785,
+          "max": 0.005095593509063086,
+          "min": 0.00031846178023511157
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.005332943797111511,
+          "max": 0.0128173828125,
+          "min": 0.0006866455078125
+        }
+      }
+    },
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 8,
+      "task_description": "put both moka pots on the stove",
+      "init_index": 7,
+      "success": false,
+      "exception": null,
+      "num_steps": 40,
+      "elapsed_seconds": 35.78310942649841,
+      "scope": "dit_mlp_only",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 40,
+        "raw_relative_rmse": {
+          "mean": 0.00621284321124801,
+          "max": 0.00901302388804135,
+          "min": 0.0046540223826916595
+        },
+        "raw_cosine": {
+          "mean": 0.9999808663448558,
+          "max": 0.9999892019651295,
+          "min": 0.9999594248478577
+        },
+        "libero_action_rmse": {
+          "mean": 0.001905049997135691,
+          "max": 0.003653685999027643,
+          "min": 0.0008067663522166552
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.004045948386192322,
+          "max": 0.0084686279296875,
+          "min": 0.00171661376953125
+        }
+      }
+    },
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 8,
+      "task_description": "put both moka pots on the stove",
+      "init_index": 9,
+      "success": false,
+      "exception": null,
+      "num_steps": 40,
+      "elapsed_seconds": 35.038496017456055,
+      "scope": "dit_mlp_only",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "fp4_block_size": 32,
+      "drift_summary": {
+        "policy_steps": 40,
+        "raw_relative_rmse": {
+          "mean": 0.005539519429793092,
+          "max": 0.008228472479645841,
+          "min": 0.0037691653517899974
+        },
+        "raw_cosine": {
+          "mean": 0.9999852769337574,
+          "max": 0.9999929031457548,
+          "min": 0.9999672322156525
+        },
+        "libero_action_rmse": {
+          "mean": 0.0018103056718615771,
+          "max": 0.003582161074051422,
+          "min": 0.0006921192652007901
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.0037335939705371857,
+          "max": 0.0091552734375,
+          "min": 0.0011697709560394287
+        }
+      }
+    }
+  ],
+  "episode_trace_files": [
+    "/tmp/quantvla_phase7_online_drift_dit_mlp_40/task=00--init=03--success=False--task=put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket.json",
+    "/tmp/quantvla_phase7_online_drift_dit_mlp_40/task=04--init=10--success=False--task=put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_righ.json",
+    "/tmp/quantvla_phase7_online_drift_dit_mlp_40/task=08--init=07--success=False--task=put_both_moka_pots_on_the_stove.json",
+    "/tmp/quantvla_phase7_online_drift_dit_mlp_40/task=08--init=09--success=False--task=put_both_moka_pots_on_the_stove.json"
+  ],
+  "episodes": 4,
+  "teacher_successes": 0,
+  "quant_records": {
+    "modules": [
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11415189589606597,
+          "max": 0.11664463579654694,
+          "min": 0.11123046278953552
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010456308722496,
+          "max": 0.1010456308722496,
+          "min": 0.1010456308722496
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.056792818853864446,
+          "max": 0.07324663549661636,
+          "min": 0.04123353585600853
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1015610471367836,
+          "max": 0.1015610471367836,
+          "min": 0.1015610471367836
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11508337508421392,
+          "max": 0.11836564540863037,
+          "min": 0.11207857728004456
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108465701341629,
+          "max": 0.10108465701341629,
+          "min": 0.10108465701341629
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.06859080340072979,
+          "max": 0.07594824582338333,
+          "min": 0.06165270134806633
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10136907547712326,
+          "max": 0.10136907547712326,
+          "min": 0.10136907547712326
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.1147415961662773,
+          "max": 0.118991918861866,
+          "min": 0.11005369573831558
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010904312133789,
+          "max": 0.1010904312133789,
+          "min": 0.1010904312133789
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.08138159923837521,
+          "max": 0.08731649070978165,
+          "min": 0.07289700210094452
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10121040791273117,
+          "max": 0.10121040791273117,
+          "min": 0.10121040791273117
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11477517975727096,
+          "max": 0.1186925619840622,
+          "min": 0.10895643383264542
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10107302665710449,
+          "max": 0.10107302665710449,
+          "min": 0.10107302665710449
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.08447759615373798,
+          "max": 0.08856237679719925,
+          "min": 0.07708240300416946
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109540075063705,
+          "max": 0.10109540075063705,
+          "min": 0.10109540075063705
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.1155951764783822,
+          "max": 0.11994834244251251,
+          "min": 0.11143263429403305
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10111261904239655,
+          "max": 0.10111261904239655,
+          "min": 0.10111261904239655
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09528344896971248,
+          "max": 0.10230208933353424,
+          "min": 0.08856945484876633
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10095839202404022,
+          "max": 0.10095839202404022,
+          "min": 0.10095839202404022
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11615015819552355,
+          "max": 0.1208212673664093,
+          "min": 0.11226459592580795
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10106243193149567,
+          "max": 0.10106243193149567,
+          "min": 0.10106243193149567
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09542117671808228,
+          "max": 0.09898369014263153,
+          "min": 0.09146355092525482
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10098917037248611,
+          "max": 0.10098917037248611,
+          "min": 0.10098917037248611
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11591513343737461,
+          "max": 0.12033062428236008,
+          "min": 0.1131603866815567
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104801505804062,
+          "max": 0.10104801505804062,
+          "min": 0.10104801505804062
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09741473785834387,
+          "max": 0.10224220901727676,
+          "min": 0.09298068284988403
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10103190690279007,
+          "max": 0.10103190690279007,
+          "min": 0.10103190690279007
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11594345347257332,
+          "max": 0.1204419806599617,
+          "min": 0.11247818917036057
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010328009724617,
+          "max": 0.1010328009724617,
+          "min": 0.1010328009724617
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09934915674384684,
+          "max": 0.10276225954294205,
+          "min": 0.09516602009534836
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10101879388093948,
+          "max": 0.10101879388093948,
+          "min": 0.10101879388093948
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11522097682463936,
+          "max": 0.1207529827952385,
+          "min": 0.11106057465076447
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1010247990489006,
+          "max": 0.1010247990489006,
+          "min": 0.1010247990489006
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.10046852646628394,
+          "max": 0.10690093785524368,
+          "min": 0.09648045897483826
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102414339780807,
+          "max": 0.10102414339780807,
+          "min": 0.10102414339780807
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11517603908432647,
+          "max": 0.1206803172826767,
+          "min": 0.11070194095373154
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109058022499084,
+          "max": 0.10109058022499084,
+          "min": 0.10109058022499084
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.10064234000165015,
+          "max": 0.10396230220794678,
+          "min": 0.09524965286254883
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1009574681520462,
+          "max": 0.1009574681520462,
+          "min": 0.1009574681520462
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11464360952959396,
+          "max": 0.12037736922502518,
+          "min": 0.11002328991889954
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108361393213272,
+          "max": 0.10108361393213272,
+          "min": 0.10108361393213272
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09906586186261848,
+          "max": 0.10365702956914902,
+          "min": 0.09353344142436981
+        },
+        "weight_relative_rmse": {
+          "mean": 0.1009802371263504,
+          "max": 0.1009802371263504,
+          "min": 0.1009802371263504
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11439878877135926,
+          "max": 0.12027496844530106,
+          "min": 0.10949089378118515
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10104205459356308,
+          "max": 0.10104205459356308,
+          "min": 0.10104205459356308
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09934247533092275,
+          "max": 0.10346770286560059,
+          "min": 0.09387002885341644
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10097438097000122,
+          "max": 0.10097438097000122,
+          "min": 0.10097438097000122
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11339001126470975,
+          "max": 0.11950012296438217,
+          "min": 0.10861054807901382
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10109056532382965,
+          "max": 0.10109056532382965,
+          "min": 0.10109056532382965
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09074806863209232,
+          "max": 0.09678759425878525,
+          "min": 0.0857352539896965
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10205645114183426,
+          "max": 0.10205645114183426,
+          "min": 0.10205645114183426
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11157502798596397,
+          "max": 0.11651076376438141,
+          "min": 0.10749488323926926
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108928382396698,
+          "max": 0.10108928382396698,
+          "min": 0.10108928382396698
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.10032791830017232,
+          "max": 0.1049395427107811,
+          "min": 0.09154332429170609
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10102123767137527,
+          "max": 0.10102123767137527,
+          "min": 0.10102123767137527
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11112672750605271,
+          "max": 0.11573313921689987,
+          "min": 0.10732375085353851
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10108168423175812,
+          "max": 0.10108168423175812,
+          "min": 0.10108168423175812
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09669542442425154,
+          "max": 0.10271453857421875,
+          "min": 0.08565668016672134
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10101048648357391,
+          "max": 0.10101048648357391,
+          "min": 0.10101048648357391
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.0.proj",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.11141555052017793,
+          "max": 0.11535166949033737,
+          "min": 0.10750086605548859
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10117203742265701,
+          "max": 0.10117203742265701,
+          "min": 0.10117203742265701
+        }
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.2",
+        "family": "dit_mlp",
+        "calls": 1280,
+        "input_relative_rmse": {
+          "mean": 0.09136461381567643,
+          "max": 0.09486982226371765,
+          "min": 0.08814764022827148
+        },
+        "weight_relative_rmse": {
+          "mean": 0.10489624738693237,
+          "max": 0.10489624738693237,
+          "min": 0.10489624738693237
+        }
+      }
+    ],
+    "family_summary": {
+      "dit_mlp": {
+        "modules": 32,
+        "calls": 40960,
+        "input_relative_rmse_mean": 0.10270841458577706,
+        "weight_relative_rmse_mean": 0.10123059619218111
+      }
+    }
+  }
+}

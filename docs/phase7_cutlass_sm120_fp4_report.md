@@ -296,3 +296,12 @@ Phase 7 到这里可以更新判断：
 长期：
   再决定是走 Blackwell-native FP4，还是回到 TensorRT/CUTLASS weight-only。
 ```
+
+Follow-up:
+
+```text
+docs/phase7_online_drift_report.md
+```
+
+The first online same-observation drift probe has been completed with
+teacher-controlled LIBERO rollouts and FP4-like student side evaluation.
