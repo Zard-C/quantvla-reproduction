@@ -1,0 +1,745 @@
+{
+  "torch_version": "2.8.0+cu128",
+  "cuda_available": true,
+  "device": "cuda",
+  "config": "llm_dit_mlp",
+  "groups": [
+    "dit_mlp_selected",
+    "llm_selected"
+  ],
+  "selected_modules": 116,
+  "captured_modules": 116,
+  "representative_cases": 6,
+  "denoising_steps": 1,
+  "num_observations": 1,
+  "load_seconds": 11.320208311080933,
+  "kernel_configs": [
+    "bm16_bn32_bk64_w4",
+    "bm16_bn64_bk64_w4",
+    "bm32_bn32_bk64_w4",
+    "bm32_bn64_bk64_w4",
+    "bm32_bn64_bk128_w4",
+    "bm32_bn128_bk64_w4",
+    "bm32_bn128_bk128_w4",
+    "bm64_bn64_bk64_w4",
+    "bm64_bn64_bk128_w4"
+  ],
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp_selected",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp_selected",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ]
+    }
+  ],
+  "summary": {
+    "dit_mlp_selected": {
+      "cases": 2,
+      "best_speedup_vs_torch_fp16_mean": 0.487533604262983,
+      "packed_ratio_mean": 0.2508138020833333
+    },
+    "llm_selected": {
+      "cases": 4,
+      "best_speedup_vs_torch_fp16_mean": 0.5221172054009516,
+      "packed_ratio_mean": 0.2508138020833333
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp_selected",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ],
+      "fp16_weight_bytes": 18874368,
+      "packed_weight_bytes": 4718592,
+      "scale_bytes": 24576,
+      "packed_plus_scale_ratio_vs_fp16": 0.2513020833333333,
+      "torch_fp16_ms": 0.014645606279373169,
+      "dense_dequant_ref_ms": 0.014650225639343262,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04168510437011719,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.041519999504089355,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.041398778557777405,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04151150584220886,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04186749458312988,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06850376725196838,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06442762911319733,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04109703004360199,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 0.00017570002819411457,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0414082407951355,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 0.0001220703125,
+        "relative_rmse": 0.00017570002819411457,
+        "cosine": 1.0,
+        "w4a16_ms": 0.04109703004360199,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.35636653704257654
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp_selected",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ],
+      "fp16_weight_bytes": 18874368,
+      "packed_weight_bytes": 4718592,
+      "scale_bytes": 6144,
+      "packed_plus_scale_ratio_vs_fp16": 0.2503255208333333,
+      "torch_fp16_ms": 0.031077489256858826,
+      "dense_dequant_ref_ms": 0.030770525336265564,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.050230249762535095,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.06228603422641754,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 1.4590515941381454,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07064953446388245,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07325135171413422,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.25888435542583466,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.22207111120224,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09334951639175415,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.00048828125,
+          "relative_rmse": 0.00030849355971440673,
+          "cosine": 1.0,
+          "w4a16_ms": 0.10731950402259827,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm16_bn32_bk64_w4",
+        "max_abs_diff": 0.00048828125,
+        "relative_rmse": 0.00030849355971440673,
+        "cosine": 1.0,
+        "w4a16_ms": 0.050230249762535095,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.6187006714833895
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 4194304,
+      "packed_weight_bytes": 1048576,
+      "scale_bytes": 4096,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.020019710063934326,
+      "dense_dequant_ref_ms": 0.020103976130485535,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.05292654037475586,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07589317858219147,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04036560654640198,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08105926215648651,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04145614802837372,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08781552314758301,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.08907616138458252,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.04158608615398407,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1497890227474272e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07914230227470398,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm32_bn32_bk64_w4",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.1497890227474272e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.04036560654640198,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.4959595996884333
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 8388608,
+      "packed_weight_bytes": 2097152,
+      "scale_bytes": 8192,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.027070865035057068,
+      "dense_dequant_ref_ms": 0.026990771293640137,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09703613817691803,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09834788739681244,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07728181779384613,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07748320698738098,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07600277662277222,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.09728752076625824,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12881644070148468,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.0732317566871643,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.1940377589780837e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.07078126072883606,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk128_w4",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.1940377589780837e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.07078126072883606,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.382458079388638
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "fp16_weight_bytes": 25165824,
+      "packed_weight_bytes": 6291456,
+      "scale_bytes": 24576,
+      "packed_plus_scale_ratio_vs_fp16": 0.2509765625,
+      "torch_fp16_ms": 0.07619298994541168,
+      "dense_dequant_ref_ms": 0.07610678672790527,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.26466675102710724,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2597188204526901,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.1553572714328766,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.16300171613693237,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.180119127035141,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.2757421135902405,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3669065237045288,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.1220395416021347,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 0.0001220703125,
+          "relative_rmse": 1.2070094271621201e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.15541143715381622,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 0.0001220703125,
+        "relative_rmse": 1.2070094271621201e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.1220395416021347,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.6243303518281891
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_selected",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ],
+      "fp16_weight_bytes": 25165824,
+      "packed_weight_bytes": 6291456,
+      "scale_bytes": 8192,
+      "packed_plus_scale_ratio_vs_fp16": 0.2503255208333333,
+      "torch_fp16_ms": 0.07216580212116241,
+      "dense_dequant_ref_ms": 0.07248133420944214,
+      "configs": [
+        {
+          "config": "bm16_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28264790773391724,
+          "error": null
+        },
+        {
+          "config": "bm16_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.28464943170547485,
+          "error": null
+        },
+        {
+          "config": "bm32_bn32_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.16374029219150543,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.17289407551288605,
+          "error": null
+        },
+        {
+          "config": "bm32_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.18164418637752533,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.27783527970314026,
+          "error": null
+        },
+        {
+          "config": "bm32_bn128_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.3504772484302521,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk64_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.12320853769779205,
+          "error": null
+        },
+        {
+          "config": "bm64_bn64_bk128_w4",
+          "max_abs_diff": 6.103515625e-05,
+          "relative_rmse": 1.5028298548713792e-05,
+          "cosine": 1.0,
+          "w4a16_ms": 0.146285742521286,
+          "error": null
+        }
+      ],
+      "best": {
+        "config": "bm64_bn64_bk64_w4",
+        "max_abs_diff": 6.103515625e-05,
+        "relative_rmse": 1.5028298548713792e-05,
+        "cosine": 1.0,
+        "w4a16_ms": 0.12320853769779205,
+        "error": null
+      },
+      "speedup_vs_torch_fp16": 0.5857207906985463
+    }
+  ]
+}

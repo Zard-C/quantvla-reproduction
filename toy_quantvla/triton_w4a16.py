@@ -173,6 +173,7 @@ if tl is not None:
         k_size,
         k_packed,
         has_bias: tl.constexpr,
+        input_dtype: tl.constexpr,
         BLOCK_M: tl.constexpr,
         BLOCK_N: tl.constexpr,
         BLOCK_K: tl.constexpr,
@@ -204,7 +205,11 @@ if tl is not None:
             nibble = tl.where((k[:, None] & 1) == 0, low, high)
             q = nibble - 8
             scale = tl.load(scale_ptr + offs_n, mask=offs_n < n_size, other=0.0)
-            w = (q.to(tl.float32) * scale[None, :]).to(tl.float16)
+            w = q.to(tl.float32) * scale[None, :]
+            if input_dtype == "bf16":
+                w = w.to(tl.bfloat16)
+            elif input_dtype == "fp16":
+                w = w.to(tl.float16)
             acc += tl.dot(x, w, out_dtype=tl.float32)
 
         if has_bias:
@@ -233,14 +238,16 @@ def w4a16_linear_triton(
     block_m: int = 16,
     block_n: int = 32,
     block_k: int = 64,
+    num_warps: int = 4,
+    num_stages: int = 3,
 ) -> torch.Tensor:
     """Run the Triton fused dequantization matmul path."""
     if triton is None or tl is None:
         raise RuntimeError("Triton is not available")
     if not x.is_cuda:
         raise ValueError("Triton W4A16 kernel requires a CUDA input tensor")
-    if x.dtype != torch.float16:
-        raise TypeError(f"first Triton W4A16 kernel supports torch.float16 activation, got {x.dtype}")
+    if x.dtype not in {torch.float16, torch.bfloat16, torch.float32}:
+        raise TypeError(f"Triton W4A16 kernel supports fp16/bf16/fp32 activation, got {x.dtype}")
     if qweight.dtype != torch.uint8:
         raise TypeError(f"qweight must be torch.uint8, got {qweight.dtype}")
     if x.shape[-1] != in_features:
@@ -270,9 +277,12 @@ def w4a16_linear_triton(
         in_features,
         k_packed,
         bias is not None,
+        "bf16" if x.dtype == torch.bfloat16 else "fp32" if x.dtype == torch.float32 else "fp16",
         BLOCK_M=bm,
         BLOCK_N=block_n,
         BLOCK_K=block_k,
+        num_warps=num_warps,
+        num_stages=num_stages,
     )
     return out.reshape(*original_shape, n_size)
 

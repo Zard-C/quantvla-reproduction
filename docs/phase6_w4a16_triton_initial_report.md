@@ -82,6 +82,9 @@ Result JSON:
 toy_quantvla/results/phase6_w4a16_smoke_cuda.json
 ```
 
+Follow-up status: real GR00T shape benchmark and offline model replacement
+smoke are documented in `docs/phase6_w4a16_real_shape_forward_report.md`.
+
 ## 4. Correctness Results
 
 The Triton kernel was compared against a PyTorch dense-dequant reference:
@@ -215,4 +218,3 @@ Recommended next work:
 The immediate priority is shape-aware performance tuning. Simulator rollout is
 not yet the bottleneck to test; the kernel still needs to become competitive on
 the actual model shapes.
-
