@@ -1,0 +1,409 @@
+{
+  "torch_version": "2.8.0+cu128",
+  "bnb_version": "0.49.2",
+  "cuda_available": true,
+  "device": "cuda",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "compute_dtype": "float16",
+  "quant_types": [
+    "fp4",
+    "nf4"
+  ],
+  "selected_modules": 116,
+  "captured_modules": 116,
+  "representative_cases": 6,
+  "denoising_steps": 1,
+  "num_observations": 1,
+  "load_seconds": 11.43345046043396,
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ]
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ]
+    }
+  ],
+  "summary": {
+    "dit_mlp": {
+      "cases": 2,
+      "valid_cases": 2,
+      "best_speedup_vs_torch_fp_mean": 0.220327823347635,
+      "best_relative_rmse_vs_fp_mean": 0.03320704307407141
+    },
+    "llm_attn": {
+      "cases": 2,
+      "valid_cases": 2,
+      "best_speedup_vs_torch_fp_mean": 0.22139364605418993,
+      "best_relative_rmse_vs_fp_mean": 0.10987338423728943
+    },
+    "llm_mlp": {
+      "cases": 2,
+      "valid_cases": 2,
+      "best_speedup_vs_torch_fp_mean": 0.742422493432231,
+      "best_relative_rmse_vs_fp_mean": 0.10890168696641922
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          49,
+          1536
+        ]
+      ],
+      "torch_fp_ms": 0.015313327312469482,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.019439697265625,
+          "relative_rmse_vs_fp": 0.041031643748283386,
+          "cosine_vs_fp": 0.9991585612297058,
+          "bnb_ms": 0.10727435350418091,
+          "error": null,
+          "speedup_vs_torch_fp": 0.1427491922556556
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.0135498046875,
+          "relative_rmse_vs_fp": 0.030552072450518608,
+          "cosine_vs_fp": 0.9995331764221191,
+          "bnb_ms": 0.10700076818466187,
+          "error": null,
+          "speedup_vs_torch_fp": 0.14311418106869803
+        }
+      ],
+      "best": {
+        "quant_type": "nf4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.0135498046875,
+        "relative_rmse_vs_fp": 0.030552072450518608,
+        "cosine_vs_fp": 0.9995331764221191,
+        "bnb_ms": 0.10700076818466187,
+        "error": null,
+        "speedup_vs_torch_fp": 0.14311418106869803
+      }
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shapes": [
+        [
+          1,
+          49,
+          6144
+        ]
+      ],
+      "torch_fp_ms": 0.031288936734199524,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.052490234375,
+          "relative_rmse_vs_fp": 0.0499814972281456,
+          "cosine_vs_fp": 0.9987517595291138,
+          "bnb_ms": 0.107235386967659,
+          "error": null,
+          "speedup_vs_torch_fp": 0.2917780932113009
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.033203125,
+          "relative_rmse_vs_fp": 0.03586201369762421,
+          "cosine_vs_fp": 0.9993578791618347,
+          "bnb_ms": 0.1051582396030426,
+          "error": null,
+          "speedup_vs_torch_fp": 0.297541465626572
+        }
+      ],
+      "best": {
+        "quant_type": "nf4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.033203125,
+        "relative_rmse_vs_fp": 0.03586201369762421,
+        "cosine_vs_fp": 0.9993578791618347,
+        "bnb_ms": 0.1051582396030426,
+        "error": null,
+        "speedup_vs_torch_fp": 0.297541465626572
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 1024,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "torch_fp_ms": 0.016653165221214294,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.040283203125,
+          "relative_rmse_vs_fp": 0.1246938407421112,
+          "cosine_vs_fp": 0.9922486543655396,
+          "bnb_ms": 0.09937509894371033,
+          "error": null,
+          "speedup_vs_torch_fp": 0.16757885424242197
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.032470703125,
+          "relative_rmse_vs_fp": 0.09269429743289948,
+          "cosine_vs_fp": 0.9957032203674316,
+          "bnb_ms": 0.09849674999713898,
+          "error": null,
+          "speedup_vs_torch_fp": 0.16907324578423163
+        }
+      ],
+      "best": {
+        "quant_type": "nf4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.032470703125,
+        "relative_rmse_vs_fp": 0.09269429743289948,
+        "cosine_vs_fp": 0.9957032203674316,
+        "bnb_ms": 0.09849674999713898,
+        "error": null,
+        "speedup_vs_torch_fp": 0.16907324578423163
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 551,
+      "k": 2048,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "torch_fp_ms": 0.02701692283153534,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.04583740234375,
+          "relative_rmse_vs_fp": 0.12705247104167938,
+          "cosine_vs_fp": 0.9919582605361938,
+          "bnb_ms": 0.09870491921901703,
+          "error": null,
+          "speedup_vs_torch_fp": 0.27371404632414825
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.028076171875,
+          "relative_rmse_vs_fp": 0.09383551776409149,
+          "cosine_vs_fp": 0.9955987334251404,
+          "bnb_ms": 0.09955354034900665,
+          "error": null,
+          "speedup_vs_torch_fp": 0.27138083424076753
+        }
+      ],
+      "best": {
+        "quant_type": "fp4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.04583740234375,
+        "relative_rmse_vs_fp": 0.12705247104167938,
+        "cosine_vs_fp": 0.9919582605361938,
+        "bnb_ms": 0.09870491921901703,
+        "error": null,
+        "speedup_vs_torch_fp": 0.27371404632414825
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 2048,
+      "n": 6144,
+      "input_shapes": [
+        [
+          1,
+          551,
+          2048
+        ]
+      ],
+      "torch_fp_ms": 0.07616274058818817,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.03643798828125,
+          "relative_rmse_vs_fp": 0.12466972321271896,
+          "cosine_vs_fp": 0.9922506809234619,
+          "bnb_ms": 0.0994987040758133,
+          "error": null,
+          "speedup_vs_torch_fp": 0.7654646489682496
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.0267486572265625,
+          "relative_rmse_vs_fp": 0.09303268790245056,
+          "cosine_vs_fp": 0.9956713914871216,
+          "bnb_ms": 0.10159783065319061,
+          "error": null,
+          "speedup_vs_torch_fp": 0.7496492798962763
+        }
+      ],
+      "best": {
+        "quant_type": "fp4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.03643798828125,
+        "relative_rmse_vs_fp": 0.12466972321271896,
+        "cosine_vs_fp": 0.9922506809234619,
+        "bnb_ms": 0.0994987040758133,
+        "error": null,
+        "speedup_vs_torch_fp": 0.7654646489682496
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 551,
+      "k": 6144,
+      "n": 2048,
+      "input_shapes": [
+        [
+          1,
+          551,
+          6144
+        ]
+      ],
+      "torch_fp_ms": 0.07215112447738647,
+      "bnb": [
+        {
+          "quant_type": "fp4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.05035400390625,
+          "relative_rmse_vs_fp": 0.12534113228321075,
+          "cosine_vs_fp": 0.9921685457229614,
+          "bnb_ms": 0.10048747062683105,
+          "error": null,
+          "speedup_vs_torch_fp": 0.7180111513138383
+        },
+        {
+          "quant_type": "nf4",
+          "compute_dtype": "float16",
+          "max_abs_diff_vs_fp": 0.025390625,
+          "relative_rmse_vs_fp": 0.09313365072011948,
+          "cosine_vs_fp": 0.9956634640693665,
+          "bnb_ms": 0.10029621422290802,
+          "error": null,
+          "speedup_vs_torch_fp": 0.7193803378962124
+        }
+      ],
+      "best": {
+        "quant_type": "nf4",
+        "compute_dtype": "float16",
+        "max_abs_diff_vs_fp": 0.025390625,
+        "relative_rmse_vs_fp": 0.09313365072011948,
+        "cosine_vs_fp": 0.9956634640693665,
+        "bnb_ms": 0.10029621422290802,
+        "error": null,
+        "speedup_vs_torch_fp": 0.7193803378962124
+      }
+    }
+  ]
+}
