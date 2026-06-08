@@ -608,6 +608,72 @@ FP16 DiT MLP profile：
 - 可能原因是 Triton pack / CUTLASS bridge 内部仍有同步或 CPU-side 阻塞，也可能是该 case 的 tail latency 波动淹没了小收益；
 - 这个修复仍然保留，因为普通 runtime path 不应该为了 timing 强制同步，但它不是当前端到端加速的突破口。
 
+### Larger Scope Offline Smoke
+
+由于 FP16 matched profile 显示 `dit_mlp_only` 覆盖面太小，又测试了更大的 scope。
+
+offline command boundary:
+
+```text
+denoising_steps=8
+pack_backend=triton
+num_observations=1
+indices=115
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_full_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_dit_mlp_full_d8_tritonpack_shared.json`
+
+offline 对比：
+
+| scope | patched modules | teacher | warm student | warm/teacher | relative RMSE | cosine | max abs diff | patch | cold |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `dit_mlp_only` | 32 | 0.4765s | 0.1637s | 0.3434 | 0.00354 | 0.9999937 | 0.00504 | - | - |
+| `llm_mlp_only` | 36 | 0.5533s | 0.0927s | 0.1674 | 0.00389 | 0.9999925 | 0.00616 | 4.84s | 55.05s |
+| `llm_mlp_dit_mlp` | 68 | 0.4905s | 0.1509s | 0.3076 | 0.00496 | 0.9999877 | 0.00732 | 8.59s | 106.26s |
+
+offline 观察：
+
+- `llm_mlp_only` 是目前 offline 速度最好的 scope；
+- `llm_mlp_dit_mlp` 覆盖更大，但 warm latency 反而比纯 `llm_mlp_only` 慢；
+- 两者单步 action error 都仍然很小，说明 offline action-vector 误差不足以判断闭环成功率。
+
+### LLM MLP Rollout Smoke
+
+基于 offline 结果，先跑 `llm_mlp_only` 的真实 rollout smoke。
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_full_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_full_d8_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_full_d8_task6_init1.json`
+
+case:
+
+```text
+task=6
+init=1
+scope=llm_mlp_only
+denoising_steps=8
+```
+
+rollout result:
+
+| config | success | calls | client mean | client p50 | client p90 | server mean | server p50 | server p90 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 official | 1/1 | 243 | 0.1561s | 0.1612s | 0.1687s | 0.1511s | 0.1559s | 0.1639s |
+| FP4 `dit_mlp_only` | 1/1 | 420 | 0.1624s | 0.1613s | 0.1691s | 0.1572s | 0.1562s | 0.1640s |
+| FP4 `llm_mlp_only` | 0/1 | 991 | 0.2096s | 0.1610s | 0.1712s | 0.2050s | 0.1560s | 0.1674s |
+
+解释：
+
+- `llm_mlp_only` 的 p50/p90 latency 仍接近 FP16/DiT-only；
+- mean 被一个约 `54s` 的 server/client outlier 拉高，发生在失败长 horizon/terminated path 附近；
+- 主要问题是行为失败：991 calls 跑到 horizon，最后 `executing action in terminated episode`；
+- 这说明 LLM MLP 的小 offline action error 可以累积成闭环病态，不能因为 offline warm latency 好就直接推进 rollout 主线。
+
 ## 解读
 
 可以确认：
@@ -624,6 +690,7 @@ FP16 DiT MLP profile：
 10. output tensor cache 能改善 profiled offline path，但没有改善非 profile rollout latency，因此不是当前真实端到端瓶颈。
 11. FP16 matched module profile 显示原始 DiT MLP Linear 只占 FP16 server-side `get_action` 的约 8.4%，所以 `dit_mlp_only` 的端到端加速上限天然很低。
 12. 去掉非 profile 每层同步没有改善 rollout latency，但作为正确 runtime hygiene 应保留。
+13. `llm_mlp_only` offline 速度最好，但真实 rollout 在 `task6:init1` 失败，说明更大 scope 的闭环风险明显更高。
 
 还不能确认：
 
@@ -633,6 +700,7 @@ FP16 DiT MLP profile：
 4. 需要确认更多 task/init 的成功率是否保持，以及轨迹变长是否普遍存在。
 5. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
+7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
 
 ## 下一步
 
@@ -640,6 +708,6 @@ FP16 DiT MLP profile：
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
 2. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
-3. 速度路线需要重新评估 scope：仅 `dit_mlp_only` 的上限太低，下一步应考虑 projector / attention / larger scope，但必须同步做成功率 smoke；
+3. 对 `llm_mlp_only` 先做小 matched-init 成功率确认，不建议直接扩大 rollout；
 4. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
-5. 暂缓扩大到 `llm_mlp_dit_mlp` 做 rollout 主线，先用 offline/profile 确认更大 scope 的收益和风险。
+5. 暂缓扩大到 `llm_mlp_dit_mlp` 做 rollout 主线；offline 虽然可行，但行为风险可能更高。
