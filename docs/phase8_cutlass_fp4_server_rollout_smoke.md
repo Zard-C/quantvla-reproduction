@@ -530,6 +530,84 @@ offline profile 中，output cache 把 `output_prepare` 从 `16.4ms/get_action` 
 - 因此 output cache 暂时保留为实验开关，不作为默认优化；
 - 下一步不应继续只盯 output wrapper，而应该补 FP16 matched module hooks，直接估算原始 DiT MLP 在 FP16 server 里的占比，并用更低扰动的 profiler 确认真实 CUDA timeline。
 
+### FP16 Matched DiT MLP Profile
+
+为了判断 FP4 module 本身是否真的比原始 FP16 DiT MLP 快，又给 FP16 official server 加了 matched module hook。这个 hook 使用和 FP4 一样的 `dit_mlp_only` scope，包住原始 `nn.Linear`，只记录 forward latency，不改变权重和计算。
+
+新增：
+
+- `toy_quantvla/fp16_linear_profiler.py`
+- `toy_quantvla/timed_fp16_inference_service.py`
+
+命令边界：
+
+```text
+server=timed_fp16_inference_service.py
+denoising_steps=8
+profile_linear_modules=true
+profile_scope=dit_mlp_only
+task=6
+init=1
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_fp16_profiled_dit_mlp_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_fp16_profiled_server_dit_mlp_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_fp16_profiled_server_prepare_dit_mlp_task6_init1.json`
+
+FP16 DiT MLP profile：
+
+| item | value |
+| --- | ---: |
+| success | 1/1 |
+| policy calls | 243 |
+| server get_action mean | 0.1586s |
+| server get_action p50 | 0.1573s |
+| server get_action p90 | 0.1672s |
+| DiT MLP Linear forward total | 3.2362s |
+| DiT MLP Linear calls | 62208 |
+| DiT MLP per get_action | 13.32 ms |
+| DiT MLP share of server get_action | 8.40% |
+
+对比 FP4 profiled rollout：
+
+| config | policy calls | server mean | DiT MLP per get_action | DiT MLP share |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 matched profile | 243 | 0.1586s | 13.32 ms | 8.40% |
+| FP4 profiled | 420 | 0.1757s | 64.54 ms | 36.74% |
+
+这个对比需要小心解释：FP4 profile 在每个阶段有更多 CUDA synchronize，因此不能把 `64.54 / 13.32` 直接当成真实部署中的严格倍率。但它足以说明两件事：
+
+- 在 FP16 official server 里，原始 DiT MLP Linear 只占约 `8.4%` 的 `get_action`；
+- 即使把 DiT MLP Linear 完美加速到 0，`dit_mlp_only` 对端到端 `get_action` 的理论上限也只有约 8-9%；
+- 这解释了为什么 full DiT MLP FP4 rollout 很难显著超过 FP16：覆盖面太小，且当前 FP4 path 自身还有 pack/wrapper 开销。
+
+### No-Sync Runtime Ablation
+
+检查 FP4 wrapper 时发现早期实现里即使非 profile，也会在 activation pack 后和 GEMM 后执行 `torch.cuda.synchronize()`。这会打断 CUDA 异步执行，因此做了一个修复：这些同步只保留在 `--profile-modules` 模式，普通 server path 不再每层同步。
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_no_sync_dit_full_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_dit_full_d8_no_sync_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_dit_full_d8_no_sync_task6_init1.json`
+
+非 profile rollout 对比：
+
+| config | success | calls | client mean | client p50 | client p90 | server mean | server p50 | server p90 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 official | 1/1 | 243 | 0.1561s | 0.1612s | 0.1687s | 0.1511s | 0.1559s | 0.1639s |
+| FP4 original | 1/1 | 420 | 0.1624s | 0.1613s | 0.1691s | 0.1572s | 0.1562s | 0.1640s |
+| FP4 no-sync | 1/1 | 420 | 0.1656s | 0.1614s | 0.1795s | 0.1606s | 0.1563s | 0.1742s |
+| FP4 output cache | 1/1 | 420 | 0.1635s | 0.1614s | 0.1724s | 0.1579s | 0.1561s | 0.1664s |
+
+结论：
+
+- 去掉非 profile 的显式 synchronize 没有改善这个 rollout；
+- 可能原因是 Triton pack / CUTLASS bridge 内部仍有同步或 CPU-side 阻塞，也可能是该 case 的 tail latency 波动淹没了小收益；
+- 这个修复仍然保留，因为普通 runtime path 不应该为了 timing 强制同步，但它不是当前端到端加速的突破口。
+
 ## 解读
 
 可以确认：
@@ -544,6 +622,8 @@ offline profile 中，output cache 把 `output_prepare` 从 `16.4ms/get_action` 
 8. latency breakdown 证明 client preprocess/postprocess 不是瓶颈，主要时间在 server-side `policy.get_action`。
 9. module-level profiling 证明当前 FP4 DiT MLP 只覆盖 profiled server-side `get_action` 的约 36.7%，且 module 内部 pack/output wrapper 比 GEMM 更值得优化。
 10. output tensor cache 能改善 profiled offline path，但没有改善非 profile rollout latency，因此不是当前真实端到端瓶颈。
+11. FP16 matched module profile 显示原始 DiT MLP Linear 只占 FP16 server-side `get_action` 的约 8.4%，所以 `dit_mlp_only` 的端到端加速上限天然很低。
+12. 去掉非 profile 每层同步没有改善 rollout latency，但作为正确 runtime hygiene 应保留。
 
 还不能确认：
 
@@ -551,16 +631,15 @@ offline profile 中，output cache 把 `output_prepare` 从 `16.4ms/get_action` 
 2. full DiT MLP FP4 也没有在该 case 上显示单步 latency 优势，mean latency 为 0.163s，FP16 为 0.147s。
 3. 当前显存峰值仍接近 FP16，full DiT MLP 的 prewarm current allocated 约 5.238 GB。
 4. 需要确认更多 task/init 的成功率是否保持，以及轨迹变长是否普遍存在。
-5. 需要测 FP16 DiT MLP 的同口径 module-level runtime，才能直接判断 FP4 module 本身相对 FP16 module 是否更快。
-6. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
+5. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
+6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 
 ## 下一步
 
 建议继续按两级推进：
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
-2. 增加 FP16 matched module-level hooks，估算原始 DiT MLP 在 FP16 server 中的真实占比；
-3. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
-4. 如果 FP4 module 仍只覆盖三分之一左右的 server time，再考虑扩大到 attention/projector 或更大 scope；
-5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
-6. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。
+2. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
+3. 速度路线需要重新评估 scope：仅 `dit_mlp_only` 的上限太低，下一步应考虑 projector / attention / larger scope，但必须同步做成功率 smoke；
+4. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
+5. 暂缓扩大到 `llm_mlp_dit_mlp` 做 rollout 主线，先用 offline/profile 确认更大 scope 的收益和风险。

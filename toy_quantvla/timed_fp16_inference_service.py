@@ -10,8 +10,15 @@ import time
 from pathlib import Path
 from typing import Any
 
+from fp16_linear_profiler import (
+    module_results,
+    parse_name_contains,
+    patch_timed_fp16_modules,
+    reset_module_stats,
+)
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
+from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
 from timing_utils import TimedPolicyWrapper
 
 
@@ -48,6 +55,10 @@ def main() -> None:
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase8_fp16_timed_server_prepare.json"))
     parser.add_argument("--server-latency-json", type=Path, help="Optional server-side get_action latency JSON.")
     parser.add_argument("--server-latency-flush-every", type=int, default=0)
+    parser.add_argument("--profile-linear-modules", action="store_true")
+    parser.add_argument("--profile-scope", choices=SCOPE_CHOICES, default="dit_mlp_only")
+    parser.add_argument("--profile-max-modules", type=int, default=0)
+    parser.add_argument("--profile-name-contains")
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
@@ -71,6 +82,11 @@ def main() -> None:
         "torch_cuda": torch.version.cuda,
         "cuda_available": bool(torch.cuda.is_available()),
         "device": args.device,
+        "profile_linear_modules": bool(args.profile_linear_modules),
+        "profile_scope": args.profile_scope,
+        "profile_scope_description": scope_description(args.profile_scope),
+        "profile_max_modules": int(args.profile_max_modules),
+        "profile_name_contains": parse_name_contains(args.profile_name_contains),
     }
 
     started = time.perf_counter()
@@ -86,6 +102,25 @@ def main() -> None:
         torch.cuda.synchronize(args.device)
     result["model_load_seconds"] = time.perf_counter() - started
     result["prepare_seconds"] = result["model_load_seconds"]
+
+    profiled_modules = {}
+    if args.profile_linear_modules:
+        patch_started = time.perf_counter()
+        records, profiled_modules = patch_timed_fp16_modules(
+            policy.model,
+            args.profile_scope,
+            max_modules=args.profile_max_modules,
+            name_contains=parse_name_contains(args.profile_name_contains),
+            profile=True,
+        )
+        if torch.cuda.is_available() and torch.device(args.device).type == "cuda":
+            torch.cuda.synchronize(args.device)
+        result["profile_patch_seconds"] = time.perf_counter() - patch_started
+        result["profiled_modules"] = len(records)
+        result["profile_patch_records"] = records
+        result["profile_module_results_after_prepare"] = module_results(profiled_modules)
+        reset_module_stats(profiled_modules)
+
     write_json(args.output_json, result)
 
     if args.prepare_only:
@@ -100,6 +135,9 @@ def main() -> None:
         output_json=args.server_latency_json,
         label="fp16_official",
         flush_every=args.server_latency_flush_every,
+        extra_summary=(lambda: {"profile_module_results": module_results(profiled_modules)})
+        if args.profile_linear_modules
+        else None,
     )
     server = RobotInferenceServer(timed_policy, port=args.port, api_token=args.api_token)
     server.run()

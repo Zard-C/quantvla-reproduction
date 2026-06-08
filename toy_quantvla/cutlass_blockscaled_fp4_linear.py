@@ -383,8 +383,9 @@ class CutlassBlockscaledFP4Linear(nn.Module):
 
         pack_started = time.perf_counter()
         activation_pack = self._pack_operand(x_3d, cache_activation=True)
-        torch.cuda.synchronize(x.device)
-        self.stats.add_pack(time.perf_counter() - pack_started)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_pack(time.perf_counter() - pack_started)
 
         output_started = time.perf_counter()
         output_tensor, output_storage = self._output_for_m(x, m)
@@ -407,8 +408,9 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             output_tensor,
             entry["stream"],
         )
-        torch.cuda.synchronize(x.device)
-        self.stats.add_gemm(time.perf_counter() - gemm_started)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_gemm(time.perf_counter() - gemm_started)
         self.stats.calls += 1
 
         finalize_started = time.perf_counter()
