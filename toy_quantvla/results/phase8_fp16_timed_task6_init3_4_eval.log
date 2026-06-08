@@ -1,0 +1,74 @@
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(6, 3), (6, 4)]
+  0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /root/.cache/libero/assets
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+ 50%|█████     | 1/2 [03:16<03:16, 196.80s/it][A
+100%|██████████| 2/2 [04:00<00:00, 106.85s/it][A100%|██████████| 2/2 [04:00<00:00, 120.35s/it]
+ 70%|███████   | 7/10 [04:03<01:44, 34.83s/it]100%|██████████| 10/10 [04:03<00:00, 24.38s/it]
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 3
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-18_48_05--episode=1--success=False--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.15636480377477666, 'min': 0.0875668153166771, 'max': 0.6436500623822212, 'p50': 0.1605290248990059, 'p90': 0.1685507334768772, 'p99': 0.1944500654935837}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.15636480377477666, 'min': 0.0875668153166771, 'max': 0.6436500623822212, 'p50': 0.1605290248990059, 'p90': 0.1685507334768772, 'p99': 0.1944500654935837}, 'postprocess_seconds': {'count': 991, 'mean': 0.00010863155141608145, 'min': 3.9108097553253174e-05, 'max': 0.0007722824811935425, 'p50': 0.00010349974036216736, 'p90': 0.000126570463180542, 'p99': 0.00019167661666870175}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010818157318742678, 'min': 3.917887806892395e-05, 'max': 0.00033130496740341187, 'p50': 0.00010402500629425049, 'p90': 0.00012755021452903748, 'p99': 0.00016892440617084504}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.15614480753058022, 'min': 0.08748447149991989, 'max': 0.6435026377439499, 'p50': 0.16029119119048119, 'p90': 0.16831232234835625, 'p99': 0.19421517513692382}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 4
+Starting episode 2...
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-18_48_05--episode=2--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 218, 'mean': 0.15175082690056857, 'min': 0.08961812034249306, 'max': 0.2013537473976612, 'p50': 0.1581888049840927, 'p90': 0.16762287877500057, 'p99': 0.19205072574317442}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 218, 'mean': 0.15175082690056857, 'min': 0.08961812034249306, 'max': 0.2013537473976612, 'p50': 0.1581888049840927, 'p90': 0.16762287877500057, 'p99': 0.19205072574317442}, 'postprocess_seconds': {'count': 218, 'mean': 0.00011270988835107295, 'min': 4.148110747337341e-05, 'max': 0.00036422163248062134, 'p50': 0.00011052750051021576, 'p90': 0.00013052038848400117, 'p99': 0.00017399188131093975}, 'preprocess_seconds': {'count': 218, 'mean': 0.00011602044105529785, 'min': 4.126504063606262e-05, 'max': 0.00023786723613739014, 'p50': 0.0001132618635892868, 'p90': 0.00013411082327365877, 'p99': 0.00020920149981975528}, 'remote_get_action_seconds': {'count': 218, 'mean': 0.15151912366988463, 'min': 0.08939646184444427, 'max': 0.2011076807975769, 'p50': 0.15797872841358185, 'p90': 0.16738964878022672, 'p99': 0.19181408204138264}}
+# episodes completed so far: 2
+# successes: 1 (50.0%)
+Current task success rate: 0.5
+Current total success rate: 0.5
+Final policy latency seconds: {'count': 1209, 'mean': 0.1555328377213628, 'min': 0.0875668153166771, 'max': 0.6436500623822212, 'p50': 0.15999602898955345, 'p90': 0.16829071789979935, 'p99': 0.19425673753023148}
+Final policy breakdown seconds: {'policy_total_seconds': {'count': 1209, 'mean': 0.1555328377213628, 'min': 0.0875668153166771, 'max': 0.6436500623822212, 'p50': 0.15999602898955345, 'p90': 0.16829071789979935, 'p99': 0.19425673753023148}, 'postprocess_seconds': {'count': 1209, 'mean': 0.00010936693392379704, 'min': 3.9108097553253174e-05, 'max': 0.0007722824811935425, 'p50': 0.00010460987687110901, 'p90': 0.0001276455819606781, 'p99': 0.00018795415759086716}, 'preprocess_seconds': {'count': 1209, 'mean': 0.00010959503323308094, 'min': 3.917887806892395e-05, 'max': 0.00033130496740341187, 'p50': 0.00010589137673377991, 'p90': 0.00012863576412200928, 'p99': 0.00018844261765480088}, 'remote_get_action_seconds': {'count': 1209, 'mean': 0.15531073053998332, 'min': 0.08748447149991989, 'max': 0.6435026377439499, 'p50': 0.15978090465068817, 'p90': 0.16805970147252083, 'p99': 0.1940202032029629}}
+Exception ignored in: <function MjRenderContext.__del__ at 0x7fde668808b0>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 199, in __del__
+    self.gl_ctx.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7fde54b04540>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fde67fbf140>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fde67fbf140>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7fde67fbf340>,
+	),
+	result = 0
+)
+Exception ignored in: <function EGLGLContext.__del__ at 0x7fde66880700>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 155, in __del__
+    self.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7fde54b04540>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fde67fbf140>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fde67fbf140>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7fde67fbf340>,
+	),
+	result = 0
+)

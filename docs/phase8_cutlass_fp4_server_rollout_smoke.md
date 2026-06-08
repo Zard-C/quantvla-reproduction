@@ -953,6 +953,66 @@ Interpretation:
 - steady-state FP4 `up_proj` remains close to FP16 in p50/p90 and still does not demonstrate a real speedup;
 - for deployment, the server needs a warmup contract that covers expected LLM sequence lengths for the task set before accepting eval/production requests.
 
+### LLM MLP `up_proj` Warmdesc Exact Match: task6:init3-4
+
+为了继续检查 `up_proj` 的闭环稳定性，追加跑了同一 task 的两个新 init，并且同时补了严格对齐的 FP16 timed baseline。
+
+边界：
+
+```text
+task_suite=libero_10
+case_list=6:3,6:4
+FP16=official Gr00tPolicy d8
+FP4=llm_mlp_only + name_contains=up_proj + d8 + warmdesc prewarm
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_fp16_timed_task6_init3_4_client_latency.json`
+- `toy_quantvla/results/phase8_fp16_timed_server_task6_init3_4_server_latency.json`
+- `toy_quantvla/results/phase8_fp16_timed_server_prepare_task6_init3_4.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init3_4_warmdesc_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init3_4_warmdesc_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_init3_4_warmdesc.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init3_4_warmdesc_request_trace.jsonl`
+
+逐 init 结果：
+
+| init | FP16 success | FP16 calls | FP16 p50 | FP16 p90 | FP16 max | FP4 `up_proj` success | FP4 calls | FP4 p50 | FP4 p90 | FP4 max |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 3 | no | 991 | 0.1605s | 0.1686s | 0.6437s | yes | 301 | 0.1602s | 0.1696s | 0.1853s |
+| 4 | yes | 218 | 0.1582s | 0.1676s | 0.2014s | no | 991 | 0.1602s | 0.1693s | 0.2881s |
+
+总体 latency：
+
+| config | success | calls | client mean | client p50 | client p90 | client max | server mean | server p50 | server p90 | server max |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 official | 1/2 | 1209 | 0.1555s | 0.1600s | 0.1683s | 0.6437s | 0.1506s | 0.1551s | 0.1630s | 0.6381s |
+| FP4 `up_proj` warmdesc | 1/2 | 1292 | 0.1568s | 0.1602s | 0.1694s | 0.2881s | 0.1518s | 0.1551s | 0.1642s | 0.2824s |
+
+FP4 prepare / trace：
+
+| item | value |
+| --- | ---: |
+| patched modules | 12 |
+| prewarm observations | 2 |
+| compiled M values | `[565, 566]` |
+| prewarm seconds | 51.4346s |
+| prewarm total seconds | 51.5407s |
+| prepare seconds | 65.1444s |
+| request trace rows | 1292 |
+| rows with FP4 compile delta | 0 |
+| trace max get_action | 0.2824s |
+
+这组结果很关键：
+
+- 总成功率仍然是 `1/2`，但成功和失败的 init 对调了；
+- `init3` 在 FP16 下跑满失败，FP4 `up_proj` 反而用 301 calls 成功；
+- `init4` 在 FP16 下 218 calls 成功，FP4 `up_proj` 反而跑满失败；
+- 因此不能简单说量化“更好”或“更差”，更准确的描述是：小扰动改变了闭环轨迹分布，把某些初始状态推入成功 basin，也把另一些初始状态推出成功 basin；
+- warmdesc 仍然有效：这轮 1292 个 request 中没有任何 rollout-time FP4 compile delta，max 从旧 trace 的 `~26s` 降到 `0.2824s`；
+- 稳态 latency 仍与 FP16 同量级，`up_proj` 当前主要证明了真实 FP4 可部署路径和行为扰动现象，还没有证明端到端加速。
+
 ## 解读
 
 可以确认：
@@ -975,7 +1035,9 @@ Interpretation:
 16. exact matched FP16 baseline 在 task6:init0-2 上同样是 2/3，且失败点同为 init0；因此 task6:init0 的失败不能归因于 FP4 `up_proj`。
 17. FP4 `up_proj` 在这组三个 init 上行为层面基本追平 FP16 baseline，但性能层面还没有体现加速。
 18. request trace 证明 `~26s` FP4 长尾来自 first-request CUTLASS compile-cache miss，不是稳态 kernel latency。
-19. `--prewarm-task-description` 可以提前覆盖 task-induced LLM sequence length；task6 warmdesc smoke 中 compile delta rows 降到 0，rollout max 降到约 0.52s。
+19. `--prewarm-task-description` 可以提前覆盖 task-induced LLM sequence length；task6 warmdesc smoke 中 compile delta rows 降到 0，single-init rollout max 降到约 0.52s。
+20. exact matched `task6:init3-4` 继续确认 warmdesc 有效，1292 个 request 中 FP4 compile delta rows 为 0，rollout max 为 0.2824s。
+21. `task6:init3-4` 的总成功率仍为 1/2，但 FP16 与 FP4 的成功 init 发生交换，说明量化扰动正在重分配闭环轨迹，而不是单调改善或单调破坏。
 
 还不能确认：
 
@@ -987,14 +1049,15 @@ Interpretation:
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
 8. `up_proj` 的 task6:init2 calls 变少是否代表量化扰动改善轨迹，还只是 simulator 随机性或单点偶然，需要更大 matched set。
-9. warmdesc 目前只验证了 task6:init1；更大 matched set 需要对所有 task descriptions 做 shape-aware prewarm。
+9. warmdesc 目前只覆盖 task6；更大 matched set 需要对所有 task descriptions 做 shape-aware prewarm。
+10. `task6:init3-4` 出现 success basin 交换，因此后续不能只比较 aggregate success rate，还要比较 per-init 成败、calls 和关键轨迹。
 
 ## 下一步
 
 建议继续按两级推进：
 
 1. 为 exact matched case set 收集 task descriptions，并在 FP4 server 启动时做 shape-aware prewarm；
-2. 扩展 `llm_mlp_up_proj` 到更多 exact matched cases，例如 task6:init3-4 或之前权重挑出的中等难度任务；
+2. 扩展 `llm_mlp_up_proj` 到更多 exact matched cases，尤其是之前权重挑出的中等难度任务；
 3. 同时保留 FP16 timed baseline，对每个 case 比 success/calls/p50/p90/max，不再只看单点成功率；
 4. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
 5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
