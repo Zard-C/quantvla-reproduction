@@ -21,6 +21,7 @@ from typing import Any
 import torch
 import torch.nn as nn
 
+from blockscaled_fp4_packer import make_torch_blockscaled_fp4_operand
 from phase8_cutlass_blockscaled_fp4_smoke import (
     load_blockscaled_example,
     make_blockscaled_fp4_operand,
@@ -110,6 +111,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         sf_dtype: str = "Float8E4M3FN",
         tile_shape_mnk: tuple[int, int, int] = DEFAULT_TILE_SHAPE_MNK,
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
+        pack_backend: str = "helper",
         profile: bool = False,
         fallback: bool = False,
     ):
@@ -123,6 +125,11 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         self.sf_dtype_name = str(sf_dtype)
         self.tile_shape_mnk = tuple(int(v) for v in tile_shape_mnk)
         self.epi_tile = tuple(int(v) for v in epi_tile)
+        self.pack_backend = str(pack_backend)
+        if self.pack_backend not in {"helper", "torch"}:
+            raise ValueError(f"unsupported pack_backend={self.pack_backend!r}; expected helper or torch")
+        if self.pack_backend == "torch" and self.sf_dtype_name != "Float8E4M3FN":
+            raise ValueError("torch pack_backend currently supports only Float8E4M3FN scales")
         self.profile = bool(profile)
         self.fallback = bool(fallback)
         self.stats = CutlassBlockscaledFP4Stats()
@@ -133,21 +140,12 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         else:
             self.register_buffer("bias", bias.detach().contiguous())
 
-        ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
         device = weight.device if weight.is_cuda else torch.device("cuda")
         weight_3d = weight.detach().to(device=device, dtype=torch.float32).contiguous().view(
             self.out_features, self.in_features, 1
         )
         started = time.perf_counter()
-        packed = make_blockscaled_fp4_operand(
-            weight_3d,
-            fp4_dtype=ctx["cutlass"].Float4E2M1FN,
-            sf_dtype=ctx["sf_dtype"],
-            sf_vec_size=self.sf_vec_size,
-            blockscaled_module=ctx["blockscaled"],
-            cutlass_torch=ctx["cutlass_torch"],
-            from_dlpack=ctx["from_dlpack"],
-        )
+        packed = self._pack_operand(weight_3d)
         torch.cuda.synchronize(device)
         self.weight_pack_seconds = time.perf_counter() - started
         self.weight_fp4_tensor = packed["fp4_tensor"]
@@ -165,6 +163,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         sf_dtype: str = "Float8E4M3FN",
         tile_shape_mnk: tuple[int, int, int] = DEFAULT_TILE_SHAPE_MNK,
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
+        pack_backend: str = "helper",
         profile: bool = False,
         fallback: bool = False,
     ) -> "CutlassBlockscaledFP4Linear":
@@ -176,8 +175,29 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             sf_dtype=sf_dtype,
             tile_shape_mnk=tile_shape_mnk,
             epi_tile=epi_tile,
+            pack_backend=pack_backend,
             profile=profile,
             fallback=fallback,
+        )
+
+    def _pack_operand(self, x_mkl: torch.Tensor) -> dict[str, Any]:
+        ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
+        if self.pack_backend == "torch":
+            return make_torch_blockscaled_fp4_operand(
+                x_mkl,
+                fp4_dtype=ctx["cutlass"].Float4E2M1FN,
+                sf_dtype=ctx["sf_dtype"],
+                sf_vec_size=self.sf_vec_size,
+                cutlass_torch=ctx["cutlass_torch"],
+            )
+        return make_blockscaled_fp4_operand(
+            x_mkl,
+            fp4_dtype=ctx["cutlass"].Float4E2M1FN,
+            sf_dtype=ctx["sf_dtype"],
+            sf_vec_size=self.sf_vec_size,
+            blockscaled_module=ctx["blockscaled"],
+            cutlass_torch=ctx["cutlass_torch"],
+            from_dlpack=ctx["from_dlpack"],
         )
 
     def _compile_for_m(self, m: int, activation_pack: dict[str, Any], output_tensor: Any) -> dict[str, Any]:
@@ -222,15 +242,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         m = int(x_3d.shape[0])
 
         pack_started = time.perf_counter()
-        activation_pack = make_blockscaled_fp4_operand(
-            x_3d,
-            fp4_dtype=ctx["cutlass"].Float4E2M1FN,
-            sf_dtype=ctx["sf_dtype"],
-            sf_vec_size=self.sf_vec_size,
-            blockscaled_module=ctx["blockscaled"],
-            cutlass_torch=ctx["cutlass_torch"],
-            from_dlpack=ctx["from_dlpack"],
-        )
+        activation_pack = self._pack_operand(x_3d)
         torch.cuda.synchronize(x.device)
         self.stats.add_pack(time.perf_counter() - pack_started)
 
@@ -268,6 +280,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             "out_features": self.out_features,
             "sf_vec_size": self.sf_vec_size,
             "sf_dtype": self.sf_dtype_name,
+            "pack_backend": self.pack_backend,
             "tile_shape_mnk": list(self.tile_shape_mnk),
             "epi_tile": list(self.epi_tile),
             "weight_pack_seconds": float(self.weight_pack_seconds),
@@ -282,5 +295,5 @@ class CutlassBlockscaledFP4Linear(nn.Module):
     def extra_repr(self) -> str:
         return (
             f"{self.in_features}, {self.out_features}, bias={self.bias is not None}, "
-            f"sf_vec_size={self.sf_vec_size}, sf_dtype={self.sf_dtype_name}"
+            f"sf_vec_size={self.sf_vec_size}, sf_dtype={self.sf_dtype_name}, pack_backend={self.pack_backend}"
         )

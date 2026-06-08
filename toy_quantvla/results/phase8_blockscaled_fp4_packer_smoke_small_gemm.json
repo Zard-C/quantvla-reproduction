@@ -1,0 +1,85 @@
+{
+  "boundary": "torch-side blockscaled FP4 packer smoke against CUTLASS helper conversion",
+  "m": 9,
+  "k": 64,
+  "n": 17,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "a_meaningful_fp4_bytes": 288,
+  "a_fp4_bytes_equal": true,
+  "a_scale_storage_equal": true,
+  "a_decoded_max_abs_diff": 0.0,
+  "a_decoded_mean_abs_diff": 0.0,
+  "a_decoded_scale_max_abs_diff": 0.0,
+  "a_decoded_scale_mean_abs_diff": 0.0,
+  "a_fp4_storage_shape": [
+    9,
+    64,
+    1
+  ],
+  "a_scale_storage_shape": [
+    32,
+    4,
+    1,
+    4,
+    1,
+    1
+  ],
+  "a_scale_storage_stride": [
+    16,
+    4,
+    512,
+    1,
+    512,
+    512
+  ],
+  "b_meaningful_fp4_bytes": 544,
+  "b_fp4_bytes_equal": true,
+  "b_scale_storage_equal": true,
+  "b_decoded_max_abs_diff": 0.0,
+  "b_decoded_mean_abs_diff": 0.0,
+  "b_decoded_scale_max_abs_diff": 0.0,
+  "b_decoded_scale_mean_abs_diff": 0.0,
+  "b_fp4_storage_shape": [
+    17,
+    64,
+    1
+  ],
+  "b_scale_storage_shape": [
+    32,
+    4,
+    1,
+    4,
+    1,
+    1
+  ],
+  "b_scale_storage_stride": [
+    16,
+    4,
+    512,
+    1,
+    512,
+    512
+  ],
+  "helper_activation_pack_ms": 361.49778962135315,
+  "torch_activation_pack_ms": 112.43116408586502,
+  "activation_pack_speedup_vs_helper": 3.2152810349386134,
+  "helper_weight_pack_ms": 360.65229400992393,
+  "torch_weight_pack_ms": 113.21242228150368,
+  "weight_pack_speedup_vs_helper": 3.185624746312369,
+  "gemm": {
+    "compile_seconds": 8.153807062655687,
+    "max_abs_diff_fast_vs_helper": 0.0,
+    "mean_abs_diff_fast_vs_helper": 0.0,
+    "relative_rmse_fast_vs_helper": 0.0
+  }
+}

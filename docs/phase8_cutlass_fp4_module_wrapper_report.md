@@ -156,3 +156,14 @@ Full `get_action` peak allocated:
    - LLM MLP 1 module；
    - `dit_mlp_only` 全 32 modules；
    - end-to-end `get_action` latency and peak memory。
+
+## Update: torch-side packer
+
+后续已经实现 torch-side blockscaled FP4 packer，能 byte-exact 替代 CuTe helper conversion：
+
+- 详见 `docs/phase8_torch_fp4_packer_report.md`
+- 关键结论：FP4 meaningful bytes、scale storage、CUTLASS decode 和 GEMM 输出都与 helper 对齐；
+- DiT MLP 1 module warm `get_action` 从 helper 版 0.588s 降到 0.163s；
+- DiT MLP 2 modules warm `get_action` 从 helper 版 1.269s 降到 0.268s；
+- LLM MLP 1 module warm `get_action` 从 helper 版 1.345s 降到 0.182s；
+- DiT MLP 8 modules 仍慢于 teacher，说明下一步瓶颈已经转向 pack kernel 化、buffer 复用和 compile cache 共享。
