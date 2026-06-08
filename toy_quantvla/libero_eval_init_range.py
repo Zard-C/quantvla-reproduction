@@ -14,6 +14,7 @@ import json
 import os
 import pprint
 import sys
+import time
 from pathlib import Path
 
 import cv2
@@ -156,6 +157,21 @@ def as_float_list(value) -> list[float]:
     return np.asarray(value, dtype=np.float64).reshape(-1).tolist()
 
 
+def summarize_float(values: list[float]) -> dict[str, float | int]:
+    if not values:
+        return {"count": 0, "mean": 0.0, "min": 0.0, "max": 0.0, "p50": 0.0, "p90": 0.0, "p99": 0.0}
+    arr = np.asarray(values, dtype=np.float64)
+    return {
+        "count": int(arr.size),
+        "mean": float(arr.mean()),
+        "min": float(arr.min()),
+        "max": float(arr.max()),
+        "p50": float(np.percentile(arr, 50)),
+        "p90": float(np.percentile(arr, 90)),
+        "p99": float(np.percentile(arr, 99)),
+    }
+
+
 def write_episode_trace(
     trace_dir: Path | None,
     *,
@@ -223,6 +239,8 @@ def eval_libero(args: argparse.Namespace) -> None:
             log_file.write(f"Case list: {requested_cases}\n")
 
         total_episodes, total_successes = 0, 0
+        all_policy_latencies: list[float] = []
+        episode_latency_rows: list[dict] = []
         for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
             if cases_by_task is not None and task_id not in cases_by_task:
                 continue
@@ -256,6 +274,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                 wrist_view = []
                 max_steps = max_steps_for_suite(args.task_suite_name)
                 trace_steps: list[dict] = []
+                episode_policy_latencies: list[float] = []
                 exception_message = None
 
                 print(f"Starting episode {task_episodes + 1}...")
@@ -274,7 +293,11 @@ def eval_libero(args: argparse.Namespace) -> None:
                         pre_eef_pos = as_float_list(obs.get("robot0_eef_pos", []))
                         pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
                         pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
+                        policy_started = time.perf_counter()
                         action, raw_action_trace = gr00t_policy.get_action_with_trace(obs, task.language)
+                        policy_latency_seconds = time.perf_counter() - policy_started
+                        episode_policy_latencies.append(policy_latency_seconds)
+                        all_policy_latencies.append(policy_latency_seconds)
                         obs, reward, done, info = env.step(action.tolist())
                         trace_steps.append(
                             {
@@ -288,6 +311,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                                 "post_robot0_gripper_qpos": as_float_list(obs.get("robot0_gripper_qpos", [])),
                                 "raw_action": raw_action_trace,
                                 "libero_action": as_float_list(action),
+                                "policy_latency_seconds": float(policy_latency_seconds),
                                 "reward": float(reward),
                                 "done": bool(done),
                             }
@@ -305,6 +329,16 @@ def eval_libero(args: argparse.Namespace) -> None:
 
                 task_episodes += 1
                 total_episodes += 1
+                episode_latency_summary = summarize_float(episode_policy_latencies)
+                episode_latency_rows.append(
+                    {
+                        "episode_index": int(total_episodes),
+                        "task_id": int(task_id),
+                        "init_index": int(init_index),
+                        "success": bool(done),
+                        "policy_latency_seconds": episode_latency_summary,
+                    }
+                )
                 write_episode_trace(
                     args.trace_dir,
                     task_suite_name=args.task_suite_name,
@@ -327,12 +361,14 @@ def eval_libero(args: argparse.Namespace) -> None:
                 )
 
                 print(f"Success: {done}")
+                print(f"Policy latency seconds: {episode_latency_summary}")
                 print(f"# episodes completed so far: {total_episodes}")
                 print(
                     f"# successes: {total_successes} "
                     f"({total_successes / total_episodes * 100:.1f}%)"
                 )
                 log_file.write(f"Success: {done}\n")
+                log_file.write(f"Policy latency seconds: {episode_latency_summary}\n")
                 log_file.write(f"# episodes completed so far: {total_episodes}\n")
                 log_file.write(
                     f"# successes: {total_successes} "
@@ -349,6 +385,28 @@ def eval_libero(args: argparse.Namespace) -> None:
                 f"Current total success rate: {float(total_successes) / float(total_episodes)}\n"
             )
             log_file.flush()
+
+        final_latency_summary = summarize_float(all_policy_latencies)
+        print(f"Final policy latency seconds: {final_latency_summary}")
+        log_file.write(f"Final policy latency seconds: {final_latency_summary}\n")
+        log_file.flush()
+        if args.latency_json is not None:
+            args.latency_json.parent.mkdir(parents=True, exist_ok=True)
+            args.latency_json.write_text(
+                json.dumps(
+                    {
+                        "task_suite_name": args.task_suite_name,
+                        "port": args.port,
+                        "total_episodes": int(total_episodes),
+                        "total_successes": int(total_successes),
+                        "success_rate": float(total_successes / total_episodes) if total_episodes else 0.0,
+                        "policy_latency_seconds": final_latency_summary,
+                        "episodes": episode_latency_rows,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
 
 
 def main() -> None:
@@ -370,6 +428,7 @@ def main() -> None:
         type=Path,
         default=Path("/tmp/logs/libero_eval_libero_10_init5_14.log"),
     )
+    parser.add_argument("--latency-json", type=Path, help="Optional JSON output for policy request latency statistics.")
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
