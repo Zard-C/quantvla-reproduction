@@ -808,8 +808,45 @@ Interpretation:
 
 - `init1` and `init2` are clean successes, with no long latency tail and with calls close to or lower than the FP16 `task6:init1` smoke;
 - `init0` fails at horizon with `991` calls and also contains the same kind of `~26s` long-tail request;
-- the multi-init result is therefore promising but not validated: `up_proj` is much safer than full `llm_mlp_only`, but task6 init0 must be compared against an exact FP16 timed baseline before attributing the failure to FP4;
-- this run strengthens `up_proj` as the first real FP4 candidate, but the next decision point should be matched FP16 `task6:init0,1,2`, not wider quantization scope.
+- the multi-init result is therefore promising but not sufficient alone: `up_proj` is much safer than full `llm_mlp_only`, but task6 init0 needs an exact FP16 timed baseline before attributing the failure to FP4;
+- this run strengthens `up_proj` as the first real FP4 candidate; the exact FP16 control is reported below.
+
+### FP16 Exact Matched Baseline
+
+The exact matched FP16 timed baseline was then run on the same task and init states. This is the key control for interpreting the `up_proj` multi-init smoke.
+
+结果文件：
+
+- `toy_quantvla/results/phase8_fp16_timed_task6_init0_2_client_latency.json`
+- `toy_quantvla/results/phase8_fp16_timed_server_task6_init0_2_server_latency.json`
+- `toy_quantvla/results/phase8_fp16_timed_server_prepare_task6_init0_2.json`
+- `toy_quantvla/results/phase8_fp16_timed_task6_init0_2_client.log`
+- `toy_quantvla/results/phase8_fp16_timed_task6_init0_2_eval.log`
+- `toy_quantvla/results/phase8_fp16_timed_server_task6_init0_2.log`
+
+matched result:
+
+| init | FP16 success | FP16 calls | FP16 p50 | FP16 p90 | FP16 max | FP4 `up_proj` success | FP4 calls | FP4 p50 | FP4 p90 | FP4 max |
+| ---: | :---: | ---: | ---: | ---: | ---: | :---: | ---: | ---: | ---: | ---: |
+| 0 | false | 991 | 0.1616s | 0.1707s | 0.8095s | false | 991 | 0.1625s | 0.1691s | 26.2857s |
+| 1 | true | 236 | 0.1618s | 0.1697s | 0.5874s | true | 236 | 0.1615s | 0.1674s | 0.1752s |
+| 2 | true | 247 | 0.1603s | 0.1673s | 0.1962s | true | 220 | 0.1620s | 0.1693s | 0.1901s |
+| overall | 2/3 | 1474 | 0.1612s | 0.1701s | 0.8095s | 2/3 | 1447 | 0.1623s | 0.1691s | 26.2857s |
+
+server-side `get_action` overall:
+
+| config | count | mean | p50 | p90 | p99 | max |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 timed | 1474 | 0.1548s | 0.1560s | 0.1651s | 0.1909s | 0.8039s |
+| FP4 `llm_mlp_up_proj` | 1447 | 0.1732s | 0.1572s | 0.1640s | 0.1816s | 26.2788s |
+
+Interpretation:
+
+- success/failure pattern is identical: both FP16 and FP4 `up_proj` fail at `init0` and succeed at `init1/init2`;
+- `init0` should no longer be treated as an FP4-specific behavior regression in this small matched set;
+- `init1` has exactly matched calls (`236` vs `236`), while `init2` is shorter under FP4 (`220` vs `247`), but this is too small to call a systematic improvement;
+- p50/p90 latency is essentially matched, so there is no real speedup yet;
+- FP4 still has a single large `~26s` latency tail, absent from this FP16 baseline, so latency-tail instrumentation remains necessary before any performance claim.
 
 ## 解读
 
@@ -830,6 +867,8 @@ Interpretation:
 13. `llm_mlp_only` offline 速度最好，但真实 rollout 在 `task6:init1` 失败，说明更大 scope 的闭环风险明显更高。
 14. LLM MLP `up_proj` only 是目前最好的 FP4 子集候选：offline error 最低，真实 rollout 成功，并且 single-init calls 降到 226。
 15. `up_proj` multi-init smoke 在 task6:init0-2 上达到 2/3，init1 和 init2 都是干净成功，说明它不是纯 one-init 偶然结果。
+16. exact matched FP16 baseline 在 task6:init0-2 上同样是 2/3，且失败点同为 init0；因此 task6:init0 的失败不能归因于 FP4 `up_proj`。
+17. FP4 `up_proj` 在这组三个 init 上行为层面基本追平 FP16 baseline，但性能层面还没有体现加速。
 
 还不能确认：
 
@@ -841,15 +880,16 @@ Interpretation:
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
 8. `up_proj` rollout 里的 26s outlier 是偶发系统尾部、server hiccup，还是该 scope 会诱发 occasional stall，需要重复验证。
-9. task6:init0 的失败是否由 FP4 引入还不能确认；这个 init 本身可能就是 FP16 baseline 脆弱点，需要 exact matched FP16 timed baseline。
+9. `up_proj` 的 task6:init2 calls 变少是否代表量化扰动改善轨迹，还只是 simulator 随机性或单点偶然，需要更大 matched set。
+10. FP4 `up_proj` 的 `~26s` long-tail 是否来自 CUTLASS/Triton wrapper、CUDA runtime、ZMQ/server scheduling，还是机器瞬时抖动，需要 per-request tail instrumentation。
 
 ## 下一步
 
 建议继续按两级推进：
 
-1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
-2. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
-3. 立即补 `task6:init0,1,2` 的 FP16 timed baseline，然后和 `llm_mlp_up_proj` 做 exact matched 对比；
-4. 如果 FP16 在 init0 也失败，则继续扩展 `up_proj` 到 init3-4 或其它权重任务；如果 FP16 init0 成功，则优先定位 `up_proj` 的闭环漂移；
+1. 扩展 `llm_mlp_up_proj` 到更多 exact matched cases，例如 task6:init3-4 或之前权重挑出的中等难度任务；
+2. 同时保留 FP16 timed baseline，对每个 case 比 success/calls/p50/p90/max，不再只看单点成功率；
+3. 增加 FP4 latency-tail instrumentation，记录每次 request 的 wall time、server timestamp、CUDA sync optional marker 和 module call count，优先定位 `~26s` long-tail；
+4. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
 5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
 6. 暂缓 full `llm_mlp_only` 和 `llm_mlp_dit_mlp` rollout 主线；offline 虽然可行，但行为风险已经暴露。

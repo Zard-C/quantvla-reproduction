@@ -1,0 +1,85 @@
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(6, 0), (6, 1), (6, 2)]
+  0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /root/.cache/libero/assets
+
+  0%|          | 0/3 [00:00<?, ?it/s][A
+ 33%|███▎      | 1/3 [03:18<06:37, 198.94s/it][A
+ 67%|██████▋   | 2/3 [04:08<01:51, 111.11s/it][A
+100%|██████████| 3/3 [05:00<00:00, 83.88s/it] [A100%|██████████| 3/3 [05:00<00:00, 100.01s/it]
+ 70%|███████   | 7/10 [05:03<02:09, 43.33s/it]100%|██████████| 10/10 [05:03<00:00, 30.33s/it]
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 0
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-18_10_51--episode=1--success=False--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.16019130856415217, 'min': 0.08811799809336662, 'max': 0.8095154315233231, 'p50': 0.16157622635364532, 'p90': 0.17072268202900887, 'p99': 0.1971172817051411}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.16019130856415217, 'min': 0.08811799809336662, 'max': 0.8095154315233231, 'p50': 0.16157622635364532, 'p90': 0.17072268202900887, 'p99': 0.1971172817051411}, 'postprocess_seconds': {'count': 991, 'mean': 0.00011486626642743947, 'min': 4.018843173980713e-05, 'max': 0.0005665160715579987, 'p50': 0.0001118592917919159, 'p90': 0.00013371184468269348, 'p99': 0.00015996359288692478}, 'preprocess_seconds': {'count': 991, 'mean': 0.00011454827474537339, 'min': 3.8545578718185425e-05, 'max': 0.0011108070611953735, 'p50': 0.00011180713772773743, 'p90': 0.00012759119272232056, 'p99': 0.00017405375838279728}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.15995865111078553, 'min': 0.08801748231053352, 'max': 0.8093772083520889, 'p50': 0.16131414845585823, 'p90': 0.17048177123069763, 'p99': 0.19686122797429564}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 1
+Starting episode 2...
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-18_10_51--episode=2--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 236, 'mean': 0.15956448416336108, 'min': 0.09517977014183998, 'max': 0.5874388441443443, 'p50': 0.16178628616034985, 'p90': 0.1697363182902336, 'p99': 0.2551681462675339}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 236, 'mean': 0.15956448416336108, 'min': 0.09517977014183998, 'max': 0.5874388441443443, 'p50': 0.16178628616034985, 'p90': 0.1697363182902336, 'p99': 0.2551681462675339}, 'postprocess_seconds': {'count': 236, 'mean': 0.00012139380925287635, 'min': 4.578009247779846e-05, 'max': 0.0004902966320514679, 'p50': 0.00012153014540672302, 'p90': 0.00013782642781734467, 'p99': 0.000212838500738144}, 'preprocess_seconds': {'count': 236, 'mean': 0.00011928594213421062, 'min': 4.233792424201965e-05, 'max': 0.0007162541151046753, 'p50': 0.00011441297829151154, 'p90': 0.0001289956271648407, 'p99': 0.0003282584249973307}, 'remote_get_action_seconds': {'count': 236, 'mean': 0.15932065166406711, 'min': 0.0950143113732338, 'max': 0.5872383415699005, 'p50': 0.1615360528230667, 'p90': 0.16948005743324757, 'p99': 0.25492148380726637}}
+# episodes completed so far: 2
+# successes: 1 (50.0%)
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 2
+Starting episode 3...
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-18_10_51--episode=3--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 247, 'mean': 0.15905036964276542, 'min': 0.0959230288863182, 'max': 0.19621235877275467, 'p50': 0.16034843772649765, 'p90': 0.16727866977453232, 'p99': 0.18785289473831646}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 247, 'mean': 0.15905036964276542, 'min': 0.0959230288863182, 'max': 0.19621235877275467, 'p50': 0.16034843772649765, 'p90': 0.16727866977453232, 'p99': 0.18785289473831646}, 'postprocess_seconds': {'count': 247, 'mean': 0.00011556339167390275, 'min': 4.3608248233795166e-05, 'max': 0.00018576905131340027, 'p50': 0.00011318176984786987, 'p90': 0.00013414919376373292, 'p99': 0.00016178525984287257}, 'preprocess_seconds': {'count': 247, 'mean': 0.00011792570835183024, 'min': 4.18834388256073e-05, 'max': 0.00019252300262451172, 'p50': 0.0001191459596157074, 'p90': 0.00013772323727607728, 'p99': 0.00015713885426521298}, 'remote_get_action_seconds': {'count': 247, 'mean': 0.15881383206378594, 'min': 0.09576040133833885, 'max': 0.1960049346089363, 'p50': 0.1600794829428196, 'p90': 0.1670210801064968, 'p99': 0.1876213724911212}}
+# episodes completed so far: 3
+# successes: 2 (66.7%)
+Current task success rate: 0.6666666666666666
+Current total success rate: 0.6666666666666666
+Final policy latency seconds: {'count': 1474, 'mean': 0.1598997600755706, 'min': 0.08811799809336662, 'max': 0.8095154315233231, 'p50': 0.16123685613274574, 'p90': 0.1700938642024994, 'p99': 0.19577983923256395}
+Final policy breakdown seconds: {'policy_total_seconds': {'count': 1474, 'mean': 0.1598997600755706, 'min': 0.08811799809336662, 'max': 0.8095154315233231, 'p50': 0.16123685613274574, 'p90': 0.1700938642024994, 'p99': 0.19577983923256395}, 'postprocess_seconds': {'count': 1474, 'mean': 0.00011602819997064132, 'min': 4.018843173980713e-05, 'max': 0.0005665160715579987, 'p50': 0.0001131650060415268, 'p90': 0.00013490281999111174, 'p99': 0.0001675746962428093}, 'preprocess_seconds': {'count': 1474, 'mean': 0.00011587277651237503, 'min': 3.8545578718185425e-05, 'max': 0.0011108070611953735, 'p50': 0.0001131352037191391, 'p90': 0.00012955814599990845, 'p99': 0.00017456274479627604}, 'remote_get_action_seconds': {'count': 1474, 'mean': 0.15966466320438494, 'min': 0.08801748231053352, 'max': 0.8093772083520889, 'p50': 0.16100403107702732, 'p90': 0.16983870305120946, 'p99': 0.19556134413927792}}
+Exception ignored in: <function MjRenderContext.__del__ at 0x7f719c168820>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 199, in __del__
+    self.gl_ctx.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7f718a4304c0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7f719d9a70c0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7f719d9a70c0>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7f719d9a72c0>,
+	),
+	result = 0
+)
+Exception ignored in: <function EGLGLContext.__del__ at 0x7f719c168670>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 155, in __del__
+    self.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7f718a4304c0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7f719d9a70c0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7f719d9a70c0>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7f719d9a72c0>,
+	),
+	result = 0
+)
