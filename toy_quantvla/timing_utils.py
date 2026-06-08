@@ -43,14 +43,27 @@ class TimedPolicyWrapper:
         label: str,
         flush_every: int = 0,
         extra_summary: Callable[[], dict[str, Any]] | None = None,
+        request_trace_jsonl: Path | None = None,
+        request_trace_min_seconds: float = 0.0,
+        request_extra: Callable[[int, float], dict[str, Any]] | None = None,
+        cuda_sync_device: str | None = None,
     ):
         self._policy = policy
         self._output_json = output_json
         self._label = label
         self._flush_every = int(flush_every)
         self._extra_summary = extra_summary
+        self._request_trace_jsonl = request_trace_jsonl
+        self._request_trace_min_seconds = float(request_trace_min_seconds)
+        self._request_extra = request_extra
+        self._cuda_sync_device = cuda_sync_device
         self._latencies: list[float] = []
         self._write_count = 0
+        self._trace_file = None
+        if self._request_trace_jsonl is not None:
+            self._request_trace_jsonl.parent.mkdir(parents=True, exist_ok=True)
+            self._trace_file = self._request_trace_jsonl.open("a", encoding="utf-8")
+            atexit.register(self.close_trace)
         if self._output_json is not None:
             atexit.register(self.write_summary)
             for sig in (signal.SIGINT, signal.SIGTERM):
@@ -61,16 +74,58 @@ class TimedPolicyWrapper:
 
     def _handle_signal(self, signum: int, _frame: Any) -> None:
         self.write_summary()
+        self.close_trace()
         raise SystemExit(128 + int(signum))
 
     def get_action(self, observation: dict[str, Any]) -> dict[str, Any]:
+        request_index = len(self._latencies) + 1
+        wall_started = time.time()
         started = time.perf_counter()
         out = self._policy.get_action(observation)
+        sync_seconds = None
+        if self._cuda_sync_device is not None:
+            import torch
+
+            sync_started = time.perf_counter()
+            torch.cuda.synchronize(self._cuda_sync_device)
+            sync_seconds = time.perf_counter() - sync_started
         seconds = time.perf_counter() - started
         self._latencies.append(float(seconds))
+        self._write_request_trace(
+            request_index=request_index,
+            wall_started=wall_started,
+            seconds=float(seconds),
+            sync_seconds=None if sync_seconds is None else float(sync_seconds),
+        )
         if self._flush_every > 0 and len(self._latencies) % self._flush_every == 0:
             self.write_summary()
         return out
+
+    def _write_request_trace(
+        self,
+        *,
+        request_index: int,
+        wall_started: float,
+        seconds: float,
+        sync_seconds: float | None,
+    ) -> None:
+        if self._trace_file is None:
+            return
+        if seconds < self._request_trace_min_seconds:
+            return
+        row: dict[str, Any] = {
+            "label": self._label,
+            "request_index": int(request_index),
+            "wall_start_unix": float(wall_started),
+            "wall_end_unix": float(time.time()),
+            "get_action_seconds": float(seconds),
+        }
+        if sync_seconds is not None:
+            row["cuda_sync_seconds_after_get_action"] = float(sync_seconds)
+        if self._request_extra is not None:
+            row["extra"] = self._request_extra(int(request_index), float(seconds))
+        self._trace_file.write(json.dumps(row, sort_keys=True) + "\n")
+        self._trace_file.flush()
 
     def summary(self) -> dict[str, Any]:
         payload = {
@@ -90,3 +145,9 @@ class TimedPolicyWrapper:
         payload["writes"] = int(self._write_count + 1)
         self._output_json.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         self._write_count += 1
+
+    def close_trace(self) -> None:
+        if self._trace_file is None:
+            return
+        self._trace_file.close()
+        self._trace_file = None

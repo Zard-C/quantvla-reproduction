@@ -846,7 +846,112 @@ Interpretation:
 - `init0` should no longer be treated as an FP4-specific behavior regression in this small matched set;
 - `init1` has exactly matched calls (`236` vs `236`), while `init2` is shorter under FP4 (`220` vs `247`), but this is too small to call a systematic improvement;
 - p50/p90 latency is essentially matched, so there is no real speedup yet;
-- FP4 still has a single large `~26s` latency tail, absent from this FP16 baseline, so latency-tail instrumentation remains necessary before any performance claim.
+- FP4 still has a single large `~26s` latency tail, absent from this FP16 baseline, so the next step is to instrument whether it is a real runtime tail or a compile-cache miss.
+
+### FP4 Request Trace and Shape Warmup
+
+To locate the `~26s` FP4 tail, the server was extended with optional per-request JSONL tracing:
+
+```text
+--server-request-trace-jsonl
+--server-request-trace-min-seconds
+--server-request-trace-module-deltas
+--server-request-trace-cuda-sync
+```
+
+For FP4 modules, the trace can record request-level module call deltas, compile-cache hit deltas, and compile events. The default server behavior is unchanged when these flags are not passed.
+
+Trace rerun result files:
+
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_trace_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init0_2_trace_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init0_2_request_trace.jsonl`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_init0_2_trace.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_trace_client.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_trace_eval.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init0_2_trace.log`
+
+The exact trace rerun preserved the behavior pattern:
+
+| init | success | calls | client mean | client p50 | client p90 | client max |
+| ---: | :---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | false | 991 | 0.1881s | 0.1624s | 0.1706s | 26.9273s |
+| 1 | true | 236 | 0.1603s | 0.1622s | 0.1697s | 0.1822s |
+| 2 | true | 220 | 0.1616s | 0.1618s | 0.1725s | 0.1980s |
+| overall | 2/3 | 1447 | 0.1795s | 0.1623s | 0.1705s | 26.9273s |
+
+Trace diagnosis:
+
+| item | value |
+| --- | ---: |
+| request trace rows | 1447 |
+| rows with FP4 compile delta | 1 |
+| long-tail request index | 1 |
+| long-tail server time | 26.9210s |
+| long-tail FP4 module calls | 12 |
+| long-tail compile count delta | 1 |
+| long-tail compile seconds delta | 25.2818s |
+| module with new compile | `backbone.eagle_model.language_model.model.layers.0.mlp.up_proj` |
+| compiled M values after event | `[565, 566]` |
+
+Interpretation:
+
+- the `~26s` outlier is not random server jitter and not steady-state GEMM latency;
+- it is a CUTLASS compile-cache miss on the first rollout request;
+- the original prewarm compiled `M=566`, while the first real task6 request required `M=565`;
+- because shared compile cache is enabled, only the first module pays the compile cost; the other `up_proj` modules hit the shared cache for the new shape.
+
+To move this cost out of rollout, the FP4 server now accepts:
+
+```text
+--prewarm-task-description "..."
+```
+
+This reuses a real prewarm observation but overrides the task text, allowing the server to precompile LLM sequence lengths induced by the actual eval task description.
+
+Warmdesc prepare-only result:
+
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_prewarm_taskdesc.json`
+
+| item | value |
+| --- | ---: |
+| prewarm observations | 2 |
+| prewarm seconds | 52.0920s |
+| prewarm total seconds | 52.1997s |
+| prepare seconds | 65.5828s |
+| compiled M values | `[565, 566]` |
+
+Warmdesc rollout smoke:
+
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init1_warmdesc_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init1_warmdesc_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init1_warmdesc_request_trace.jsonl`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_init1_warmdesc.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init1_warmdesc_client.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init1_warmdesc_eval.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init1_warmdesc.log`
+
+| item | value |
+| --- | ---: |
+| success | 1/1 |
+| calls | 226 |
+| client mean | 0.1515s |
+| client p50 | 0.1606s |
+| client p90 | 0.1729s |
+| client max | 0.5197s |
+| server mean | 0.1466s |
+| server p50 | 0.1553s |
+| server p90 | 0.1677s |
+| server max | 0.5166s |
+| request trace rows | 226 |
+| rows with FP4 compile delta | 0 |
+
+Interpretation:
+
+- shape-aware prewarm removes the rollout-time `~26s` cold compile;
+- the cost is not eliminated, but moved into startup/prewarm where it belongs;
+- steady-state FP4 `up_proj` remains close to FP16 in p50/p90 and still does not demonstrate a real speedup;
+- for deployment, the server needs a warmup contract that covers expected LLM sequence lengths for the task set before accepting eval/production requests.
 
 ## 解读
 
@@ -869,6 +974,8 @@ Interpretation:
 15. `up_proj` multi-init smoke 在 task6:init0-2 上达到 2/3，init1 和 init2 都是干净成功，说明它不是纯 one-init 偶然结果。
 16. exact matched FP16 baseline 在 task6:init0-2 上同样是 2/3，且失败点同为 init0；因此 task6:init0 的失败不能归因于 FP4 `up_proj`。
 17. FP4 `up_proj` 在这组三个 init 上行为层面基本追平 FP16 baseline，但性能层面还没有体现加速。
+18. request trace 证明 `~26s` FP4 长尾来自 first-request CUTLASS compile-cache miss，不是稳态 kernel latency。
+19. `--prewarm-task-description` 可以提前覆盖 task-induced LLM sequence length；task6 warmdesc smoke 中 compile delta rows 降到 0，rollout max 降到约 0.52s。
 
 还不能确认：
 
@@ -879,17 +986,16 @@ Interpretation:
 5. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
-8. `up_proj` rollout 里的 26s outlier 是偶发系统尾部、server hiccup，还是该 scope 会诱发 occasional stall，需要重复验证。
-9. `up_proj` 的 task6:init2 calls 变少是否代表量化扰动改善轨迹，还只是 simulator 随机性或单点偶然，需要更大 matched set。
-10. FP4 `up_proj` 的 `~26s` long-tail 是否来自 CUTLASS/Triton wrapper、CUDA runtime、ZMQ/server scheduling，还是机器瞬时抖动，需要 per-request tail instrumentation。
+8. `up_proj` 的 task6:init2 calls 变少是否代表量化扰动改善轨迹，还只是 simulator 随机性或单点偶然，需要更大 matched set。
+9. warmdesc 目前只验证了 task6:init1；更大 matched set 需要对所有 task descriptions 做 shape-aware prewarm。
 
 ## 下一步
 
 建议继续按两级推进：
 
-1. 扩展 `llm_mlp_up_proj` 到更多 exact matched cases，例如 task6:init3-4 或之前权重挑出的中等难度任务；
-2. 同时保留 FP16 timed baseline，对每个 case 比 success/calls/p50/p90/max，不再只看单点成功率；
-3. 增加 FP4 latency-tail instrumentation，记录每次 request 的 wall time、server timestamp、CUDA sync optional marker 和 module call count，优先定位 `~26s` long-tail；
+1. 为 exact matched case set 收集 task descriptions，并在 FP4 server 启动时做 shape-aware prewarm；
+2. 扩展 `llm_mlp_up_proj` 到更多 exact matched cases，例如 task6:init3-4 或之前权重挑出的中等难度任务；
+3. 同时保留 FP16 timed baseline，对每个 case 比 success/calls/p50/p90/max，不再只看单点成功率；
 4. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
 5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
 6. 暂缓 full `llm_mlp_only` 和 `llm_mlp_dit_mlp` rollout 主线；offline 虽然可行，但行为风险已经暴露。

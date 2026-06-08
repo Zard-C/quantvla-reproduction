@@ -1,0 +1,1238 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "llm_mlp_only",
+  "scope_description": "LLM MLP Linear modules only",
+  "max_modules": 0,
+  "name_contains": [
+    "up_proj"
+  ],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "share_compile_cache": true,
+  "cache_output_tensor": false,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.245996873825788,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 2.444379583001137,
+  "patched_modules": 12,
+  "patch_summary": {
+    "modules": 12,
+    "by_family": {
+      "llm_mlp": 12
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5326703616,
+    "reserved_bytes": 5758779392,
+    "max_allocated_bytes": 5682695168,
+    "max_reserved_bytes": 5758779392
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 27.76667647436261,
+  "prewarm_total_seconds": 27.883648745715618,
+  "prewarm_memory": {
+    "allocated_bytes": 5413010432,
+    "reserved_bytes": 5937037312,
+    "max_allocated_bytes": 5618788352,
+    "max_reserved_bytes": 5937037312
+  },
+  "module_results_after_prewarm": {
+    "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.109876062721014,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.46093199029565,
+          "max": 25.46093199029565,
+          "min": 25.46093199029565,
+          "p50": 25.46093199029565,
+          "p90": 25.46093199029565
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 0
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1150149516761303,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.14164697378873825,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.13611092045903206,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11374728009104729,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11311917752027512,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11357592791318893,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11798383295536041,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11369483545422554,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11618272215127945,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11981695890426636,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": false,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11604930460453033,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 1,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 0,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    }
+  },
+  "prepare_seconds": 41.57515291124582
+}

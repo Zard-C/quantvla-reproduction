@@ -55,6 +55,74 @@ def summarize_patch(records: dict[str, Any]) -> dict[str, Any]:
     return {"modules": len(records), "by_family": dict(sorted(by_family.items()))}
 
 
+def build_module_delta_tracer(patched_modules: dict[str, Any]):
+    """Return a compact per-request module delta tracer for JSONL latency tails."""
+
+    last: dict[str, dict[str, Any]] = {}
+    for name, module in patched_modules.items():
+        last[name] = {
+            "calls": int(module.stats.calls),
+            "local_hits": int(module.stats.local_compile_cache_hits),
+            "shared_hits": int(module.stats.shared_compile_cache_hits),
+            "compile_count": len(module.stats.compile_seconds),
+            "compile_seconds_sum": float(sum(module.stats.compile_seconds)),
+        }
+
+    def trace(_request_index: int, _seconds: float) -> dict[str, Any]:
+        total_call_delta = 0
+        total_local_hit_delta = 0
+        total_shared_hit_delta = 0
+        total_compile_delta = 0
+        total_compile_seconds_delta = 0.0
+        compile_events = []
+        for name, module in patched_modules.items():
+            stats = module.stats
+            prev = last[name]
+            calls = int(stats.calls)
+            local_hits = int(stats.local_compile_cache_hits)
+            shared_hits = int(stats.shared_compile_cache_hits)
+            compile_count = len(stats.compile_seconds)
+            compile_seconds_sum = float(sum(stats.compile_seconds))
+
+            call_delta = calls - int(prev["calls"])
+            local_hit_delta = local_hits - int(prev["local_hits"])
+            shared_hit_delta = shared_hits - int(prev["shared_hits"])
+            compile_delta = compile_count - int(prev["compile_count"])
+            compile_seconds_delta = compile_seconds_sum - float(prev["compile_seconds_sum"])
+
+            total_call_delta += call_delta
+            total_local_hit_delta += local_hit_delta
+            total_shared_hit_delta += shared_hit_delta
+            total_compile_delta += compile_delta
+            total_compile_seconds_delta += compile_seconds_delta
+            if compile_delta:
+                compile_events.append(
+                    {
+                        "module": name,
+                        "compile_count_delta": int(compile_delta),
+                        "compile_seconds_delta": float(compile_seconds_delta),
+                        "compiled_m_values": sorted(int(m) for m in module._compiled_by_m),
+                    }
+                )
+
+            prev["calls"] = calls
+            prev["local_hits"] = local_hits
+            prev["shared_hits"] = shared_hits
+            prev["compile_count"] = compile_count
+            prev["compile_seconds_sum"] = compile_seconds_sum
+
+        return {
+            "fp4_module_calls_delta": int(total_call_delta),
+            "fp4_local_compile_cache_hits_delta": int(total_local_hit_delta),
+            "fp4_shared_compile_cache_hits_delta": int(total_shared_hit_delta),
+            "fp4_compile_count_delta": int(total_compile_delta),
+            "fp4_compile_seconds_delta": float(total_compile_seconds_delta),
+            "fp4_compile_events": compile_events,
+        }
+
+    return trace
+
+
 def build_prewarm_observations(args: argparse.Namespace, data_config: Any) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     if args.prewarm_observations <= 0:
         return [], {
@@ -75,6 +143,33 @@ def build_prewarm_observations(args: argparse.Namespace, data_config: Any) -> tu
         base_seed=args.prewarm_base_seed,
     )
     return build_observations(prewarm_args, data_config)
+
+
+def add_prewarm_task_descriptions(
+    observations: list[dict[str, Any]],
+    descriptions: list[str],
+    *,
+    base_seed: int,
+) -> list[dict[str, Any]]:
+    """Add warmup observations with controlled task text to cover LLM sequence lengths."""
+
+    if not descriptions:
+        return observations
+    if not observations:
+        raise ValueError("--prewarm-task-description requires at least one base prewarm observation")
+
+    out = list(observations)
+    base = observations[0]
+    base_obs = dict(base["obs"])
+    for offset, description in enumerate(descriptions, start=1):
+        obs = dict(base_obs)
+        obs["annotation.human.action.task_description"] = [description]
+        item = dict(base)
+        item["obs"] = obs
+        item["seed"] = int(base_seed) + offset
+        item["prewarm_task_description"] = description
+        out.append(item)
+    return out
 
 
 def main() -> None:
@@ -107,12 +202,17 @@ def main() -> None:
     parser.add_argument("--prewarm-start-index", type=int, default=0)
     parser.add_argument("--prewarm-sample-stride", type=int, default=100)
     parser.add_argument("--prewarm-base-seed", type=int, default=20260608)
+    parser.add_argument("--prewarm-task-description", action="append", default=[])
     parser.add_argument("--video-backend", default="torchvision_av")
     parser.add_argument("--synthetic-variants", default="zero,midgray,noise")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase8_cutlass_fp4_server_prepare.json"))
     parser.add_argument("--server-latency-json", type=Path, help="Optional server-side get_action latency JSON.")
     parser.add_argument("--server-latency-flush-every", type=int, default=0)
+    parser.add_argument("--server-request-trace-jsonl", type=Path, help="Optional per-request server latency JSONL.")
+    parser.add_argument("--server-request-trace-min-seconds", type=float, default=0.0)
+    parser.add_argument("--server-request-trace-module-deltas", action="store_true")
+    parser.add_argument("--server-request-trace-cuda-sync", action="store_true")
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
@@ -189,6 +289,14 @@ def main() -> None:
 
     prewarm_started = time.perf_counter()
     observations, observation_meta = build_prewarm_observations(args, data_config)
+    observations = add_prewarm_task_descriptions(
+        observations,
+        args.prewarm_task_description,
+        base_seed=args.prewarm_base_seed,
+    )
+    if args.prewarm_task_description:
+        observation_meta["prewarm_task_descriptions"] = list(args.prewarm_task_description)
+        observation_meta["prewarm_observations_with_task_descriptions"] = len(observations)
     result["prewarm_observation_meta"] = observation_meta
     if observations:
         _actions, prewarm_seconds, prewarm_memory = run_actions(policy, observations, device=args.device)
@@ -216,6 +324,12 @@ def main() -> None:
         label=f"cutlass_fp4:{args.scope}",
         flush_every=args.server_latency_flush_every,
         extra_summary=lambda: {"module_results": module_results(patched_modules)},
+        request_trace_jsonl=args.server_request_trace_jsonl,
+        request_trace_min_seconds=args.server_request_trace_min_seconds,
+        request_extra=build_module_delta_tracer(patched_modules)
+        if args.server_request_trace_module_deltas
+        else None,
+        cuda_sync_device=args.device if args.server_request_trace_cuda_sync else None,
     )
     server = RobotInferenceServer(timed_policy, port=args.port, api_token=args.api_token)
     server.run()
