@@ -1,0 +1,219 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 GEMM with captured GR00T activations and real weights; pack path is helper-based, not final fused runtime",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "model_load_seconds": 11.297641385346651,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "selected_modules": 32,
+  "captured_cases": 2,
+  "capture_meta": {
+    "capture_seconds": 0.5469940826296806,
+    "capture_memory": {
+      "allocated_bytes": 5476781056,
+      "reserved_bytes": 5779750912,
+      "max_allocated_bytes": 5682665472,
+      "max_reserved_bytes": 5779750912
+    },
+    "captured_cases": 2
+  },
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shape": [
+        1,
+        49,
+        1536
+      ],
+      "input_dtype": "torch.float32"
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shape": [
+        1,
+        49,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16"
+    }
+  ],
+  "summary": {
+    "dit_mlp": {
+      "cases": 2,
+      "cutlass_fp4_ms_mean": 0.01573823392391205,
+      "torch_fp16_ms_mean": 0.023949798196554184,
+      "speedup_vs_torch_fp16_mean": 1.7365489333010249,
+      "quant_relative_rmse_vs_fp32_mean": 0.034754492342472076,
+      "kernel_relative_rmse_vs_decoded_ref_mean": 0.00020507205044850707,
+      "pack_seconds_current_helper_mean": 10.340557308867574,
+      "compile_seconds_mean": 25.484959810972214,
+      "theoretical_fp16_activation_weight_bytes_mean": 19250688.0,
+      "theoretical_fp4_plus_scale_activation_weight_bytes_mean": 5414256.0
+    }
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shape": [
+        1,
+        49,
+        1536
+      ],
+      "input_dtype": "torch.float32",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 10.335934896022081,
+      "compile_seconds": 25.34722077846527,
+      "cutlass_fp4_ms": 0.009813904762268066,
+      "torch_fp16_ms": 0.02264212816953659,
+      "speedup_vs_torch_fp16": 2.307147737625266,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020684684568550438,
+      "quant_relative_rmse_vs_fp32": 0.0333462730050087,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00021228160767350346,
+      "max_abs_diff_vs_decoded_ref": 0.00390625,
+      "footprint": {
+        "fp16_activation_bytes": 150528,
+        "fp16_weight_bytes": 18874368,
+        "fp16_output_bytes": 602112,
+        "fp16_activation_weight_bytes": 19024896,
+        "theoretical_fp4_activation_bytes": 37632,
+        "theoretical_fp4_weight_bytes": 4718592,
+        "theoretical_fp8_activation_scale_bytes": 4704,
+        "theoretical_fp8_weight_scale_bytes": 589824,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 5350752
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 75264,
+        "activation_scale_storage_bytes": 12288,
+        "weight_fp4_storage_bytes": 9437184,
+        "weight_scale_storage_bytes": 589824,
+        "activation_weight_fp4_plus_scale_storage_bytes": 10114560
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5698323968,
+          "reserved_bytes": 5807013888,
+          "max_allocated_bytes": 5700990464,
+          "max_reserved_bytes": 5807013888
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5698323968,
+          "reserved_bytes": 5807013888,
+          "max_allocated_bytes": 5700990464,
+          "max_reserved_bytes": 5807013888
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5704168960,
+          "reserved_bytes": 5844762624,
+          "max_allocated_bytes": 5704168960,
+          "max_reserved_bytes": 5844762624
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5704168960,
+          "reserved_bytes": 5844762624,
+          "max_allocated_bytes": 5704771072,
+          "max_reserved_bytes": 5844762624
+        }
+      }
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shape": [
+        1,
+        49,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 10.345179721713066,
+      "compile_seconds": 25.622698843479156,
+      "cutlass_fp4_ms": 0.02166256308555603,
+      "torch_fp16_ms": 0.025257468223571777,
+      "speedup_vs_torch_fp16": 1.1659501289767842,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020329725521150976,
+      "quant_relative_rmse_vs_fp32": 0.036162711679935455,
+      "torch_fp16_relative_rmse_vs_fp32": 0.0002324949746252969,
+      "max_abs_diff_vs_decoded_ref": 0.01554107666015625,
+      "footprint": {
+        "fp16_activation_bytes": 602112,
+        "fp16_weight_bytes": 18874368,
+        "fp16_output_bytes": 150528,
+        "fp16_activation_weight_bytes": 19476480,
+        "theoretical_fp4_activation_bytes": 150528,
+        "theoretical_fp4_weight_bytes": 4718592,
+        "theoretical_fp8_activation_scale_bytes": 18816,
+        "theoretical_fp8_weight_scale_bytes": 589824,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 5477760
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 301056,
+        "activation_scale_storage_bytes": 49152,
+        "weight_fp4_storage_bytes": 9437184,
+        "weight_scale_storage_bytes": 589824,
+        "activation_weight_fp4_plus_scale_storage_bytes": 10377216
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5704722432,
+          "reserved_bytes": 5804916736,
+          "max_allocated_bytes": 5707388928,
+          "max_reserved_bytes": 5804916736
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5704722432,
+          "reserved_bytes": 5804916736,
+          "max_allocated_bytes": 5707388928,
+          "max_reserved_bytes": 5804916736
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5705776128,
+          "reserved_bytes": 5844762624,
+          "max_allocated_bytes": 5705776128,
+          "max_reserved_bytes": 5844762624
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5705776128,
+          "reserved_bytes": 5844762624,
+          "max_allocated_bytes": 5705926656,
+          "max_reserved_bytes": 5844762624
+        }
+      }
+    }
+  ]
+}

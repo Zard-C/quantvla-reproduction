@@ -1,0 +1,393 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 GEMM with captured GR00T activations and real weights; pack path is helper-based, not final fused runtime",
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "model_load_seconds": 19.029386032372713,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "selected_modules": 116,
+  "captured_cases": 4,
+  "capture_meta": {
+    "capture_seconds": 0.8118325211107731,
+    "capture_memory": {
+      "allocated_bytes": 5476781056,
+      "reserved_bytes": 5779750912,
+      "max_allocated_bytes": 5682665472,
+      "max_reserved_bytes": 5779750912
+    },
+    "captured_cases": 4
+  },
+  "case_descriptors": [
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 566,
+      "k": 2048,
+      "n": 1024,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16"
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 566,
+      "k": 2048,
+      "n": 2048,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16"
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 566,
+      "k": 2048,
+      "n": 6144,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16"
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 566,
+      "k": 6144,
+      "n": 2048,
+      "input_shape": [
+        1,
+        566,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16"
+    }
+  ],
+  "summary": {
+    "llm_attn": {
+      "cases": 2,
+      "cutlass_fp4_ms_mean": 0.010139122605323792,
+      "torch_fp16_ms_mean": 0.025300681591033936,
+      "speedup_vs_torch_fp16_mean": 2.4908243146605082,
+      "quant_relative_rmse_vs_fp32_mean": 0.06919608265161514,
+      "kernel_relative_rmse_vs_decoded_ref_mean": 0.00020645610493374988,
+      "pack_seconds_current_helper_mean": 5.181725863367319,
+      "compile_seconds_mean": 24.209210205823183,
+      "theoretical_fp16_activation_weight_bytes_mean": 8609792.0,
+      "theoretical_fp4_plus_scale_activation_weight_bytes_mean": 2421504.0
+    },
+    "llm_mlp": {
+      "cases": 2,
+      "cutlass_fp4_ms_mean": 0.021087564527988434,
+      "torch_fp16_ms_mean": 0.07543591782450676,
+      "speedup_vs_torch_fp16_mean": 3.622075875153768,
+      "quant_relative_rmse_vs_fp32_mean": 0.10501682758331299,
+      "kernel_relative_rmse_vs_decoded_ref_mean": 0.00020713983394671232,
+      "pack_seconds_current_helper_mean": 14.976541310548782,
+      "compile_seconds_mean": 24.339425085112453,
+      "theoretical_fp16_activation_weight_bytes_mean": 29802496.0,
+      "theoretical_fp4_plus_scale_activation_weight_bytes_mean": 8381952.0
+    }
+  },
+  "cases": [
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "group": "llm_attn",
+      "m": 566,
+      "k": 2048,
+      "n": 1024,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 4.51818585023284,
+      "compile_seconds": 24.427670888602734,
+      "cutlass_fp4_ms": 0.009886175394058228,
+      "torch_fp16_ms": 0.02283044159412384,
+      "speedup_vs_torch_fp16": 2.3093300173336346,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020587044127751142,
+      "quant_relative_rmse_vs_fp32": 0.06582359969615936,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00020726014918182045,
+      "max_abs_diff_vs_decoded_ref": 0.0018815994262695312,
+      "footprint": {
+        "fp16_activation_bytes": 2318336,
+        "fp16_weight_bytes": 4194304,
+        "fp16_output_bytes": 1159168,
+        "fp16_activation_weight_bytes": 6512640,
+        "theoretical_fp4_activation_bytes": 579584,
+        "theoretical_fp4_weight_bytes": 1048576,
+        "theoretical_fp8_activation_scale_bytes": 72448,
+        "theoretical_fp8_weight_scale_bytes": 131072,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 1831680
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 1159168,
+        "activation_scale_storage_bytes": 81920,
+        "weight_fp4_storage_bytes": 2097152,
+        "weight_scale_storage_bytes": 131072,
+        "activation_weight_fp4_plus_scale_storage_bytes": 3469312
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5557296128,
+          "reserved_bytes": 5643436032,
+          "max_allocated_bytes": 5557820416,
+          "max_reserved_bytes": 5643436032
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5557296128,
+          "reserved_bytes": 5643436032,
+          "max_allocated_bytes": 5557820416,
+          "max_reserved_bytes": 5643436032
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5566700544,
+          "reserved_bytes": 5664407552,
+          "max_allocated_bytes": 5566700544,
+          "max_reserved_bytes": 5664407552
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5566700544,
+          "reserved_bytes": 5664407552,
+          "max_allocated_bytes": 5568273408,
+          "max_reserved_bytes": 5664407552
+        }
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "group": "llm_attn",
+      "m": 566,
+      "k": 2048,
+      "n": 2048,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 5.845265876501799,
+      "compile_seconds": 23.990749523043633,
+      "cutlass_fp4_ms": 0.010392069816589355,
+      "torch_fp16_ms": 0.02777092158794403,
+      "speedup_vs_torch_fp16": 2.672318611987382,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020704176858998835,
+      "quant_relative_rmse_vs_fp32": 0.07256856560707092,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00020588317420333624,
+      "max_abs_diff_vs_decoded_ref": 0.0036144256591796875,
+      "footprint": {
+        "fp16_activation_bytes": 2318336,
+        "fp16_weight_bytes": 8388608,
+        "fp16_output_bytes": 2318336,
+        "fp16_activation_weight_bytes": 10706944,
+        "theoretical_fp4_activation_bytes": 579584,
+        "theoretical_fp4_weight_bytes": 2097152,
+        "theoretical_fp8_activation_scale_bytes": 72448,
+        "theoretical_fp8_weight_scale_bytes": 262144,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 3011328
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 1159168,
+        "activation_scale_storage_bytes": 81920,
+        "weight_fp4_storage_bytes": 4194304,
+        "weight_scale_storage_bytes": 262144,
+        "activation_weight_fp4_plus_scale_storage_bytes": 5697536
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5608725504,
+          "reserved_bytes": 5687476224,
+          "max_allocated_bytes": 5609774080,
+          "max_reserved_bytes": 5687476224
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5608725504,
+          "reserved_bytes": 5687476224,
+          "max_allocated_bytes": 5609774080,
+          "max_reserved_bytes": 5687476224
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5625060352,
+          "reserved_bytes": 5725224960,
+          "max_allocated_bytes": 5625060352,
+          "max_reserved_bytes": 5725224960
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5625060352,
+          "reserved_bytes": 5725224960,
+          "max_allocated_bytes": 5628369920,
+          "max_reserved_bytes": 5725224960
+        }
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "group": "llm_mlp",
+      "m": 566,
+      "k": 2048,
+      "n": 6144,
+      "input_shape": [
+        1,
+        566,
+        2048
+      ],
+      "input_dtype": "torch.bfloat16",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 13.56437374278903,
+      "compile_seconds": 24.54858211800456,
+      "cutlass_fp4_ms": 0.018976815044879913,
+      "torch_fp16_ms": 0.07723011076450348,
+      "speedup_vs_torch_fp16": 4.069708777887928,
+      "kernel_relative_rmse_vs_decoded_ref": 0.00020774568838533014,
+      "quant_relative_rmse_vs_fp32": 0.10764492303133011,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00020775655866600573,
+      "max_abs_diff_vs_decoded_ref": 0.001857757568359375,
+      "footprint": {
+        "fp16_activation_bytes": 2318336,
+        "fp16_weight_bytes": 25165824,
+        "fp16_output_bytes": 6955008,
+        "fp16_activation_weight_bytes": 27484160,
+        "theoretical_fp4_activation_bytes": 579584,
+        "theoretical_fp4_weight_bytes": 6291456,
+        "theoretical_fp8_activation_scale_bytes": 72448,
+        "theoretical_fp8_weight_scale_bytes": 786432,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 7729920
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 1159168,
+        "activation_scale_storage_bytes": 81920,
+        "weight_fp4_storage_bytes": 12582912,
+        "weight_scale_storage_bytes": 786432,
+        "activation_weight_fp4_plus_scale_storage_bytes": 14610432
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5815430144,
+          "reserved_bytes": 5899288576,
+          "max_allocated_bytes": 5819100160,
+          "max_reserved_bytes": 5899288576
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5815430144,
+          "reserved_bytes": 5899288576,
+          "max_allocated_bytes": 5819100160,
+          "max_reserved_bytes": 5899288576
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5864885248,
+          "reserved_bytes": 5985271808,
+          "max_allocated_bytes": 5864885248,
+          "max_reserved_bytes": 5985271808
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5864885248,
+          "reserved_bytes": 5985271808,
+          "max_allocated_bytes": 5871840256,
+          "max_reserved_bytes": 5985271808
+        }
+      }
+    },
+    {
+      "name": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "group": "llm_mlp",
+      "m": 566,
+      "k": 6144,
+      "n": 2048,
+      "input_shape": [
+        1,
+        566,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16",
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_seconds_current_helper": 16.388708878308535,
+      "compile_seconds": 24.130268052220345,
+      "cutlass_fp4_ms": 0.023198314011096954,
+      "torch_fp16_ms": 0.07364172488451004,
+      "speedup_vs_torch_fp16": 3.1744429724196075,
+      "kernel_relative_rmse_vs_decoded_ref": 0.0002065339795080945,
+      "quant_relative_rmse_vs_fp32": 0.10238873213529587,
+      "torch_fp16_relative_rmse_vs_fp32": 0.00020970121840946376,
+      "max_abs_diff_vs_decoded_ref": 0.0038623809814453125,
+      "footprint": {
+        "fp16_activation_bytes": 6955008,
+        "fp16_weight_bytes": 25165824,
+        "fp16_output_bytes": 2318336,
+        "fp16_activation_weight_bytes": 32120832,
+        "theoretical_fp4_activation_bytes": 1738752,
+        "theoretical_fp4_weight_bytes": 6291456,
+        "theoretical_fp8_activation_scale_bytes": 217344,
+        "theoretical_fp8_weight_scale_bytes": 786432,
+        "theoretical_fp4_plus_scale_activation_weight_bytes": 9033984
+      },
+      "current_helper_storage": {
+        "activation_fp4_storage_bytes": 3477504,
+        "activation_scale_storage_bytes": 245760,
+        "weight_fp4_storage_bytes": 12582912,
+        "weight_scale_storage_bytes": 786432,
+        "activation_weight_fp4_plus_scale_storage_bytes": 17092608
+      },
+      "memory": {
+        "pack_current_helper": {
+          "allocated_bytes": 5858548736,
+          "reserved_bytes": 5983174656,
+          "max_allocated_bytes": 5862611968,
+          "max_reserved_bytes": 5983174656
+        },
+        "prepare_after_compile_current_helper": {
+          "allocated_bytes": 5858548736,
+          "reserved_bytes": 5983174656,
+          "max_allocated_bytes": 5862611968,
+          "max_reserved_bytes": 5983174656
+        },
+        "cutlass_steady_prepacked": {
+          "allocated_bytes": 5875657728,
+          "reserved_bytes": 6033506304,
+          "max_allocated_bytes": 5875657728,
+          "max_reserved_bytes": 6033506304
+        },
+        "torch_fp16_steady": {
+          "allocated_bytes": 5875657728,
+          "reserved_bytes": 6033506304,
+          "max_allocated_bytes": 5877976064,
+          "max_reserved_bytes": 6033506304
+        }
+      }
+    }
+  ]
+}
