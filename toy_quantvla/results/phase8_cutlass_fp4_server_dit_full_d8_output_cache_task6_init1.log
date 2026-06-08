@@ -1,0 +1,3201 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.11it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.35it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.31it/s]
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+Initialized dataset libero_10_subset with new_embodiment
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "max_modules": 0,
+  "name_contains": [],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "share_compile_cache": true,
+  "cache_output_tensor": true,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 10.979982383549213,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 4.620201751589775,
+  "patched_modules": 32,
+  "patch_summary": {
+    "modules": 32,
+    "by_family": {
+      "dit_mlp": 32
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5185145856,
+    "reserved_bytes": 5953814528,
+    "max_allocated_bytes": 5829540864,
+    "max_reserved_bytes": 5953814528
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 54.169328995049,
+  "prewarm_total_seconds": 54.287000246346,
+  "prewarm_memory": {
+    "allocated_bytes": 5249489920,
+    "reserved_bytes": 6155141120,
+    "max_allocated_bytes": 5401372672,
+    "max_reserved_bytes": 6155141120
+  },
+  "module_results_after_prewarm": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.0812700651586056,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014582833275198936,
+          "max": 0.11595419049263,
+          "min": 9.819120168685913e-05,
+          "p50": 9.942427277565002e-05,
+          "p90": 0.00011064484715461731
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.685653913766146,
+          "max": 24.685653913766146,
+          "min": 24.685653913766146,
+          "p50": 24.685653913766146,
+          "p90": 24.685653913766146
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 0
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0010844990611076355,
+          "max": 0.008375253528356552,
+          "min": 4.174187779426575e-05,
+          "p50": 4.279240965843201e-05,
+          "p90": 4.7225505113601685e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11778345331549644,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014884304720908403,
+          "max": 0.11862931400537491,
+          "min": 6.151199340820312e-05,
+          "p50": 6.313621997833252e-05,
+          "p90": 6.88508152961731e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.76072545349598,
+          "max": 24.76072545349598,
+          "min": 24.76072545349598,
+          "p50": 24.76072545349598,
+          "p90": 24.76072545349598
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 0
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011527184396982193,
+          "max": 0.008917167782783508,
+          "min": 4.2416155338287354e-05,
+          "p50": 4.3448060750961304e-05,
+          "p90": 4.650279879570007e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11384132504463196,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01440988713875413,
+          "max": 0.1147846095263958,
+          "min": 6.844475865364075e-05,
+          "p50": 6.977096199989319e-05,
+          "p90": 7.81528651714325e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.950996324419975e-05,
+          "max": 7.664412260055542e-05,
+          "min": 3.310292959213257e-05,
+          "p50": 3.395974636077881e-05,
+          "p90": 3.696605563163757e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11371759325265884,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.015054254326969385,
+          "max": 0.12002306431531906,
+          "min": 5.698204040527344e-05,
+          "p50": 5.849078297615051e-05,
+          "p90": 6.469711661338806e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.54275868833065e-05,
+          "max": 7.490068674087524e-05,
+          "min": 4.018470644950867e-05,
+          "p50": 4.1525810956954956e-05,
+          "p90": 4.196539521217346e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1140732429921627,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013889184687286615,
+          "max": 0.11061272025108337,
+          "min": 6.566569209098816e-05,
+          "p50": 7.210299372673035e-05,
+          "p90": 8.830428123474121e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.8564205169677734e-05,
+          "max": 6.996840238571167e-05,
+          "min": 3.240257501602173e-05,
+          "p50": 3.378838300704956e-05,
+          "p90": 3.785640001296997e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11686882749199867,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.0156031115911901,
+          "max": 0.12440720573067665,
+          "min": 5.6765973567962646e-05,
+          "p50": 5.9157609939575195e-05,
+          "p90": 6.67273998260498e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.550395533442497e-05,
+          "max": 7.775053381919861e-05,
+          "min": 4.002079367637634e-05,
+          "p50": 4.112720489501953e-05,
+          "p90": 4.262849688529968e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11337673664093018,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01390474895015359,
+          "max": 0.11076445505023003,
+          "min": 6.383657455444336e-05,
+          "p50": 6.866827607154846e-05,
+          "p90": 7.450953125953674e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.63718718290329e-05,
+          "max": 6.376206874847412e-05,
+          "min": 3.149360418319702e-05,
+          "p50": 3.2436102628707886e-05,
+          "p90": 3.395974636077881e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11256159096956253,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013971349690109491,
+          "max": 0.11137441173195839,
+          "min": 5.387142300605774e-05,
+          "p50": 5.637854337692261e-05,
+          "p90": 5.9448182582855225e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.5451801270246506e-05,
+          "max": 7.659941911697388e-05,
+          "min": 4.0236860513687134e-05,
+          "p50": 4.1447579860687256e-05,
+          "p90": 4.184991121292114e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11058975011110306,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.015358722303062677,
+          "max": 0.12242159992456436,
+          "min": 6.0770660638809204e-05,
+          "p50": 6.475299596786499e-05,
+          "p90": 6.821751594543457e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.62275168299675e-05,
+          "max": 6.44102692604065e-05,
+          "min": 3.123655915260315e-05,
+          "p50": 3.175809979438782e-05,
+          "p90": 3.520771861076355e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11312848702073097,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013921532779932022,
+          "max": 0.11099041253328323,
+          "min": 5.278736352920532e-05,
+          "p50": 5.576014518737793e-05,
+          "p90": 5.626678466796875e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.450324922800064e-05,
+          "max": 7.525831460952759e-05,
+          "min": 3.956630825996399e-05,
+          "p50": 4.016607999801636e-05,
+          "p90": 4.143267869949341e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11705513298511505,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014370459131896496,
+          "max": 0.11451009660959244,
+          "min": 6.0733407735824585e-05,
+          "p50": 6.600096821784973e-05,
+          "p90": 6.993114948272705e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.6277808248996735e-05,
+          "max": 6.583705544471741e-05,
+          "min": 3.030151128768921e-05,
+          "p50": 3.267452120780945e-05,
+          "p90": 3.324076533317566e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11223024874925613,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013904305640608072,
+          "max": 0.11085086315870285,
+          "min": 5.226209759712219e-05,
+          "p50": 5.4795295000076294e-05,
+          "p90": 5.7831406593322754e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.499312490224838e-05,
+          "max": 7.44946300983429e-05,
+          "min": 3.977864980697632e-05,
+          "p50": 4.0549784898757935e-05,
+          "p90": 4.376843571662903e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11284683644771576,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013887467794120312,
+          "max": 0.11063436791300774,
+          "min": 6.242096424102783e-05,
+          "p50": 6.949529051780701e-05,
+          "p90": 7.142126560211182e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.67271713912487e-05,
+          "max": 6.414949893951416e-05,
+          "min": 3.164634108543396e-05,
+          "p50": 3.338232636451721e-05,
+          "p90": 3.4168362617492676e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11142408847808838,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013982531614601612,
+          "max": 0.11147039756178856,
+          "min": 5.447492003440857e-05,
+          "p50": 5.63301146030426e-05,
+          "p90": 5.698949098587036e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.510348662734032e-05,
+          "max": 7.707253098487854e-05,
+          "min": 3.9733946323394775e-05,
+          "p50": 4.071369767189026e-05,
+          "p90": 4.151463508605957e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11275066435337067,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01415929850190878,
+          "max": 0.11284255236387253,
+          "min": 6.0185790061950684e-05,
+          "p50": 6.281211972236633e-05,
+          "p90": 6.366893649101257e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.4726690500974655e-05,
+          "max": 5.7149678468704224e-05,
+          "min": 3.042072057723999e-05,
+          "p50": 3.178417682647705e-05,
+          "p90": 3.3549964427948e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11476047337055206,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014111103024333715,
+          "max": 0.11250649020075798,
+          "min": 5.305930972099304e-05,
+          "p50": 5.506351590156555e-05,
+          "p90": 5.591288208961487e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.4168438762426376e-05,
+          "max": 6.953999400138855e-05,
+          "min": 3.93986701965332e-05,
+          "p50": 4.0240585803985596e-05,
+          "p90": 4.385411739349365e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11211260035634041,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014361622743308544,
+          "max": 0.11441262066364288,
+          "min": 6.211549043655396e-05,
+          "p50": 6.996840238571167e-05,
+          "p90": 7.425621151924133e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.7635210901498795e-05,
+          "max": 5.6471675634384155e-05,
+          "min": 3.143027424812317e-05,
+          "p50": 3.501400351524353e-05,
+          "p90": 4.269927740097046e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11371331661939621,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01394939050078392,
+          "max": 0.1111905388534069,
+          "min": 5.562976002693176e-05,
+          "p50": 5.8747828006744385e-05,
+          "p90": 6.110966205596924e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.494469612836838e-05,
+          "max": 7.052719593048096e-05,
+          "min": 4.0434300899505615e-05,
+          "p50": 4.139542579650879e-05,
+          "p90": 4.239007830619812e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11197294667363167,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01391894230619073,
+          "max": 0.11089233681559563,
+          "min": 6.172060966491699e-05,
+          "p50": 6.60829246044159e-05,
+          "p90": 7.021799683570862e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.539863973855972e-05,
+          "max": 5.5573880672454834e-05,
+          "min": 3.113970160484314e-05,
+          "p50": 3.245845437049866e-05,
+          "p90": 3.4790486097335815e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11236787587404251,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01406073896214366,
+          "max": 0.11209460720419884,
+          "min": 5.47654926776886e-05,
+          "p50": 5.65648078918457e-05,
+          "p90": 5.72986900806427e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.41037118434906e-05,
+          "max": 6.956607103347778e-05,
+          "min": 3.943592309951782e-05,
+          "p50": 4.032999277114868e-05,
+          "p90": 4.307553172111511e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1163538508117199,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01461804285645485,
+          "max": 0.11650573089718819,
+          "min": 6.0770660638809204e-05,
+          "p50": 6.31771981716156e-05,
+          "p90": 6.413087248802185e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.567943349480629e-05,
+          "max": 6.055459380149841e-05,
+          "min": 3.090128302574158e-05,
+          "p50": 3.166496753692627e-05,
+          "p90": 3.639981150627136e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11219453811645508,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013955647125840187,
+          "max": 0.11126317456364632,
+          "min": 5.2656978368759155e-05,
+          "p50": 5.4564327001571655e-05,
+          "p90": 5.8438628911972046e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.447624087333679e-05,
+          "max": 7.293745875358582e-05,
+          "min": 4.001706838607788e-05,
+          "p50": 4.053488373756409e-05,
+          "p90": 4.075095057487488e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11336662247776985,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013899547047913074,
+          "max": 0.11074575781822205,
+          "min": 5.8960169553756714e-05,
+          "p50": 6.624311208724976e-05,
+          "p90": 7.06017017364502e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.5606324672698975e-05,
+          "max": 5.86584210395813e-05,
+          "min": 3.0443072319030762e-05,
+          "p50": 3.2860785722732544e-05,
+          "p90": 3.439560532569885e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11609284952282906,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01517816772684455,
+          "max": 0.12104425579309464,
+          "min": 5.219504237174988e-05,
+          "p50": 5.537644028663635e-05,
+          "p90": 5.727261304855347e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.475424066185951e-05,
+          "max": 7.377564907073975e-05,
+          "min": 3.9774924516677856e-05,
+          "p50": 4.046782851219177e-05,
+          "p90": 4.202127456665039e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11296307295560837,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014821704477071762,
+          "max": 0.11810996010899544,
+          "min": 6.321445107460022e-05,
+          "p50": 6.886199116706848e-05,
+          "p90": 7.076188921928406e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.67448665201664e-05,
+          "max": 6.479024887084961e-05,
+          "min": 3.1925737857818604e-05,
+          "p50": 3.33152711391449e-05,
+          "p90": 3.3974647521972656e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11197531968355179,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013929867651313543,
+          "max": 0.11105002462863922,
+          "min": 5.3081661462783813e-05,
+          "p50": 5.5734068155288696e-05,
+          "p90": 5.935877561569214e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.482036456465721e-05,
+          "max": 7.487460970878601e-05,
+          "min": 3.93986701965332e-05,
+          "p50": 4.069507122039795e-05,
+          "p90": 4.174560308456421e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11448541283607483,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014927706215530634,
+          "max": 0.11897298321127892,
+          "min": 6.045401096343994e-05,
+          "p50": 6.418302655220032e-05,
+          "p90": 7.320567965507507e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.5872682929039e-05,
+          "max": 6.11916184425354e-05,
+          "min": 3.0957162380218506e-05,
+          "p50": 3.246217966079712e-05,
+          "p90": 3.34717333316803e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11286534741520882,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.0139326062053442,
+          "max": 0.11108221113681793,
+          "min": 5.2597373723983765e-05,
+          "p50": 5.4661184549331665e-05,
+          "p90": 5.659833550453186e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.43081371486187e-05,
+          "max": 7.327646017074585e-05,
+          "min": 3.948807716369629e-05,
+          "p50": 4.038959741592407e-05,
+          "p90": 4.147365689277649e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11184902861714363,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014868777245283127,
+          "max": 0.11850273981690407,
+          "min": 6.074830889701843e-05,
+          "p50": 6.467476487159729e-05,
+          "p90": 6.93686306476593e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.5894569009542465e-05,
+          "max": 6.292015314102173e-05,
+          "min": 3.1147152185440063e-05,
+          "p50": 3.22684645652771e-05,
+          "p90": 3.355368971824646e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11199220642447472,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01391127659007907,
+          "max": 0.11091166362166405,
+          "min": 5.2601099014282227e-05,
+          "p50": 5.3845345973968506e-05,
+          "p90": 5.6181102991104126e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.428159445524216e-05,
+          "max": 7.288157939910889e-05,
+          "min": 3.957375884056091e-05,
+          "p50": 4.050135612487793e-05,
+          "p90": 4.0881335735321045e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1131807193160057,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014521853998303413,
+          "max": 0.11573374643921852,
+          "min": 5.8632344007492065e-05,
+          "p50": 6.309524178504944e-05,
+          "p90": 6.851926445960999e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 3.7266407161951065e-05,
+          "max": 7.21663236618042e-05,
+          "min": 3.061816096305847e-05,
+          "p50": 3.219768404960632e-05,
+          "p90": 3.447383642196655e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "cache_output_tensor": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11350394785404205,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "forward_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "input_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013922413811087608,
+          "max": 0.11100051924586296,
+          "min": 5.191192030906677e-05,
+          "p50": 5.4486095905303955e-05,
+          "p90": 5.75333833694458e-05
+        },
+        "output_prepare_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_lookup_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.403945058584213e-05,
+          "max": 7.100030779838562e-05,
+          "min": 3.935769200325012e-05,
+          "p50": 4.020705819129944e-05,
+          "p90": 4.0978193283081055e-05
+        },
+        "finalize_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0,
+          "p50": 0.0,
+          "p90": 0.0
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "prepare_seconds": 69.88862705975771
+}
+Starting CUTLASS FP4 server on port 5566
+Server is ready and listening on tcp://0.0.0.0:5566

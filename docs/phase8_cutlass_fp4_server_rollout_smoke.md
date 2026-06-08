@@ -485,6 +485,51 @@ phase share:
 - 在 FP4 module 内部，GEMM 只占约 `18.8%`，pack 与 output wrapper preparation 合计约 `51.1%`；
 - 因此只优化 CUTLASS GEMM 本身，理论收益上限很低；要看到 rollout 级加速，必须同时压低 activation pack / output wrapper 开销，或者扩大可加速覆盖面。
 
+### Output Tensor Cache Ablation
+
+基于上面的 profile，先尝试了一个低风险工程优化：按 module/device/runtime `M` 缓存 CUTLASS output tensor/storage，减少每次 forward 里的 `cute_tensor_like` 和 wrapper preparation。
+
+实现位置：
+
+- `toy_quantvla/cutlass_blockscaled_fp4_linear.py`
+- `toy_quantvla/phase8_cutlass_blockscaled_fp4_forward_smoke.py`
+- `toy_quantvla/cutlass_fp4_inference_service.py`
+
+注意：这个 cache 现在是显式开关 `--cache-output-tensor`，不是默认行为。原因是它会复用 output storage，虽然当前单 case rollout 成功，但跨更多任务前不应该默认改变 storage lifetime。
+
+offline profile 对比：
+
+| config | warm get_action | module forward total | activation pack | output prepare | GEMM | finalize |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| no output cache | 0.1637s | 0.0636s | 0.0167s | 0.0164s | 0.0128s | 0.0099s |
+| output cache | 0.1357s | 0.0422s | 0.0147s | 0.0019s | 0.0094s | 0.0093s |
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_profile_dit_full_d8_1obs_v3_cache_output.json`
+
+offline profile 中，output cache 把 `output_prepare` 从 `16.4ms/get_action` 降到 `1.9ms/get_action`，profiled warm get_action 从 `0.1637s` 降到 `0.1357s`。
+
+但真实非 profile rollout 没有同步收益：
+
+| config | success | calls | client mean | client p50 | client p90 | server mean | server p50 | server p90 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP4 no output cache | 1/1 | 420 | 0.1624s | 0.1613s | 0.1691s | 0.1572s | 0.1562s | 0.1640s |
+| FP4 output cache | 1/1 | 420 | 0.1635s | 0.1614s | 0.1724s | 0.1579s | 0.1561s | 0.1664s |
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_output_cache_dit_full_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_dit_full_d8_output_cache_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_dit_full_d8_output_cache_task6_init1.json`
+
+解读：
+
+- output cache 确实降低了 profile 模式下可见的 `output_prepare`；
+- 但非 profile rollout 的 server mean 基本持平，说明这个开销在真实异步执行路径里不是当前主瓶颈，或者被其他未覆盖路径和 tail latency 淹没；
+- 因此 output cache 暂时保留为实验开关，不作为默认优化；
+- 下一步不应继续只盯 output wrapper，而应该补 FP16 matched module hooks，直接估算原始 DiT MLP 在 FP16 server 里的占比，并用更低扰动的 profiler 确认真实 CUDA timeline。
+
 ## 解读
 
 可以确认：
@@ -498,6 +543,7 @@ phase share:
 7. full DiT MLP shared-cache rollout 在 `task 6:init 1` 上成功。
 8. latency breakdown 证明 client preprocess/postprocess 不是瓶颈，主要时间在 server-side `policy.get_action`。
 9. module-level profiling 证明当前 FP4 DiT MLP 只覆盖 profiled server-side `get_action` 的约 36.7%，且 module 内部 pack/output wrapper 比 GEMM 更值得优化。
+10. output tensor cache 能改善 profiled offline path，但没有改善非 profile rollout latency，因此不是当前真实端到端瓶颈。
 
 还不能确认：
 
@@ -506,13 +552,15 @@ phase share:
 3. 当前显存峰值仍接近 FP16，full DiT MLP 的 prewarm current allocated 约 5.238 GB。
 4. 需要确认更多 task/init 的成功率是否保持，以及轨迹变长是否普遍存在。
 5. 需要测 FP16 DiT MLP 的同口径 module-level runtime，才能直接判断 FP4 module 本身相对 FP16 module 是否更快。
+6. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
 
 ## 下一步
 
 建议继续按两级推进：
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
-2. 优先优化 `CutlassBlockscaledFP4Linear` 的 activation pack 和 output tensor/wrapper preparation；
-3. 增加 FP16 matched module-level hooks，估算原始 DiT MLP 在 FP16 server 中的真实占比；
-4. 如果 FP4 module 优化后仍只覆盖三分之一左右的 server time，再考虑扩大到 attention/projector 或更大 scope；
-5. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。
+2. 增加 FP16 matched module-level hooks，估算原始 DiT MLP 在 FP16 server 中的真实占比；
+3. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
+4. 如果 FP4 module 仍只覆盖三分之一左右的 server time，再考虑扩大到 attention/projector 或更大 scope；
+5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
+6. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。

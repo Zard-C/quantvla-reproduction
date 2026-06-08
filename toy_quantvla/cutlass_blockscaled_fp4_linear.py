@@ -162,6 +162,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
         pack_backend: str = "helper",
         share_compile_cache: bool = True,
+        cache_output_tensor: bool = False,
         profile: bool = False,
         fallback: bool = False,
     ):
@@ -181,11 +182,13 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         if self.pack_backend in {"torch", "triton"} and self.sf_dtype_name != "Float8E4M3FN":
             raise ValueError(f"{self.pack_backend} pack_backend currently supports only Float8E4M3FN scales")
         self.share_compile_cache = bool(share_compile_cache)
+        self.cache_output_tensor = bool(cache_output_tensor)
         self.profile = bool(profile)
         self.fallback = bool(fallback)
         self.stats = CutlassBlockscaledFP4Stats()
         self._compiled_by_m: dict[int, dict[str, Any]] = {}
         self._triton_activation_pack_by_m: dict[int, dict[str, Any]] = {}
+        self._output_by_device_m: dict[tuple[str, int], tuple[Any, torch.Tensor]] = {}
 
         if bias is None:
             self.register_buffer("bias", None)
@@ -217,6 +220,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
         pack_backend: str = "helper",
         share_compile_cache: bool = True,
+        cache_output_tensor: bool = False,
         profile: bool = False,
         fallback: bool = False,
     ) -> "CutlassBlockscaledFP4Linear":
@@ -230,6 +234,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             epi_tile=epi_tile,
             pack_backend=pack_backend,
             share_compile_cache=share_compile_cache,
+            cache_output_tensor=cache_output_tensor,
             profile=profile,
             fallback=fallback,
         )
@@ -335,6 +340,28 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             self._shared_compiled_by_shape[shared_key] = cached
         return cached
 
+    def _output_for_m(self, x: torch.Tensor, m: int) -> tuple[Any, torch.Tensor]:
+        ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
+        device_key = str(x.device)
+        cache_key = (device_key, int(m))
+        if self.cache_output_tensor:
+            cached = self._output_by_device_m.get(cache_key)
+            if cached is not None:
+                return cached
+
+        c_ref = torch.empty((m, self.out_features, 1), device=x.device, dtype=torch.float32)
+        output_tensor, output_storage = ctx["cutlass_torch"].cute_tensor_like(
+            c_ref,
+            ctx["cutlass"].Float16,
+            is_dynamic_layout=True,
+            assumed_align=16,
+        )
+        output_tensor.mark_compact_shape_dynamic(mode=1, stride_order=(2, 0, 1), divisibility=1)
+        cached = (output_tensor, output_storage)
+        if self.cache_output_tensor:
+            self._output_by_device_m[cache_key] = cached
+        return cached
+
     def reset_runtime_stats(self) -> None:
         self.stats = CutlassBlockscaledFP4Stats()
 
@@ -360,14 +387,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         self.stats.add_pack(time.perf_counter() - pack_started)
 
         output_started = time.perf_counter()
-        c_ref = torch.empty((m, self.out_features, 1), device=x.device, dtype=torch.float32)
-        output_tensor, output_storage = ctx["cutlass_torch"].cute_tensor_like(
-            c_ref,
-            ctx["cutlass"].Float16,
-            is_dynamic_layout=True,
-            assumed_align=16,
-        )
-        output_tensor.mark_compact_shape_dynamic(mode=1, stride_order=(2, 0, 1), divisibility=1)
+        output_tensor, output_storage = self._output_for_m(x, m)
         if self.profile:
             torch.cuda.synchronize(x.device)
             self.stats.add_output_prepare(time.perf_counter() - output_started)
@@ -410,6 +430,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             "sf_dtype": self.sf_dtype_name,
             "pack_backend": self.pack_backend,
             "share_compile_cache": self.share_compile_cache,
+            "cache_output_tensor": self.cache_output_tensor,
             "tile_shape_mnk": list(self.tile_shape_mnk),
             "epi_tile": list(self.epi_tile),
             "weight_pack_seconds": float(self.weight_pack_seconds),
