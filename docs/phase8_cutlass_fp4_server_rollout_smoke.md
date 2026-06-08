@@ -294,6 +294,62 @@ server prepare:
 - full DiT FP4 改变了闭环轨迹，成功但走了 420 policy calls，比 FP16 的 230 calls 明显更长；
 - 因此端到端 episode 时间变长，主要不是 server 单步 latency，而是策略轨迹发生了重分配。
 
+## Client/Server Latency Breakdown
+
+为了定位单步 latency 没有明显变快的原因，又加了两层 timing：
+
+1. eval client 侧拆分：
+
+```text
+preprocess_seconds
+remote_get_action_seconds
+postprocess_seconds
+policy_total_seconds
+```
+
+2. server 侧用 `TimedPolicyWrapper` 包住 `policy.get_action`，在 server 退出时写：
+
+```text
+server get_action_seconds
+```
+
+新增/修改：
+
+- `toy_quantvla/timing_utils.py`
+- `toy_quantvla/timed_fp16_inference_service.py`
+- `toy_quantvla/libero_eval_init_range.py`
+- `toy_quantvla/cutlass_fp4_inference_service.py`
+
+结果文件：
+
+- `toy_quantvla/results/phase8_fp16_timed_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_fp16_timed_server_task6_init1_server_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_timed_dit_full_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_timed_server_dit_full_task6_init1_server_latency.json`
+
+同 case timing：
+
+| config | calls | client total mean | client remote mean | server get_action mean | client-server overhead | preprocess mean | postprocess mean |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 official | 243 | 0.1561s | 0.1559s | 0.1511s | 4.76 ms | 0.118 ms | 0.115 ms |
+| FP4 DiT full shared-cache | 420 | 0.1624s | 0.1621s | 0.1572s | 4.88 ms | 0.118 ms | 0.114 ms |
+
+p50 / p90:
+
+| config | client total p50 | client total p90 | server get_action p50 | server get_action p90 |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 official | 0.1612s | 0.1687s | 0.1559s | 0.1639s |
+| FP4 DiT full shared-cache | 0.1613s | 0.1691s | 0.1562s | 0.1640s |
+
+解读：
+
+- eval client 的 image/state preprocessing 和 action postprocess 都是 `~0.1 ms`，可以忽略；
+- ZMQ/serialization/client-server overhead 稳定在 `~4.8 ms`，不是 FP4 比 FP16 慢的主要原因；
+- server-side `policy.get_action` 才是主体；
+- FP4 DiT full 的 server-side mean `0.1572s`，FP16 mean `0.1511s`，FP4 慢约 `6.1 ms/step`；
+- p50/p90 几乎持平，说明均值差异可能来自少量尾部波动和 wrapper 开销；
+- 当前瓶颈更可能在 `CutlassBlockscaledFP4Linear.forward` 的 Python/CuTe tensor/output wrapper 构造、per-layer pack bookkeeping、以及非量化路径占比，而不是 client eval wrapper。
+
 ## 解读
 
 可以确认：
@@ -305,6 +361,7 @@ server prepare:
 5. full DiT MLP 32 modules 的 d8 server prewarm 可以跑通，但启动预热约 13.24 分钟。
 6. shared compile cache 把 full DiT MLP d8 prepare total 从 794.20s 降到 69.99s。
 7. full DiT MLP shared-cache rollout 在 `task 6:init 1` 上成功。
+8. latency breakdown 证明 client preprocess/postprocess 不是瓶颈，主要时间在 server-side `policy.get_action`。
 
 还不能确认：
 
@@ -312,12 +369,13 @@ server prepare:
 2. full DiT MLP FP4 也没有在该 case 上显示单步 latency 优势，mean latency 为 0.163s，FP16 为 0.147s。
 3. 当前显存峰值仍接近 FP16，full DiT MLP 的 prewarm current allocated 约 5.238 GB。
 4. 需要确认更多 task/init 的成功率是否保持，以及轨迹变长是否普遍存在。
+5. 还需要更细的 module-level runtime breakdown，确认 FP4 慢的 6 ms/step 来自 CUTLASS wrapper 还是模型其余路径。
 
 ## 下一步
 
 建议继续按两级推进：
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
-2. 增加 server-side latency breakdown，把 policy request 拆成 preprocessing / model get_action / postprocess；
-3. 如果单步 latency 仍不优于 FP16，继续看 CUTLASS wrapper 是否有 Python/CuTe output tensor 创建开销；
+2. 给 `CutlassBlockscaledFP4Linear` 加 module-level runtime aggregation，按 layer 汇总 pack / output tensor creation / GEMM；
+3. 如果确认 Python/CuTe wrapper 构造是主因，优先缓存 output tensor/storage 或改成更低层的 persistent launcher；
 4. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。

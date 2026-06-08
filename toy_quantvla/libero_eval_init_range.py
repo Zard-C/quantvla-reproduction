@@ -22,6 +22,7 @@ import numpy as np
 import torch
 import tqdm
 from libero.libero import benchmark
+from timing_utils import summarize_breakdowns, summarize_float
 
 
 def insert_paths(isaac_root: Path) -> None:
@@ -75,13 +76,27 @@ class GR00TPolicy:
         self.headless = headless
 
     def get_action(self, observation_dict, lang: str):
-        action_array, _trace = self.get_action_with_trace(observation_dict, lang)
+        action_array, _trace, _timing = self.get_action_with_trace(observation_dict, lang)
         return action_array
 
     def get_action_with_trace(self, observation_dict, lang: str):
+        started = time.perf_counter()
         obs_dict = self._process_observation(observation_dict, lang)
+        preprocess_seconds = time.perf_counter() - started
+        remote_started = time.perf_counter()
         action_chunk = self.policy.get_action(obs_dict)
-        return self._convert_to_libero_action(action_chunk, 0), self._trace_action(action_chunk, 0)
+        remote_get_action_seconds = time.perf_counter() - remote_started
+        postprocess_started = time.perf_counter()
+        action_array = self._convert_to_libero_action(action_chunk, 0)
+        action_trace = self._trace_action(action_chunk, 0)
+        postprocess_seconds = time.perf_counter() - postprocess_started
+        timing = {
+            "preprocess_seconds": float(preprocess_seconds),
+            "remote_get_action_seconds": float(remote_get_action_seconds),
+            "postprocess_seconds": float(postprocess_seconds),
+            "policy_total_seconds": float(time.perf_counter() - started),
+        }
+        return action_array, action_trace, timing
 
     def _process_observation(self, obs, lang: str):
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
@@ -157,21 +172,6 @@ def as_float_list(value) -> list[float]:
     return np.asarray(value, dtype=np.float64).reshape(-1).tolist()
 
 
-def summarize_float(values: list[float]) -> dict[str, float | int]:
-    if not values:
-        return {"count": 0, "mean": 0.0, "min": 0.0, "max": 0.0, "p50": 0.0, "p90": 0.0, "p99": 0.0}
-    arr = np.asarray(values, dtype=np.float64)
-    return {
-        "count": int(arr.size),
-        "mean": float(arr.mean()),
-        "min": float(arr.min()),
-        "max": float(arr.max()),
-        "p50": float(np.percentile(arr, 50)),
-        "p90": float(np.percentile(arr, 90)),
-        "p99": float(np.percentile(arr, 99)),
-    }
-
-
 def write_episode_trace(
     trace_dir: Path | None,
     *,
@@ -240,6 +240,7 @@ def eval_libero(args: argparse.Namespace) -> None:
 
         total_episodes, total_successes = 0, 0
         all_policy_latencies: list[float] = []
+        all_policy_breakdowns: list[dict[str, float]] = []
         episode_latency_rows: list[dict] = []
         for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
             if cases_by_task is not None and task_id not in cases_by_task:
@@ -275,6 +276,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                 max_steps = max_steps_for_suite(args.task_suite_name)
                 trace_steps: list[dict] = []
                 episode_policy_latencies: list[float] = []
+                episode_policy_breakdowns: list[dict[str, float]] = []
                 exception_message = None
 
                 print(f"Starting episode {task_episodes + 1}...")
@@ -293,11 +295,12 @@ def eval_libero(args: argparse.Namespace) -> None:
                         pre_eef_pos = as_float_list(obs.get("robot0_eef_pos", []))
                         pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
                         pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
-                        policy_started = time.perf_counter()
-                        action, raw_action_trace = gr00t_policy.get_action_with_trace(obs, task.language)
-                        policy_latency_seconds = time.perf_counter() - policy_started
+                        action, raw_action_trace, policy_timing = gr00t_policy.get_action_with_trace(obs, task.language)
+                        policy_latency_seconds = float(policy_timing["policy_total_seconds"])
                         episode_policy_latencies.append(policy_latency_seconds)
                         all_policy_latencies.append(policy_latency_seconds)
+                        episode_policy_breakdowns.append(policy_timing)
+                        all_policy_breakdowns.append(policy_timing)
                         obs, reward, done, info = env.step(action.tolist())
                         trace_steps.append(
                             {
@@ -312,6 +315,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                                 "raw_action": raw_action_trace,
                                 "libero_action": as_float_list(action),
                                 "policy_latency_seconds": float(policy_latency_seconds),
+                                "policy_timing_seconds": policy_timing,
                                 "reward": float(reward),
                                 "done": bool(done),
                             }
@@ -330,6 +334,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                 task_episodes += 1
                 total_episodes += 1
                 episode_latency_summary = summarize_float(episode_policy_latencies)
+                episode_breakdown_summary = summarize_breakdowns(episode_policy_breakdowns)
                 episode_latency_rows.append(
                     {
                         "episode_index": int(total_episodes),
@@ -337,6 +342,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "init_index": int(init_index),
                         "success": bool(done),
                         "policy_latency_seconds": episode_latency_summary,
+                        "policy_breakdown_seconds": episode_breakdown_summary,
                     }
                 )
                 write_episode_trace(
@@ -362,6 +368,7 @@ def eval_libero(args: argparse.Namespace) -> None:
 
                 print(f"Success: {done}")
                 print(f"Policy latency seconds: {episode_latency_summary}")
+                print(f"Policy breakdown seconds: {episode_breakdown_summary}")
                 print(f"# episodes completed so far: {total_episodes}")
                 print(
                     f"# successes: {total_successes} "
@@ -369,6 +376,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                 )
                 log_file.write(f"Success: {done}\n")
                 log_file.write(f"Policy latency seconds: {episode_latency_summary}\n")
+                log_file.write(f"Policy breakdown seconds: {episode_breakdown_summary}\n")
                 log_file.write(f"# episodes completed so far: {total_episodes}\n")
                 log_file.write(
                     f"# successes: {total_successes} "
@@ -387,8 +395,11 @@ def eval_libero(args: argparse.Namespace) -> None:
             log_file.flush()
 
         final_latency_summary = summarize_float(all_policy_latencies)
+        final_breakdown_summary = summarize_breakdowns(all_policy_breakdowns)
         print(f"Final policy latency seconds: {final_latency_summary}")
+        print(f"Final policy breakdown seconds: {final_breakdown_summary}")
         log_file.write(f"Final policy latency seconds: {final_latency_summary}\n")
+        log_file.write(f"Final policy breakdown seconds: {final_breakdown_summary}\n")
         log_file.flush()
         if args.latency_json is not None:
             args.latency_json.parent.mkdir(parents=True, exist_ok=True)
@@ -401,6 +412,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "total_successes": int(total_successes),
                         "success_rate": float(total_successes / total_episodes) if total_episodes else 0.0,
                         "policy_latency_seconds": final_latency_summary,
+                        "policy_breakdown_seconds": final_breakdown_summary,
                         "episodes": episode_latency_rows,
                     },
                     indent=2,

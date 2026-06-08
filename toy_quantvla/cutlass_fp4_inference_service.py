@@ -25,6 +25,7 @@ from phase8_cutlass_blockscaled_fp4_forward_smoke import (
 )
 from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations
 from phase8_cutlass_blockscaled_fp4_smoke import parse_tuple
+from timing_utils import TimedPolicyWrapper
 
 
 def load_object(spec: str) -> Any:
@@ -108,6 +109,8 @@ def main() -> None:
     parser.add_argument("--synthetic-variants", default="zero,midgray,noise")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase8_cutlass_fp4_server_prepare.json"))
+    parser.add_argument("--server-latency-json", type=Path, help="Optional server-side get_action latency JSON.")
+    parser.add_argument("--server-latency-flush-every", type=int, default=0)
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
@@ -202,7 +205,13 @@ def main() -> None:
     print(json.dumps(result, indent=2), flush=True)
     print(f"Starting CUTLASS FP4 server on port {args.port}", flush=True)
     set_seed(args.prewarm_base_seed)
-    server = RobotInferenceServer(policy, port=args.port, api_token=args.api_token)
+    timed_policy = TimedPolicyWrapper(
+        policy,
+        output_json=args.server_latency_json,
+        label=f"cutlass_fp4:{args.scope}",
+        flush_every=args.server_latency_flush_every,
+    )
+    server = RobotInferenceServer(timed_policy, port=args.port, api_token=args.api_token)
     server.run()
 
 

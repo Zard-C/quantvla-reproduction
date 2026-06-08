@@ -1,0 +1,13 @@
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 10.48628081008792,
+  "prepare_seconds": 10.48628081008792
+}
