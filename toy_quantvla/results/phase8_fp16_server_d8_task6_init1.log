@@ -1,0 +1,18 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/tyro/_parsers.py:347: UserWarning: The field `api-token` is annotated with type `<class 'str'>`, but the default value `None` has type `<class 'NoneType'>`. We'll try to handle this gracefully, but it may cause unexpected behavior.
+  warnings.warn(message)
+Loading external config: examples.Libero.custom_data_config.LiberoDataConfig
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  1.01it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.30it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.24it/s]

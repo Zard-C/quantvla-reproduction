@@ -1,0 +1,33 @@
+{
+  "task_suite_name": "libero_10",
+  "port": 5561,
+  "total_episodes": 1,
+  "total_successes": 1,
+  "success_rate": 1.0,
+  "policy_latency_seconds": {
+    "count": 230,
+    "mean": 0.14731903599332208,
+    "min": 0.08655119687318802,
+    "max": 0.6529817655682564,
+    "p50": 0.1601681113243103,
+    "p90": 0.1678026307374239,
+    "p99": 0.18607868667691946
+  },
+  "episodes": [
+    {
+      "episode_index": 1,
+      "task_id": 6,
+      "init_index": 1,
+      "success": true,
+      "policy_latency_seconds": {
+        "count": 230,
+        "mean": 0.14731903599332208,
+        "min": 0.08655119687318802,
+        "max": 0.6529817655682564,
+        "p50": 0.1601681113243103,
+        "p90": 0.1678026307374239,
+        "p99": 0.18607868667691946
+      }
+    }
+  ]
+}

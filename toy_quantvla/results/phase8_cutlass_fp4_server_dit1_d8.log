@@ -1,0 +1,139 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.15s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.24it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.16it/s]
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+Initialized dataset libero_10_subset with new_embodiment
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "max_modules": 1,
+  "name_contains": [],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.165021382272243,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 1.035967718809843,
+  "patched_modules": 1,
+  "patch_summary": {
+    "modules": 1,
+    "by_family": {
+      "dit_mlp": 1
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5459414016,
+    "reserved_bytes": 5597298688,
+    "max_allocated_bytes": 5518703616,
+    "max_reserved_bytes": 5597298688
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 25.370835412293673,
+  "prewarm_total_seconds": 25.47838595509529,
+  "prewarm_memory": {
+    "allocated_bytes": 5468322304,
+    "reserved_bytes": 5777653760,
+    "max_allocated_bytes": 5675313152,
+    "max_reserved_bytes": 5777653760
+  },
+  "module_results_after_prewarm": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.0239030234515667,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014379648491740227,
+          "max": 0.11352571099996567,
+          "min": 0.00010490790009498596
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.698651917278767,
+          "max": 24.698651917278767,
+          "min": 24.698651917278767
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.002067437395453453,
+          "max": 0.016112152487039566,
+          "min": 5.631893873214722e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "prepare_seconds": 37.680336493998766
+}
+Starting CUTLASS FP4 server on port 5560

@@ -1,0 +1,115 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 1,
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "max_modules": 1,
+  "name_contains": [],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.89967305585742,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 1.0405187346041203,
+  "patched_modules": 1,
+  "patch_summary": {
+    "modules": 1,
+    "by_family": {
+      "dit_mlp": 1
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5459414016,
+    "reserved_bytes": 5597298688,
+    "max_allocated_bytes": 5518703616,
+    "max_reserved_bytes": 5597298688
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 25.058772765100002,
+  "prewarm_total_seconds": 25.169306065887213,
+  "prewarm_memory": {
+    "allocated_bytes": 5468322304,
+    "reserved_bytes": 5777653760,
+    "max_allocated_bytes": 5675313152,
+    "max_reserved_bytes": 5777653760
+  },
+  "module_results_after_prewarm": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.0265905261039734,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 1,
+        "activation_pack_seconds": {
+          "count": 1,
+          "mean": 0.11397931352257729,
+          "max": 0.11397931352257729,
+          "min": 0.11397931352257729
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.42466865479946,
+          "max": 24.42466865479946,
+          "min": 24.42466865479946
+        },
+        "gemm_seconds": {
+          "count": 1,
+          "mean": 0.00899668037891388,
+          "max": 0.00899668037891388,
+          "min": 0.00899668037891388
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "prepare_seconds": 38.11044404283166
+}
