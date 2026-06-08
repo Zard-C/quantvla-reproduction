@@ -1,0 +1,1510 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "max_modules": 0,
+  "name_contains": [],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.141634751111269,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 4.5613729283213615,
+  "patched_modules": 32,
+  "patch_summary": {
+    "modules": 32,
+    "by_family": {
+      "dit_mlp": 32
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5185145856,
+    "reserved_bytes": 5953814528,
+    "max_allocated_bytes": 5829540864,
+    "max_reserved_bytes": 5953814528
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 778.368971567601,
+  "prewarm_total_seconds": 778.4943896308541,
+  "prewarm_memory": {
+    "allocated_bytes": 5237992448,
+    "reserved_bytes": 6142558208,
+    "max_allocated_bytes": 5401372672,
+    "max_reserved_bytes": 6142558208
+  },
+  "module_results_after_prewarm": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.0702472887933254,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014686709269881248,
+          "max": 0.11666624248027802,
+          "min": 9.939819574356079e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.98278969526291,
+          "max": 23.98278969526291,
+          "min": 23.98278969526291
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011921911500394344,
+          "max": 0.009093247354030609,
+          "min": 5.5674463510513306e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11535907909274101,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014863994438201189,
+          "max": 0.11839921772480011,
+          "min": 6.808340549468994e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.860969211906195,
+          "max": 23.860969211906195,
+          "min": 23.860969211906195
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011964221484959126,
+          "max": 0.009160872548818588,
+          "min": 5.231425166130066e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1124524176120758,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014224240556359291,
+          "max": 0.11323211342096329,
+          "min": 7.437914609909058e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.8401038646698,
+          "max": 23.8401038646698,
+          "min": 23.8401038646698
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011448129080235958,
+          "max": 0.008794918656349182,
+          "min": 4.6156346797943115e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1114945188164711,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014692011289298534,
+          "max": 0.11706484109163284,
+          "min": 6.350129842758179e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.132851496338844,
+          "max": 24.132851496338844,
+          "min": 24.132851496338844
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.001240306068211794,
+          "max": 0.009523838758468628,
+          "min": 5.150213837623596e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11110790818929672,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014323798473924398,
+          "max": 0.11402975022792816,
+          "min": 7.497146725654602e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.96892974898219,
+          "max": 23.96892974898219,
+          "min": 23.96892974898219
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011347508989274502,
+          "max": 0.00871465727686882,
+          "min": 4.591420292854309e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11109869554638863,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014255964662879705,
+          "max": 0.11359121650457382,
+          "min": 6.080791354179382e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.026154350489378,
+          "max": 24.026154350489378,
+          "min": 24.026154350489378
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011614477261900902,
+          "max": 0.008903272449970245,
+          "min": 4.982948303222656e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11143467202782631,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014435156714171171,
+          "max": 0.1149522103369236,
+          "min": 6.961077451705933e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.25994450598955,
+          "max": 24.25994450598955,
+          "min": 24.25994450598955
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011393865570425987,
+          "max": 0.008753545582294464,
+          "min": 4.4051557779312134e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11099943146109581,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01422386895865202,
+          "max": 0.11334116384387016,
+          "min": 6.027519702911377e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.413529079407454,
+          "max": 24.413529079407454,
+          "min": 24.413529079407454
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.00116432411596179,
+          "max": 0.008929941803216934,
+          "min": 4.9795955419540405e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1107947900891304,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014186759945005178,
+          "max": 0.1129637286067009,
+          "min": 6.879866123199463e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.36884120106697,
+          "max": 24.36884120106697,
+          "min": 24.36884120106697
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011497847735881805,
+          "max": 0.008842088282108307,
+          "min": 4.32915985584259e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1122414767742157,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014253860339522362,
+          "max": 0.11358213424682617,
+          "min": 6.0580670833587646e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.600904565304518,
+          "max": 24.600904565304518,
+          "min": 24.600904565304518
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011500641703605652,
+          "max": 0.008813377469778061,
+          "min": 4.920735955238342e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11121995374560356,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014553000219166279,
+          "max": 0.11589450761675835,
+          "min": 6.951764225959778e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.078140262514353,
+          "max": 24.078140262514353,
+          "min": 24.078140262514353
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011458764784038067,
+          "max": 0.008810300379991531,
+          "min": 4.32431697845459e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11122079566121101,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014456927310675383,
+          "max": 0.11521292850375175,
+          "min": 5.9042125940322876e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.119734209030867,
+          "max": 24.119734209030867,
+          "min": 24.119734209030867
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011615809053182602,
+          "max": 0.008910536766052246,
+          "min": 4.918500781059265e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1110091507434845,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014335884246975183,
+          "max": 0.1141601987183094,
+          "min": 6.853416562080383e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.396763760596514,
+          "max": 24.396763760596514,
+          "min": 24.396763760596514
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011287601664662361,
+          "max": 0.008674819022417068,
+          "min": 4.4289976358413696e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11108164489269257,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01418168842792511,
+          "max": 0.11301260441541672,
+          "min": 5.8416277170181274e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.996118240058422,
+          "max": 23.996118240058422,
+          "min": 23.996118240058422
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011507710441946983,
+          "max": 0.008818130940198898,
+          "min": 4.994496703147888e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11121565848588943,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014158995356410742,
+          "max": 0.11277167499065399,
+          "min": 6.794556975364685e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.003322530537844,
+          "max": 24.003322530537844,
+          "min": 24.003322530537844
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011373795568943024,
+          "max": 0.008755482733249664,
+          "min": 4.3608248233795166e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11723913624882698,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014832011424005032,
+          "max": 0.11821989715099335,
+          "min": 5.799904465675354e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.987074561417103,
+          "max": 23.987074561417103,
+          "min": 23.987074561417103
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.00114085478708148,
+          "max": 0.008749540895223618,
+          "min": 4.874914884567261e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11052341386675835,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014243775513023138,
+          "max": 0.1134360022842884,
+          "min": 6.905198097229004e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.10214352607727,
+          "max": 24.10214352607727,
+          "min": 24.10214352607727
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011246539652347565,
+          "max": 0.00864824652671814,
+          "min": 4.391372203826904e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11286662518978119,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014372217934578657,
+          "max": 0.11453970894217491,
+          "min": 5.769357085227966e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.125543281435966,
+          "max": 24.125543281435966,
+          "min": 24.125543281435966
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0012632105499505997,
+          "max": 0.009727921336889267,
+          "min": 4.9114227294921875e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11126125603914261,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014451762661337852,
+          "max": 0.11510857939720154,
+          "min": 6.669014692306519e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.99524211138487,
+          "max": 23.99524211138487,
+          "min": 23.99524211138487
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011390028521418571,
+          "max": 0.008775807917118073,
+          "min": 4.2695552110672e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11093083024024963,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014407014474272728,
+          "max": 0.1148332953453064,
+          "min": 5.8162957429885864e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.199365478008986,
+          "max": 24.199365478008986,
+          "min": 24.199365478008986
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011350689455866814,
+          "max": 0.008702225983142853,
+          "min": 4.869699478149414e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11101996898651123,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01432784041389823,
+          "max": 0.11409623175859451,
+          "min": 6.964802742004395e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.151595417410135,
+          "max": 24.151595417410135,
+          "min": 24.151595417410135
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011432399041950703,
+          "max": 0.008789867162704468,
+          "min": 4.400312900543213e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1115434505045414,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014546578284353018,
+          "max": 0.11593323945999146,
+          "min": 5.9626996517181396e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.287514440715313,
+          "max": 24.287514440715313,
+          "min": 24.287514440715313
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011584660969674587,
+          "max": 0.008884981274604797,
+          "min": 4.91216778755188e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11158697307109833,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014207437168806791,
+          "max": 0.1131516695022583,
+          "min": 6.899610161781311e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.105483144521713,
+          "max": 24.105483144521713,
+          "min": 24.105483144521713
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0010242690332233906,
+          "max": 0.00784303992986679,
+          "min": 4.396960139274597e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1105271577835083,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014259150251746178,
+          "max": 0.11364464834332466,
+          "min": 5.729496479034424e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.055537052452564,
+          "max": 24.055537052452564,
+          "min": 24.055537052452564
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011120275594294071,
+          "max": 0.008519258350133896,
+          "min": 4.9505382776260376e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11087462678551674,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01427658274769783,
+          "max": 0.11369792371988297,
+          "min": 6.533041596412659e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.11581987515092,
+          "max": 24.11581987515092,
+          "min": 24.11581987515092
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011435425840318203,
+          "max": 0.008805561810731888,
+          "min": 4.3336302042007446e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11105739325284958,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014251511078327894,
+          "max": 0.11357875168323517,
+          "min": 5.7581812143325806e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.92759357765317,
+          "max": 23.92759357765317,
+          "min": 23.92759357765317
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0012151766568422318,
+          "max": 0.00934244692325592,
+          "min": 4.9114227294921875e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11101680248975754,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014258759561926126,
+          "max": 0.11354628577828407,
+          "min": 6.839260458946228e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.023775942623615,
+          "max": 24.023775942623615,
+          "min": 24.023775942623615
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0012451126240193844,
+          "max": 0.009616348892450333,
+          "min": 4.320219159126282e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11623134464025497,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01428112480789423,
+          "max": 0.11381125822663307,
+          "min": 5.985423922538757e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.045877870172262,
+          "max": 24.045877870172262,
+          "min": 24.045877870172262
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0010550161823630333,
+          "max": 0.00806591659784317,
+          "min": 4.9326568841934204e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1131550557911396,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014313293620944023,
+          "max": 0.11401082575321198,
+          "min": 6.802380084991455e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.019622456282377,
+          "max": 24.019622456282377,
+          "min": 24.019622456282377
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011231410317122936,
+          "max": 0.008648756891489029,
+          "min": 4.364922642707825e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11210620403289795,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014276053756475449,
+          "max": 0.11378451436758041,
+          "min": 5.7402998208999634e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.07809566706419,
+          "max": 24.07809566706419,
+          "min": 24.07809566706419
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0012385854497551918,
+          "max": 0.009544894099235535,
+          "min": 4.892423748970032e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11418619751930237,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.015529869589954615,
+          "max": 0.1237388364970684,
+          "min": 6.60531222820282e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.575633585453033,
+          "max": 24.575633585453033,
+          "min": 24.575633585453033
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011110017076134682,
+          "max": 0.008561182767152786,
+          "min": 4.374608397483826e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11267516762018204,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.015103893354535103,
+          "max": 0.12040703371167183,
+          "min": 5.7540833950042725e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.082784559577703,
+          "max": 24.082784559577703,
+          "min": 24.082784559577703
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011292989365756512,
+          "max": 0.008680503815412521,
+          "min": 4.931539297103882e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "prepare_seconds": 794.198704559356
+}

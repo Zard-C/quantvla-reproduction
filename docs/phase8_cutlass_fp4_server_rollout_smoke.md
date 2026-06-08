@@ -130,6 +130,64 @@ Patched module stats after d8 prewarm:
 
 这里的 activation pack mean 被第一次 allocation/cache fill 拉高；同一个 module 后续 cached pack 最小值已经到约 0.105 ms。
 
+## Full DiT MLP Prepare-only
+
+随后跑了 `dit_mlp_only --max-modules 0`，也就是 action head 里全部 32 个 DiT MLP Linear，只做 server prepare/prewarm，不进入 simulator rollout。
+
+命令边界：
+
+```text
+scope: dit_mlp_only
+max_modules: 0
+denoising_steps: 8
+pack_backend: triton
+prewarm_indices: 115
+prepare_only: true
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_dit_mlp_full_d8_prewarm.json`
+
+总体结果：
+
+| metric | value |
+| --- | ---: |
+| patched modules | 32 |
+| model load | 11.14s |
+| patch | 4.56s |
+| prewarm | 778.37s |
+| prepare total | 794.20s |
+| post-patch current allocated | 5.185 GB |
+| prewarm current allocated | 5.238 GB |
+| prewarm peak allocated | 5.401 GB |
+| prewarm peak reserved | 6.143 GB |
+
+32 个 module 的聚合 stats：
+
+| stat | count | mean | min | max | sum |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| compile seconds | 32 | 24.12s | 23.84s | 24.60s | 771.93s |
+| activation pack mean | 32 | 14.43 ms | 14.16 ms | 15.53 ms | 461.77 ms |
+| activation pack min | 32 | 0.065 ms | 0.057 ms | 0.099 ms | 2.09 ms |
+| GEMM mean | 32 | 1.153 ms | 1.024 ms | 1.263 ms | 36.90 ms |
+| GEMM min | 32 | 0.047 ms | 0.043 ms | 0.056 ms | 1.51 ms |
+
+所有 module 都是：
+
+```text
+compiled_m_values: [49]
+calls: 8
+compile count: 1
+```
+
+这个结果说明：
+
+- d8 prewarm 成功覆盖全部 full DiT MLP modules；
+- 启动预热代价约 13.24 分钟，其中约 97.2% 是 CUTLASS/CuTe compile；
+- 热路径本身不慢，cached activation pack 最小值约 0.06 ms/module，GEMM 最小值约 0.05 ms/module；
+- 现在最大工程债不是 FP4 arithmetic，而是 compile cache 粒度太细。
+
 ## 解读
 
 可以确认：
@@ -138,19 +196,20 @@ Patched module stats after d8 prewarm:
 2. prewarm 能把 episode 内首次 CUTLASS compile 移到 server 启动阶段。
 3. `libero_10 task 6:init 1` 在 FP4 1-module 和 FP16 下都成功。
 4. eval wrapper 现在能记录端到端 policy request latency。
+5. full DiT MLP 32 modules 的 d8 server prewarm 可以跑通，但启动预热约 13.24 分钟。
 
 还不能确认：
 
 1. 1-module FP4 不会带来端到端加速，当前 latency 与 FP16 同量级且均值略慢。
 2. 当前显存峰值仍接近 FP16，因为只替换了 1 个 Linear。
-3. 大 scope rollout 仍会面对长 prewarm：按 offline full DiT MLP 32 modules 估计，cold compile 可到 13 分钟量级。
+3. 大 scope rollout 会面对长 prewarm：full DiT MLP 32 modules 实测 prepare total 为 794.20s。
 4. 需要确认 full DiT MLP / `llm_mlp_dit_mlp` 的成功率是否保持，以及 server latency 是否低于 FP16。
 
 ## 下一步
 
 建议继续按两级推进：
 
-1. `dit_mlp_only --max-modules 0` 做 server prepare-only，确认 full DiT MLP 的 d8 prewarm stats、显存和 prepare 时间；
-2. 选 1-2 个短 case 做 full DiT MLP rollout smoke，记录 success 和 latency；
-3. 若 full DiT MLP 仍成功且 latency 有改善，再跑小规模 matched case set；
+1. 选 1-2 个短 case 做 full DiT MLP rollout smoke，记录 success 和 latency；
+2. 若 full DiT MLP 仍成功且 latency 有改善，再跑小规模 matched case set；
+3. 做 per-shape compile cache 共享，避免 32 个同类 module 重复 compile；
 4. 最后再考虑 `llm_mlp_dit_mlp` 或 Phase 5 行为上最强的 `llm_dit_mlp` 路径。
