@@ -1,0 +1,16 @@
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(6, 1)]
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Task id: 6
+Init index: 1
+Starting episode 1...
+Saved rollout MP4 at path ./rollouts/2026_06_08/2026_06_08-15_14_51--episode=1--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 420, 'mean': 0.1627698583883189, 'min': 0.15389331430196762, 'max': 0.23425474390387535, 'p50': 0.16039822064340115, 'p90': 0.16881886981427668, 'p99': 0.19619209673255683}
+# episodes completed so far: 1
+# successes: 1 (100.0%)
+Current task success rate: 1.0
+Current total success rate: 1.0
+Final policy latency seconds: {'count': 420, 'mean': 0.1627698583883189, 'min': 0.15389331430196762, 'max': 0.23425474390387535, 'p50': 0.16039822064340115, 'p90': 0.16881886981427668, 'p99': 0.19619209673255683}

@@ -6,9 +6,9 @@ GR00T `get_action` behavior before writing a production activation packer.
 
 The wrapper is intentionally honest about its boundary:
 - weights are packed once during module construction;
-- activations are packed every forward using CUTLASS helper conversion;
-- GEMM compilation is cached per runtime M for each module;
-- helper packing is far too slow for production inference.
+- activations are packed every forward and cached per runtime M when possible;
+- GEMM compilation is cached per runtime shape and can be shared across modules;
+- this is still a bridge, not a final production kernel package.
 """
 
 from __future__ import annotations
@@ -44,12 +44,20 @@ class CutlassBlockscaledFP4Stats:
     activation_pack_seconds: list[float] = field(default_factory=list)
     compile_seconds: list[float] = field(default_factory=list)
     gemm_seconds: list[float] = field(default_factory=list)
+    local_compile_cache_hits: int = 0
+    shared_compile_cache_hits: int = 0
 
     def add_pack(self, seconds: float) -> None:
         self.activation_pack_seconds.append(float(seconds))
 
     def add_compile(self, seconds: float) -> None:
         self.compile_seconds.append(float(seconds))
+
+    def add_local_compile_cache_hit(self) -> None:
+        self.local_compile_cache_hits += 1
+
+    def add_shared_compile_cache_hit(self) -> None:
+        self.shared_compile_cache_hits += 1
 
     def add_gemm(self, seconds: float) -> None:
         self.gemm_seconds.append(float(seconds))
@@ -70,6 +78,10 @@ class CutlassBlockscaledFP4Stats:
             "calls": self.calls,
             "activation_pack_seconds": self._summary(self.activation_pack_seconds),
             "compile_seconds": self._summary(self.compile_seconds),
+            "compile_cache_hits": {
+                "local": int(self.local_compile_cache_hits),
+                "shared": int(self.shared_compile_cache_hits),
+            },
             "gemm_seconds": self._summary(self.gemm_seconds),
         }
 
@@ -106,6 +118,8 @@ class CutlassBlockscaledFP4Context:
 class CutlassBlockscaledFP4Linear(nn.Module):
     """Bridge `nn.Linear` replacement using CUTLASS SM120 blockscaled FP4."""
 
+    _shared_compiled_by_shape: dict[tuple[Any, ...], dict[str, Any]] = {}
+
     def __init__(
         self,
         weight: torch.Tensor,
@@ -117,6 +131,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         tile_shape_mnk: tuple[int, int, int] = DEFAULT_TILE_SHAPE_MNK,
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
         pack_backend: str = "helper",
+        share_compile_cache: bool = True,
         profile: bool = False,
         fallback: bool = False,
     ):
@@ -135,6 +150,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             raise ValueError(f"unsupported pack_backend={self.pack_backend!r}; expected helper, torch, or triton")
         if self.pack_backend in {"torch", "triton"} and self.sf_dtype_name != "Float8E4M3FN":
             raise ValueError(f"{self.pack_backend} pack_backend currently supports only Float8E4M3FN scales")
+        self.share_compile_cache = bool(share_compile_cache)
         self.profile = bool(profile)
         self.fallback = bool(fallback)
         self.stats = CutlassBlockscaledFP4Stats()
@@ -170,6 +186,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         tile_shape_mnk: tuple[int, int, int] = DEFAULT_TILE_SHAPE_MNK,
         epi_tile: tuple[int, int] = DEFAULT_EPI_TILE,
         pack_backend: str = "helper",
+        share_compile_cache: bool = True,
         profile: bool = False,
         fallback: bool = False,
     ) -> "CutlassBlockscaledFP4Linear":
@@ -182,8 +199,22 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             tile_shape_mnk=tile_shape_mnk,
             epi_tile=epi_tile,
             pack_backend=pack_backend,
+            share_compile_cache=share_compile_cache,
             profile=profile,
             fallback=fallback,
+        )
+
+    def _compile_cache_key(self, m: int) -> tuple[Any, ...]:
+        return (
+            str(self.cutlass_root),
+            self.sf_dtype_name,
+            int(self.sf_vec_size),
+            tuple(int(v) for v in self.tile_shape_mnk),
+            tuple(int(v) for v in self.epi_tile),
+            int(m),
+            int(self.in_features),
+            int(self.out_features),
+            "Float16Output",
         )
 
     def _pack_operand(self, x_mkl: torch.Tensor, *, cache_activation: bool) -> dict[str, Any]:
@@ -237,7 +268,15 @@ class CutlassBlockscaledFP4Linear(nn.Module):
     def _compile_for_m(self, m: int, activation_pack: dict[str, Any], output_tensor: Any) -> dict[str, Any]:
         cached = self._compiled_by_m.get(m)
         if cached is not None:
+            self.stats.add_local_compile_cache_hit()
             return cached
+        shared_key = self._compile_cache_key(m)
+        if self.share_compile_cache:
+            cached = self._shared_compiled_by_shape.get(shared_key)
+            if cached is not None:
+                self.stats.add_shared_compile_cache_hit()
+                self._compiled_by_m[m] = cached
+                return cached
         ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
         gemm = ctx["blockscaled"].Sm120BlockScaledGemmKernel(
             ctx["cutlass"].Float32,
@@ -260,8 +299,10 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         torch.cuda.synchronize()
         seconds = time.perf_counter() - started
         self.stats.add_compile(seconds)
-        cached = {"compiled": compiled, "stream": ctx["stream"]}
+        cached = {"compiled": compiled, "stream": ctx["stream"], "shared_key": shared_key}
         self._compiled_by_m[m] = cached
+        if self.share_compile_cache:
+            self._shared_compiled_by_shape[shared_key] = cached
         return cached
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -315,6 +356,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             "sf_vec_size": self.sf_vec_size,
             "sf_dtype": self.sf_dtype_name,
             "pack_backend": self.pack_backend,
+            "share_compile_cache": self.share_compile_cache,
             "tile_shape_mnk": list(self.tile_shape_mnk),
             "epi_tile": list(self.epi_tile),
             "weight_pack_seconds": float(self.weight_pack_seconds),

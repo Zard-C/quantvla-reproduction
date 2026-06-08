@@ -1,0 +1,1671 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 inference server with optional policy prewarm",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "max_modules": 0,
+  "name_contains": [],
+  "cutlass_root": "/root/autodl-tmp/cutlass",
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "pack_backend": "triton",
+  "share_compile_cache": true,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 11.288594849407673,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 5.093273371458054,
+  "patched_modules": 32,
+  "patch_summary": {
+    "modules": 32,
+    "by_family": {
+      "dit_mlp": 32
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5185145856,
+    "reserved_bytes": 5953814528,
+    "max_allocated_bytes": 5829540864,
+    "max_reserved_bytes": 5953814528
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_seconds": 53.48255559056997,
+  "prewarm_total_seconds": 53.608661130070686,
+  "prewarm_memory": {
+    "allocated_bytes": 5237992448,
+    "reserved_bytes": 6142558208,
+    "max_allocated_bytes": 5401372672,
+    "max_reserved_bytes": 6142558208
+  },
+  "module_results_after_prewarm": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 1.0324050970375538,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.015806745272129774,
+          "max": 0.12575357407331467,
+          "min": 9.674578905105591e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.602971240878105,
+          "max": 24.602971240878105,
+          "min": 24.602971240878105
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 0
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.001197256613522768,
+          "max": 0.009191308170557022,
+          "min": 5.138292908668518e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.132206778973341,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014758255798369646,
+          "max": 0.11757683008909225,
+          "min": 6.787478923797607e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.14538825675845,
+          "max": 24.14538825675845,
+          "min": 24.14538825675845
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 0
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 0.0011513098143041134,
+          "max": 0.00882444903254509,
+          "min": 5.163997411727905e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11163163557648659,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014211171772331,
+          "max": 0.11313176155090332,
+          "min": 7.610395550727844e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.2440445870161057e-05,
+          "max": 8.616223931312561e-05,
+          "min": 4.60892915725708e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11282747983932495,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014261174481362104,
+          "max": 0.11363129690289497,
+          "min": 6.375089287757874e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.4827891290187836e-05,
+          "max": 7.861852645874023e-05,
+          "min": 5.058944225311279e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1481432467699051,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013960704207420349,
+          "max": 0.11112946271896362,
+          "min": 7.3261559009552e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.938244819641113e-05,
+          "max": 6.765127182006836e-05,
+          "min": 4.469230771064758e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11145760491490364,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013942418619990349,
+          "max": 0.11108847707509995,
+          "min": 6.292760372161865e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.346117541193962e-05,
+          "max": 6.966665387153625e-05,
+          "min": 4.9423426389694214e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.12898225709795952,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013955236412584782,
+          "max": 0.11111705377697945,
+          "min": 7.222592830657959e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.7285109758377075e-05,
+          "max": 5.928054451942444e-05,
+          "min": 4.331767559051514e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.14087416604161263,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014020535163581371,
+          "max": 0.11172239482402802,
+          "min": 6.105750799179077e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.305791273713112e-05,
+          "max": 7.007643580436707e-05,
+          "min": 4.949420690536499e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.111368577927351,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013944911304861307,
+          "max": 0.11102482303977013,
+          "min": 7.202848792076111e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.798918962478638e-05,
+          "max": 5.8028846979141235e-05,
+          "min": 4.408136010169983e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1525093875825405,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013906017877161503,
+          "max": 0.11080696806311607,
+          "min": 6.135180592536926e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.328608676791191e-05,
+          "max": 7.12461769580841e-05,
+          "min": 4.991888999938965e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11109965667128563,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013947032392024994,
+          "max": 0.1110604777932167,
+          "min": 6.911158561706543e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.64441254734993e-05,
+          "max": 5.9466809034347534e-05,
+          "min": 4.303827881813049e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.12461391091346741,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013896301854401827,
+          "max": 0.1107376404106617,
+          "min": 5.899369716644287e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.2652787417173386e-05,
+          "max": 7.046759128570557e-05,
+          "min": 4.844367504119873e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.13432950526475906,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013889717403799295,
+          "max": 0.1106090284883976,
+          "min": 6.917864084243774e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.7608744353055954e-05,
+          "max": 5.950406193733215e-05,
+          "min": 4.348158836364746e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1490732952952385,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013934914022684097,
+          "max": 0.11104541644454002,
+          "min": 5.8416277170181274e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.376804620027542e-05,
+          "max": 7.117912173271179e-05,
+          "min": 4.8294663429260254e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11108371242880821,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014186383690685034,
+          "max": 0.11297142878174782,
+          "min": 6.811320781707764e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.690699279308319e-05,
+          "max": 5.8650970458984375e-05,
+          "min": 4.31351363658905e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11291838064789772,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014311810955405235,
+          "max": 0.11405985429883003,
+          "min": 6.006285548210144e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.44465146958828e-05,
+          "max": 8.387118577957153e-05,
+          "min": 4.860386252403259e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.157557412981987,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013966307509690523,
+          "max": 0.11121935769915581,
+          "min": 7.048249244689941e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.742620512843132e-05,
+          "max": 6.189942359924316e-05,
+          "min": 4.354119300842285e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11465534195303917,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013964659068733454,
+          "max": 0.11128660291433334,
+          "min": 6.035715341567993e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.268072709441185e-05,
+          "max": 6.864592432975769e-05,
+          "min": 4.838034510612488e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11159976944327354,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013992814812809229,
+          "max": 0.11141929402947426,
+          "min": 6.773322820663452e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.753377288579941e-05,
+          "max": 5.6415796279907227e-05,
+          "min": 4.353374242782593e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.17242905870079994,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014007031917572021,
+          "max": 0.11161670461297035,
+          "min": 6.002932786941528e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.2933115512132645e-05,
+          "max": 6.841868162155151e-05,
+          "min": 4.957243800163269e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11544783040881157,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013910719193518162,
+          "max": 0.11076116189360619,
+          "min": 7.211044430732727e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.698289558291435e-05,
+          "max": 5.636736750602722e-05,
+          "min": 4.3842941522598267e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.16431430727243423,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013974553905427456,
+          "max": 0.11136268824338913,
+          "min": 5.936622619628906e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.268212407827377e-05,
+          "max": 6.983429193496704e-05,
+          "min": 4.881247878074646e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11458364501595497,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013951747212558985,
+          "max": 0.11109854653477669,
+          "min": 6.839632987976074e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.675332456827164e-05,
+          "max": 5.8278441429138184e-05,
+          "min": 4.341825842857361e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.15233052894473076,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.01400373037904501,
+          "max": 0.11160524189472198,
+          "min": 5.8010220527648926e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.280831828713417e-05,
+          "max": 7.136166095733643e-05,
+          "min": 4.85442578792572e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.12001562118530273,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013977103400975466,
+          "max": 0.11130402237176895,
+          "min": 6.922706961631775e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.7342851758003235e-05,
+          "max": 5.748867988586426e-05,
+          "min": 4.344061017036438e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11981923505663872,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013979998882859945,
+          "max": 0.11140887439250946,
+          "min": 5.98318874835968e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.230586975812912e-05,
+          "max": 6.69434666633606e-05,
+          "min": 4.916265606880188e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.14595196396112442,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014069005846977234,
+          "max": 0.11205354705452919,
+          "min": 6.846338510513306e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.662340506911278e-05,
+          "max": 6.14747405052185e-05,
+          "min": 4.341825842857361e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11452587321400642,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014190830290317535,
+          "max": 0.11309679970145226,
+          "min": 5.7660043239593506e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.379039794206619e-05,
+          "max": 7.553398609161377e-05,
+          "min": 4.89354133605957e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.12162765488028526,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014162554405629635,
+          "max": 0.11280101910233498,
+          "min": 6.709247827529907e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.720129072666168e-05,
+          "max": 6.035715341567993e-05,
+          "min": 4.388391971588135e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.14377770200371742,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013967173174023628,
+          "max": 0.111300740391016,
+          "min": 5.902722477912903e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.227653309702873e-05,
+          "max": 6.85378909111023e-05,
+          "min": 4.892796277999878e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11366989836096764,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.014185416046530008,
+          "max": 0.11298491805791855,
+          "min": 6.658583879470825e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 4.576751962304115e-05,
+          "max": 5.794689059257507e-05,
+          "min": 4.1987746953964233e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "share_compile_cache": true,
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.15925035625696182,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 8,
+        "activation_pack_seconds": {
+          "count": 8,
+          "mean": 0.013987124897539616,
+          "max": 0.11147643998265266,
+          "min": 5.748867988586426e-05
+        },
+        "compile_seconds": {
+          "count": 0,
+          "mean": 0.0,
+          "max": 0.0,
+          "min": 0.0
+        },
+        "compile_cache_hits": {
+          "local": 7,
+          "shared": 1
+        },
+        "gemm_seconds": {
+          "count": 8,
+          "mean": 5.326373502612114e-05,
+          "max": 6.945431232452393e-05,
+          "min": 4.886463284492493e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "prepare_seconds": 69.992153365165
+}

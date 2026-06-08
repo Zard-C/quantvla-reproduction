@@ -58,6 +58,7 @@ def patch_cutlass_fp4_modules(
     tile_shape_mnk: tuple[int, int, int],
     epi_tile: tuple[int, int],
     pack_backend: str,
+    share_compile_cache: bool,
     max_modules: int,
     name_contains: list[str],
     profile: bool,
@@ -87,6 +88,7 @@ def patch_cutlass_fp4_modules(
             tile_shape_mnk=tile_shape_mnk,
             epi_tile=epi_tile,
             pack_backend=pack_backend,
+            share_compile_cache=share_compile_cache,
             profile=profile,
         )
         synchronize("cuda")
@@ -157,6 +159,7 @@ def main() -> None:
     parser.add_argument("--tile-shape-mnk", type=lambda s: parse_tuple(s, 3), default=(128, 128, 128))
     parser.add_argument("--epi-tile", type=lambda s: parse_tuple(s, 2), default=(64, 32))
     parser.add_argument("--pack-backend", choices=["helper", "torch", "triton"], default="helper")
+    parser.add_argument("--no-share-compile-cache", action="store_true")
     parser.add_argument("--profile-modules", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke.json"))
     args = parser.parse_args()
@@ -194,6 +197,7 @@ def main() -> None:
         tile_shape_mnk=args.tile_shape_mnk,
         epi_tile=args.epi_tile,
         pack_backend=args.pack_backend,
+        share_compile_cache=not args.no_share_compile_cache,
         max_modules=args.max_modules,
         name_contains=parse_name_contains(args.name_contains),
         profile=args.profile_modules,
@@ -221,6 +225,7 @@ def main() -> None:
         "sf_vec_size": args.sf_vec_size,
         "sf_dtype": args.sf_dtype,
         "pack_backend": args.pack_backend,
+        "share_compile_cache": not args.no_share_compile_cache,
         "tile_shape_mnk": list(args.tile_shape_mnk),
         "epi_tile": list(args.epi_tile),
         "max_modules": args.max_modules,

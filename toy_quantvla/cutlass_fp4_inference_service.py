@@ -96,6 +96,7 @@ def main() -> None:
     parser.add_argument("--tile-shape-mnk", type=lambda s: parse_tuple(s, 3), default=(128, 128, 128))
     parser.add_argument("--epi-tile", type=lambda s: parse_tuple(s, 2), default=(64, 32))
     parser.add_argument("--pack-backend", choices=["helper", "torch", "triton"], default="triton")
+    parser.add_argument("--no-share-compile-cache", action="store_true")
     parser.add_argument("--profile-modules", action="store_true")
     parser.add_argument("--prewarm-observations", type=int, default=1)
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
@@ -137,6 +138,7 @@ def main() -> None:
         "tile_shape_mnk": list(args.tile_shape_mnk),
         "epi_tile": list(args.epi_tile),
         "pack_backend": args.pack_backend,
+        "share_compile_cache": not args.no_share_compile_cache,
         "torch_version": torch.__version__,
         "torch_cuda": torch.version.cuda,
         "cuda_available": bool(torch.cuda.is_available()),
@@ -167,6 +169,7 @@ def main() -> None:
         tile_shape_mnk=args.tile_shape_mnk,
         epi_tile=args.epi_tile,
         pack_backend=args.pack_backend,
+        share_compile_cache=not args.no_share_compile_cache,
         max_modules=args.max_modules,
         name_contains=parse_name_contains(args.name_contains),
         profile=args.profile_modules,
