@@ -674,6 +674,89 @@ rollout result:
 - 主要问题是行为失败：991 calls 跑到 horizon，最后 `executing action in terminated episode`；
 - 这说明 LLM MLP 的小 offline action error 可以累积成闭环病态，不能因为 offline warm latency 好就直接推进 rollout 主线。
 
+### LLM MLP Subset FP4 Sweep
+
+按照“以真实 FP4 结果为导向”的原则，继续把 LLM MLP 拆成更小的 FP4 子集。这里不使用 fake quant 作为结论，只用 CUTLASS FP4 offline/server 结果。
+
+offline boundary:
+
+```text
+scope=llm_mlp_only
+denoising_steps=8
+pack_backend=triton
+num_observations=1
+indices=115
+patched_modules=12 each subset
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_gate_proj_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_up_proj_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_down_proj_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_layers_early_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_layers_mid_d8_tritonpack_shared.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_layers_late_d8_tritonpack_shared.json`
+
+offline subset results:
+
+| subset | warm | warm/teacher | relative RMSE | cosine | max abs diff | patch+cold |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `gate_proj` | 0.0927s | 0.1879 | 0.00201 | 0.9999980 | 0.00366 | 27.94s |
+| `up_proj` | 0.0934s | 0.1387 | 0.00178 | 0.9999985 | 0.00298 | 28.05s |
+| `down_proj` | 0.0943s | 0.1792 | 0.00262 | 0.9999966 | 0.00431 | 28.11s |
+| `layers_0_3` | 0.0909s | 0.1925 | 0.00371 | 0.9999933 | 0.00641 | 52.06s |
+| `layers_4_7` | 0.0912s | 0.1455 | 0.00186 | 0.9999984 | 0.00343 | 52.61s |
+| `layers_8_11` | 0.1606s | 0.3328 | 0.00183 | 0.9999984 | 0.00240 | 56.40s |
+
+offline observation:
+
+- projection-wise, `up_proj` has the lowest action error among `gate/up/down`;
+- layer-wise, middle and late layers have lower action error than early layers, but late layers show worse warm latency in this single-observation run;
+- `up_proj` is the cleanest first rollout candidate: low error, small scope, lower prepare cost than layer bins.
+
+### LLM MLP `up_proj` Rollout Smoke
+
+Based on the subset sweep, `up_proj` only was tested in the same real simulator case.
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_init1.json`
+
+case:
+
+```text
+task=6
+init=1
+scope=llm_mlp_only
+name_contains=up_proj
+denoising_steps=8
+```
+
+rollout comparison:
+
+| config | success | calls | client mean | client p50 | client p90 | server mean | server p50 | server p90 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| FP16 official | 1/1 | 243 | 0.1561s | 0.1612s | 0.1687s | 0.1511s | 0.1559s | 0.1639s |
+| FP4 `llm_mlp_only` full | 0/1 | 991 | 0.2096s | 0.1610s | 0.1712s | 0.2050s | 0.1560s | 0.1674s |
+| FP4 `llm_mlp_up_proj` | 1/1 | 226 | 0.2769s | 0.1612s | 0.1687s | 0.2716s | 0.1558s | 0.1633s |
+
+Interpretation:
+
+- `up_proj` only succeeds on the same case where full `llm_mlp_only` fails;
+- calls drop to `226`, compared with FP16's `243` and DiT-only's `420`;
+- p50/p90 latency is essentially FP16-like;
+- mean latency is dominated by one large `~26.6s` outlier, so mean should not be used as the main speed signal for this run;
+- this is currently the best FP4 rollout candidate: behavior survived the smoke, scope is small, and offline error is lowest among projection slices.
+
+Remaining concern:
+
+- the large outlier must be reproduced or ruled out across more init states;
+- success on one case is not enough to call `up_proj` safe;
+- next test should be matched multi-init, not broader scope.
+
 ## 解读
 
 可以确认：
@@ -691,6 +774,7 @@ rollout result:
 11. FP16 matched module profile 显示原始 DiT MLP Linear 只占 FP16 server-side `get_action` 的约 8.4%，所以 `dit_mlp_only` 的端到端加速上限天然很低。
 12. 去掉非 profile 每层同步没有改善 rollout latency，但作为正确 runtime hygiene 应保留。
 13. `llm_mlp_only` offline 速度最好，但真实 rollout 在 `task6:init1` 失败，说明更大 scope 的闭环风险明显更高。
+14. LLM MLP `up_proj` only 是目前最好的 FP4 子集候选：offline error 最低，真实 rollout 成功，并且 calls 降到 226。
 
 还不能确认：
 
@@ -701,6 +785,7 @@ rollout result:
 5. 需要用低扰动 profiler 确认非 profile server 的 CUDA timeline，因为 Python-side synchronize profile 会放大部分阶段开销。
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
+8. `up_proj` rollout 里的 26s outlier 是偶发系统尾部、server hiccup，还是该 scope 会诱发 occasional stall，需要重复验证。
 
 ## 下一步
 
@@ -708,6 +793,6 @@ rollout result:
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
 2. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
-3. 对 `llm_mlp_only` 先做小 matched-init 成功率确认，不建议直接扩大 rollout；
+3. 对 `llm_mlp_up_proj` 做 matched multi-init 小实验，优先确认 success/calls/outlier；
 4. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
-5. 暂缓扩大到 `llm_mlp_dit_mlp` 做 rollout 主线；offline 虽然可行，但行为风险可能更高。
+5. 暂缓 full `llm_mlp_only` 和 `llm_mlp_dit_mlp` rollout 主线；offline 虽然可行，但行为风险已经暴露。
