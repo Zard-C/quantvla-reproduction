@@ -7,7 +7,7 @@ import json
 import signal
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import numpy as np
 
@@ -42,11 +42,13 @@ class TimedPolicyWrapper:
         output_json: Path | None,
         label: str,
         flush_every: int = 0,
+        extra_summary: Callable[[], dict[str, Any]] | None = None,
     ):
         self._policy = policy
         self._output_json = output_json
         self._label = label
         self._flush_every = int(flush_every)
+        self._extra_summary = extra_summary
         self._latencies: list[float] = []
         self._write_count = 0
         if self._output_json is not None:
@@ -71,11 +73,14 @@ class TimedPolicyWrapper:
         return out
 
     def summary(self) -> dict[str, Any]:
-        return {
+        payload = {
             "label": self._label,
             "writes": int(self._write_count),
             "get_action_seconds": summarize_float(self._latencies),
         }
+        if self._extra_summary is not None:
+            payload["extra"] = self._extra_summary()
+        return payload
 
     def write_summary(self) -> None:
         if self._output_json is None:

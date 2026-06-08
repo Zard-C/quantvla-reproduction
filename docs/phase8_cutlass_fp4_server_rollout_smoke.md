@@ -350,6 +350,141 @@ p50 / p90:
 - p50/p90 几乎持平，说明均值差异可能来自少量尾部波动和 wrapper 开销；
 - 当前瓶颈更可能在 `CutlassBlockscaledFP4Linear.forward` 的 Python/CuTe tensor/output wrapper 构造、per-layer pack bookkeeping、以及非量化路径占比，而不是 client eval wrapper。
 
+## Module-Level Runtime Breakdown
+
+为了进一步确认 `policy.get_action` 里的时间到底花在哪里，给 `CutlassBlockscaledFP4Linear.forward` 加了 profile-only 阶段计时：
+
+```text
+input_prepare_seconds
+activation_pack_seconds
+output_prepare_seconds
+compile_lookup_seconds
+gemm_seconds
+finalize_seconds
+forward_seconds
+```
+
+注意：profile 模式会在阶段边界增加 CUDA synchronize，所以 profile rollout 的绝对 latency 会比普通 rollout 更慢；这里主要看比例和归因，不直接作为部署速度。
+
+新增/修改：
+
+- `toy_quantvla/cutlass_blockscaled_fp4_linear.py`
+- `toy_quantvla/phase8_cutlass_blockscaled_fp4_forward_smoke.py`
+- `toy_quantvla/cutlass_fp4_inference_service.py`
+- `toy_quantvla/timing_utils.py`
+
+### Offline Clean Profile
+
+命令边界：
+
+```text
+scope=dit_mlp_only
+max_modules=0
+denoising_steps=8
+pack_backend=triton
+profile_modules=true
+num_observations=1
+indices=115
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_profile_dit_full_d8_1obs_v2.json`
+
+top-level timing：
+
+| item | seconds |
+| --- | ---: |
+| FP16 teacher get_action | 0.4765 |
+| patch | 4.2922 |
+| FP4 cold student | 54.2758 |
+| FP4 warm student | 0.1637 |
+| warm student / teacher | 0.3434 |
+
+warm module totals over 32 DiT MLP modules:
+
+| phase | total | count | mean |
+| --- | ---: | ---: | ---: |
+| forward | 0.0636s | 256 | 0.248 ms |
+| input prepare | 0.0041s | 256 | 0.016 ms |
+| activation pack | 0.0167s | 256 | 0.065 ms |
+| output prepare | 0.0164s | 256 | 0.064 ms |
+| compile lookup | 0.0015s | 256 | 0.006 ms |
+| GEMM | 0.0128s | 256 | 0.050 ms |
+| finalize | 0.0099s | 256 | 0.039 ms |
+
+phase share inside FP4 module forward:
+
+| phase | share |
+| --- | ---: |
+| activation pack | 26.22% |
+| output prepare | 25.77% |
+| GEMM | 20.05% |
+| finalize | 15.57% |
+| input prepare | 6.52% |
+| compile lookup | 2.42% |
+
+这说明 steady-state 下，真正的 CUTLASS GEMM 不是唯一大头；activation pack 和 output tensor/wrapper preparation 合起来约占 FP4 module forward 的一半。
+
+### Profiled Rollout
+
+同一个真实 simulator case：
+
+```text
+task=6
+init=1
+success=true
+policy calls=420
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_profiled_dit_full_task6_init1_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_profiled_server_dit_full_task6_init1_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_profiled_server_prepare_dit_full_task6_init1.json`
+
+profiled server/client timing：
+
+| item | value |
+| --- | ---: |
+| client policy total mean | 0.1818s |
+| client remote mean | 0.1816s |
+| server get_action mean | 0.1757s |
+| server get_action p50 | 0.1611s |
+| server get_action p90 | 0.2341s |
+
+rollout module totals over 420 requests:
+
+| phase | total | count | mean |
+| --- | ---: | ---: | ---: |
+| FP4 module forward | 27.1072s | 107520 | 0.252 ms |
+| input prepare | 2.0742s | 107520 | 0.019 ms |
+| activation pack | 6.9338s | 107520 | 0.064 ms |
+| output prepare | 6.9262s | 107520 | 0.064 ms |
+| compile lookup | 0.6675s | 107520 | 0.006 ms |
+| GEMM | 5.1028s | 107520 | 0.047 ms |
+| finalize | 4.4661s | 107520 | 0.042 ms |
+
+server-side `get_action` total over the rollout is about `73.78s`; profiled FP4 DiT MLP modules account for `27.11s`, or `36.74%`.
+
+phase share:
+
+| phase | share of FP4 module | share of server get_action |
+| --- | ---: | ---: |
+| activation pack | 25.58% | 9.40% |
+| output prepare | 25.55% | 9.39% |
+| GEMM | 18.82% | 6.92% |
+| finalize | 16.48% | 6.05% |
+| input prepare | 7.65% | 2.81% |
+| compile lookup | 2.46% | 0.90% |
+
+关键结论：
+
+- FP4 DiT MLP 路径在真实 rollout 中稳定复现了 offline warm profile，每个 `get_action` 约 `64.5 ms`；
+- 但它只覆盖 profiled server-side `get_action` 的约 `36.7%`，剩余约 `63.3%` 来自未量化路径、diffusion/control flow、attention、projector、vision/LLM/request handling 等；
+- 在 FP4 module 内部，GEMM 只占约 `18.8%`，pack 与 output wrapper preparation 合计约 `51.1%`；
+- 因此只优化 CUTLASS GEMM 本身，理论收益上限很低；要看到 rollout 级加速，必须同时压低 activation pack / output wrapper 开销，或者扩大可加速覆盖面。
+
 ## 解读
 
 可以确认：
@@ -362,6 +497,7 @@ p50 / p90:
 6. shared compile cache 把 full DiT MLP d8 prepare total 从 794.20s 降到 69.99s。
 7. full DiT MLP shared-cache rollout 在 `task 6:init 1` 上成功。
 8. latency breakdown 证明 client preprocess/postprocess 不是瓶颈，主要时间在 server-side `policy.get_action`。
+9. module-level profiling 证明当前 FP4 DiT MLP 只覆盖 profiled server-side `get_action` 的约 36.7%，且 module 内部 pack/output wrapper 比 GEMM 更值得优化。
 
 还不能确认：
 
@@ -369,13 +505,14 @@ p50 / p90:
 2. full DiT MLP FP4 也没有在该 case 上显示单步 latency 优势，mean latency 为 0.163s，FP16 为 0.147s。
 3. 当前显存峰值仍接近 FP16，full DiT MLP 的 prewarm current allocated 约 5.238 GB。
 4. 需要确认更多 task/init 的成功率是否保持，以及轨迹变长是否普遍存在。
-5. 还需要更细的 module-level runtime breakdown，确认 FP4 慢的 6 ms/step 来自 CUTLASS wrapper 还是模型其余路径。
+5. 需要测 FP16 DiT MLP 的同口径 module-level runtime，才能直接判断 FP4 module 本身相对 FP16 module 是否更快。
 
 ## 下一步
 
 建议继续按两级推进：
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
-2. 给 `CutlassBlockscaledFP4Linear` 加 module-level runtime aggregation，按 layer 汇总 pack / output tensor creation / GEMM；
-3. 如果确认 Python/CuTe wrapper 构造是主因，优先缓存 output tensor/storage 或改成更低层的 persistent launcher；
-4. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。
+2. 优先优化 `CutlassBlockscaledFP4Linear` 的 activation pack 和 output tensor/wrapper preparation；
+3. 增加 FP16 matched module-level hooks，估算原始 DiT MLP 在 FP16 server 中的真实占比；
+4. 如果 FP4 module 优化后仍只覆盖三分之一左右的 server time，再考虑扩大到 attention/projector 或更大 scope；
+5. 暂缓扩大到 `llm_mlp_dit_mlp`，先把 full DiT MLP 的速度账算清楚。

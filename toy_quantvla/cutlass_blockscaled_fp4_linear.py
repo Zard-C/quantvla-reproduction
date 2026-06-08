@@ -41,14 +41,31 @@ DEFAULT_EPI_TILE = (64, 32)
 @dataclass
 class CutlassBlockscaledFP4Stats:
     calls: int = 0
+    forward_seconds: list[float] = field(default_factory=list)
+    input_prepare_seconds: list[float] = field(default_factory=list)
     activation_pack_seconds: list[float] = field(default_factory=list)
+    output_prepare_seconds: list[float] = field(default_factory=list)
+    compile_lookup_seconds: list[float] = field(default_factory=list)
     compile_seconds: list[float] = field(default_factory=list)
     gemm_seconds: list[float] = field(default_factory=list)
+    finalize_seconds: list[float] = field(default_factory=list)
     local_compile_cache_hits: int = 0
     shared_compile_cache_hits: int = 0
 
+    def add_forward(self, seconds: float) -> None:
+        self.forward_seconds.append(float(seconds))
+
+    def add_input_prepare(self, seconds: float) -> None:
+        self.input_prepare_seconds.append(float(seconds))
+
     def add_pack(self, seconds: float) -> None:
         self.activation_pack_seconds.append(float(seconds))
+
+    def add_output_prepare(self, seconds: float) -> None:
+        self.output_prepare_seconds.append(float(seconds))
+
+    def add_compile_lookup(self, seconds: float) -> None:
+        self.compile_lookup_seconds.append(float(seconds))
 
     def add_compile(self, seconds: float) -> None:
         self.compile_seconds.append(float(seconds))
@@ -62,27 +79,40 @@ class CutlassBlockscaledFP4Stats:
     def add_gemm(self, seconds: float) -> None:
         self.gemm_seconds.append(float(seconds))
 
+    def add_finalize(self, seconds: float) -> None:
+        self.finalize_seconds.append(float(seconds))
+
     @staticmethod
     def _summary(values: list[float]) -> dict[str, float]:
         if not values:
-            return {"count": 0, "mean": 0.0, "max": 0.0, "min": 0.0}
+            return {"count": 0, "mean": 0.0, "max": 0.0, "min": 0.0, "p50": 0.0, "p90": 0.0}
+        sorted_values = sorted(values)
+        p50_index = int(round((len(sorted_values) - 1) * 0.50))
+        p90_index = int(round((len(sorted_values) - 1) * 0.90))
         return {
             "count": len(values),
             "mean": float(sum(values) / len(values)),
             "max": float(max(values)),
             "min": float(min(values)),
+            "p50": float(sorted_values[p50_index]),
+            "p90": float(sorted_values[p90_index]),
         }
 
     def to_result(self) -> dict[str, Any]:
         return {
             "calls": self.calls,
+            "forward_seconds": self._summary(self.forward_seconds),
+            "input_prepare_seconds": self._summary(self.input_prepare_seconds),
             "activation_pack_seconds": self._summary(self.activation_pack_seconds),
+            "output_prepare_seconds": self._summary(self.output_prepare_seconds),
+            "compile_lookup_seconds": self._summary(self.compile_lookup_seconds),
             "compile_seconds": self._summary(self.compile_seconds),
             "compile_cache_hits": {
                 "local": int(self.local_compile_cache_hits),
                 "shared": int(self.shared_compile_cache_hits),
             },
             "gemm_seconds": self._summary(self.gemm_seconds),
+            "finalize_seconds": self._summary(self.finalize_seconds),
         }
 
 
@@ -305,7 +335,11 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             self._shared_compiled_by_shape[shared_key] = cached
         return cached
 
+    def reset_runtime_stats(self) -> None:
+        self.stats = CutlassBlockscaledFP4Stats()
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        forward_started = time.perf_counter()
         if self.fallback or not x.is_cuda:
             raise RuntimeError("CutlassBlockscaledFP4Linear bridge requires CUDA input and fallback=False")
         if x.shape[-1] != self.in_features:
@@ -313,7 +347,11 @@ class CutlassBlockscaledFP4Linear(nn.Module):
 
         ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
         orig_shape = tuple(x.shape[:-1])
+        input_started = time.perf_counter()
         x_3d = x.reshape(-1, self.in_features).float().contiguous().view(-1, self.in_features, 1)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_input_prepare(time.perf_counter() - input_started)
         m = int(x_3d.shape[0])
 
         pack_started = time.perf_counter()
@@ -321,6 +359,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         torch.cuda.synchronize(x.device)
         self.stats.add_pack(time.perf_counter() - pack_started)
 
+        output_started = time.perf_counter()
         c_ref = torch.empty((m, self.out_features, 1), device=x.device, dtype=torch.float32)
         output_tensor, output_storage = ctx["cutlass_torch"].cute_tensor_like(
             c_ref,
@@ -329,7 +368,15 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             assumed_align=16,
         )
         output_tensor.mark_compact_shape_dynamic(mode=1, stride_order=(2, 0, 1), divisibility=1)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_output_prepare(time.perf_counter() - output_started)
+
+        compile_lookup_started = time.perf_counter()
         entry = self._compile_for_m(m, activation_pack, output_tensor)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_compile_lookup(time.perf_counter() - compile_lookup_started)
 
         gemm_started = time.perf_counter()
         entry["compiled"](
@@ -344,10 +391,16 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         self.stats.add_gemm(time.perf_counter() - gemm_started)
         self.stats.calls += 1
 
+        finalize_started = time.perf_counter()
         out = output_storage.view(m, self.out_features)
         if self.bias is not None:
             out = out + self.bias.to(device=x.device, dtype=out.dtype)
-        return out.reshape(*orig_shape, self.out_features).to(dtype=x.dtype)
+        out = out.reshape(*orig_shape, self.out_features).to(dtype=x.dtype)
+        if self.profile:
+            torch.cuda.synchronize(x.device)
+            self.stats.add_finalize(time.perf_counter() - finalize_started)
+            self.stats.add_forward(time.perf_counter() - forward_started)
+        return out
 
     def to_result(self) -> dict[str, Any]:
         return {

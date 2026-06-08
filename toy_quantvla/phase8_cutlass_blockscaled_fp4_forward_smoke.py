@@ -133,6 +133,11 @@ def module_results(modules: dict[str, CutlassBlockscaledFP4Linear]) -> dict[str,
     return {name: module.to_result() for name, module in modules.items()}
 
 
+def reset_module_stats(modules: dict[str, CutlassBlockscaledFP4Linear]) -> None:
+    for module in modules.values():
+        module.reset_runtime_stats()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--isaac-root", type=Path, default=Path("/root/autodl-tmp/Isaac-GR00T-n1.5"))
@@ -205,7 +210,10 @@ def main() -> None:
     synchronize(args.device)
     patch_seconds = time.perf_counter() - patch_started
     cold_actions, cold_student_seconds, cold_student_memory = run_actions(policy, observations, device=args.device)
+    cold_module_results = module_results(patched_modules)
+    reset_module_stats(patched_modules)
     warm_actions, warm_student_seconds, warm_student_memory = run_actions(policy, observations, device=args.device)
+    warm_module_results = module_results(patched_modules)
 
     comparisons = []
     for item, teacher, student in zip(observations, teacher_actions, warm_actions, strict=True):
@@ -242,7 +250,9 @@ def main() -> None:
         "warm_student_memory": warm_student_memory,
         "patched_modules": len(records),
         "patch_records": records,
-        "module_results": module_results(patched_modules),
+        "module_results": warm_module_results,
+        "cold_module_results": cold_module_results,
+        "warm_module_results": warm_module_results,
         "comparisons": comparisons,
         "summary": aggregate_metrics(comparisons),
     }

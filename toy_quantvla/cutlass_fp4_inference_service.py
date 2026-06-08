@@ -19,6 +19,7 @@ from phase8_cutlass_blockscaled_fp4_forward_smoke import (
     module_results,
     parse_name_contains,
     patch_cutlass_fp4_modules,
+    reset_module_stats,
     reset_cuda_peak,
     run_actions,
     synchronize,
@@ -197,6 +198,7 @@ def main() -> None:
     result["module_results_after_prewarm"] = module_results(patched_modules)
     result["prepare_seconds"] = time.perf_counter() - started
     write_json(args.output_json, result)
+    reset_module_stats(patched_modules)
 
     if args.prepare_only:
         print(json.dumps(result, indent=2))
@@ -210,6 +212,7 @@ def main() -> None:
         output_json=args.server_latency_json,
         label=f"cutlass_fp4:{args.scope}",
         flush_every=args.server_latency_flush_every,
+        extra_summary=lambda: {"module_results": module_results(patched_modules)},
     )
     server = RobotInferenceServer(timed_policy, port=args.port, api_token=args.api_token)
     server.run()
