@@ -757,6 +757,60 @@ Remaining concern:
 - success on one case is not enough to call `up_proj` safe;
 - next test should be matched multi-init, not broader scope.
 
+### LLM MLP `up_proj` Multi-init Smoke
+
+To separate one-init luck from a real candidate, `up_proj` only was rerun on the same task with three init states.
+
+结果文件：
+
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_client_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init0_2_latency.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_prepare_llm_mlp_up_proj_d8_task6_init0_2.json`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_client.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_llm_mlp_up_proj_task6_init0_2_eval.log`
+- `toy_quantvla/results/phase8_cutlass_fp4_server_llm_mlp_up_proj_d8_task6_init0_2.log`
+
+case:
+
+```text
+task=6
+init=0,1,2
+scope=llm_mlp_only
+name_contains=up_proj
+denoising_steps=8
+patched_modules=12
+pack_backend=triton
+```
+
+client-side rollout result:
+
+| init | success | calls | client mean | client p50 | client p90 | client p99 | client max |
+| ---: | :---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | false | 991 | 0.1868s | 0.1625s | 0.1691s | 0.1956s | 26.2857s |
+| 1 | true | 236 | 0.1600s | 0.1615s | 0.1674s | 0.1746s | 0.1752s |
+| 2 | true | 220 | 0.1589s | 0.1620s | 0.1693s | 0.1812s | 0.1901s |
+| overall | 2/3 | 1447 | 0.1782s | 0.1623s | 0.1691s | 0.1871s | 26.2857s |
+
+server-side `get_action` overall:
+
+| count | mean | p50 | p90 | p99 | max |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1447 | 0.1732s | 0.1572s | 0.1640s | 0.1816s | 26.2788s |
+
+prepare/profile note:
+
+- model load: `11.29s`;
+- patch: `2.30s`;
+- prewarm total: `27.12s`;
+- prewarm memory: `5.413 GB` allocated, `5.937 GB` reserved.
+
+Interpretation:
+
+- `init1` and `init2` are clean successes, with no long latency tail and with calls close to or lower than the FP16 `task6:init1` smoke;
+- `init0` fails at horizon with `991` calls and also contains the same kind of `~26s` long-tail request;
+- the multi-init result is therefore promising but not validated: `up_proj` is much safer than full `llm_mlp_only`, but task6 init0 must be compared against an exact FP16 timed baseline before attributing the failure to FP4;
+- this run strengthens `up_proj` as the first real FP4 candidate, but the next decision point should be matched FP16 `task6:init0,1,2`, not wider quantization scope.
+
 ## 解读
 
 可以确认：
@@ -774,7 +828,8 @@ Remaining concern:
 11. FP16 matched module profile 显示原始 DiT MLP Linear 只占 FP16 server-side `get_action` 的约 8.4%，所以 `dit_mlp_only` 的端到端加速上限天然很低。
 12. 去掉非 profile 每层同步没有改善 rollout latency，但作为正确 runtime hygiene 应保留。
 13. `llm_mlp_only` offline 速度最好，但真实 rollout 在 `task6:init1` 失败，说明更大 scope 的闭环风险明显更高。
-14. LLM MLP `up_proj` only 是目前最好的 FP4 子集候选：offline error 最低，真实 rollout 成功，并且 calls 降到 226。
+14. LLM MLP `up_proj` only 是目前最好的 FP4 子集候选：offline error 最低，真实 rollout 成功，并且 single-init calls 降到 226。
+15. `up_proj` multi-init smoke 在 task6:init0-2 上达到 2/3，init1 和 init2 都是干净成功，说明它不是纯 one-init 偶然结果。
 
 还不能确认：
 
@@ -786,6 +841,7 @@ Remaining concern:
 6. 如果扩大 scope 到 attention/projector，需要重新做成功率风险评估，不能只按速度推进。
 7. `llm_mlp_only` 的失败是否是单 init 脆弱性，还是该 scope 普遍破坏语言/动作条件，需要更多 matched init 才能下结论。
 8. `up_proj` rollout 里的 26s outlier 是偶发系统尾部、server hiccup，还是该 scope 会诱发 occasional stall，需要重复验证。
+9. task6:init0 的失败是否由 FP4 引入还不能确认；这个 init 本身可能就是 FP16 baseline 脆弱点，需要 exact matched FP16 timed baseline。
 
 ## 下一步
 
@@ -793,6 +849,7 @@ Remaining concern:
 
 1. 跑 3-5 个 matched short cases，确认 full DiT FP4 的 trajectory-length 变化是否普遍；
 2. 用低扰动 profiler 或 CUDA events 复核 activation pack / GEMM / non-quantized path 的真实 timeline；
-3. 对 `llm_mlp_up_proj` 做 matched multi-init 小实验，优先确认 success/calls/outlier；
-4. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
-5. 暂缓 full `llm_mlp_only` 和 `llm_mlp_dit_mlp` rollout 主线；offline 虽然可行，但行为风险已经暴露。
+3. 立即补 `task6:init0,1,2` 的 FP16 timed baseline，然后和 `llm_mlp_up_proj` 做 exact matched 对比；
+4. 如果 FP16 在 init0 也失败，则继续扩展 `up_proj` 到 init3-4 或其它权重任务；如果 FP16 init0 成功，则优先定位 `up_proj` 的闭环漂移；
+5. output tensor cache 仅作为实验开关保留，更多 task 验证前不默认启用；
+6. 暂缓 full `llm_mlp_only` 和 `llm_mlp_dit_mlp` rollout 主线；offline 虽然可行，但行为风险已经暴露。
