@@ -1,0 +1,608 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 module wrapper get_action smoke; pack_backend=triton",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "pack_backend": "triton",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "max_modules": 8,
+  "name_contains": [],
+  "load_seconds": 11.442630685865879,
+  "teacher_seconds": 0.5667822994291782,
+  "patch_seconds": 1.6069273576140404,
+  "cold_student_seconds": 195.3656416386366,
+  "warm_student_seconds": 0.04822917282581329,
+  "cold_student_over_teacher_time": 344.6925597983469,
+  "warm_student_over_teacher_time": 0.08509294110699328,
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cold_student_memory": {
+    "allocated_bytes": 5416297472,
+    "reserved_bytes": 5962203136,
+    "max_allocated_bytes": 5612107776,
+    "max_reserved_bytes": 5962203136
+  },
+  "warm_student_memory": {
+    "allocated_bytes": 5416297472,
+    "reserved_bytes": 5962203136,
+    "max_allocated_bytes": 5622403072,
+    "max_reserved_bytes": 5962203136
+  },
+  "patched_modules": 8,
+  "patch_records": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.8108504340052605,
+      "weight_pack_seconds": 0.8105414025485516
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11669078841805458,
+      "weight_pack_seconds": 0.11639583855867386
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11177507042884827,
+      "weight_pack_seconds": 0.11157799512147903
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11312487348914146,
+      "weight_pack_seconds": 0.11294858530163765
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11239296942949295,
+      "weight_pack_seconds": 0.1122150681912899
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11184192448854446,
+      "weight_pack_seconds": 0.111666489392519
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.1126374639570713,
+      "weight_pack_seconds": 0.11245164647698402
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11547520756721497,
+      "weight_pack_seconds": 0.11530086025595665
+    }
+  },
+  "module_results": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.8105414025485516,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05669494904577732,
+          "max": 0.11283892393112183,
+          "min": 0.0005509741604328156
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.468321833759546,
+          "max": 24.468321833759546,
+          "min": 24.468321833759546
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.00471121072769165,
+          "max": 0.00931781530380249,
+          "min": 0.00010460615158081055
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11639583855867386,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05778487026691437,
+          "max": 0.11548146605491638,
+          "min": 8.827447891235352e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.184370450675488,
+          "max": 24.184370450675488,
+          "min": 24.184370450675488
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004392104223370552,
+          "max": 0.008707985281944275,
+          "min": 7.622316479682922e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11157799512147903,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.0566391795873642,
+          "max": 0.11319182813167572,
+          "min": 8.653104305267334e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.018731340765953,
+          "max": 24.018731340765953,
+          "min": 24.018731340765953
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004518551751971245,
+          "max": 0.008964989334344864,
+          "min": 7.211416959762573e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11294858530163765,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05670124664902687,
+          "max": 0.11333387345075607,
+          "min": 6.861984729766846e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.302072156220675,
+          "max": 24.302072156220675,
+          "min": 24.302072156220675
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004362951964139938,
+          "max": 0.008658912032842636,
+          "min": 6.69918954372406e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1122150681912899,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05708276852965355,
+          "max": 0.11408727616071701,
+          "min": 7.826089859008789e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.51647822186351,
+          "max": 24.51647822186351,
+          "min": 24.51647822186351
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004436366260051727,
+          "max": 0.008804906159639359,
+          "min": 6.782636046409607e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.111666489392519,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05646529048681259,
+          "max": 0.11286661773920059,
+          "min": 6.396323442459106e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.34333550184965,
+          "max": 24.34333550184965,
+          "min": 24.34333550184965
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004831930622458458,
+          "max": 0.009596552699804306,
+          "min": 6.730854511260986e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11245164647698402,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.0568257886916399,
+          "max": 0.11357841268181801,
+          "min": 7.316470146179199e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.056849721819162,
+          "max": 24.056849721819162,
+          "min": 24.056849721819162
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.008553210645914078,
+          "max": 0.01704833284020424,
+          "min": 5.8088451623916626e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11530086025595665,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.056269191205501556,
+          "max": 0.11247692629694939,
+          "min": 6.14561140537262e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.034439116716385,
+          "max": 24.034439116716385,
+          "min": 24.034439116716385
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004320908337831497,
+          "max": 0.008589319884777069,
+          "min": 5.249679088592529e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 1.3294759447168847e-05,
+      "nmse": 5.978135442824726e-05,
+      "rmse": 0.0036461979440464893,
+      "relative_rmse": 0.007731840300229128,
+      "cosine": 0.999972515891211,
+      "max_abs_diff": 0.0146484375,
+      "teacher_rms": 0.4715821592872833,
+      "student_rms": 0.4726039635960572,
+      "per_key": {
+        "action.gripper": {
+          "mse": 8.00932866806825e-06,
+          "nmse": 8.075048646926461e-06,
+          "max_abs_diff": 0.0078125,
+          "teacher_rms": 0.9959223624149337,
+          "student_rms": 0.9974439359649953
+        },
+        "action.pitch": {
+          "mse": 7.176049638402127e-07,
+          "nmse": 0.0001671316173075825,
+          "max_abs_diff": 0.002339571714401245,
+          "teacher_rms": 0.06552596253545534,
+          "student_rms": 0.06601102580829146
+        },
+        "action.roll": {
+          "mse": 6.335303459059638e-07,
+          "nmse": 0.00042543646983019744,
+          "max_abs_diff": 0.0020954012870788574,
+          "teacher_rms": 0.0385892513363842,
+          "student_rms": 0.03835355135607402
+        },
+        "action.x": {
+          "mse": 2.1583400666713715e-05,
+          "nmse": 0.0019782202783877306,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.10445340739093593,
+          "student_rms": 0.10541884176974242
+        },
+        "action.y": {
+          "mse": 3.6566052585840225e-05,
+          "nmse": 6.75281753623255e-05,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.7358622638502788,
+          "student_rms": 0.7382489622223711
+        },
+        "action.yaw": {
+          "mse": 2.1282168921055167e-06,
+          "nmse": 0.00032283631014522765,
+          "max_abs_diff": 0.0029003918170928955,
+          "teacher_rms": 0.08119265732937798,
+          "student_rms": 0.08076651175308644
+        },
+        "action.z": {
+          "mse": 2.3425182007708045e-05,
+          "nmse": 0.26630605545622665,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.009378879715285313,
+          "student_rms": 0.010526023962213747
+        }
+      },
+      "seed": 20260608,
+      "dataset_index": 115,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 1,
+    "mse": {
+      "mean": 1.3294759447168847e-05,
+      "max": 1.3294759447168847e-05,
+      "min": 1.3294759447168847e-05
+    },
+    "nmse": {
+      "mean": 5.978135442824726e-05,
+      "max": 5.978135442824726e-05,
+      "min": 5.978135442824726e-05
+    },
+    "rmse": {
+      "mean": 0.0036461979440464893,
+      "max": 0.0036461979440464893,
+      "min": 0.0036461979440464893
+    },
+    "relative_rmse": {
+      "mean": 0.007731840300229128,
+      "max": 0.007731840300229128,
+      "min": 0.007731840300229128
+    },
+    "cosine": {
+      "mean": 0.999972515891211,
+      "max": 0.999972515891211,
+      "min": 0.999972515891211
+    },
+    "max_abs_diff": {
+      "mean": 0.0146484375,
+      "max": 0.0146484375,
+      "min": 0.0146484375
+    },
+    "teacher_rms": {
+      "mean": 0.4715821592872833,
+      "max": 0.4715821592872833,
+      "min": 0.4715821592872833
+    },
+    "student_rms": {
+      "mean": 0.4726039635960572,
+      "max": 0.4726039635960572,
+      "min": 0.4726039635960572
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 module wrapper get_action smoke; pack_backend=triton",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "pack_backend": "triton",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "max_modules": 1,
+  "name_contains": [],
+  "load_seconds": 11.161170821636915,
+  "teacher_seconds": 0.4299035407602787,
+  "patch_seconds": 0.8331255652010441,
+  "cold_student_seconds": 25.211925979703665,
+  "warm_student_seconds": 0.2107991874217987,
+  "cold_student_over_teacher_time": 58.64554159083386,
+  "warm_student_over_teacher_time": 0.49034066351024497,
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cold_student_memory": {
+    "allocated_bytes": 5467933696,
+    "reserved_bytes": 5781848064,
+    "max_allocated_bytes": 5674485760,
+    "max_reserved_bytes": 5781848064
+  },
+  "warm_student_memory": {
+    "allocated_bytes": 5467933696,
+    "reserved_bytes": 5781848064,
+    "max_allocated_bytes": 5674485760,
+    "max_reserved_bytes": 5781848064
+  },
+  "patched_modules": 1,
+  "patch_records": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.8316616602241993,
+      "weight_pack_seconds": 0.8313495889306068
+    }
+  },
+  "module_results": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.8313495889306068,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.1376538649201393,
+          "max": 0.16161589324474335,
+          "min": 0.11369183659553528
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.99043993279338,
+          "max": 24.99043993279338,
+          "min": 24.99043993279338
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0039052721112966537,
+          "max": 0.007744375616312027,
+          "min": 6.616860628128052e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 3.385055519948356e-06,
+      "nmse": 1.522127606757272e-05,
+      "rmse": 0.0018398520375150704,
+      "relative_rmse": 0.003901445381851798,
+      "cosine": 0.9999924908361651,
+      "max_abs_diff": 0.0146484375,
+      "teacher_rms": 0.4715821592872833,
+      "student_rms": 0.47179151454943985,
+      "per_key": {
+        "action.gripper": {
+          "mse": 1.1641532182693481e-07,
+          "nmse": 1.1737055950119089e-07,
+          "max_abs_diff": 0.0009765625,
+          "teacher_rms": 0.9959223624149337,
+          "student_rms": 0.9958078621852385
+        },
+        "action.pitch": {
+          "mse": 4.2895803761822116e-07,
+          "nmse": 9.990517652018875e-05,
+          "max_abs_diff": 0.002339571714401245,
+          "teacher_rms": 0.06552596253545534,
+          "student_rms": 0.06567414293225941
+        },
+        "action.roll": {
+          "mse": 1.0612980377855408e-07,
+          "nmse": 7.126965480832945e-05,
+          "max_abs_diff": 0.0010477304458618164,
+          "teacher_rms": 0.0385892513363842,
+          "student_rms": 0.03845258715644592
+        },
+        "action.x": {
+          "mse": 3.4051481634378433e-06,
+          "nmse": 0.00031209785945437497,
+          "max_abs_diff": 0.00732421875,
+          "teacher_rms": 0.10445340739093593,
+          "student_rms": 0.10380682958205537
+        },
+        "action.y": {
+          "mse": 1.3882527127861977e-05,
+          "nmse": 2.5637487780825587e-05,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.7358622638502788,
+          "student_rms": 0.7370763422762775
+        },
+        "action.yaw": {
+          "mse": 1.2108285140643993e-06,
+          "nmse": 0.0001836746109615029,
+          "max_abs_diff": 0.0029003918170928955,
+          "teacher_rms": 0.08119265732937798,
+          "student_rms": 0.08077904908448641
+        },
+        "action.z": {
+          "mse": 4.5453816710505635e-06,
+          "nmse": 0.051673564925224715,
+          "max_abs_diff": 0.00732421875,
+          "teacher_rms": 0.009378879715285313,
+          "student_rms": 0.010148523285984212
+        }
+      },
+      "seed": 20260608,
+      "dataset_index": 115,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 1,
+    "mse": {
+      "mean": 3.385055519948356e-06,
+      "max": 3.385055519948356e-06,
+      "min": 3.385055519948356e-06
+    },
+    "nmse": {
+      "mean": 1.522127606757272e-05,
+      "max": 1.522127606757272e-05,
+      "min": 1.522127606757272e-05
+    },
+    "rmse": {
+      "mean": 0.0018398520375150704,
+      "max": 0.0018398520375150704,
+      "min": 0.0018398520375150704
+    },
+    "relative_rmse": {
+      "mean": 0.003901445381851798,
+      "max": 0.003901445381851798,
+      "min": 0.003901445381851798
+    },
+    "cosine": {
+      "mean": 0.9999924908361651,
+      "max": 0.9999924908361651,
+      "min": 0.9999924908361651
+    },
+    "max_abs_diff": {
+      "mean": 0.0146484375,
+      "max": 0.0146484375,
+      "min": 0.0146484375
+    },
+    "teacher_rms": {
+      "mean": 0.4715821592872833,
+      "max": 0.4715821592872833,
+      "min": 0.4715821592872833
+    },
+    "student_rms": {
+      "mean": 0.47179151454943985,
+      "max": 0.47179151454943985,
+      "min": 0.47179151454943985
+    }
+  }
+}

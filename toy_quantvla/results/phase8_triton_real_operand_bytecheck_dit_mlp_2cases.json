@@ -1,0 +1,209 @@
+{
+  "boundary": "real GR00T activation and weight byte-check: helper pack vs Triton pack",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "model_load_seconds": 11.218784239143133,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "selected_modules": 32,
+  "captured_cases": 2,
+  "capture_meta": {
+    "capture_seconds": 0.6152583323419094,
+    "capture_memory": {
+      "allocated_bytes": 5476781056,
+      "reserved_bytes": 5779750912,
+      "max_allocated_bytes": 5682665472,
+      "max_reserved_bytes": 5779750912
+    },
+    "captured_cases": 2
+  },
+  "case_descriptors": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shape": [
+        1,
+        49,
+        1536
+      ],
+      "input_dtype": "torch.float32"
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shape": [
+        1,
+        49,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16"
+    }
+  ],
+  "summary": {
+    "cases": 2,
+    "activation_fp4_bytes_equal": true,
+    "activation_scale_storage_equal": true,
+    "weight_fp4_bytes_equal": true,
+    "weight_scale_storage_equal": true,
+    "activation_decoded_max_abs_diff": 0.0,
+    "weight_decoded_max_abs_diff": 0.0
+  },
+  "cases": [
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 1536,
+      "n": 6144,
+      "input_shape": [
+        1,
+        49,
+        1536
+      ],
+      "input_dtype": "torch.float32",
+      "pack_seconds": 11.532783929258585,
+      "activation_meaningful_fp4_bytes": 37632,
+      "activation_fp4_bytes_equal": true,
+      "activation_scale_storage_equal": true,
+      "activation_decoded_max_abs_diff": 0.0,
+      "activation_decoded_mean_abs_diff": 0.0,
+      "activation_decoded_scale_max_abs_diff": null,
+      "activation_decoded_scale_mean_abs_diff": null,
+      "activation_fp4_storage_shape": [
+        49,
+        1536,
+        1
+      ],
+      "activation_scale_storage_shape": [
+        32,
+        4,
+        1,
+        4,
+        24,
+        1
+      ],
+      "activation_scale_storage_stride": [
+        16,
+        4,
+        12288,
+        1,
+        512,
+        12288
+      ],
+      "weight_meaningful_fp4_bytes": 4718592,
+      "weight_fp4_bytes_equal": true,
+      "weight_scale_storage_equal": true,
+      "weight_decoded_max_abs_diff": 0.0,
+      "weight_decoded_mean_abs_diff": 0.0,
+      "weight_decoded_scale_max_abs_diff": null,
+      "weight_decoded_scale_mean_abs_diff": null,
+      "weight_fp4_storage_shape": [
+        6144,
+        1536,
+        1
+      ],
+      "weight_scale_storage_shape": [
+        32,
+        4,
+        48,
+        4,
+        24,
+        1
+      ],
+      "weight_scale_storage_stride": [
+        16,
+        4,
+        12288,
+        1,
+        512,
+        589824
+      ]
+    },
+    {
+      "name": "action_head.model.transformer_blocks.0.ff.net.2",
+      "group": "dit_mlp",
+      "m": 49,
+      "k": 6144,
+      "n": 1536,
+      "input_shape": [
+        1,
+        49,
+        6144
+      ],
+      "input_dtype": "torch.bfloat16",
+      "pack_seconds": 11.07213320210576,
+      "activation_meaningful_fp4_bytes": 150528,
+      "activation_fp4_bytes_equal": true,
+      "activation_scale_storage_equal": true,
+      "activation_decoded_max_abs_diff": 0.0,
+      "activation_decoded_mean_abs_diff": 0.0,
+      "activation_decoded_scale_max_abs_diff": null,
+      "activation_decoded_scale_mean_abs_diff": null,
+      "activation_fp4_storage_shape": [
+        49,
+        6144,
+        1
+      ],
+      "activation_scale_storage_shape": [
+        32,
+        4,
+        1,
+        4,
+        96,
+        1
+      ],
+      "activation_scale_storage_stride": [
+        16,
+        4,
+        49152,
+        1,
+        512,
+        49152
+      ],
+      "weight_meaningful_fp4_bytes": 4718592,
+      "weight_fp4_bytes_equal": true,
+      "weight_scale_storage_equal": true,
+      "weight_decoded_max_abs_diff": 0.0,
+      "weight_decoded_mean_abs_diff": 0.0,
+      "weight_decoded_scale_max_abs_diff": null,
+      "weight_decoded_scale_mean_abs_diff": null,
+      "weight_fp4_storage_shape": [
+        1536,
+        6144,
+        1
+      ],
+      "weight_scale_storage_shape": [
+        32,
+        4,
+        12,
+        4,
+        96,
+        1
+      ],
+      "weight_scale_storage_stride": [
+        16,
+        4,
+        49152,
+        1,
+        512,
+        589824
+      ]
+    }
+  ]
+}

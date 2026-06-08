@@ -167,3 +167,11 @@ Full `get_action` peak allocated:
 - DiT MLP 2 modules warm `get_action` 从 helper 版 1.269s 降到 0.268s；
 - LLM MLP 1 module warm `get_action` 从 helper 版 1.345s 降到 0.182s；
 - DiT MLP 8 modules 仍慢于 teacher，说明下一步瓶颈已经转向 pack kernel 化、buffer 复用和 compile cache 共享。
+
+## Update: cached Triton packer
+
+再后续已经实现 cached Triton FP4 packer：
+
+- 详见 `docs/phase8_triton_fp4_packer_cached_report.md`
+- DiT MLP 8 modules warm `get_action` 已从 torchpack 版 0.953s 降到 0.048s；
+- 当前 blocker 从 runtime pack 转向 CUTLASS per-module cold compile，以及更大 scope / rollout 行为验证。

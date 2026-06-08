@@ -146,3 +146,12 @@ pack_backend: torch
 4. 在 pack kernel 完成后，再跑 `dit_mlp_only` 更大 scope 和 LIBERO rollout。
 
 当前不建议直接跑大规模 rollout。8-module smoke 已经显示 runtime pack/allocation 仍是瓶颈；先把 pack kernel 化，性价比更高。
+
+## Update: Triton cached packer
+
+后续已经实现 Triton pack kernel，并在 `CutlassBlockscaledFP4Linear` 中缓存 activation operand storage：
+
+- 详见 `docs/phase8_triton_fp4_packer_cached_report.md`
+- Triton packer 对 small 和 DiT MLP 真实 shape 都达到 byte-exact；
+- DiT MLP 8 modules warm `get_action` 从 torchpack 版 0.953s 降到 0.048s；
+- 下一步瓶颈转向 CUTLASS per-module cold compile 和更大 scope 的 action drift/rollout 验证。

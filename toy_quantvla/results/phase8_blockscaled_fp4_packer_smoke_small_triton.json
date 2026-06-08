@@ -1,0 +1,80 @@
+{
+  "boundary": "triton-side blockscaled FP4 packer smoke against CUTLASS helper conversion",
+  "fast_backend": "triton",
+  "m": 9,
+  "k": 64,
+  "n": 17,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "a_meaningful_fp4_bytes": 288,
+  "a_fp4_bytes_equal": true,
+  "a_scale_storage_equal": true,
+  "a_decoded_max_abs_diff": 0.0,
+  "a_decoded_mean_abs_diff": 0.0,
+  "a_decoded_scale_max_abs_diff": null,
+  "a_decoded_scale_mean_abs_diff": null,
+  "a_fp4_storage_shape": [
+    9,
+    64,
+    1
+  ],
+  "a_scale_storage_shape": [
+    32,
+    4,
+    1,
+    4,
+    1,
+    1
+  ],
+  "a_scale_storage_stride": [
+    16,
+    4,
+    512,
+    1,
+    512,
+    512
+  ],
+  "b_meaningful_fp4_bytes": 544,
+  "b_fp4_bytes_equal": true,
+  "b_scale_storage_equal": true,
+  "b_decoded_max_abs_diff": 0.0,
+  "b_decoded_mean_abs_diff": 0.0,
+  "b_decoded_scale_max_abs_diff": null,
+  "b_decoded_scale_mean_abs_diff": null,
+  "b_fp4_storage_shape": [
+    17,
+    64,
+    1
+  ],
+  "b_scale_storage_shape": [
+    32,
+    4,
+    1,
+    4,
+    1,
+    1
+  ],
+  "b_scale_storage_stride": [
+    16,
+    4,
+    512,
+    1,
+    512,
+    512
+  ],
+  "helper_activation_pack_ms": 364.11255970597267,
+  "torch_activation_pack_ms": 111.77298501133919,
+  "activation_pack_speedup_vs_helper": 3.257607906499357,
+  "helper_weight_pack_ms": 369.6577437222004,
+  "torch_weight_pack_ms": 113.33413682878017,
+  "weight_pack_speedup_vs_helper": 3.261662849920159
+}

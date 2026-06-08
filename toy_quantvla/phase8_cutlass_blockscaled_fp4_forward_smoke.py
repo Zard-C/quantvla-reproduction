@@ -156,7 +156,7 @@ def main() -> None:
     parser.add_argument("--sf-dtype", choices=["Float8E4M3FN", "Float8E8M0FNU"], default="Float8E4M3FN")
     parser.add_argument("--tile-shape-mnk", type=lambda s: parse_tuple(s, 3), default=(128, 128, 128))
     parser.add_argument("--epi-tile", type=lambda s: parse_tuple(s, 2), default=(64, 32))
-    parser.add_argument("--pack-backend", choices=["helper", "torch"], default="helper")
+    parser.add_argument("--pack-backend", choices=["helper", "torch", "triton"], default="helper")
     parser.add_argument("--profile-modules", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke.json"))
     args = parser.parse_args()

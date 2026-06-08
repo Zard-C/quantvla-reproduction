@@ -21,7 +21,12 @@ from typing import Any
 import torch
 import torch.nn as nn
 
-from blockscaled_fp4_packer import make_torch_blockscaled_fp4_operand
+from blockscaled_fp4_packer import (
+    fill_triton_blockscaled_fp4_operand,
+    make_empty_triton_blockscaled_fp4_operand,
+    make_torch_blockscaled_fp4_operand,
+    make_triton_blockscaled_fp4_operand,
+)
 from phase8_cutlass_blockscaled_fp4_smoke import (
     load_blockscaled_example,
     make_blockscaled_fp4_operand,
@@ -126,14 +131,15 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         self.tile_shape_mnk = tuple(int(v) for v in tile_shape_mnk)
         self.epi_tile = tuple(int(v) for v in epi_tile)
         self.pack_backend = str(pack_backend)
-        if self.pack_backend not in {"helper", "torch"}:
-            raise ValueError(f"unsupported pack_backend={self.pack_backend!r}; expected helper or torch")
-        if self.pack_backend == "torch" and self.sf_dtype_name != "Float8E4M3FN":
-            raise ValueError("torch pack_backend currently supports only Float8E4M3FN scales")
+        if self.pack_backend not in {"helper", "torch", "triton"}:
+            raise ValueError(f"unsupported pack_backend={self.pack_backend!r}; expected helper, torch, or triton")
+        if self.pack_backend in {"torch", "triton"} and self.sf_dtype_name != "Float8E4M3FN":
+            raise ValueError(f"{self.pack_backend} pack_backend currently supports only Float8E4M3FN scales")
         self.profile = bool(profile)
         self.fallback = bool(fallback)
         self.stats = CutlassBlockscaledFP4Stats()
         self._compiled_by_m: dict[int, dict[str, Any]] = {}
+        self._triton_activation_pack_by_m: dict[int, dict[str, Any]] = {}
 
         if bias is None:
             self.register_buffer("bias", None)
@@ -145,7 +151,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             self.out_features, self.in_features, 1
         )
         started = time.perf_counter()
-        packed = self._pack_operand(weight_3d)
+        packed = self._pack_operand(weight_3d, cache_activation=False)
         torch.cuda.synchronize(device)
         self.weight_pack_seconds = time.perf_counter() - started
         self.weight_fp4_tensor = packed["fp4_tensor"]
@@ -180,8 +186,36 @@ class CutlassBlockscaledFP4Linear(nn.Module):
             fallback=fallback,
         )
 
-    def _pack_operand(self, x_mkl: torch.Tensor) -> dict[str, Any]:
+    def _pack_operand(self, x_mkl: torch.Tensor, *, cache_activation: bool) -> dict[str, Any]:
         ctx = CutlassBlockscaledFP4Context.get(self.cutlass_root, self.sf_dtype_name)
+        if self.pack_backend == "triton":
+            if cache_activation:
+                m = int(x_mkl.shape[0])
+                cached = self._triton_activation_pack_by_m.get(m)
+                if cached is None:
+                    cached = make_empty_triton_blockscaled_fp4_operand(
+                        x_mkl,
+                        fp4_dtype=ctx["cutlass"].Float4E2M1FN,
+                        sf_dtype=ctx["sf_dtype"],
+                        sf_vec_size=self.sf_vec_size,
+                        cutlass_torch=ctx["cutlass_torch"],
+                    )
+                    self._triton_activation_pack_by_m[m] = cached
+                fill_triton_blockscaled_fp4_operand(
+                    x_mkl,
+                    fp4_storage=cached["fp4_storage"],
+                    scale_storage=cached["scale_storage"],
+                    sf_vec_size=self.sf_vec_size,
+                    zero_storage=False,
+                )
+                return cached
+            return make_triton_blockscaled_fp4_operand(
+                x_mkl,
+                fp4_dtype=ctx["cutlass"].Float4E2M1FN,
+                sf_dtype=ctx["sf_dtype"],
+                sf_vec_size=self.sf_vec_size,
+                cutlass_torch=ctx["cutlass_torch"],
+            )
         if self.pack_backend == "torch":
             return make_torch_blockscaled_fp4_operand(
                 x_mkl,
@@ -242,7 +276,7 @@ class CutlassBlockscaledFP4Linear(nn.Module):
         m = int(x_3d.shape[0])
 
         pack_started = time.perf_counter()
-        activation_pack = self._pack_operand(x_3d)
+        activation_pack = self._pack_operand(x_3d, cache_activation=True)
         torch.cuda.synchronize(x.device)
         self.stats.add_pack(time.perf_counter() - pack_started)
 

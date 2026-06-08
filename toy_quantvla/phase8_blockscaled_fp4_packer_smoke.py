@@ -11,7 +11,7 @@ from typing import Any, Callable
 
 import torch
 
-from blockscaled_fp4_packer import make_torch_blockscaled_fp4_operand
+from blockscaled_fp4_packer import make_torch_blockscaled_fp4_operand, make_triton_blockscaled_fp4_operand
 from phase8_cutlass_blockscaled_fp4_smoke import (
     load_blockscaled_example,
     make_blockscaled_fp4_operand,
@@ -71,18 +71,14 @@ def make_helper_pack(
 def make_fast_pack(
     x: torch.Tensor,
     *,
+    backend: str,
     cutlass: Any,
     cutlass_torch: Any,
     sf_dtype: Any,
     sf_vec_size: int,
 ) -> dict[str, Any]:
-    return make_torch_blockscaled_fp4_operand(
-        x,
-        fp4_dtype=cutlass.Float4E2M1FN,
-        sf_dtype=sf_dtype,
-        sf_vec_size=sf_vec_size,
-        cutlass_torch=cutlass_torch,
-    )
+    maker = make_triton_blockscaled_fp4_operand if backend == "triton" else make_torch_blockscaled_fp4_operand
+    return maker(x, fp4_dtype=cutlass.Float4E2M1FN, sf_dtype=sf_dtype, sf_vec_size=sf_vec_size, cutlass_torch=cutlass_torch)
 
 
 def run_gemm_pair(
@@ -167,7 +163,9 @@ def compare_pack(prefix: str, helper: dict[str, Any], fast: dict[str, Any], *, b
     fast_fp4 = meaningful_fp4_bytes(fast)
     decoded_fast_by_cutlass = decode_fp4_with_cutlass(fast, blockscaled=blockscaled, from_dlpack=from_dlpack)
     decoded_diff = (decoded_fast_by_cutlass - helper["decoded"]).float()
-    scale_diff = (fast["decoded_scale_expanded"] - helper["decoded_scale_expanded"]).float()
+    scale_diff = None
+    if "decoded_scale_expanded" in fast:
+        scale_diff = (fast["decoded_scale_expanded"] - helper["decoded_scale_expanded"]).float()
     fp4_len = min(int(helper_fp4.numel()), int(fast_fp4.numel()))
     fp4_equal = torch.equal(helper_fp4[:fp4_len].detach().cpu(), fast_fp4[:fp4_len].detach().cpu())
     scale_equal = torch.equal(helper["scale_storage"].detach().cpu(), fast["scale_storage"].detach().cpu())
@@ -177,8 +175,8 @@ def compare_pack(prefix: str, helper: dict[str, Any], fast: dict[str, Any], *, b
         f"{prefix}_scale_storage_equal": bool(scale_equal),
         f"{prefix}_decoded_max_abs_diff": float(decoded_diff.abs().max().item()),
         f"{prefix}_decoded_mean_abs_diff": float(decoded_diff.abs().mean().item()),
-        f"{prefix}_decoded_scale_max_abs_diff": float(scale_diff.abs().max().item()),
-        f"{prefix}_decoded_scale_mean_abs_diff": float(scale_diff.abs().mean().item()),
+        f"{prefix}_decoded_scale_max_abs_diff": None if scale_diff is None else float(scale_diff.abs().max().item()),
+        f"{prefix}_decoded_scale_mean_abs_diff": None if scale_diff is None else float(scale_diff.abs().mean().item()),
         f"{prefix}_fp4_storage_shape": list(fast["fp4_storage"].shape),
         f"{prefix}_scale_storage_shape": list(fast["scale_storage"].shape),
         f"{prefix}_scale_storage_stride": list(fast["scale_storage"].stride()),
@@ -209,6 +207,7 @@ def run_case(args: argparse.Namespace) -> dict[str, Any]:
     fast_kwargs = {
         "cutlass": cutlass,
         "cutlass_torch": cutlass_torch,
+        "backend": args.fast_backend,
         "sf_dtype": sf_dtype,
         "sf_vec_size": args.sf_vec_size,
     }
@@ -220,7 +219,8 @@ def run_case(args: argparse.Namespace) -> dict[str, Any]:
     synchronize(args.device)
 
     result: dict[str, Any] = {
-        "boundary": "torch-side blockscaled FP4 packer smoke against CUTLASS helper conversion",
+        "boundary": f"{args.fast_backend}-side blockscaled FP4 packer smoke against CUTLASS helper conversion",
+        "fast_backend": args.fast_backend,
         "m": args.m,
         "k": args.k,
         "n": args.n,
@@ -239,9 +239,11 @@ def run_case(args: argparse.Namespace) -> dict[str, Any]:
     result.update(
         {
             "helper_activation_pack_ms": helper_a_ms,
+            "fast_activation_pack_ms": fast_a_ms,
             "torch_activation_pack_ms": fast_a_ms,
             "activation_pack_speedup_vs_helper": float(helper_a_ms / fast_a_ms) if fast_a_ms else None,
             "helper_weight_pack_ms": helper_b_ms,
+            "fast_weight_pack_ms": fast_b_ms,
             "torch_weight_pack_ms": fast_b_ms,
             "weight_pack_speedup_vs_helper": float(helper_b_ms / fast_b_ms) if fast_b_ms else None,
         }
@@ -273,6 +275,7 @@ def main() -> None:
     parser.add_argument("--n", type=int, default=6144)
     parser.add_argument("--sf-vec-size", type=int, default=16)
     parser.add_argument("--sf-dtype", choices=["Float8E4M3FN"], default="Float8E4M3FN")
+    parser.add_argument("--fast-backend", choices=["torch", "triton"], default="torch")
     parser.add_argument("--tile-shape-mnk", type=lambda s: parse_tuple(s, 3), default=(128, 128, 128))
     parser.add_argument("--epi-tile", type=lambda s: parse_tuple(s, 2), default=(64, 32))
     parser.add_argument("--seed", type=int, default=20260608)
