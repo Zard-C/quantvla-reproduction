@@ -1,0 +1,608 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 module wrapper get_action smoke; pack_backend=triton",
+  "scope": "llm_mlp_only",
+  "scope_description": "LLM MLP Linear modules only",
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "pack_backend": "triton",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "max_modules": 8,
+  "name_contains": [],
+  "load_seconds": 11.152543298900127,
+  "teacher_seconds": 0.4747469872236252,
+  "patch_seconds": 1.823287446051836,
+  "cold_student_seconds": 188.63135083392262,
+  "warm_student_seconds": 0.0461421012878418,
+  "cold_student_over_teacher_time": 397.33027467338,
+  "warm_student_over_teacher_time": 0.09719303656393082,
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cold_student_memory": {
+    "allocated_bytes": 5456337920,
+    "reserved_bytes": 5960105984,
+    "max_allocated_bytes": 5662889984,
+    "max_reserved_bytes": 5960105984
+  },
+  "warm_student_memory": {
+    "allocated_bytes": 5456337920,
+    "reserved_bytes": 5960105984,
+    "max_allocated_bytes": 5662889984,
+    "max_reserved_bytes": 5960105984
+  },
+  "patched_modules": 8,
+  "patch_records": {
+    "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.8303018249571323,
+      "weight_pack_seconds": 0.8299869075417519
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11202594265341759,
+      "weight_pack_seconds": 0.1117151752114296
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.32086121290922165,
+      "weight_pack_seconds": 0.32061542198061943
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11301310360431671,
+      "weight_pack_seconds": 0.11271605640649796
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11106511205434799,
+      "weight_pack_seconds": 0.11084328964352608
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11031274497509003,
+      "weight_pack_seconds": 0.1101137287914753
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11320316419005394,
+      "weight_pack_seconds": 0.1129533015191555
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11066041514277458,
+      "weight_pack_seconds": 0.1104312427341938
+    }
+  },
+  "module_results": {
+    "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.8299869075417519,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05570688657462597,
+          "max": 0.1112380288541317,
+          "min": 0.00017574429512023926
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.55073642730713,
+          "max": 23.55073642730713,
+          "min": 23.55073642730713
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004786819219589233,
+          "max": 0.009466361254453659,
+          "min": 0.00010727718472480774
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1117151752114296,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.056612683460116386,
+          "max": 0.11312160268425941,
+          "min": 0.00010376423597335815
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.36303299292922,
+          "max": 23.36303299292922,
+          "min": 23.36303299292922
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004545159637928009,
+          "max": 0.00902734324336052,
+          "min": 6.297603249549866e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.32061542198061943,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.15557141043245792,
+          "max": 0.31098465621471405,
+          "min": 0.00015816465020179749
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.302700597792864,
+          "max": 23.302700597792864,
+          "min": 23.302700597792864
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004405532032251358,
+          "max": 0.008742466568946838,
+          "min": 6.859749555587769e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11271605640649796,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05679528787732124,
+          "max": 0.11347412690520287,
+          "min": 0.00011644884943962097
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.272858809679747,
+          "max": 23.272858809679747,
+          "min": 23.272858809679747
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.003959644585847855,
+          "max": 0.007836785167455673,
+          "min": 8.250400424003601e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11084328964352608,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.194895064458251,
+          "max": 0.3897010535001755,
+          "min": 8.907541632652283e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.27083744853735,
+          "max": 23.27083744853735,
+          "min": 23.27083744853735
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0043782684952020645,
+          "max": 0.008685588836669922,
+          "min": 7.094815373420715e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1101137287914753,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.056723278015851974,
+          "max": 0.11329305917024612,
+          "min": 0.0001534968614578247
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.35134280845523,
+          "max": 23.35134280845523,
+          "min": 23.35134280845523
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0048775095492601395,
+          "max": 0.009686950594186783,
+          "min": 6.80685043334961e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1129533015191555,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.056867025792598724,
+          "max": 0.1136266253888607,
+          "min": 0.00010742619633674622
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.301393523812294,
+          "max": 23.301393523812294,
+          "min": 23.301393523812294
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.007443467155098915,
+          "max": 0.014814183115959167,
+          "min": 7.275119423866272e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1104312427341938,
+      "compiled_m_values": [
+        566
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05668462626636028,
+          "max": 0.11327997967600822,
+          "min": 8.927285671234131e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 23.295823384076357,
+          "max": 23.295823384076357,
+          "min": 23.295823384076357
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.008140970021486282,
+          "max": 0.01623287796974182,
+          "min": 4.906207323074341e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 12582912,
+        "scale_storage_bytes": 786432
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 2.29866299093971e-06,
+      "nmse": 1.0336192055112743e-05,
+      "rmse": 0.001516134225898126,
+      "relative_rmse": 0.00321499487637426,
+      "cosine": 0.9999948367598086,
+      "max_abs_diff": 0.0078125,
+      "teacher_rms": 0.4715821592872833,
+      "student_rms": 0.4716281431789048,
+      "per_key": {
+        "action.gripper": {
+          "mse": 4.84660267829895e-06,
+          "nmse": 4.886371133153579e-06,
+          "max_abs_diff": 0.0078125,
+          "teacher_rms": 0.9959223624149337,
+          "student_rms": 0.9956669540885615
+        },
+        "action.pitch": {
+          "mse": 3.648173327042148e-07,
+          "nmse": 8.496667931392742e-05,
+          "max_abs_diff": 0.002339571714401245,
+          "teacher_rms": 0.06552596253545534,
+          "student_rms": 0.06566679528791775
+        },
+        "action.roll": {
+          "mse": 1.211330765138463e-07,
+          "nmse": 8.134484604368316e-05,
+          "max_abs_diff": 0.0010477006435394287,
+          "teacher_rms": 0.0385892513363842,
+          "student_rms": 0.038660456192648004
+        },
+        "action.x": {
+          "mse": 3.614695742726326e-06,
+          "nmse": 0.0003313038815746442,
+          "max_abs_diff": 0.00732421875,
+          "teacher_rms": 0.10445340739093593,
+          "student_rms": 0.10373343215065334
+        },
+        "action.y": {
+          "mse": 2.4097971618175507e-06,
+          "nmse": 4.450280897803687e-06,
+          "max_abs_diff": 0.003662109375,
+          "teacher_rms": 0.7358622638502788,
+          "student_rms": 0.7365578021190589
+        },
+        "action.yaw": {
+          "mse": 1.3472733214059396e-06,
+          "nmse": 0.00020437237832911354,
+          "max_abs_diff": 0.0029003918170928955,
+          "teacher_rms": 0.08119265732937798,
+          "student_rms": 0.080672468577108
+        },
+        "action.z": {
+          "mse": 3.3863216231111437e-06,
+          "nmse": 0.038496945452125814,
+          "max_abs_diff": 0.003662109375,
+          "teacher_rms": 0.009378879715285313,
+          "student_rms": 0.009285888957491006
+        }
+      },
+      "seed": 20260608,
+      "dataset_index": 115,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 1,
+    "mse": {
+      "mean": 2.29866299093971e-06,
+      "max": 2.29866299093971e-06,
+      "min": 2.29866299093971e-06
+    },
+    "nmse": {
+      "mean": 1.0336192055112743e-05,
+      "max": 1.0336192055112743e-05,
+      "min": 1.0336192055112743e-05
+    },
+    "rmse": {
+      "mean": 0.001516134225898126,
+      "max": 0.001516134225898126,
+      "min": 0.001516134225898126
+    },
+    "relative_rmse": {
+      "mean": 0.00321499487637426,
+      "max": 0.00321499487637426,
+      "min": 0.00321499487637426
+    },
+    "cosine": {
+      "mean": 0.9999948367598086,
+      "max": 0.9999948367598086,
+      "min": 0.9999948367598086
+    },
+    "max_abs_diff": {
+      "mean": 0.0078125,
+      "max": 0.0078125,
+      "min": 0.0078125
+    },
+    "teacher_rms": {
+      "mean": 0.4715821592872833,
+      "max": 0.4715821592872833,
+      "min": 0.4715821592872833
+    },
+    "student_rms": {
+      "mean": 0.4716281431789048,
+      "max": 0.4716281431789048,
+      "min": 0.4716281431789048
+    }
+  }
+}

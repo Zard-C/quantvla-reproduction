@@ -120,6 +120,10 @@ cached activation operand: enabled
 - `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_dit_mlp_2mod_tritonpack_cached.json`
 - `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_1mod_tritonpack_cached.json`
 - `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_dit_mlp_8mod_tritonpack_cached.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_dit_mlp_16mod_tritonpack_cached.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_dit_mlp_full_tritonpack_cached.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_dit_mlp_full_tritonpack_cached_4obs.json`
+- `toy_quantvla/results/phase8_cutlass_blockscaled_fp4_forward_smoke_llm_mlp_8mod_tritonpack_cached.json`
 
 | config | patched modules | teacher | patch | cold student | warm student | warm / teacher | action rel RMSE | cosine |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -127,6 +131,9 @@ cached activation operand: enabled
 | DiT MLP | 2 | 0.462s | 0.941s | 49.20s | 0.045s | 0.10x | 0.00747 | 0.999974 |
 | LLM MLP | 1 | 0.489s | 1.040s | 24.98s | 0.041s | 0.08x | 0.00416 | 0.999991 |
 | DiT MLP | 8 | 0.567s | 1.607s | 195.37s | 0.048s | 0.09x | 0.00773 | 0.999973 |
+| DiT MLP | 16 | 0.434s | 2.488s | 405.64s | 0.053s | 0.12x | 0.00800 | 0.999970 |
+| DiT MLP full | 32 | 0.441s | 4.372s | 814.81s | 0.061s | 0.14x | 0.00903 | 0.999964 |
+| LLM MLP | 8 | 0.475s | 1.823s | 188.63s | 0.046s | 0.10x | 0.00321 | 0.999995 |
 
 对比上一阶段 torch-side packer：
 
@@ -139,16 +146,56 @@ cached activation operand: enabled
 
 这说明 `llm_dit_mlp_only` 这条工程路线开始真正出现希望：至少在 small offline `get_action` smoke 中，大 scope 不再被 runtime pack 拖死。
 
-## 显存观察
+## Full DiT MLP 多 Observation Drift
 
-8-module DiT MLP：
+为了避免只看单个 observation，又跑了 full DiT MLP，也就是 action head 里全部 32 个 DiT feed-forward Linear，覆盖 4 个真实 dataset index：
 
 ```text
-teacher peak allocated: 5.683 GB
-cached Triton warm peak allocated: 5.622 GB
+indices: 115, 4000, 8000, 16000
+denoising_steps: 1
+pack_backend: triton
+patched_modules: 32
 ```
 
-显存有小幅下降，但还没有兑现理论 FP4+scale 的完整收益。原因仍然是：
+总时间：
+
+| metric | value |
+| --- | ---: |
+| teacher total | 0.643s |
+| patch | 4.355s |
+| cold student total | 781.06s |
+| warm student total | 0.394s |
+| warm / teacher | 0.61x |
+
+漂移：
+
+| dataset index | teacher RMS | RMSE | rel RMSE | cosine | max abs diff |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 115 | 0.4716 | 0.00426 | 0.00903 | 0.999964 | 0.01465 |
+| 4000 | 0.3153 | 0.00605 | 0.01918 | 0.999818 | 0.02197 |
+| 8000 | 0.2355 | 0.00479 | 0.02034 | 0.999801 | 0.02930 |
+| 16000 | 0.0818 | 0.00387 | 0.04736 | 0.998903 | 0.02148 |
+| mean | 0.2760 | 0.00474 | 0.02398 | 0.999622 | 0.02185 |
+
+解读：
+
+- full DiT MLP 的 action cosine 仍然很高，4 个样本最低也有 0.9989；
+- 相对 RMSE 在 index 16000 上升到 4.7%，主要因为 teacher action RMS 只有 0.0818，分母很小；
+- 绝对 RMSE 仍在 `0.0039-0.0061`，max abs diff 最大约 0.0293；
+- 这说明 offline action drift 没有明显爆炸，但 rollout 里是否会闭环放大，仍必须用 simulator 评估。
+
+## 显存观察
+
+代表性样例：
+
+| config | patched modules | teacher peak allocated | warm peak allocated | warm current allocated |
+| --- | ---: | ---: | ---: | ---: |
+| DiT MLP 8 | 8 | 5.683 GB | 5.622 GB | 5.416 GB |
+| DiT MLP 16 | 16 | 5.683 GB | 5.563 GB | 5.357 GB |
+| DiT MLP full | 32 | 5.683 GB | 5.444 GB | 5.238 GB |
+| LLM MLP 8 | 8 | 5.683 GB | 5.663 GB | 5.456 GB |
+
+显存有小幅下降，full DiT MLP 的 allocated current 下降约 240 MB。但还没有兑现理论 FP4+scale 的完整收益。原因仍然是：
 
 - 大多数模型权重仍保留原始 dtype；
 - 只 patch 了部分模块；
@@ -162,20 +209,23 @@ cached Triton warm peak allocated: 5.622 GB
 1. Triton packer 已经 byte-exact 对齐 CUTLASS helper conversion。
 2. 缓存 activation operand 后，runtime pack 固定开销基本被消掉。
 3. DiT MLP 8 modules 的 warm `get_action` 从 torchpack 的 0.953s 降到 0.048s。
-4. action drift 仍然很小，8 modules 的 cosine 约 0.999971。
+4. full DiT MLP 32 modules 的单 observation warm `get_action` 为 0.061s，action rel RMSE 0.00903，cosine 0.999964。
+5. full DiT MLP 4 observation smoke 的 mean rel RMSE 0.02398、mean cosine 0.999622，没有出现离线 action 爆炸。
+6. LLM MLP 8 modules 也能稳定运行，warm 0.046s，rel RMSE 0.00321，cosine 0.999995。
 
 仍然不能忽略：
 
-1. cold student 仍被 CUTLASS per-module compile 主导，8 modules 约 200s。
+1. cold student 仍被 CUTLASS per-module compile 主导，full DiT MLP 32 modules 约 13.6 分钟。
 2. 目前只测了 `denoising_steps=1` 的 offline `get_action` smoke，还不是 LIBERO rollout。
-3. full scope 可能出现更多 unique M/shape，需要 compile/cache 策略。
-4. 需要做真实 rollout 前，最好先跑更大 patch scope 的 offline action drift。
+3. multi-observation 只覆盖了 4 个有效 subset index，还不足以替代 rollout。
+4. warm speed 是离线 `get_action` smoke，不等同于 server + simulator 的端到端 FPS。
 
 ## 下一步
 
 建议下一步按这个顺序：
 
-1. 跑 `dit_mlp_only` 更大 scope，例如 16 modules / full DiT MLP，先只做 `get_action` smoke。
-2. 跑 `llm_mlp_only` 或 `llm_dit_mlp` 的更大 scope offline action drift。
-3. 研究 CUTLASS compile cache 共享，同 shape 的 modules 不应每个都 cold compile 25s。
-4. 在 offline action drift 可控后，再进入小规模 LIBERO rollout，对比 FP16 baseline、fake quant、cached Triton FP4。
+1. 把 cached Triton/CUTLASS module 接入 inference service 的 patch path，而不是只在离线 smoke 脚本里调用。
+2. 先做 1-2 个 LIBERO task 的小规模 rollout，对比 FP16 baseline、fake quant、cached Triton FP4。
+3. 在 rollout 前预热全部会用到的 CUTLASS kernels，避免 episode 内首次调用吃掉 cold compile。
+4. 继续研究 CUTLASS compile cache 共享，同 shape 的 modules 理论上不该每个都 cold compile 24-25s。
+5. 如果 rollout action drift 能接受，再扩到 `llm_dit_mlp_only`，并记录端到端推理速度、GPU 显存峰值和 success rate。

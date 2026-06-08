@@ -1,0 +1,1928 @@
+{
+  "boundary": "CUTLASS blockscaled FP4 module wrapper get_action smoke; pack_backend=triton",
+  "scope": "dit_mlp_only",
+  "scope_description": "DiT feed-forward Linear modules only",
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "denoising_steps": 1,
+  "sf_vec_size": 16,
+  "sf_dtype": "Float8E4M3FN",
+  "pack_backend": "triton",
+  "tile_shape_mnk": [
+    128,
+    128,
+    128
+  ],
+  "epi_tile": [
+    64,
+    32
+  ],
+  "max_modules": 0,
+  "name_contains": [],
+  "load_seconds": 11.268247444182634,
+  "teacher_seconds": 0.44132591784000397,
+  "patch_seconds": 4.371690262109041,
+  "cold_student_seconds": 814.8098130300641,
+  "warm_student_seconds": 0.061062321066856384,
+  "cold_student_over_teacher_time": 1846.2768219415136,
+  "warm_student_over_teacher_time": 0.1383610583437196,
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cold_student_memory": {
+    "allocated_bytes": 5237992448,
+    "reserved_bytes": 6129975296,
+    "max_allocated_bytes": 5399771136,
+    "max_reserved_bytes": 6129975296
+  },
+  "warm_student_memory": {
+    "allocated_bytes": 5237992448,
+    "reserved_bytes": 6129975296,
+    "max_allocated_bytes": 5444098048,
+    "max_reserved_bytes": 6129975296
+  },
+  "patched_modules": 32,
+  "patch_records": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.8115488849580288,
+      "weight_pack_seconds": 0.8112032786011696
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11840473115444183,
+      "weight_pack_seconds": 0.11809638887643814
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11171502247452736,
+      "weight_pack_seconds": 0.11150344461202621
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11214764043688774,
+      "weight_pack_seconds": 0.11196426674723625
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11684504523873329,
+      "weight_pack_seconds": 0.11664585396647453
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11160630732774734,
+      "weight_pack_seconds": 0.11143042519688606
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11117523908615112,
+      "weight_pack_seconds": 0.11098448187112808
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11248740553855896,
+      "weight_pack_seconds": 0.11230193823575974
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.4.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11496834456920624,
+      "weight_pack_seconds": 0.11477255821228027
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.4.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11244764551520348,
+      "weight_pack_seconds": 0.11226236447691917
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.5.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11153148114681244,
+      "weight_pack_seconds": 0.11135135218501091
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.5.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11362449824810028,
+      "weight_pack_seconds": 0.11344855278730392
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.6.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11581462249159813,
+      "weight_pack_seconds": 0.1156378798186779
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.6.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11488008126616478,
+      "weight_pack_seconds": 0.11468736454844475
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.7.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11517521739006042,
+      "weight_pack_seconds": 0.11498977243900299
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.7.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11411013826727867,
+      "weight_pack_seconds": 0.11392819508910179
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.8.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11638178303837776,
+      "weight_pack_seconds": 0.11619966477155685
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.8.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11499552428722382,
+      "weight_pack_seconds": 0.11480693146586418
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.9.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11491930857300758,
+      "weight_pack_seconds": 0.11474089697003365
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.9.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.1162298209965229,
+      "weight_pack_seconds": 0.1160530112683773
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.10.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11719667911529541,
+      "weight_pack_seconds": 0.11701687052845955
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.10.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11507274582982063,
+      "weight_pack_seconds": 0.11488128080964088
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.11.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11603707075119019,
+      "weight_pack_seconds": 0.11586706712841988
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.11.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11395589262247086,
+      "weight_pack_seconds": 0.1137816347181797
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.12.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.1152334213256836,
+      "weight_pack_seconds": 0.11506012827157974
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.12.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11546315997838974,
+      "weight_pack_seconds": 0.11528028175234795
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.13.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11389075592160225,
+      "weight_pack_seconds": 0.11370323225855827
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.13.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11659054085612297,
+      "weight_pack_seconds": 0.11639157310128212
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.14.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11662960425019264,
+      "weight_pack_seconds": 0.11645524948835373
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.14.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11510439589619637,
+      "weight_pack_seconds": 0.11492612585425377
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.15.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11673173308372498,
+      "weight_pack_seconds": 0.11656282097101212
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.15.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16",
+      "patch_seconds": 0.11529723182320595,
+      "weight_pack_seconds": 0.1151062399148941
+    }
+  },
+  "module_results": {
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.8112032786011696,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05924878269433975,
+          "max": 0.11832019314169884,
+          "min": 0.00017737224698066711
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.308818712830544,
+          "max": 25.308818712830544,
+          "min": 25.308818712830544
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004917869344353676,
+          "max": 0.009731210768222809,
+          "min": 0.00010452792048454285
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11809638887643814,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.06173164024949074,
+          "max": 0.1233702078461647,
+          "min": 9.307265281677246e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.883042618632317,
+          "max": 24.883042618632317,
+          "min": 24.883042618632317
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.007745038717985153,
+          "max": 0.015406183898448944,
+          "min": 8.38935375213623e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11150344461202621,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05846456624567509,
+          "max": 0.11683288589119911,
+          "min": 9.624660015106201e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.792259756475687,
+          "max": 25.792259756475687,
+          "min": 25.792259756475687
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0044249799102544785,
+          "max": 0.008766256272792816,
+          "min": 8.370354771614075e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11196426674723625,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.056951966136693954,
+          "max": 0.11382735520601273,
+          "min": 7.65770673751831e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.107867166399956,
+          "max": 25.107867166399956,
+          "min": 25.107867166399956
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004471670836210251,
+          "max": 0.0088595449924469,
+          "min": 8.37966799736023e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11664585396647453,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05680881440639496,
+          "max": 0.11352403461933136,
+          "min": 9.359419345855713e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.888187631964684,
+          "max": 24.888187631964684,
+          "min": 24.888187631964684
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004546446725726128,
+          "max": 0.009000420570373535,
+          "min": 9.247288107872009e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11143042519688606,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057364024221897125,
+          "max": 0.11465191096067429,
+          "min": 7.61374831199646e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.007087122648954,
+          "max": 25.007087122648954,
+          "min": 25.007087122648954
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004202140495181084,
+          "max": 0.008319560438394547,
+          "min": 8.472055196762085e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11098448187112808,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05735023319721222,
+          "max": 0.11460813879966736,
+          "min": 9.232759475708008e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.073140751570463,
+          "max": 25.073140751570463,
+          "min": 25.073140751570463
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004416203126311302,
+          "max": 0.008749403059482574,
+          "min": 8.300319314002991e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11230193823575974,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.06037146970629692,
+          "max": 0.12067218124866486,
+          "min": 7.07581639289856e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.426024470478296,
+          "max": 25.426024470478296,
+          "min": 25.426024470478296
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004385495558381081,
+          "max": 0.008684836328029633,
+          "min": 8.615478873252869e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11477255821228027,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05704669654369354,
+          "max": 0.1140044555068016,
+          "min": 8.893758058547974e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.666359305381775,
+          "max": 25.666359305381775,
+          "min": 25.666359305381775
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004413546994328499,
+          "max": 0.008746504783630371,
+          "min": 8.058920502662659e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11226236447691917,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057041656225919724,
+          "max": 0.11401291564106941,
+          "min": 7.039681077003479e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.609886527061462,
+          "max": 25.609886527061462,
+          "min": 25.609886527061462
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004379503428936005,
+          "max": 0.00867316871881485,
+          "min": 8.583813905715942e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11135135218501091,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057027772068977356,
+          "max": 0.11397705227136612,
+          "min": 7.849186658859253e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.76180100440979,
+          "max": 25.76180100440979,
+          "min": 25.76180100440979
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004525447264313698,
+          "max": 0.008974011987447739,
+          "min": 7.688254117965698e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11344855278730392,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05701948329806328,
+          "max": 0.11397051811218262,
+          "min": 6.844848394393921e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 26.288464654237032,
+          "max": 26.288464654237032,
+          "min": 26.288464654237032
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004838835448026657,
+          "max": 0.009604457765817642,
+          "min": 7.3213130235672e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1156378798186779,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.06155988946557045,
+          "max": 0.12304193153977394,
+          "min": 7.784739136695862e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.645908299833536,
+          "max": 25.645908299833536,
+          "min": 25.645908299833536
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004390578716993332,
+          "max": 0.008702412247657776,
+          "min": 7.874518632888794e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11468736454844475,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.0570126511156559,
+          "max": 0.1139538437128067,
+          "min": 7.145851850509644e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.70616178587079,
+          "max": 25.70616178587079,
+          "min": 25.70616178587079
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004390891641378403,
+          "max": 0.008700944483280182,
+          "min": 8.083879947662354e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11498977243900299,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05702674388885498,
+          "max": 0.11397308483719826,
+          "min": 8.040294051170349e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.582987867295742,
+          "max": 25.582987867295742,
+          "min": 25.582987867295742
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.00427948497235775,
+          "max": 0.008486330509185791,
+          "min": 7.263943552970886e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11392819508910179,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.06271413899958134,
+          "max": 0.1253611333668232,
+          "min": 6.714463233947754e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 26.256857335567474,
+          "max": 26.256857335567474,
+          "min": 26.256857335567474
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0041403211653232574,
+          "max": 0.008204441517591476,
+          "min": 7.620081305503845e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11619966477155685,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.0600468460470438,
+          "max": 0.1200183816254139,
+          "min": 7.531046867370605e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.75806898996234,
+          "max": 25.75806898996234,
+          "min": 25.75806898996234
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004326267167925835,
+          "max": 0.008575621992349625,
+          "min": 7.691234350204468e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11480693146586418,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05720630846917629,
+          "max": 0.11434899270534515,
+          "min": 6.362423300743103e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.975773852318525,
+          "max": 24.975773852318525,
+          "min": 24.975773852318525
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004367034882307053,
+          "max": 0.008660737425088882,
+          "min": 7.333233952522278e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11474089697003365,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05859193578362465,
+          "max": 0.11709893867373466,
+          "min": 8.493289351463318e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.609794460237026,
+          "max": 24.609794460237026,
+          "min": 24.609794460237026
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004385923966765404,
+          "max": 0.008694343268871307,
+          "min": 7.750466465950012e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1160530112683773,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05671883933246136,
+          "max": 0.11336890235543251,
+          "min": 6.877630949020386e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.875037726014853,
+          "max": 24.875037726014853,
+          "min": 24.875037726014853
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004271486774086952,
+          "max": 0.008465476334095001,
+          "min": 7.74972140789032e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11701687052845955,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05712681636214256,
+          "max": 0.11417507007718086,
+          "min": 7.85626471042633e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.786777172237635,
+          "max": 24.786777172237635,
+          "min": 24.786777172237635
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004458220675587654,
+          "max": 0.008841875940561295,
+          "min": 7.456541061401367e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11488128080964088,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05707306042313576,
+          "max": 0.11407873034477234,
+          "min": 6.739050149917603e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.619729783385992,
+          "max": 24.619729783385992,
+          "min": 24.619729783385992
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.00442705862224102,
+          "max": 0.00877813994884491,
+          "min": 7.597729563713074e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11586706712841988,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05709368176758289,
+          "max": 0.11410205811262131,
+          "min": 8.530542254447937e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.595919393002987,
+          "max": 24.595919393002987,
+          "min": 24.595919393002987
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004429608583450317,
+          "max": 0.008780483156442642,
+          "min": 7.873401045799255e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1137816347181797,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.06210699491202831,
+          "max": 0.12414377555251122,
+          "min": 7.021427154541016e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.842005409300327,
+          "max": 24.842005409300327,
+          "min": 24.842005409300327
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004375167191028595,
+          "max": 0.008671533316373825,
+          "min": 7.880106568336487e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11506012827157974,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05765314772725105,
+          "max": 0.11522913724184036,
+          "min": 7.715821266174316e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.16725057736039,
+          "max": 25.16725057736039,
+          "min": 25.16725057736039
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.00392221100628376,
+          "max": 0.007774386554956436,
+          "min": 7.003545761108398e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11528028175234795,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05718587338924408,
+          "max": 0.11430374160408974,
+          "min": 6.800517439842224e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 24.541409619152546,
+          "max": 24.541409619152546,
+          "min": 24.541409619152546
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004396902397274971,
+          "max": 0.008722685277462006,
+          "min": 7.11195170879364e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11370323225855827,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.058805305510759354,
+          "max": 0.1175280213356018,
+          "min": 8.258968591690063e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.35338991507888,
+          "max": 25.35338991507888,
+          "min": 25.35338991507888
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004426304250955582,
+          "max": 0.008778698742389679,
+          "min": 7.390975952148438e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11639157310128212,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057057857513427734,
+          "max": 0.11404730007052422,
+          "min": 6.841495633125305e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.21386954188347,
+          "max": 25.21386954188347,
+          "min": 25.21386954188347
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004411354660987854,
+          "max": 0.008752003312110901,
+          "min": 7.070600986480713e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11645524948835373,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057408785447478294,
+          "max": 0.11473981663584709,
+          "min": 7.775425910949707e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.80249821394682,
+          "max": 25.80249821394682,
+          "min": 25.80249821394682
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.004406746476888657,
+          "max": 0.008745137602090836,
+          "min": 6.835535168647766e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11492612585425377,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.0577034130692482,
+          "max": 0.11533860489726067,
+          "min": 6.822124123573303e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.445358477532864,
+          "max": 25.445358477532864,
+          "min": 25.445358477532864
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0048688724637031555,
+          "max": 0.009673081338405609,
+          "min": 6.46635890007019e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.11656282097101212,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.05752532370388508,
+          "max": 0.11496914550662041,
+          "min": 8.150190114974976e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.150468453764915,
+          "max": 25.150468453764915,
+          "min": 25.150468453764915
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.0043678488582372665,
+          "max": 0.008671656250953674,
+          "min": 6.404146552085876e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "sf_vec_size": 16,
+      "sf_dtype": "Float8E4M3FN",
+      "pack_backend": "triton",
+      "tile_shape_mnk": [
+        128,
+        128,
+        128
+      ],
+      "epi_tile": [
+        64,
+        32
+      ],
+      "weight_pack_seconds": 0.1151062399148941,
+      "compiled_m_values": [
+        49
+      ],
+      "stats": {
+        "calls": 2,
+        "activation_pack_seconds": {
+          "count": 2,
+          "mean": 0.057463059201836586,
+          "max": 0.1148611269891262,
+          "min": 6.499141454696655e-05
+        },
+        "compile_seconds": {
+          "count": 1,
+          "mean": 25.28782718628645,
+          "max": 25.28782718628645,
+          "min": 25.28782718628645
+        },
+        "gemm_seconds": {
+          "count": 2,
+          "mean": 0.003999689593911171,
+          "max": 0.007944229990243912,
+          "min": 5.5149197578430176e-05
+        }
+      },
+      "weight_storage_bytes": {
+        "fp4_storage_bytes": 9437184,
+        "scale_storage_bytes": 589824
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 1.813497642220996e-05,
+      "nmse": 8.154592471960145e-05,
+      "rmse": 0.004258518101665174,
+      "relative_rmse": 0.009030278219390665,
+      "cosine": 0.9999638697049014,
+      "max_abs_diff": 0.0146484375,
+      "teacher_rms": 0.4715821592872833,
+      "student_rms": 0.47300228217320656,
+      "per_key": {
+        "action.gripper": {
+          "mse": 2.2672983506222266e-05,
+          "nmse": 2.2859025065812913e-05,
+          "max_abs_diff": 0.0078125,
+          "teacher_rms": 0.9959223624149337,
+          "student_rms": 0.9979662153714546
+        },
+        "action.pitch": {
+          "mse": 2.442785922610047e-06,
+          "nmse": 0.0005689296793561756,
+          "max_abs_diff": 0.004679128527641296,
+          "teacher_rms": 0.06552596253545534,
+          "student_rms": 0.06588535756590481
+        },
+        "action.roll": {
+          "mse": 9.958524417874592e-07,
+          "nmse": 0.0006687476772718403,
+          "max_abs_diff": 0.002095431089401245,
+          "teacher_rms": 0.0385892513363842,
+          "student_rms": 0.03801860074747655
+        },
+        "action.x": {
+          "mse": 3.227032721042633e-05,
+          "nmse": 0.002957727406521461,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.10445340739093593,
+          "student_rms": 0.10159699997301197
+        },
+        "action.y": {
+          "mse": 4.222383722662926e-05,
+          "nmse": 7.79766609484733e-05,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.7358622638502788,
+          "student_rms": 0.7398505032452121
+        },
+        "action.yaw": {
+          "mse": 1.5599655421860703e-06,
+          "nmse": 0.00023663636984612438,
+          "max_abs_diff": 0.0029003918170928955,
+          "teacher_rms": 0.08119265732937798,
+          "student_rms": 0.08105853620997991
+        },
+        "action.z": {
+          "mse": 2.477908310560828e-05,
+          "nmse": 0.2816976994033698,
+          "max_abs_diff": 0.0146484375,
+          "teacher_rms": 0.009378879715285313,
+          "student_rms": 0.011137655588605182
+        }
+      },
+      "seed": 20260608,
+      "dataset_index": 115,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 1,
+    "mse": {
+      "mean": 1.813497642220996e-05,
+      "max": 1.813497642220996e-05,
+      "min": 1.813497642220996e-05
+    },
+    "nmse": {
+      "mean": 8.154592471960145e-05,
+      "max": 8.154592471960145e-05,
+      "min": 8.154592471960145e-05
+    },
+    "rmse": {
+      "mean": 0.004258518101665174,
+      "max": 0.004258518101665174,
+      "min": 0.004258518101665174
+    },
+    "relative_rmse": {
+      "mean": 0.009030278219390665,
+      "max": 0.009030278219390665,
+      "min": 0.009030278219390665
+    },
+    "cosine": {
+      "mean": 0.9999638697049014,
+      "max": 0.9999638697049014,
+      "min": 0.9999638697049014
+    },
+    "max_abs_diff": {
+      "mean": 0.0146484375,
+      "max": 0.0146484375,
+      "min": 0.0146484375
+    },
+    "teacher_rms": {
+      "mean": 0.4715821592872833,
+      "max": 0.4715821592872833,
+      "min": 0.4715821592872833
+    },
+    "student_rms": {
+      "mean": 0.47300228217320656,
+      "max": 0.47300228217320656,
+      "min": 0.47300228217320656
+    }
+  }
+}
