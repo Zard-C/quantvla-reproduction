@@ -150,6 +150,64 @@ Compiled 失败尾段：
 - step 119 到 121 之间迅速从毫米级分叉放大到厘米级。
 - baseline 在 210 steps 成功；compiled 在后段基本停留在物体附近，但没有完成目标状态。
 
+## Online Drift Replay
+
+为了把 compile 数值漂移和 simulator 闭环反馈拆开，新增了同观测在线 replay：
+
+```text
+script: toy_quantvla/phase13_torch_compile_online_drift.py
+tag: phase13_torch_compile_online_drift_4_6_6_0_v1
+cases: 4:6,6:0
+boundary: eager policy controls LIBERO; compiled action_head.model is evaluated on the same live observations with the same denoising seeds
+```
+
+输出：
+
+```text
+docs/phase13_torch_compile_online_drift_4_6_6_0_v1.md
+toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1.json
+toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1_trace/
+```
+
+这次 replay 中，环境只执行 eager action。compiled action 只在同一个 observation 上旁路计算，不参与控制。因此它回答的是：
+
+```text
+如果 observation 完全一样，RNG seed 也一样，compile 路径本身会产生多大 action drift？
+```
+
+汇总：
+
+| case | eager success | steps | raw rel RMSE mean | raw rel RMSE max | raw max abs diff | LIBERO action RMSE mean | LIBERO max abs diff |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 4:6 | success | 245 | 0.003573 | 0.045184 | 0.142975 | 0.000697 | 0.009155 |
+| 6:0 | success | 210 | 0.003889 | 0.011721 | 0.011353 | 0.000645 | 0.005493 |
+
+窗口演化：
+
+| case | first 5 raw rel RMSE | first 50 raw rel RMSE | first 100 raw rel RMSE | full raw rel RMSE | first 100 raw max | full raw max |
+|---|---:|---:|---:|---:|---:|---:|
+| 4:6 | 0.002709 | 0.003359 | 0.003925 | 0.003573 | 0.005608 | 0.142975 |
+| 6:0 | 0.002657 | 0.003467 | 0.004046 | 0.003889 | 0.005615 | 0.011353 |
+
+最大尖峰位置：
+
+| case | metric | top policy step | value |
+|---|---|---:|---:|
+| 4:6 | raw relative RMSE | 114 | 0.045184 |
+| 4:6 | raw max abs diff | 114 | 0.142975 |
+| 4:6 | LIBERO action RMSE | 114 | 0.004808 |
+| 6:0 | raw relative RMSE | 45 | 0.011721 |
+| 6:0 | raw max abs diff | 108 | 0.011353 |
+| 6:0 | LIBERO action RMSE | 66 | 0.002115 |
+
+解读：
+
+- compile 路径在同观测、同 seed 下确实不是严格数值等价；平均 raw relative RMSE 约 `0.36-0.39%`。
+- 误差不是均匀小白噪声。`4:6` 在 policy step 114 出现一个很尖的 raw action spike，单维最大差达到 `0.143`。
+- 这解释了为什么 step0 drift 很小，但闭环 rollout 仍会失败：真实危险不是第一步，而是接触/抓取局部状态附近的 drift spike 被物理闭环放大。
+- `6:0` 没有 `4:6` 那么极端的单点尖峰，但持续 `0.2-0.4%` 量级 action drift 也足以在前面 closed-loop compiled rollout 中造成厘米级分叉。
+- 这个 replay 进一步排除了“RNG 没控住”的解释。eager 控制轨迹成功，compiled 只旁路计算，因此差异来自 compile backend 的数值路径。
+
 ## 当前判断
 
 `torch.compile(action_head.model)` 的工程价值很高，但不能直接作为透明替换：
@@ -164,8 +222,8 @@ Compiled 失败尾段：
 
 下一步不建议直接扩大到 50/100 episodes。更合理的路线：
 
-1. 固定 `4:6` 和 `6:0`，做 action-level A/B replay。
-   用相同 observation 直接比较 eager vs compiled 的 action drift，收集更多真实 rollout 中的 observation。
+1. 收缩 compile scope。
+   先不要 compile 整个 `action_head.model`，改为只 compile DiT MLP、attention 或某几个 transformer block，定位哪一段带来 drift spike。
 
 2. 尝试更保守的 backend 约束。
    例如只 compile 更小的子块，或禁用可能改变 matmul/reduction 路径的优化。
@@ -175,4 +233,3 @@ Compiled 失败尾段：
 
 4. 若必须部署 compile 路线，应按 backend 单独标定成功率。
    不能用 FP16 eager baseline 的成功率直接代表 compiled backend。
-

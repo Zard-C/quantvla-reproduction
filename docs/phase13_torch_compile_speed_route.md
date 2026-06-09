@@ -273,6 +273,39 @@ toy_quantvla/results/phase13_torch_compile_replay_obs4_task6desc_v1.json
 4. 因此当前正确结论是：
    `torch.compile(action_head.model)` 是强候选路线，但还不是透明替换。它需要用更大 matched rollout 同时看速度收益和成功率回归。
 
+## Online Drift Replay
+
+fixed-observation replay 只验证了少量静态 observation。为了观察真实成功轨迹上 drift 是否会在接触阶段冒尖，又新增了在线 replay：
+
+```text
+script: toy_quantvla/phase13_torch_compile_online_drift.py
+tag: phase13_torch_compile_online_drift_4_6_6_0_v1
+cases: 4:6,6:0
+boundary: eager controls LIBERO; compiled only computes side-by-side actions on the same live observations
+```
+
+输出：
+
+```text
+docs/phase13_torch_compile_online_drift_4_6_6_0_v1.md
+toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1.json
+toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1_trace/
+```
+
+结果：
+
+| case | eager success | steps | raw rel RMSE mean | raw rel RMSE max | raw max abs diff | LIBERO action RMSE mean |
+|---|---|---:|---:|---:|---:|---:|
+| 4:6 | success | 245 | 0.003573 | 0.045184 | 0.142975 | 0.000697 |
+| 6:0 | success | 210 | 0.003889 | 0.011721 | 0.011353 | 0.000645 |
+
+关键点：
+
+- eager 控制轨迹在两个稳定回归 case 上都成功，说明这次 replay 的 teacher trajectory 是健康的。
+- compiled action 在同一个 observation 上仍有 `0.36-0.39%` 平均 raw relative RMSE。
+- `4:6` 在 policy step 114 出现明显尖峰：raw max abs diff `0.142975`，LIBERO action RMSE `0.004808`。
+- 因此闭环失败更像是局部数值尖峰进入接触动力学后被放大，而不是整体均匀噪声或 seed 没控住。
+
 ## 下一步
 
 短期建议：
@@ -280,14 +313,14 @@ toy_quantvla/results/phase13_torch_compile_replay_obs4_task6desc_v1.json
 0. 阅读回归病例分析。
    15-case 与 flip-case 复验已经补充到 `docs/phase13_compile_regression_trace_analysis.md`。当前判断是 compile 速度收益稳定，但 `4:6` 与 `6:0` 存在稳定闭环回归。
 
-1. 跑更细的 action-level A/B replay。
-   固定 `4:6` 和 `6:0` 成功 baseline 轨迹中的 observation，对 eager 与 compiled 逐帧做 action drift 比较，定位接触前后的漂移放大点。
+1. 收缩 compile scope。
+   先不要 compile 整个 `action_head.model`，而是分别尝试 DiT MLP、attention、部分 block，定位 drift spike 的来源。
 
 2. 统一统计 rollout 级指标。
    对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
 
-3. 尝试更保守的 compile 配置。
-   对比 `mode=default`、`mode=reduce-overhead`、`dynamic=false/true`，看是否能降低行为漂移，同时保留主要速度收益。
+3. 尝试更保守的数值路径。
+   对比更小 compile scope、禁用部分 Inductor 重排、或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
 
 4. 研究 CUDA graph / tensor-only denoise loop。
    如果 compile 的行为扰动来自 Inductor 重排，可以尝试 CUDA graph 捕获 eager kernel 序列，理论上可能更接近数值等价。
