@@ -188,6 +188,57 @@ blocks 8-15 eager island 追平 FP16 baseline 的 7/15，
 - `action_head.model` 手工分段：blocks 0-7 compile，blocks 8-15 eager，out projection eager/compile 分别测；
 - CUDA graph 捕获 eager denoise loop，优先保持数值路径不变。
 
+## 30-Case Matched Set + Memory
+
+把 `action_head_model_blocks_8_15_eager` 进一步扩大到 30-case matched set：
+
+```text
+tag: phase13_block_island_30case_mem_v1
+case list: task4 init0..9, task6 init0..9, task8 init0..9
+compare: FP16 baseline vs blocks 8-15 eager island
+```
+
+详细报告：
+
+```text
+docs/phase13_block_island_30case_mem_v1.md
+```
+
+总表：
+
+| policy | success | calls | client p50 | client p90 | server p50 | server p90 | reserved memory |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| FP16 baseline | 16/30 | 20050 | 161.1 ms | 166.5 ms | 156.2 ms | 161.5 ms | 5512 MiB |
+| blocks 8-15 eager island | 13/30 | 21316 | 81.0 ms | 150.3 ms | 76.5 ms | 145.5 ms | 5538 MiB |
+
+分任务：
+
+| task | baseline | blocks 8-15 eager island |
+|---|---:|---:|
+| task4 | 6/10 | 5/10 |
+| task6 | 6/10 | 5/10 |
+| task8 | 4/10 | 3/10 |
+
+逐 case 翻转：
+
+| case | baseline | blocks 8-15 eager island |
+|---|---|---|
+| 4:9 | success | fail |
+| 6:8 | success | fail |
+| 8:4 | fail | success |
+| 8:7 | success | fail |
+| 8:8 | success | fail |
+
+这轮把结论从 15-case 的乐观状态拉回谨慎：
+
+```text
+速度收益仍然很强：server p50 约 2.04x，client p50 约 1.99x。
+steady-state 显存成本很小：reserved memory 只增加约 26 MiB。
+但行为没有追平 baseline：success 从 16/30 降到 13/30。
+```
+
+因此 blocks 8-15 eager island 是一个很好的速度候选 backend，但不能作为透明替换。它仍然会改变闭环轨迹分布：既有 `8:4` 这种失败转成功，也有 `4:9`, `6:8`, `8:7`, `8:8` 这种成功转失败。
+
 ## 本轮结论
 
 ```text
@@ -196,6 +247,7 @@ whole action_head.model compile + FFN 8-15 eager island:
 
 whole action_head.model compile + blocks 8-15 eager island:
 速度 OK，两个稳定回归 case 行为 OK，并在 15-case 上追平 FP16 baseline。
+但 30-case 扩大后 success 为 13/30，低于 FP16 baseline 16/30。
 
-下一步应该做更大 matched rollout，并同时记录成功率、server latency、显存与 compile/prewarm 成本。
+下一步应该收缩 patch scope 或改测 CUDA graph，目标是在保留大部分 p50 速度收益的同时减少闭环轨迹重分配。
 ```

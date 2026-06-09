@@ -202,6 +202,22 @@ per-init：
 4. 这条路比继续压低单个 FP4 GEMM 更值得优先推进。
    它直接作用于 DiT denoising 主体，覆盖面远大于 `up_proj` 或 `dit_mlp_only` 的单层替换。
 
+补充更新：
+
+```text
+docs/phase13_eager_island_probe.md
+docs/phase13_block_island_30case_mem_v1.md
+```
+
+后续把 compile scope 收缩到 `action_head_model_blocks_8_15_eager` 后，30-case matched rollout 显示：
+
+| policy | success | client p50 | server p50 | server p90 | reserved memory |
+|---|---:|---:|---:|---:|---:|
+| FP16 baseline | 16/30 | 161.1 ms | 156.2 ms | 161.5 ms | 5512 MiB |
+| blocks 8-15 eager island | 13/30 | 81.0 ms | 76.5 ms | 145.5 ms | 5538 MiB |
+
+这说明速度路线仍然很强，server p50 约 `2.04x`；steady-state 显存几乎不变。但它仍不是透明替换，成功率从 `16/30` 降到 `13/30`。下一步应优先做更保守的 patch scope 或 CUDA graph 捕获 eager denoising loop，而不是继续盲目扩大 rollout。
+
 ## RNG 与 Fixed-Observation Replay 复查
 
 上一节 rollout 对比还不能证明“同一策略透明加速”，因为 baseline 和 compiled 是两条独立闭环轨迹。即使每个 request 都设置了 deterministic policy seed，只要第一步动作有微小差异，下一帧 observation 就会不同，后面就不再是严格 paired comparison。
