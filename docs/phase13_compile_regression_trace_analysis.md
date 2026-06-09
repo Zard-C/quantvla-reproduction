@@ -228,6 +228,40 @@ docs/phase13_compile_scope_probe.md
 后半 DiT FFN 是 task4:init6 大尖峰的主要来源。
 ```
 
+后续尝试了 `action_head_model_ff_8_15_eager`，也就是 whole `action_head.model` compile 加 `transformer_blocks.8..15.ff` eager island：
+
+```text
+docs/phase13_eager_island_probe.md
+```
+
+结果显示：
+
+- server p50 仍能保持在 `70.4 ms`，速度收益保住；
+- 但 `4:6` online raw max abs diff 仍有 `0.129303`；
+- closed-loop `4:6` 仍失败，`6:0` 成功，总体 `1/2`。
+
+所以单纯保护 FFN forward 不够，风险更可能位于后半 block 的 residual/norm/add/FFN 整段数据路径。
+
+继续尝试 `action_head_model_blocks_8_15_eager`，即保护 `transformer_blocks.8..15` 整个 block：
+
+| target | closed-loop | server p50 |
+|---|---:|---:|
+| action_head + FFN 8-15 eager island | 1/2 | 70.4 ms |
+| action_head + blocks 8-15 eager island | 2/2 | 72.6 ms |
+
+逐 case：
+
+| case | blocks 8-15 eager island |
+|---|---|
+| 4:6 | success, 241 calls |
+| 6:0 | success, 206 calls |
+
+所以当前最有希望的工程折中点是：
+
+```text
+whole action_head.model compile + transformer_blocks.8..15 eager island
+```
+
 ## 当前判断
 
 `torch.compile(action_head.model)` 的工程价值很高，但不能直接作为透明替换：
@@ -242,8 +276,8 @@ docs/phase13_compile_scope_probe.md
 
 下一步不建议直接扩大到 50/100 episodes。更合理的路线：
 
-1. 收缩 compile scope。
-   先不要 compile 整个 `action_head.model`，改为只 compile DiT MLP、attention 或某几个 transformer block，定位哪一段带来 drift spike。
+1. 扩大 blocks 8-15 eager island 到 15-case matched set。
+   `action_head_model_blocks_8_15_eager` 已经救回 `4:6` 和 `6:0`，下一步需要看它在 15-case 上是否保持成功率和 p50 收益。
 
 2. 尝试更保守的 backend 约束。
    例如只 compile 更小的子块，或禁用可能改变 matmul/reduction 路径的优化。

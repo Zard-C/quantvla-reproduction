@@ -145,6 +145,40 @@ but keep transformer_blocks.8..15.ff on eager path
 - 或把 DiT forward 手工拆成两段：大段 compile，后半 FFN eager；
 - 或退一步做 CUDA graph 捕获 eager kernel 序列，优先追求数值路径不变。
 
+## Eager Island 复验
+
+上述 “whole compile + 后半 FFN eager island” 已复验，报告见：
+
+```text
+docs/phase13_eager_island_probe.md
+```
+
+结果：
+
+| target | case | online raw max abs diff | closed-loop |
+|---|---|---:|---|
+| whole action_head.model | 4:6 | 0.142975 | fail |
+| action_head + FFN 8-15 eager island | 4:6 | 0.129303 | fail |
+| action_head + FFN 8-15 eager island | 6:0 | 0.005493 | success |
+| action_head + blocks 8-15 eager island | 4:6 | 0.134369 | success |
+| action_head + blocks 8-15 eager island | 6:0 | not run online | success |
+
+速度：
+
+| target | server p50 | server p90 |
+|---|---:|---:|
+| action_head + FFN 8-15 eager island | 70.4 ms | 141.7 ms |
+| action_head + blocks 8-15 eager island | 72.6 ms | 143.2 ms |
+
+结论：
+
+```text
+FFN eager island 保住了速度，但没有压掉 task4:init6 的回归。
+Blocks 8-15 eager island 保住了速度，并在 2-case 复验中救回 task4:init6 和 task6:init0。
+```
+
+这说明风险不只是后半 FFN forward 内部，而是后半 transformer block 的完整 residual/norm/add/attention/FFN 数据路径。下一步应该把 `action_head_model_blocks_8_15_eager` 扩大到 15-case matched set。
+
 ## 本轮结论
 
 这轮 scope probe 的收益很明确：
@@ -153,5 +187,7 @@ but keep transformer_blocks.8..15.ff on eager path
 整块 DiT compile 给速度。
 后半 FFN compile 给尖峰风险。
 attention-only 没有足够速度收益。
-下一步应尝试 whole-model compile with risky-FFN eager island。
+FFN 8-15 eager island 保速度但未解决 task4:init6 回归。
+Blocks 8-15 eager island 是当前最有希望的折中点：server p50 约 72.6 ms，2/2 稳定回归样本成功。
+下一步应扩大到 15-case matched set。
 ```

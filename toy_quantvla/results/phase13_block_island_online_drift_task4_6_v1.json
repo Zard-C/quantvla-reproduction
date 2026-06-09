@@ -1,0 +1,547 @@
+{
+  "boundary": "online eager-controlled torch.compile drift diagnostic, not compiled closed-loop benchmark",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "task_suite_name": "libero_10",
+  "case_list": "4:6",
+  "denoising_steps": 8,
+  "num_steps_wait": 10,
+  "max_policy_steps": 0,
+  "base_seed": 20260613,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "device": "cuda",
+  "model_load_seconds": 20.147316828370094,
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model_blocks_8_15_eager",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "compiled_modules": [
+      "policy.model.action_head.model"
+    ],
+    "eager_island_modules": [
+      "policy.model.action_head.model.transformer_blocks.8",
+      "policy.model.action_head.model.transformer_blocks.9",
+      "policy.model.action_head.model.transformer_blocks.10",
+      "policy.model.action_head.model.transformer_blocks.11",
+      "policy.model.action_head.model.transformer_blocks.12",
+      "policy.model.action_head.model.transformer_blocks.13",
+      "policy.model.action_head.model.transformer_blocks.14",
+      "policy.model.action_head.model.transformer_blocks.15"
+    ],
+    "wrap_seconds": 1.5605803914368153
+  },
+  "episode_summaries": [
+    {
+      "task_suite_name": "libero_10",
+      "task_id": 4,
+      "task_description": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "init_index": 6,
+      "success": true,
+      "exception": null,
+      "num_steps": 245,
+      "elapsed_seconds": 62.916019044816494,
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_8_15_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.8",
+          "policy.model.action_head.model.transformer_blocks.9",
+          "policy.model.action_head.model.transformer_blocks.10",
+          "policy.model.action_head.model.transformer_blocks.11",
+          "policy.model.action_head.model.transformer_blocks.12",
+          "policy.model.action_head.model.transformer_blocks.13",
+          "policy.model.action_head.model.transformer_blocks.14",
+          "policy.model.action_head.model.transformer_blocks.15"
+        ],
+        "wrap_seconds": 1.5605803914368153
+      },
+      "drift_summary": {
+        "policy_steps": 245,
+        "raw_relative_rmse": {
+          "mean": 0.0031851033228874376,
+          "max": 0.04176050765508325,
+          "min": 0.0013374246332082096
+        },
+        "raw_cosine": {
+          "mean": 0.9999913880513831,
+          "max": 0.9999991055095366,
+          "min": 0.9992174505669187
+        },
+        "raw_max_abs_diff": {
+          "mean": 0.0038537199399909195,
+          "max": 0.134368896484375,
+          "min": 0.0016021728515625
+        },
+        "libero_action_rmse": {
+          "mean": 0.0005931781764416582,
+          "max": 0.004072626310883075,
+          "min": 7.418672492122145e-05
+        },
+        "libero_action_max_abs_diff": {
+          "mean": 0.001279103391024531,
+          "max": 0.007781982421875,
+          "min": 0.0001462101936340332
+        },
+        "eager_get_action_seconds": {
+          "mean": 0.12200816390769822,
+          "max": 0.7403709962964058,
+          "min": 0.08977831527590752
+        },
+        "compiled_get_action_seconds": {
+          "mean": 0.11936034496341433,
+          "max": 3.8527947142720222,
+          "min": 0.07208776101469994
+        },
+        "compiled_over_eager_time": {
+          "mean": 0.9379787295563696,
+          "max": 5.20387040219707,
+          "min": 0.40649893426839057
+        }
+      },
+      "window_summaries": [
+        {
+          "first_steps": 1,
+          "actual_steps": 1,
+          "metrics": {
+            "policy_steps": 1,
+            "raw_relative_rmse": {
+              "mean": 0.0019998163552598495,
+              "max": 0.0019998163552598495,
+              "min": 0.0019998163552598495
+            },
+            "raw_cosine": {
+              "mean": 0.9999980752387351,
+              "max": 0.9999980752387351,
+              "min": 0.9999980752387351
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.003662109375,
+              "max": 0.003662109375,
+              "min": 0.003662109375
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005524062752967871,
+              "max": 0.0005524062752967871,
+              "min": 0.0005524062752967871
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.001373291015625,
+              "max": 0.001373291015625,
+              "min": 0.001373291015625
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.7403709962964058,
+              "max": 0.7403709962964058,
+              "min": 0.7403709962964058
+            },
+            "compiled_get_action_seconds": {
+              "mean": 3.8527947142720222,
+              "max": 3.8527947142720222,
+              "min": 3.8527947142720222
+            },
+            "compiled_over_eager_time": {
+              "mean": 5.20387040219707,
+              "max": 5.20387040219707,
+              "min": 5.20387040219707
+            }
+          }
+        },
+        {
+          "first_steps": 5,
+          "actual_steps": 5,
+          "metrics": {
+            "policy_steps": 5,
+            "raw_relative_rmse": {
+              "mean": 0.0022338580292398215,
+              "max": 0.002690063647783329,
+              "min": 0.0018644953270166766
+            },
+            "raw_cosine": {
+              "mean": 0.9999975231636513,
+              "max": 0.9999982697939342,
+              "min": 0.9999964172481928
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.00368499755859375,
+              "max": 0.00492095947265625,
+              "min": 0.00274658203125
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005382231295762506,
+              "max": 0.0008591807204326985,
+              "min": 0.00038513025811052354
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.00121307373046875,
+              "max": 0.0020599365234375,
+              "min": 0.00080108642578125
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.25448871925473215,
+              "max": 0.7403709962964058,
+              "min": 0.10173234716057777
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.8411378465592861,
+              "max": 3.8527947142720222,
+              "min": 0.08250236883759499
+            },
+            "compiled_over_eager_time": {
+              "mean": 1.5994366617173346,
+              "max": 5.20387040219707,
+              "min": 0.4943954962033757
+            }
+          }
+        },
+        {
+          "first_steps": 10,
+          "actual_steps": 10,
+          "metrics": {
+            "policy_steps": 10,
+            "raw_relative_rmse": {
+              "mean": 0.0021780112076858035,
+              "max": 0.002690063647783329,
+              "min": 0.0018644953270166766
+            },
+            "raw_cosine": {
+              "mean": 0.9999976595894797,
+              "max": 0.9999982873459665,
+              "min": 0.9999964172481928
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.003582000732421875,
+              "max": 0.00492095947265625,
+              "min": 0.00274658203125
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005813936999727846,
+              "max": 0.0011815372183568314,
+              "min": 0.00035275339017097526
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.001272439956665039,
+              "max": 0.0025177001953125,
+              "min": 0.0006866455078125
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.20320231691002846,
+              "max": 0.7403709962964058,
+              "min": 0.09999025613069534
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.4672171756625175,
+              "max": 3.8527947142720222,
+              "min": 0.08250236883759499
+            },
+            "compiled_over_eager_time": {
+              "mean": 1.1348332932792493,
+              "max": 5.20387040219707,
+              "min": 0.4699547100523031
+            }
+          }
+        },
+        {
+          "first_steps": 20,
+          "actual_steps": 20,
+          "metrics": {
+            "policy_steps": 20,
+            "raw_relative_rmse": {
+              "mean": 0.0020665201321114364,
+              "max": 0.002690063647783329,
+              "min": 0.0014614766318262248
+            },
+            "raw_cosine": {
+              "mean": 0.9999978941286749,
+              "max": 0.9999989460133551,
+              "min": 0.9999964172481928
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.003372874855995178,
+              "max": 0.00492095947265625,
+              "min": 0.002288818359375
+            },
+            "libero_action_rmse": {
+              "mean": 0.000650137704615171,
+              "max": 0.0013389255044201833,
+              "min": 8.650920250150159e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.0014010965824127197,
+              "max": 0.0027751922607421875,
+              "min": 0.0002288818359375
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.1632257079705596,
+              "max": 0.7403709962964058,
+              "min": 0.09094784408807755
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.2848094115033746,
+              "max": 3.8527947142720222,
+              "min": 0.08197493106126785
+            },
+            "compiled_over_eager_time": {
+              "mean": 1.0192684216156027,
+              "max": 5.20387040219707,
+              "min": 0.4130471414117534
+            }
+          }
+        },
+        {
+          "first_steps": 50,
+          "actual_steps": 50,
+          "metrics": {
+            "policy_steps": 50,
+            "raw_relative_rmse": {
+              "mean": 0.0029314516519780816,
+              "max": 0.00901592071745052,
+              "min": 0.0014614766318262248
+            },
+            "raw_cosine": {
+              "mean": 0.9999943788695482,
+              "max": 0.9999989460133551,
+              "min": 0.9999593593713747
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.0030234968662261963,
+              "max": 0.00492095947265625,
+              "min": 0.001953125
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005739868696539215,
+              "max": 0.001400617426683208,
+              "min": 8.650920250150159e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.0011850056052207947,
+              "max": 0.0027751922607421875,
+              "min": 0.0002288818359375
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.14415890596807002,
+              "max": 0.7403709962964058,
+              "min": 0.09094784408807755
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.17230742610991,
+              "max": 3.8527947142720222,
+              "min": 0.07208776101469994
+            },
+            "compiled_over_eager_time": {
+              "mean": 0.8910964511506226,
+              "max": 5.20387040219707,
+              "min": 0.4130471414117534
+            }
+          }
+        },
+        {
+          "first_steps": 100,
+          "actual_steps": 100,
+          "metrics": {
+            "policy_steps": 100,
+            "raw_relative_rmse": {
+              "mean": 0.0034991426405939826,
+              "max": 0.00901592071745052,
+              "min": 0.0014614766318262248
+            },
+            "raw_cosine": {
+              "mean": 0.9999929030903499,
+              "max": 0.9999989460133551,
+              "min": 0.9999593593713747
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.0032650750875473024,
+              "max": 0.0054931640625,
+              "min": 0.0018310546875
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005607282491228548,
+              "max": 0.001400617426683208,
+              "min": 8.650920250150159e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.001180656850337982,
+              "max": 0.0027751922607421875,
+              "min": 0.0002288818359375
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.12981254823505878,
+              "max": 0.7403709962964058,
+              "min": 0.09094784408807755
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.14198941309005023,
+              "max": 3.8527947142720222,
+              "min": 0.07208776101469994
+            },
+            "compiled_over_eager_time": {
+              "mean": 0.9456921639636465,
+              "max": 5.20387040219707,
+              "min": 0.40649893426839057
+            }
+          }
+        },
+        {
+          "first_steps": 150,
+          "actual_steps": 150,
+          "metrics": {
+            "policy_steps": 150,
+            "raw_relative_rmse": {
+              "mean": 0.003416613429965194,
+              "max": 0.04176050765508325,
+              "min": 0.0014614766318262248
+            },
+            "raw_cosine": {
+              "mean": 0.9999886576938043,
+              "max": 0.9999990751289113,
+              "min": 0.9992174505669187
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.004153218269348145,
+              "max": 0.134368896484375,
+              "min": 0.0018310546875
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005819556427517371,
+              "max": 0.004072626310883075,
+              "min": 8.650920250150159e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.0012355711062749227,
+              "max": 0.007781982421875,
+              "min": 0.0002288818359375
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.12453458711504936,
+              "max": 0.7403709962964058,
+              "min": 0.09094784408807755
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.12831111885607244,
+              "max": 3.8527947142720222,
+              "min": 0.07208776101469994
+            },
+            "compiled_over_eager_time": {
+              "mean": 0.9375944880320534,
+              "max": 5.20387040219707,
+              "min": 0.40649893426839057
+            }
+          }
+        },
+        {
+          "first_steps": 200,
+          "actual_steps": 200,
+          "metrics": {
+            "policy_steps": 200,
+            "raw_relative_rmse": {
+              "mean": 0.0031805354266244232,
+              "max": 0.04176050765508325,
+              "min": 0.0013374246332082096
+            },
+            "raw_cosine": {
+              "mean": 0.9999905996545325,
+              "max": 0.9999991055095366,
+              "min": 0.9992174505669187
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.003984618186950684,
+              "max": 0.134368896484375,
+              "min": 0.0018310546875
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005985185897088932,
+              "max": 0.004072626310883075,
+              "min": 8.650920250150159e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.0012822811305522918,
+              "max": 0.007781982421875,
+              "min": 0.0002288818359375
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.12242071958258748,
+              "max": 0.7403709962964058,
+              "min": 0.08977831527590752
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.12306641276925802,
+              "max": 3.8527947142720222,
+              "min": 0.07208776101469994
+            },
+            "compiled_over_eager_time": {
+              "mean": 0.945349893596921,
+              "max": 5.20387040219707,
+              "min": 0.40649893426839057
+            }
+          }
+        },
+        {
+          "first_steps": 250,
+          "actual_steps": 245,
+          "metrics": {
+            "policy_steps": 245,
+            "raw_relative_rmse": {
+              "mean": 0.0031851033228874376,
+              "max": 0.04176050765508325,
+              "min": 0.0013374246332082096
+            },
+            "raw_cosine": {
+              "mean": 0.9999913880513831,
+              "max": 0.9999991055095366,
+              "min": 0.9992174505669187
+            },
+            "raw_max_abs_diff": {
+              "mean": 0.0038537199399909195,
+              "max": 0.134368896484375,
+              "min": 0.0016021728515625
+            },
+            "libero_action_rmse": {
+              "mean": 0.0005931781764416582,
+              "max": 0.004072626310883075,
+              "min": 7.418672492122145e-05
+            },
+            "libero_action_max_abs_diff": {
+              "mean": 0.001279103391024531,
+              "max": 0.007781982421875,
+              "min": 0.0001462101936340332
+            },
+            "eager_get_action_seconds": {
+              "mean": 0.12200816390769822,
+              "max": 0.7403709962964058,
+              "min": 0.08977831527590752
+            },
+            "compiled_get_action_seconds": {
+              "mean": 0.11936034496341433,
+              "max": 3.8527947142720222,
+              "min": 0.07208776101469994
+            },
+            "compiled_over_eager_time": {
+              "mean": 0.9379787295563696,
+              "max": 5.20387040219707,
+              "min": 0.40649893426839057
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "episode_trace_files": [
+    "/tmp/phase13_block_island_online_drift_task4_6_v1_trace/task=04--init=06--success=True--task=put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_righ.json"
+  ],
+  "episodes": 1,
+  "eager_successes": 1
+}

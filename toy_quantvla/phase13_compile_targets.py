@@ -14,6 +14,8 @@ TORCH_COMPILE_TARGETS = (
     "none",
     "backbone",
     "action_head_model",
+    "action_head_model_ff_8_15_eager",
+    "action_head_model_blocks_8_15_eager",
     "backbone_action_head_model",
     "action_head_dit_blocks_all",
     "action_head_dit_blocks_0_7",
@@ -50,6 +52,10 @@ def compile_module_paths_for_target(target: str) -> list[str]:
         return ["backbone"]
     if target == "action_head_model":
         return ["action_head.model"]
+    if target == "action_head_model_ff_8_15_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_8_15_eager":
+        return ["action_head.model"]
     if target == "backbone_action_head_model":
         return ["backbone", "action_head.model"]
     if target == "action_head_dit_blocks_all":
@@ -73,6 +79,16 @@ def compile_module_paths_for_target(target: str) -> list[str]:
     raise ValueError(f"Unknown torch compile target: {target!r}")
 
 
+def eager_island_paths_for_target(target: str) -> list[str]:
+    """Return policy.model-relative paths that should stay outside Dynamo graphs."""
+
+    if target == "action_head_model_ff_8_15_eager":
+        return _dit_paths("ff", _block_indices(8, 15))
+    if target == "action_head_model_blocks_8_15_eager":
+        return _dit_paths("block", _block_indices(8, 15))
+    return []
+
+
 def compile_kwargs_from_args(args: Any) -> dict[str, Any]:
     compile_kwargs: dict[str, Any] = {
         "backend": args.torch_compile_backend,
@@ -89,11 +105,13 @@ def compile_policy_targets(policy: Any, args: Any, torch_module: Any) -> dict[st
 
     target = str(args.torch_compile_target)
     paths = compile_module_paths_for_target(target)
+    eager_island_paths = eager_island_paths_for_target(target)
     if not paths:
         return {"enabled": False, "target": target, "compiled_modules": []}
 
     compile_kwargs = compile_kwargs_from_args(args)
     compiled_modules: list[str] = []
+    eager_island_modules = install_eager_islands(policy, eager_island_paths, torch_module)
     started = time.perf_counter()
     for path in paths:
         module = get_submodule(policy.model, path)
@@ -108,8 +126,24 @@ def compile_policy_targets(policy: Any, args: Any, torch_module: Any) -> dict[st
         "fullgraph": bool(args.torch_compile_fullgraph),
         "dynamic": args.torch_compile_dynamic,
         "compiled_modules": compiled_modules,
+        "eager_island_modules": eager_island_modules,
         "wrap_seconds": time.perf_counter() - started,
     }
+
+
+def install_eager_islands(policy: Any, paths: list[str], torch_module: Any) -> list[str]:
+    """Mark selected module forwards as torch._dynamo.disable eager islands."""
+
+    installed: list[str] = []
+    for path in paths:
+        module = get_submodule(policy.model, path)
+        if getattr(module, "_phase13_eager_island", False):
+            installed.append(f"policy.model.{path}")
+            continue
+        module.forward = torch_module._dynamo.disable(module.forward)
+        module._phase13_eager_island = True
+        installed.append(f"policy.model.{path}")
+    return installed
 
 
 class CompileTargetSwitcher:
@@ -119,7 +153,13 @@ class CompileTargetSwitcher:
         self.policy = policy
         self.target = str(args.torch_compile_target)
         self.paths = compile_module_paths_for_target(self.target)
+        self.eager_island_paths = eager_island_paths_for_target(self.target)
         self.compile_kwargs = compile_kwargs_from_args(args)
+        self.eager_island_modules = install_eager_islands(
+            policy,
+            self.eager_island_paths,
+            torch_module,
+        )
         self.eager_modules = {path: get_submodule(policy.model, path) for path in self.paths}
         self.compiled_modules = {
             path: torch_module.compile(module, **self.compile_kwargs)
@@ -145,4 +185,5 @@ class CompileTargetSwitcher:
             "fullgraph": bool(args.torch_compile_fullgraph),
             "dynamic": args.torch_compile_dynamic,
             "compiled_modules": [f"policy.model.{path}" for path in self.paths],
+            "eager_island_modules": self.eager_island_modules,
         }

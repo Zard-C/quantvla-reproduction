@@ -329,6 +329,32 @@ toy_quantvla/phase13_compile_targets.py
 下一步应尝试 whole action_head.model compile + transformer_blocks.8..15.ff eager island。
 ```
 
+### Eager Island 复验
+
+已尝试：
+
+```text
+target: action_head_model_ff_8_15_eager
+compile: whole action_head.model
+eager island: transformer_blocks.8..15.ff
+report: docs/phase13_eager_island_probe.md
+```
+
+结果：
+
+| target | online `4:6` raw max | closed-loop success | server p50 |
+|---|---:|---:|---:|
+| whole action_head.model | 0.142975 | 5/15 或 flip-case 0/4 | 70.1 ms |
+| action_head + FFN 8-15 eager island | 0.129303 | 1/2 | 70.4 ms |
+| action_head + blocks 8-15 eager island | 0.134369 | 2/2 | 72.6 ms |
+
+结论：
+
+- 速度保住了，说明 graph break/eager island 没有破坏大图 compile 的主要 p50 收益。
+- FFN-only eager island 行为没有救回来，`4:6` 仍然失败，且同观测大尖峰仍接近 whole compile。
+- Blocks 8-15 eager island 救回了 `4:6` 和 `6:0` 两个稳定回归 case，且 p50 仍在 `72.6 ms`。
+- 风险不只是 FFN forward 内部，更可能包含后半 block 的 residual/norm/add/attention/FFN 整段数据路径。
+
 ## 下一步
 
 短期建议：
@@ -336,14 +362,14 @@ toy_quantvla/phase13_compile_targets.py
 0. 阅读回归病例分析。
    15-case 与 flip-case 复验已经补充到 `docs/phase13_compile_regression_trace_analysis.md`。当前判断是 compile 速度收益稳定，但 `4:6` 与 `6:0` 存在稳定闭环回归。
 
-1. 尝试整块 compile 加局部保护。
-   保留 `action_head.model` 的大图速度收益，同时让 `transformer_blocks.8..15.ff` 走 eager path，观察能否压低 spike。
+1. 扩大 blocks 8-15 eager island 到 15-case matched set。
+   当前 `action_head_model_blocks_8_15_eager` 在两个稳定回归 case 上 `2/2`，下一步需要和 baseline、whole compile 在同一 15-case 上对齐比较。
 
 2. 统一统计 rollout 级指标。
    对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
 
-3. 尝试更保守的数值路径。
-   对后半 FFN 使用 `torch._dynamo.disable`、手工 graph break，或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
+3. 若 15-case 仍有明显回归，再尝试更保守的数值路径。
+   手工拆 DiT forward、扩大 eager block 范围，或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
 
 4. 研究 CUDA graph / tensor-only denoise loop。
    如果 compile 的行为扰动来自 Inductor 重排，可以尝试 CUDA graph 捕获 eager kernel 序列，理论上可能更接近数值等价。
