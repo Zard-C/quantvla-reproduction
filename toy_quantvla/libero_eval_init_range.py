@@ -22,7 +22,7 @@ import numpy as np
 import torch
 import tqdm
 from libero.libero import benchmark
-from timing_utils import summarize_breakdowns, summarize_float
+from timing_utils import REQUEST_SEED_KEY, summarize_breakdowns, summarize_float
 
 
 def insert_paths(isaac_root: Path) -> None:
@@ -79,9 +79,9 @@ class GR00TPolicy:
         action_array, _trace, _timing = self.get_action_with_trace(observation_dict, lang)
         return action_array
 
-    def get_action_with_trace(self, observation_dict, lang: str):
+    def get_action_with_trace(self, observation_dict, lang: str, request_seed: int | None = None):
         started = time.perf_counter()
-        obs_dict = self._process_observation(observation_dict, lang)
+        obs_dict = self._process_observation(observation_dict, lang, request_seed=request_seed)
         preprocess_seconds = time.perf_counter() - started
         remote_started = time.perf_counter()
         action_chunk = self.policy.get_action(obs_dict)
@@ -98,7 +98,7 @@ class GR00TPolicy:
         }
         return action_array, action_trace, timing
 
-    def _process_observation(self, obs, lang: str):
+    def _process_observation(self, obs, lang: str, request_seed: int | None = None):
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
 
         xyz = obs["robot0_eef_pos"]
@@ -117,6 +117,8 @@ class GR00TPolicy:
             "state.gripper": np.expand_dims(gripper, axis=0),
             "annotation.human.action.task_description": [lang],
         }
+        if request_seed is not None:
+            new_obs[REQUEST_SEED_KEY] = int(request_seed)
         if not self.headless:
             show_obs_images_cv2(new_obs)
         return new_obs
@@ -170,6 +172,10 @@ def parse_case_list(case_list: str | None) -> list[tuple[int, int]] | None:
 
 def as_float_list(value) -> list[float]:
     return np.asarray(value, dtype=np.float64).reshape(-1).tolist()
+
+
+def deterministic_policy_seed(base_seed: int, task_id: int, init_index: int, policy_step: int) -> int:
+    return int(base_seed) + int(task_id) * 100_000 + int(init_index) * 1_000 + int(policy_step)
 
 
 def write_episode_trace(
@@ -237,6 +243,13 @@ def eval_libero(args: argparse.Namespace) -> None:
         log_file.write(f"Init indices: {init_indices}\n")
         if requested_cases is not None:
             log_file.write(f"Case list: {requested_cases}\n")
+        if args.deterministic_policy_seeds:
+            seed_line = (
+                f"Deterministic policy seeds: base={args.policy_seed_base}, "
+                "formula=base+task_id*100000+init_index*1000+policy_step"
+            )
+            print(seed_line)
+            log_file.write(seed_line + "\n")
 
         total_episodes, total_successes = 0, 0
         all_policy_latencies: list[float] = []
@@ -295,7 +308,22 @@ def eval_libero(args: argparse.Namespace) -> None:
                         pre_eef_pos = as_float_list(obs.get("robot0_eef_pos", []))
                         pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
                         pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
-                        action, raw_action_trace, policy_timing = gr00t_policy.get_action_with_trace(obs, task.language)
+                        policy_step = int(t - args.num_steps_wait)
+                        request_seed = (
+                            deterministic_policy_seed(
+                                args.policy_seed_base,
+                                task_id,
+                                init_index,
+                                policy_step,
+                            )
+                            if args.deterministic_policy_seeds
+                            else None
+                        )
+                        action, raw_action_trace, policy_timing = gr00t_policy.get_action_with_trace(
+                            obs,
+                            task.language,
+                            request_seed=request_seed,
+                        )
                         policy_latency_seconds = float(policy_timing["policy_total_seconds"])
                         episode_policy_latencies.append(policy_latency_seconds)
                         all_policy_latencies.append(policy_latency_seconds)
@@ -305,7 +333,8 @@ def eval_libero(args: argparse.Namespace) -> None:
                         trace_steps.append(
                             {
                                 "step": int(t),
-                                "policy_step": int(t - args.num_steps_wait),
+                                "policy_step": policy_step,
+                                "request_seed": request_seed,
                                 "pre_robot0_eef_pos": pre_eef_pos,
                                 "pre_robot0_eef_quat": pre_eef_quat,
                                 "pre_robot0_gripper_qpos": pre_gripper_qpos,
@@ -341,6 +370,8 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "task_id": int(task_id),
                         "init_index": int(init_index),
                         "success": bool(done),
+                        "deterministic_policy_seeds": bool(args.deterministic_policy_seeds),
+                        "policy_seed_base": int(args.policy_seed_base),
                         "policy_latency_seconds": episode_latency_summary,
                         "policy_breakdown_seconds": episode_breakdown_summary,
                     }
@@ -411,6 +442,8 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "total_episodes": int(total_episodes),
                         "total_successes": int(total_successes),
                         "success_rate": float(total_successes / total_episodes) if total_episodes else 0.0,
+                        "deterministic_policy_seeds": bool(args.deterministic_policy_seeds),
+                        "policy_seed_base": int(args.policy_seed_base),
                         "policy_latency_seconds": final_latency_summary,
                         "policy_breakdown_seconds": final_breakdown_summary,
                         "episodes": episode_latency_rows,
@@ -441,6 +474,8 @@ def main() -> None:
         default=Path("/tmp/logs/libero_eval_libero_10_init5_14.log"),
     )
     parser.add_argument("--latency-json", type=Path, help="Optional JSON output for policy request latency statistics.")
+    parser.add_argument("--deterministic-policy-seeds", action="store_true")
+    parser.add_argument("--policy-seed-base", type=int, default=20260609)
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")

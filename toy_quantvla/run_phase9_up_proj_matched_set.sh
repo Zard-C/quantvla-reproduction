@@ -14,10 +14,17 @@ RUN_FP4="${RUN_FP4:-1}"
 FP16_PORT="${FP16_PORT:-5580}"
 FP4_PORT="${FP4_PORT:-5581}"
 TAG="${TAG:-phase9_up_proj_matched_t4_6_8_15}"
+DETERMINISTIC_POLICY_SEEDS="${DETERMINISTIC_POLICY_SEEDS:-0}"
+POLICY_SEED_BASE="${POLICY_SEED_BASE:-20260609}"
 
 TASK4_DESC="put the white mug on the left plate and put the yellow and white mug on the right plate"
 TASK6_DESC="put the white mug on the plate and put the chocolate pudding to the right of the plate"
 TASK8_DESC="put both moka pots on the stove"
+
+SEED_ARGS=()
+if [ "${DETERMINISTIC_POLICY_SEEDS}" = "1" ]; then
+  SEED_ARGS=(--deterministic-policy-seeds --policy-seed-base "${POLICY_SEED_BASE}")
+fi
 
 kill_if_running() {
   local pid_file="$1"
@@ -94,6 +101,7 @@ run_fp16() {
       --trace-dir "/tmp/${TAG}_fp16_trace" \
       --log-file "toy_quantvla/results/${TAG}_fp16_client.log" \
       --latency-json "toy_quantvla/results/${TAG}_fp16_client_latency.json" \
+      "${SEED_ARGS[@]}" \
     > "${eval_log}" 2>&1 &
   echo $! > "${eval_pid_file}"
   echo "FP16_EVAL_PID=$(cat "${eval_pid_file}")"
@@ -162,6 +170,7 @@ run_fp4() {
       --trace-dir "/tmp/${TAG}_fp4_up_proj_warmdesc_trace" \
       --log-file "toy_quantvla/results/${TAG}_fp4_up_proj_warmdesc_client.log" \
       --latency-json "toy_quantvla/results/${TAG}_fp4_up_proj_warmdesc_client_latency.json" \
+      "${SEED_ARGS[@]}" \
     > "${eval_log}" 2>&1 &
   echo $! > "${eval_pid_file}"
   echo "FP4_EVAL_PID=$(cat "${eval_pid_file}")"
@@ -178,6 +187,8 @@ echo "TAG=${TAG}"
 echo "CASE_LIST=${CASE_LIST}"
 echo "RUN_FP16=${RUN_FP16}"
 echo "RUN_FP4=${RUN_FP4}"
+echo "DETERMINISTIC_POLICY_SEEDS=${DETERMINISTIC_POLICY_SEEDS}"
+echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
 
 if [ "${RUN_FP16}" = "1" ]; then
   run_fp16

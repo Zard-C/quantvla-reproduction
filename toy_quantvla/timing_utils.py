@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import atexit
 import json
+import random
 import signal
 import time
 from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
+
+REQUEST_SEED_KEY = "quantvla.request_seed"
 
 
 def summarize_float(values: list[float]) -> dict[str, float | int]:
@@ -30,6 +33,36 @@ def summarize_float(values: list[float]) -> dict[str, float | int]:
 def summarize_breakdowns(rows: list[dict[str, float]]) -> dict[str, dict[str, float | int]]:
     keys = sorted({key for row in rows for key in row})
     return {key: summarize_float([float(row.get(key, 0.0)) for row in rows]) for key in keys}
+
+
+def _coerce_seed(value: Any) -> int:
+    if isinstance(value, np.ndarray):
+        value = value.reshape(-1)[0]
+    elif isinstance(value, (list, tuple)):
+        value = value[0]
+    return int(value)
+
+
+def _seed_everything(seed: int) -> None:
+    seed = int(seed)
+    random.seed(seed)
+    np.random.seed(seed % (2**32 - 1))
+    try:
+        import torch
+
+        torch.manual_seed(seed % (2**63 - 1))
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed % (2**63 - 1))
+    except Exception:
+        return
+
+
+def _strip_private_request_fields(observation: dict[str, Any]) -> tuple[dict[str, Any], int | None]:
+    if REQUEST_SEED_KEY not in observation:
+        return observation, None
+    policy_observation = dict(observation)
+    request_seed = _coerce_seed(policy_observation.pop(REQUEST_SEED_KEY))
+    return policy_observation, request_seed
 
 
 class TimedPolicyWrapper:
@@ -80,8 +113,11 @@ class TimedPolicyWrapper:
     def get_action(self, observation: dict[str, Any]) -> dict[str, Any]:
         request_index = len(self._latencies) + 1
         wall_started = time.time()
+        policy_observation, request_seed = _strip_private_request_fields(observation)
+        if request_seed is not None:
+            _seed_everything(request_seed)
         started = time.perf_counter()
-        out = self._policy.get_action(observation)
+        out = self._policy.get_action(policy_observation)
         sync_seconds = None
         if self._cuda_sync_device is not None:
             import torch
@@ -96,6 +132,7 @@ class TimedPolicyWrapper:
             wall_started=wall_started,
             seconds=float(seconds),
             sync_seconds=None if sync_seconds is None else float(sync_seconds),
+            request_seed=request_seed,
         )
         if self._flush_every > 0 and len(self._latencies) % self._flush_every == 0:
             self.write_summary()
@@ -108,6 +145,7 @@ class TimedPolicyWrapper:
         wall_started: float,
         seconds: float,
         sync_seconds: float | None,
+        request_seed: int | None,
     ) -> None:
         if self._trace_file is None:
             return
@@ -122,6 +160,8 @@ class TimedPolicyWrapper:
         }
         if sync_seconds is not None:
             row["cuda_sync_seconds_after_get_action"] = float(sync_seconds)
+        if request_seed is not None:
+            row["request_seed"] = int(request_seed)
         if self._request_extra is not None:
             row["extra"] = self._request_extra(int(request_index), float(seconds))
         self._trace_file.write(json.dumps(row, sort_keys=True) + "\n")
