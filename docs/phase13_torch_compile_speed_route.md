@@ -202,15 +202,86 @@ per-init：
 4. 这条路比继续压低单个 FP4 GEMM 更值得优先推进。
    它直接作用于 DiT denoising 主体，覆盖面远大于 `up_proj` 或 `dit_mlp_only` 的单层替换。
 
+## RNG 与 Fixed-Observation Replay 复查
+
+上一节 rollout 对比还不能证明“同一策略透明加速”，因为 baseline 和 compiled 是两条独立闭环轨迹。即使每个 request 都设置了 deterministic policy seed，只要第一步动作有微小差异，下一帧 observation 就会不同，后面就不再是严格 paired comparison。
+
+为此新增固定 observation replay：
+
+```text
+toy_quantvla/phase13_torch_compile_replay.py
+```
+
+它做两件事：
+
+1. eager/eager A/A：同一个 observation、同一个 seed 连跑两次 eager。
+2. eager/compiled A/B：先记录 eager action，再 compile `action_head.model`，用同一个 observation 和 seed 跑 compiled。
+
+### Replay 结果：原始数据集 task description
+
+输出：
+
+```text
+docs/phase13_torch_compile_replay_obs4_v1.md
+toy_quantvla/results/phase13_torch_compile_replay_obs4_v1.json
+```
+
+| comparison | rel RMSE mean | rel RMSE max | cosine mean | max abs diff |
+|---|---:|---:|---:|---:|
+| eager/eager A/A | 0 | 0 | 0.999999999 | 0 |
+| eager/compiled | 0.002649 | 0.003966 | 0.999996402 | 0.005493 |
+
+同步离线 latency：
+
+| path | p50 | p90 |
+|---|---:|---:|
+| eager warm | 0.0877s | 0.0935s |
+| compiled warm | 0.1469s | 0.3080s |
+
+### Replay 结果：强制 task6 description
+
+输出：
+
+```text
+docs/phase13_torch_compile_replay_obs4_task6desc_v1.md
+toy_quantvla/results/phase13_torch_compile_replay_obs4_task6desc_v1.json
+```
+
+| comparison | rel RMSE mean | rel RMSE max | cosine mean | max abs diff |
+|---|---:|---:|---:|---:|
+| eager/eager A/A | 0 | 0 | 0.999999999 | 0 |
+| eager/compiled | 0.002694 | 0.004666 | 0.999995924 | 0.004578 |
+
+同步离线 latency：
+
+| path | p50 | p90 |
+|---|---:|---:|
+| eager warm | 0.0954s | 0.1038s |
+| compiled warm | 0.0837s | 0.1008s |
+
+### Replay 解读
+
+1. RNG 控制是有效的。
+   eager/eager 同 observation、同 seed 的 action drift 为 0，说明之前测试不是因为 seed 漏控。
+
+2. compile 的确引入了小幅数值扰动。
+   `rel RMSE ~= 0.0026-0.0027`，cosine 仍接近 1，但这类微扰足以在 LIBERO 接触动力学里触发闭环轨迹重分配。
+
+3. replay 不是用来否定 rollout 速度信号的。
+   三例复验已经给出关键的真实 server/eval 路径信号：compiled 单步 p50 稳定在约 75 ms，baseline 约 159 ms。fixed-observation replay 的作用是把 RNG 和 simulator feedback 拆开，证明差异不是 seed 漏控，而是 compile backend 带来的小幅数值漂移。
+
+4. 因此当前正确结论是：
+   `torch.compile(action_head.model)` 是强候选路线，但还不是透明替换。它需要用更大 matched rollout 同时看速度收益和成功率回归。
+
 ## 下一步
 
 短期建议：
 
 1. 跑 15-case matched set。
-   比较 FP16 baseline、FP16 compiled、packed FP4 up_proj。先看 compiled 的成功率是否只是 task6:init0 偶发下降。
+   比较 FP16 baseline 与 FP16 compiled，先判断 `task6:init0` 的失败是偶发轨迹切换，还是 compile 引入了稳定成功率回归。
 
-2. 加 compiled action drift 批量脚本。
-   用真实 observation 集合统计 eager vs compiled 的 action RMSE/cosine，建立“compile 数值扰动”的离线门槛。
+2. 统一统计 rollout 级指标。
+   对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
 
 3. 尝试更保守的 compile 配置。
    对比 `mode=default`、`mode=reduce-overhead`、`dynamic=false/true`，看是否能降低行为漂移，同时保留主要速度收益。
