@@ -20,7 +20,12 @@ from phase13_compile_targets import TORCH_COMPILE_TARGETS, compile_policy_target
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
-from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations, cuda_memory, synchronize
+from phase8_cutlass_blockscaled_fp4_real_activation_bench import (
+    build_observations,
+    cuda_memory,
+    reset_cuda_peak,
+    synchronize,
+)
 from timing_utils import TimedPolicyWrapper, summarize_float
 
 
@@ -253,14 +258,21 @@ def main() -> None:
     print(json.dumps(result, indent=2), flush=True)
     print(f"Starting timed FP16 server on port {args.port}", flush=True)
     set_seed(20260608)
+
+    reset_cuda_peak(args.device)
+
+    def server_extra_summary() -> dict[str, Any]:
+        summary: dict[str, Any] = {"server_memory": cuda_memory(args.device)}
+        if args.profile_linear_modules:
+            summary["profile_module_results"] = module_results(profiled_modules)
+        return summary
+
     timed_policy = TimedPolicyWrapper(
         policy,
         output_json=args.server_latency_json,
         label="fp16_official",
         flush_every=args.server_latency_flush_every,
-        extra_summary=(lambda: {"profile_module_results": module_results(profiled_modules)})
-        if args.profile_linear_modules
-        else None,
+        extra_summary=server_extra_summary,
         request_trace_jsonl=args.server_request_trace_jsonl,
         request_trace_min_seconds=args.server_request_trace_min_seconds,
         cuda_sync_device=args.device if args.server_request_trace_cuda_sync else None,
