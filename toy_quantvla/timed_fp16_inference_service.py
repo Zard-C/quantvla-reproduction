@@ -19,7 +19,16 @@ from fp16_linear_profiler import (
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
-from timing_utils import TimedPolicyWrapper
+from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations, cuda_memory, synchronize
+from timing_utils import TimedPolicyWrapper, summarize_float
+
+
+TORCH_COMPILE_TARGETS = (
+    "none",
+    "backbone",
+    "action_head_model",
+    "backbone_action_head_model",
+)
 
 
 def load_object(spec: str) -> Any:
@@ -40,10 +49,107 @@ def write_json(path: Path | None, value: dict[str, Any]) -> None:
     path.write_text(json.dumps(value, indent=2), encoding="utf-8")
 
 
+def add_prewarm_task_descriptions(
+    observations: list[dict[str, Any]],
+    descriptions: list[str],
+    *,
+    base_seed: int,
+) -> list[dict[str, Any]]:
+    """Add warmup observations with controlled task text to cover LLM sequence lengths."""
+
+    if not descriptions:
+        return observations
+    if not observations:
+        raise ValueError("--prewarm-task-description requires at least one base prewarm observation")
+
+    out = list(observations)
+    base = observations[0]
+    base_obs = dict(base["obs"])
+    for offset, description in enumerate(descriptions, start=1):
+        obs = dict(base_obs)
+        obs["annotation.human.action.task_description"] = [description]
+        item = dict(base)
+        item["obs"] = obs
+        item["seed"] = int(base_seed) + offset
+        item["prewarm_task_description"] = description
+        out.append(item)
+    return out
+
+
+def build_prewarm_observations(args: argparse.Namespace, data_config: Any) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    if args.prewarm_observations <= 0:
+        return [], {
+            "observation_source": args.prewarm_observation_source,
+            "prewarm_observations": 0,
+        }
+    prewarm_args = argparse.Namespace(
+        observation_source=args.prewarm_observation_source,
+        dataset_path=args.dataset_path,
+        model_path=args.model_path,
+        embodiment_tag=args.embodiment_tag,
+        video_backend=args.video_backend,
+        num_observations=args.prewarm_observations,
+        indices=args.prewarm_indices,
+        start_index=args.prewarm_start_index,
+        sample_stride=args.prewarm_sample_stride,
+        synthetic_variants=args.synthetic_variants,
+        base_seed=args.prewarm_base_seed,
+    )
+    return build_observations(prewarm_args, data_config)
+
+
+def compile_policy_targets(policy: Any, args: argparse.Namespace, torch_module: Any) -> dict[str, Any]:
+    """Install torch.compile wrappers on tensor-heavy policy submodules."""
+
+    target = str(args.torch_compile_target)
+    if target == "none":
+        return {"enabled": False, "target": target, "compiled_modules": []}
+
+    compile_kwargs: dict[str, Any] = {
+        "backend": args.torch_compile_backend,
+        "mode": args.torch_compile_mode,
+        "fullgraph": bool(args.torch_compile_fullgraph),
+    }
+    if args.torch_compile_dynamic is not None:
+        compile_kwargs["dynamic"] = bool(args.torch_compile_dynamic)
+
+    compiled_modules: list[str] = []
+    started = time.perf_counter()
+    if target in {"backbone", "backbone_action_head_model"}:
+        policy.model.backbone = torch_module.compile(policy.model.backbone, **compile_kwargs)
+        compiled_modules.append("policy.model.backbone")
+    if target in {"action_head_model", "backbone_action_head_model"}:
+        policy.model.action_head.model = torch_module.compile(policy.model.action_head.model, **compile_kwargs)
+        compiled_modules.append("policy.model.action_head.model")
+
+    return {
+        "enabled": True,
+        "target": target,
+        "backend": args.torch_compile_backend,
+        "mode": args.torch_compile_mode,
+        "fullgraph": bool(args.torch_compile_fullgraph),
+        "dynamic": args.torch_compile_dynamic,
+        "compiled_modules": compiled_modules,
+        "wrap_seconds": time.perf_counter() - started,
+    }
+
+
+def run_prewarm(policy: Any, observations: list[dict[str, Any]], *, device: str) -> tuple[dict[str, Any], dict[str, int]]:
+    latencies: list[float] = []
+    for item in observations:
+        set_seed(int(item.get("seed", 0)))
+        started = time.perf_counter()
+        policy.get_action(item["obs"])
+        synchronize(device)
+        latencies.append(time.perf_counter() - started)
+    return summarize_float(latencies), cuda_memory(device)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--isaac-root", type=Path, default=Path("/root/autodl-tmp/Isaac-GR00T-n1.5"))
     parser.add_argument("--model-path", type=Path, default=Path("/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain"))
+    parser.add_argument("--dataset-path", type=Path, default=Path("/root/autodl-tmp/datasets/libero_10_subset"))
     parser.add_argument("--compat-stubs", type=Path)
     parser.add_argument("--data-config", default="examples.Libero.custom_data_config:LiberoDataConfig")
     parser.add_argument("--embodiment-tag", default="new_embodiment")
@@ -59,7 +165,26 @@ def main() -> None:
     parser.add_argument("--profile-scope", choices=SCOPE_CHOICES, default="dit_mlp_only")
     parser.add_argument("--profile-max-modules", type=int, default=0)
     parser.add_argument("--profile-name-contains")
+    parser.add_argument("--torch-compile-target", choices=TORCH_COMPILE_TARGETS, default="none")
+    parser.add_argument("--torch-compile-backend", default="inductor")
+    parser.add_argument("--torch-compile-mode", default="reduce-overhead")
+    parser.add_argument("--torch-compile-fullgraph", action="store_true")
+    parser.add_argument("--torch-compile-dynamic", choices=["true", "false"])
+    parser.add_argument("--prewarm-observations", type=int, default=0)
+    parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
+    parser.add_argument("--prewarm-indices", default="115")
+    parser.add_argument("--prewarm-start-index", type=int, default=0)
+    parser.add_argument("--prewarm-sample-stride", type=int, default=100)
+    parser.add_argument("--prewarm-base-seed", type=int, default=20260613)
+    parser.add_argument("--prewarm-task-description", action="append", default=[])
+    parser.add_argument("--video-backend", default="torchvision_av")
+    parser.add_argument("--synthetic-variants", default="zero,midgray,noise")
+    parser.add_argument("--server-request-trace-jsonl", type=Path, help="Optional per-request server latency JSONL.")
+    parser.add_argument("--server-request-trace-min-seconds", type=float, default=0.0)
+    parser.add_argument("--server-request-trace-cuda-sync", action="store_true")
     args = parser.parse_args()
+    if args.torch_compile_dynamic is not None:
+        args.torch_compile_dynamic = args.torch_compile_dynamic == "true"
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -75,6 +200,7 @@ def main() -> None:
     result: dict[str, Any] = {
         "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
         "model_path": str(args.model_path),
+        "dataset_path": str(args.dataset_path),
         "data_config": args.data_config,
         "embodiment_tag": args.embodiment_tag,
         "denoising_steps": args.denoising_steps,
@@ -87,6 +213,17 @@ def main() -> None:
         "profile_scope_description": scope_description(args.profile_scope),
         "profile_max_modules": int(args.profile_max_modules),
         "profile_name_contains": parse_name_contains(args.profile_name_contains),
+        "torch_compile": {
+            "target": args.torch_compile_target,
+            "backend": args.torch_compile_backend,
+            "mode": args.torch_compile_mode,
+            "fullgraph": bool(args.torch_compile_fullgraph),
+            "dynamic": args.torch_compile_dynamic,
+        },
+        "prewarm_observations": int(args.prewarm_observations),
+        "prewarm_observation_source": args.prewarm_observation_source,
+        "prewarm_indices": args.prewarm_indices,
+        "video_backend": args.video_backend,
     }
 
     started = time.perf_counter()
@@ -101,6 +238,9 @@ def main() -> None:
     if torch.cuda.is_available() and torch.device(args.device).type == "cuda":
         torch.cuda.synchronize(args.device)
     result["model_load_seconds"] = time.perf_counter() - started
+    result["model_load_memory"] = cuda_memory(args.device)
+
+    result["torch_compile"] = compile_policy_targets(policy, args, torch)
     result["prepare_seconds"] = result["model_load_seconds"]
 
     profiled_modules = {}
@@ -121,6 +261,32 @@ def main() -> None:
         result["profile_module_results_after_prepare"] = module_results(profiled_modules)
         reset_module_stats(profiled_modules)
 
+    prewarm_started = time.perf_counter()
+    observations, observation_meta = build_prewarm_observations(args, data_config)
+    observations = add_prewarm_task_descriptions(
+        observations,
+        args.prewarm_task_description,
+        base_seed=args.prewarm_base_seed,
+    )
+    if args.prewarm_task_description:
+        observation_meta["prewarm_task_descriptions"] = list(args.prewarm_task_description)
+        observation_meta["prewarm_observations_with_task_descriptions"] = len(observations)
+    result["prewarm_observation_meta"] = observation_meta
+    if observations:
+        result["prewarm_get_action_seconds"], result["prewarm_memory"] = run_prewarm(
+            policy,
+            observations,
+            device=args.device,
+        )
+    else:
+        result["prewarm_get_action_seconds"] = summarize_float([])
+        result["prewarm_memory"] = cuda_memory(args.device)
+    result["prewarm_total_seconds"] = time.perf_counter() - prewarm_started
+    if args.profile_linear_modules:
+        result["profile_module_results_after_prewarm"] = module_results(profiled_modules)
+        reset_module_stats(profiled_modules)
+
+    result["prepare_seconds"] = time.perf_counter() - started
     write_json(args.output_json, result)
 
     if args.prepare_only:
@@ -138,6 +304,9 @@ def main() -> None:
         extra_summary=(lambda: {"profile_module_results": module_results(profiled_modules)})
         if args.profile_linear_modules
         else None,
+        request_trace_jsonl=args.server_request_trace_jsonl,
+        request_trace_min_seconds=args.server_request_trace_min_seconds,
+        cuda_sync_device=args.device if args.server_request_trace_cuda_sync else None,
     )
     server = RobotInferenceServer(timed_policy, port=args.port, api_token=args.api_token)
     server.run()
