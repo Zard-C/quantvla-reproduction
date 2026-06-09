@@ -11,8 +11,16 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
+from phase3_atm_ohb_forward import (
+    collect_attention_stats,
+    compute_atm_ohb_scales,
+    install_attention_processors,
+    scale_summary,
+    select_scales,
+)
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
+from phase4_real_data_validation import load_observations, parse_indices, sample_indices
 from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
 from phase8_cutlass_blockscaled_fp4_forward_smoke import (
     cuda_memory,
@@ -27,6 +35,12 @@ from phase8_cutlass_blockscaled_fp4_forward_smoke import (
 from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations
 from phase8_cutlass_blockscaled_fp4_smoke import parse_tuple
 from timing_utils import TimedPolicyWrapper
+
+
+DEFAULT_CALIBRATION_INDICES = (
+    "115,462,632,1063,1273,1482,1823,2034,"
+    "2406,2536,3053,3198,3492,3824,3980,4299"
+)
 
 
 def load_object(spec: str) -> Any:
@@ -145,6 +159,28 @@ def build_prewarm_observations(args: argparse.Namespace, data_config: Any) -> tu
     return build_observations(prewarm_args, data_config)
 
 
+def build_calibration_observations(args: argparse.Namespace, data_config: Any) -> list[dict[str, Any]]:
+    from gr00t.data.dataset import LeRobotSingleDataset
+
+    dataset = LeRobotSingleDataset(
+        dataset_path=str(args.dataset_path),
+        modality_configs=data_config.modality_config(),
+        embodiment_tag=args.embodiment_tag,
+        video_backend=args.video_backend,
+    )
+    calibration_indices = sample_indices(
+        len(dataset),
+        num_observations=args.num_calibration_observations,
+        start_index=args.calibration_start_index,
+        stride=args.calibration_sample_stride,
+        explicit_indices=parse_indices(args.calibration_indices),
+    )
+    observations = load_observations(dataset, calibration_indices, base_seed=args.calibration_base_seed)
+    for item, index in zip(observations, calibration_indices, strict=True):
+        item["dataset_index"] = int(index)
+    return observations
+
+
 def add_prewarm_task_descriptions(
     observations: list[dict[str, Any]],
     descriptions: list[str],
@@ -196,6 +232,14 @@ def main() -> None:
     parser.add_argument("--no-share-compile-cache", action="store_true")
     parser.add_argument("--cache-output-tensor", action="store_true")
     parser.add_argument("--profile-modules", action="store_true")
+    parser.add_argument("--atm-ohb-mode", choices=["none", "identity", "atm", "ohb", "atm_ohb"], default="none")
+    parser.add_argument("--log-clamp", type=float, default=0.3)
+    parser.add_argument("--ohb-skip-epsilon", type=float, default=0.0)
+    parser.add_argument("--calibration-indices", default=DEFAULT_CALIBRATION_INDICES)
+    parser.add_argument("--num-calibration-observations", type=int, default=16)
+    parser.add_argument("--calibration-start-index", type=int, default=0)
+    parser.add_argument("--calibration-sample-stride", type=int, default=100)
+    parser.add_argument("--calibration-base-seed", type=int, default=360204)
     parser.add_argument("--prewarm-observations", type=int, default=1)
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
     parser.add_argument("--prewarm-indices", default="115")
@@ -245,6 +289,10 @@ def main() -> None:
         "pack_backend": args.pack_backend,
         "share_compile_cache": not args.no_share_compile_cache,
         "cache_output_tensor": args.cache_output_tensor,
+        "atm_ohb_mode": args.atm_ohb_mode,
+        "log_clamp": args.log_clamp,
+        "ohb_skip_epsilon": args.ohb_skip_epsilon,
+        "video_backend": args.video_backend,
         "torch_version": torch.__version__,
         "torch_cuda": torch.version.cuda,
         "cuda_available": bool(torch.cuda.is_available()),
@@ -264,6 +312,27 @@ def main() -> None:
     synchronize(args.device)
     result["model_load_seconds"] = time.perf_counter() - started
     result["model_load_memory"] = cuda_memory(args.device)
+
+    calibration_observations: list[dict[str, Any]] = []
+    teacher_stats = {}
+    if args.atm_ohb_mode != "none":
+        calibration_started = time.perf_counter()
+        calibration_observations = build_calibration_observations(args, data_config)
+        result["calibration_dataset_indices"] = [
+            int(item["dataset_index"]) for item in calibration_observations
+        ]
+        result["calibration_base_seed"] = args.calibration_base_seed
+        result["calibration_load_seconds"] = time.perf_counter() - calibration_started
+
+        attention_started = time.perf_counter()
+        teacher_stats = collect_attention_stats(policy, calibration_observations)
+        synchronize(args.device)
+        result["teacher_attention_calibration_seconds"] = time.perf_counter() - attention_started
+    else:
+        result["calibration_dataset_indices"] = []
+        result["calibration_base_seed"] = args.calibration_base_seed
+        result["calibration_load_seconds"] = 0.0
+        result["teacher_attention_calibration_seconds"] = 0.0
 
     patch_started = time.perf_counter()
     records, patched_modules = patch_cutlass_fp4_modules(
@@ -286,6 +355,33 @@ def main() -> None:
     result["patched_modules"] = len(records)
     result["patch_summary"] = summarize_patch(records)
     result["post_patch_memory"] = cuda_memory(args.device)
+
+    scales = {}
+    if args.atm_ohb_mode != "none":
+        attention_started = time.perf_counter()
+        student_stats = collect_attention_stats(policy, calibration_observations)
+        synchronize(args.device)
+        scales = compute_atm_ohb_scales(teacher_stats, student_stats, log_clamp=args.log_clamp)
+        selected_scales = select_scales(scales, args.atm_ohb_mode)
+        if args.ohb_skip_epsilon > 0.0:
+            selected_scales = {
+                name: scale
+                for name, scale in selected_scales.items()
+                if ("beta" not in scale) or abs(float(scale["beta"]) - 1.0) > args.ohb_skip_epsilon
+            }
+        install_attention_processors(
+            policy.model,
+            mode="apply",
+            scales=selected_scales,
+        )
+        result["student_attention_calibration_seconds"] = time.perf_counter() - attention_started
+        result["scale_summary"] = scale_summary(scales)
+        result["attention_processors_applied"] = len(selected_scales)
+    else:
+        result["student_attention_calibration_seconds"] = 0.0
+        result["scale_summary"] = None
+        result["attention_processors_applied"] = 0
+    result["module_results_after_calibration"] = module_results(patched_modules)
 
     prewarm_started = time.perf_counter()
     observations, observation_meta = build_prewarm_observations(args, data_config)
@@ -321,7 +417,7 @@ def main() -> None:
     timed_policy = TimedPolicyWrapper(
         policy,
         output_json=args.server_latency_json,
-        label=f"cutlass_fp4:{args.scope}",
+        label=f"cutlass_fp4:{args.scope}:{args.atm_ohb_mode}",
         flush_every=args.server_latency_flush_every,
         extra_summary=lambda: {"module_results": module_results(patched_modules)},
         request_trace_jsonl=args.server_request_trace_jsonl,

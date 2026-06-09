@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /root/autodl-tmp/quantvla-reproduction
+mkdir -p /tmp/logs toy_quantvla/results
+
+PYTHON_BIN="${PYTHON_BIN:-/root/autodl-tmp/envs/gr00t-libero-py310/bin/python}"
+MODEL_PATH="${MODEL_PATH:-/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain}"
+DATA_CONFIG="${DATA_CONFIG:-examples.Libero.custom_data_config:LiberoDataConfig}"
+EMBODIMENT_TAG="${EMBODIMENT_TAG:-new_embodiment}"
+CASE_LIST="${CASE_LIST:-4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9,8:10}"
+FP4_PORT="${FP4_PORT:-5586}"
+TAG="${TAG:-phase12_seeded_matched_fp4_up_proj_ohb_v1}"
+FP4_SUFFIX="${FP4_SUFFIX:-fp4_up_proj_ohb_warmdesc}"
+ATM_OHB_MODE="${ATM_OHB_MODE:-ohb}"
+LOG_CLAMP="${LOG_CLAMP:-0.3}"
+OHB_SKIP_EPSILON="${OHB_SKIP_EPSILON:-0.0}"
+CALIBRATION_INDICES="${CALIBRATION_INDICES:-115,462,632,1063,1273,1482,1823,2034,2406,2536,3053,3198,3492,3824,3980,4299}"
+NUM_CALIBRATION_OBSERVATIONS="${NUM_CALIBRATION_OBSERVATIONS:-16}"
+CALIBRATION_BASE_SEED="${CALIBRATION_BASE_SEED:-360204}"
+DETERMINISTIC_POLICY_SEEDS="${DETERMINISTIC_POLICY_SEEDS:-1}"
+POLICY_SEED_BASE="${POLICY_SEED_BASE:-20260609}"
+
+TASK4_DESC="put the white mug on the left plate and put the yellow and white mug on the right plate"
+TASK6_DESC="put the white mug on the plate and put the chocolate pudding to the right of the plate"
+TASK8_DESC="put both moka pots on the stove"
+
+SEED_ARGS=()
+if [ "${DETERMINISTIC_POLICY_SEEDS}" = "1" ]; then
+  SEED_ARGS=(--deterministic-policy-seeds --policy-seed-base "${POLICY_SEED_BASE}")
+fi
+
+kill_if_running() {
+  local pid_file="$1"
+  if [ -f "${pid_file}" ]; then
+    local pid
+    pid="$(cat "${pid_file}")"
+    if kill -0 "${pid}" 2>/dev/null; then
+      kill "${pid}" 2>/dev/null || true
+      wait "${pid}" 2>/dev/null || true
+    fi
+  fi
+}
+
+wait_for_log_line() {
+  local pid_file="$1"
+  local log_file="$2"
+  local pattern="$3"
+  local limit="$4"
+  for _ in $(seq 1 "${limit}"); do
+    if grep -q "${pattern}" "${log_file}"; then
+      return 0
+    fi
+    if ! kill -0 "$(cat "${pid_file}")" 2>/dev/null; then
+      tail -200 "${log_file}"
+      return 1
+    fi
+    sleep 1
+  done
+  tail -200 "${log_file}"
+  return 1
+}
+
+run_fp4_ohb() {
+  local server_log="/tmp/logs/${TAG}_${FP4_SUFFIX}_server.log"
+  local eval_log="/tmp/logs/${TAG}_${FP4_SUFFIX}_eval.log"
+  local server_pid_file="/tmp/logs/${TAG}_${FP4_SUFFIX}_server.pid"
+  local eval_pid_file="/tmp/logs/${TAG}_${FP4_SUFFIX}_eval.pid"
+
+  kill_if_running "${server_pid_file}"
+  pkill -f "cutlass_fp4_inference_service.py.*--port ${FP4_PORT}" 2>/dev/null || true
+  pkill -f "libero_eval_init_range.py.*--port ${FP4_PORT}" 2>/dev/null || true
+  : > "${server_log}"
+  : > "${eval_log}"
+  : > "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_request_trace.jsonl"
+
+  env \
+    NO_ALBUMENTATIONS_UPDATE=1 \
+    HF_HUB_OFFLINE=1 \
+    TRANSFORMERS_OFFLINE=1 \
+    "${PYTHON_BIN}" toy_quantvla/cutlass_fp4_inference_service.py \
+      --model-path "${MODEL_PATH}" \
+      --data-config "${DATA_CONFIG}" \
+      --embodiment-tag "${EMBODIMENT_TAG}" \
+      --denoising-steps 8 \
+      --port "${FP4_PORT}" \
+      --scope llm_mlp_only \
+      --name-contains up_proj \
+      --max-modules 0 \
+      --pack-backend triton \
+      --atm-ohb-mode "${ATM_OHB_MODE}" \
+      --log-clamp "${LOG_CLAMP}" \
+      --ohb-skip-epsilon "${OHB_SKIP_EPSILON}" \
+      --calibration-indices "${CALIBRATION_INDICES}" \
+      --num-calibration-observations "${NUM_CALIBRATION_OBSERVATIONS}" \
+      --calibration-base-seed "${CALIBRATION_BASE_SEED}" \
+      --prewarm-observations 1 \
+      --prewarm-indices 115 \
+      --prewarm-task-description "${TASK4_DESC}" \
+      --prewarm-task-description "${TASK6_DESC}" \
+      --prewarm-task-description "${TASK8_DESC}" \
+      --output-json "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_server_prepare.json" \
+      --server-latency-json "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_server_latency.json" \
+      --server-latency-flush-every 50 \
+      --server-request-trace-jsonl "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_request_trace.jsonl" \
+      --server-request-trace-module-deltas \
+    > "${server_log}" 2>&1 &
+  echo $! > "${server_pid_file}"
+  echo "FP4_OHB_SERVER_PID=$(cat "${server_pid_file}")"
+  echo "FP4_OHB_SERVER_LOG=${server_log}"
+
+  wait_for_log_line "${server_pid_file}" "${server_log}" "Starting CUTLASS FP4 server on port ${FP4_PORT}" 600
+
+  env \
+    MUJOCO_GL=egl \
+    PYOPENGL_PLATFORM=egl \
+    NO_ALBUMENTATIONS_UPDATE=1 \
+    "${PYTHON_BIN}" toy_quantvla/libero_eval_init_range.py \
+      --task-suite-name libero_10 \
+      --case-list "${CASE_LIST}" \
+      --headless \
+      --port "${FP4_PORT}" \
+      --trace-dir "/tmp/${TAG}_${FP4_SUFFIX}_trace" \
+      --log-file "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_client.log" \
+      --latency-json "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_client_latency.json" \
+      "${SEED_ARGS[@]}" \
+    > "${eval_log}" 2>&1 &
+  echo $! > "${eval_pid_file}"
+  echo "FP4_OHB_EVAL_PID=$(cat "${eval_pid_file}")"
+  echo "FP4_OHB_EVAL_LOG=${eval_log}"
+
+  wait "$(cat "${eval_pid_file}")"
+  sleep 2
+  kill_if_running "${server_pid_file}"
+  cp "${server_log}" "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_server.log"
+  cp "${eval_log}" "toy_quantvla/results/${TAG}_${FP4_SUFFIX}_eval.log"
+}
+
+echo "TAG=${TAG}"
+echo "CASE_LIST=${CASE_LIST}"
+echo "FP4_SUFFIX=${FP4_SUFFIX}"
+echo "ATM_OHB_MODE=${ATM_OHB_MODE}"
+echo "OHB_SKIP_EPSILON=${OHB_SKIP_EPSILON}"
+echo "NUM_CALIBRATION_OBSERVATIONS=${NUM_CALIBRATION_OBSERVATIONS}"
+echo "DETERMINISTIC_POLICY_SEEDS=${DETERMINISTIC_POLICY_SEEDS}"
+echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
+
+run_fp4_ohb
+
+echo "Phase 12 FP4 OHB matched set complete"

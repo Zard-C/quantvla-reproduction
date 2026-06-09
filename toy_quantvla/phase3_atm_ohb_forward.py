@@ -129,9 +129,11 @@ class ATMOHBProcessor:
         if attn.norm_k is not None:
             key = attn.norm_k(key)
 
-        with torch.no_grad():
-            logits = torch.matmul(query.float(), key.float().transpose(-2, -1)) / math.sqrt(head_dim)
-            logits_std = float(logits.std(unbiased=False).item())
+        logits_std = 0.0
+        if self.stats is not None:
+            with torch.no_grad():
+                logits = torch.matmul(query.float(), key.float().transpose(-2, -1)) / math.sqrt(head_dim)
+                logits_std = float(logits.std(unbiased=False).item())
 
         if self.alpha is not None:
             query = query * float(self.alpha)
@@ -163,6 +165,40 @@ class ATMOHBProcessor:
         return hidden_states
 
 
+class OHBOutputWrapperProcessor:
+    """Apply OHB while preserving the original attention processor fast path."""
+
+    def __init__(self, base_processor: Any, beta: float):
+        self.base_processor = base_processor
+        self.beta = float(beta)
+
+    def __call__(
+        self,
+        attn: Any,
+        hidden_states: Any,
+        encoder_hidden_states: Any | None = None,
+        attention_mask: Any | None = None,
+        temb: Any | None = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
+        base_output = self.base_processor(
+            attn,
+            hidden_states,
+            encoder_hidden_states=encoder_hidden_states,
+            attention_mask=attention_mask,
+            temb=temb,
+            *args,
+            **kwargs,
+        )
+        if self.beta == 1.0:
+            return base_output
+        if attn.residual_connection:
+            attention_branch = base_output * attn.rescale_output_factor - hidden_states
+            return (attention_branch * self.beta + hidden_states) / attn.rescale_output_factor
+        return base_output * self.beta
+
+
 def install_attention_processors(
     model: Any,
     *,
@@ -174,16 +210,22 @@ def install_attention_processors(
     for name, module in model.named_modules():
         if not DIT_ATTN_MODULE_RE.match(name) or not hasattr(module, "set_processor"):
             continue
-        originals[name] = module.processor
         if mode == "collect":
+            originals[name] = module.processor
             stat = AttentionStat()
             stats[name] = stat
             module.set_processor(ATMOHBProcessor(name=name, stats=stat))
         elif mode == "apply":
             scale = scales.get(name, {}) if scales else {}
-            module.set_processor(
-                ATMOHBProcessor(name=name, alpha=scale.get("alpha"), beta=scale.get("beta"))
-            )
+            if not scale:
+                continue
+            originals[name] = module.processor
+            if "beta" in scale and "alpha" not in scale:
+                module.set_processor(OHBOutputWrapperProcessor(module.processor, beta=scale["beta"]))
+            else:
+                module.set_processor(
+                    ATMOHBProcessor(name=name, alpha=scale.get("alpha"), beta=scale.get("beta"))
+                )
         else:
             raise ValueError(f"Unknown processor mode: {mode}")
     return originals, stats
