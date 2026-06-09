@@ -277,8 +277,11 @@ toy_quantvla/results/phase13_torch_compile_replay_obs4_task6desc_v1.json
 
 短期建议：
 
-1. 跑 15-case matched set。
-   比较 FP16 baseline 与 FP16 compiled，先判断 `task6:init0` 的失败是偶发轨迹切换，还是 compile 引入了稳定成功率回归。
+0. 阅读回归病例分析。
+   15-case 与 flip-case 复验已经补充到 `docs/phase13_compile_regression_trace_analysis.md`。当前判断是 compile 速度收益稳定，但 `4:6` 与 `6:0` 存在稳定闭环回归。
+
+1. 跑更细的 action-level A/B replay。
+   固定 `4:6` 和 `6:0` 成功 baseline 轨迹中的 observation，对 eager 与 compiled 逐帧做 action drift 比较，定位接触前后的漂移放大点。
 
 2. 统一统计 rollout 级指标。
    对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
