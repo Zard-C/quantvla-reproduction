@@ -262,6 +262,79 @@ docs/phase13_eager_island_probe.md
 whole action_head.model compile + transformer_blocks.8..15 eager island
 ```
 
+## Blocks 8-15 Eager Island 15-Case 复验
+
+配置：
+
+```text
+tag: phase13_block_island_15case_v1
+case list: 4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9,8:10
+target: action_head_model_blocks_8_15_eager
+compile mode: reduce-overhead
+compile backend: inductor
+policy seed base: 20260613
+```
+
+输出：
+
+```text
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_client_latency.json
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_server_latency.json
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_server_prepare.json
+```
+
+汇总：
+
+| policy | success | calls | client p50 | client p90 | server p50 | server p90 |
+|---|---:|---:|---:|---:|---:|---:|
+| FP16 baseline | 7/15 | 10068 | 160.6 ms | 约 166 ms | 155.3 ms | 162.0 ms |
+| whole action_head.model compile | 5/15 | 11316 | 74.6 ms | 约 152 ms | 70.1 ms | 151.9 ms |
+| action_head + blocks 8-15 eager island | 7/15 | 10084 | 77.3 ms | 149.1 ms | 72.5 ms | 144.4 ms |
+
+分任务：
+
+| task | baseline | whole compile | blocks 8-15 eager island |
+|---|---:|---:|---:|
+| task4 | 3/5 | 2/5 | 2/5 |
+| task6 | 3/5 | 2/5 | 3/5 |
+| task8 | 1/5 | 1/5 | 2/5 |
+
+blocks 8-15 eager island 逐 case：
+
+| case | result |
+|---|---|
+| 4:6 | success, 241 calls |
+| 4:7 | fail, 991 calls |
+| 4:8 | fail, 991 calls |
+| 4:9 | fail, 991 calls |
+| 4:10 | success, 212 calls |
+| 6:0 | success, 206 calls |
+| 6:1 | success, 234 calls |
+| 6:2 | success, 235 calls |
+| 6:3 | fail, 991 calls |
+| 6:4 | fail, 991 calls |
+| 8:6 | fail, 991 calls |
+| 8:7 | fail, 991 calls |
+| 8:8 | fail, 991 calls |
+| 8:9 | success, 424 calls |
+| 8:10 | success, 604 calls |
+
+关键翻转样本：
+
+| case | baseline | whole compile | blocks 8-15 eager island |
+|---|---|---|---|
+| 4:6 | success | fail | success |
+| 6:0 | success | fail | success |
+| 8:9 | fail | success | success |
+| 8:10 | success | fail | success |
+
+关键判断：
+
+- `blocks 8-15 eager island` 把 whole compile 的 `5/15` 拉回到 `7/15`，追平 FP16 baseline。
+- server p50 `72.5 ms`，仍接近 whole compile 的 `70.1 ms`，远快于 baseline 的 `155.3 ms`。
+- 它救回了稳定回归 `4:6` 和 `6:0`，并且在 task8 边界样本上多拿到成功。
+- 但它不是逐 case 透明等价：task4 仍是 `2/5`，低于 baseline 的 `3/5`。因此它应该作为一个新 backend 单独评估，而不能直接继承 FP16 eager 的成功率假设。
+
 ## 当前判断
 
 `torch.compile(action_head.model)` 的工程价值很高，但不能直接作为透明替换：
@@ -269,15 +342,15 @@ whole action_head.model compile + transformer_blocks.8..15 eager island
 ```text
 速度收益：强
 数值等价：弱
-闭环成功率：存在稳定回归
+闭环成功率：whole compile 存在稳定回归；blocks 8-15 eager island 已在 15-case 追平 baseline
 ```
 
 这更像一个“高速但带闭环扰动”的 inference backend，而不是无风险优化。
 
-下一步不建议直接扩大到 50/100 episodes。更合理的路线：
+下一步可以扩大到更多 matched episodes，但要按 backend 单独标定：
 
-1. 扩大 blocks 8-15 eager island 到 15-case matched set。
-   `action_head_model_blocks_8_15_eager` 已经救回 `4:6` 和 `6:0`，下一步需要看它在 15-case 上是否保持成功率和 p50 收益。
+1. 扩大 blocks 8-15 eager island 到更多 init/task。
+   当前 15-case 说明路线成立，但样本仍小。下一轮应估计成功率置信区间，并重点观察 task4 是否继续低于 baseline。
 
 2. 尝试更保守的 backend 约束。
    例如只 compile 更小的子块，或禁用可能改变 matmul/reduction 路径的优化。

@@ -355,6 +355,49 @@ report: docs/phase13_eager_island_probe.md
 - Blocks 8-15 eager island 救回了 `4:6` 和 `6:0` 两个稳定回归 case，且 p50 仍在 `72.6 ms`。
 - 风险不只是 FFN forward 内部，更可能包含后半 block 的 residual/norm/add/attention/FFN 整段数据路径。
 
+### Blocks 8-15 Eager Island 15-Case
+
+正式 15-case matched set：
+
+```text
+tag: phase13_block_island_15case_v1
+target: action_head_model_blocks_8_15_eager
+compile mode: reduce-overhead
+backend: inductor
+policy seed base: 20260613
+```
+
+结果：
+
+| policy | success | calls | client p50 | client p90 | server p50 | server p90 |
+|---|---:|---:|---:|---:|---:|---:|
+| FP16 baseline | 7/15 | 10068 | 160.6 ms | 约 166 ms | 155.3 ms | 162.0 ms |
+| whole action_head.model compile | 5/15 | 11316 | 74.6 ms | 约 152 ms | 70.1 ms | 151.9 ms |
+| blocks 8-15 eager island | 7/15 | 10084 | 77.3 ms | 149.1 ms | 72.5 ms | 144.4 ms |
+
+分任务：
+
+| task | baseline | whole compile | blocks 8-15 eager island |
+|---|---:|---:|---:|
+| task4 | 3/5 | 2/5 | 2/5 |
+| task6 | 3/5 | 2/5 | 3/5 |
+| task8 | 1/5 | 1/5 | 2/5 |
+
+prewarm：
+
+| count | mean | p50 | p90 | max |
+|---:|---:|---:|---:|---:|
+| 4 | 1.688s | 1.321s | 3.270s | 4.038s |
+
+当前工程含义：
+
+```text
+whole compile: 速度最好，但成功率掉到 5/15。
+blocks 8-15 eager island: 速度几乎同级，成功率回到 7/15。
+```
+
+这说明我们不必在“全 eager 慢但稳”和“whole compile 快但掉成功率”之间二选一。后半 block eager island 是目前最好的折中点。
+
 ## 下一步
 
 短期建议：
@@ -362,14 +405,14 @@ report: docs/phase13_eager_island_probe.md
 0. 阅读回归病例分析。
    15-case 与 flip-case 复验已经补充到 `docs/phase13_compile_regression_trace_analysis.md`。当前判断是 compile 速度收益稳定，但 `4:6` 与 `6:0` 存在稳定闭环回归。
 
-1. 扩大 blocks 8-15 eager island 到 15-case matched set。
-   当前 `action_head_model_blocks_8_15_eager` 在两个稳定回归 case 上 `2/2`，下一步需要和 baseline、whole compile 在同一 15-case 上对齐比较。
+1. 扩大 blocks 8-15 eager island 到更多 matched rollout。
+   当前 `action_head_model_blocks_8_15_eager` 已在 15-case 上追平 baseline。下一步不是证明它“可行”，而是估计它在更多 init/task 上的置信区间。
 
 2. 统一统计 rollout 级指标。
    对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
 
-3. 若 15-case 仍有明显回归，再尝试更保守的数值路径。
-   手工拆 DiT forward、扩大 eager block 范围，或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
+3. 加入工程指标。
+   继续统计显存、prewarm/cold compile 成本、不同 task description shape 的重编译次数，以及 server steady-state p50/p90。
 
 4. 研究 CUDA graph / tensor-only denoise loop。
    如果 compile 的行为扰动来自 Inductor 重排，可以尝试 CUDA graph 捕获 eager kernel 序列，理论上可能更接近数值等价。

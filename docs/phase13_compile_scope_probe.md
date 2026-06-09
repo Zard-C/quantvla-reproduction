@@ -177,7 +177,48 @@ FFN eager island 保住了速度，但没有压掉 task4:init6 的回归。
 Blocks 8-15 eager island 保住了速度，并在 2-case 复验中救回 task4:init6 和 task6:init0。
 ```
 
-这说明风险不只是后半 FFN forward 内部，而是后半 transformer block 的完整 residual/norm/add/attention/FFN 数据路径。下一步应该把 `action_head_model_blocks_8_15_eager` 扩大到 15-case matched set。
+这说明风险不只是后半 FFN forward 内部，而是后半 transformer block 的完整 residual/norm/add/attention/FFN 数据路径。
+
+### Blocks 8-15 Eager Island 15-Case
+
+`action_head_model_blocks_8_15_eager` 已扩大到 15-case matched set：
+
+```text
+tag: phase13_block_island_15case_v1
+cases: 4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9,8:10
+target: action_head_model_blocks_8_15_eager
+```
+
+输出：
+
+```text
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_client_latency.json
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_server_latency.json
+toy_quantvla/results/phase13_block_island_15case_v1_compiled_server_prepare.json
+```
+
+汇总：
+
+| policy | success | calls | server p50 | server p90 | 结论 |
+|---|---:|---:|---:|---:|---|
+| FP16 eager baseline | 7/15 | 10068 | 155.3 ms | 162.0 ms | 稳定参考 |
+| whole action_head.model compile | 5/15 | 11316 | 70.1 ms | 151.9 ms | 快，但有闭环回归 |
+| blocks 8-15 eager island | 7/15 | 10084 | 72.5 ms | 144.4 ms | 追平 baseline，同时保住速度 |
+
+分任务：
+
+| task | baseline | whole compile | blocks 8-15 eager island |
+|---|---:|---:|---:|
+| task4 | 3/5 | 2/5 | 2/5 |
+| task6 | 3/5 | 2/5 | 3/5 |
+| task8 | 1/5 | 1/5 | 2/5 |
+
+解读：
+
+- 对 `task6`，block island 从 whole compile 的 `2/5` 恢复到 baseline 的 `3/5`。
+- 对 `task8`，block island 从 `1/5` 到 `2/5`，说明扰动也可能把边界失败样本推回成功区域。
+- 对 `task4`，block island 仍是 `2/5`，没有完全恢复 baseline 的 `3/5`。
+- 总体 `7/15` 追平 baseline，但逐 case 不等价；它是一个需要单独标定的高速 backend，而不是透明优化。
 
 ## 本轮结论
 
@@ -188,6 +229,6 @@ Blocks 8-15 eager island 保住了速度，并在 2-case 复验中救回 task4:i
 后半 FFN compile 给尖峰风险。
 attention-only 没有足够速度收益。
 FFN 8-15 eager island 保速度但未解决 task4:init6 回归。
-Blocks 8-15 eager island 是当前最有希望的折中点：server p50 约 72.6 ms，2/2 稳定回归样本成功。
-下一步应扩大到 15-case matched set。
+Blocks 8-15 eager island 是当前最有希望的折中点：server p50 约 72.5 ms，15-case 成功率 7/15，追平 FP16 baseline。
+下一步应扩大到更多 matched rollout，同时统计显存、prewarm/cold compile 成本和逐 case 行为翻转。
 ```
