@@ -306,6 +306,29 @@ toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1_trace/
 - `4:6` 在 policy step 114 出现明显尖峰：raw max abs diff `0.142975`，LIBERO action RMSE `0.004808`。
 - 因此闭环失败更像是局部数值尖峰进入接触动力学后被放大，而不是整体均匀噪声或 seed 没控住。
 
+## Compile Scope Probe
+
+进一步收缩 compile scope，结果记录在：
+
+```text
+docs/phase13_compile_scope_probe.md
+toy_quantvla/phase13_compile_targets.py
+```
+
+核心结果：
+
+- `action_head_dit_attn_all` 明显降低同观测 drift spike，但 closed-loop server p50 仍是 `153.2 ms`，几乎没有速度收益。
+- `action_head_dit_ff_all` 在 `task4:init6` 仍出现大尖峰，raw max abs diff `0.107574`。
+- 继续切半后，`action_head_dit_ff_0_7` raw max 只有 `0.018890`，但 `action_head_dit_ff_8_15` raw max 达到 `0.115875`。
+
+当前判断：
+
+```text
+速度收益需要整块 DiT 级别的大图。
+行为风险主要来自后半 DiT FFN 的局部尖峰。
+下一步应尝试 whole action_head.model compile + transformer_blocks.8..15.ff eager island。
+```
+
 ## 下一步
 
 短期建议：
@@ -313,14 +336,14 @@ toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1_trace/
 0. 阅读回归病例分析。
    15-case 与 flip-case 复验已经补充到 `docs/phase13_compile_regression_trace_analysis.md`。当前判断是 compile 速度收益稳定，但 `4:6` 与 `6:0` 存在稳定闭环回归。
 
-1. 收缩 compile scope。
-   先不要 compile 整个 `action_head.model`，而是分别尝试 DiT MLP、attention、部分 block，定位 drift spike 的来源。
+1. 尝试整块 compile 加局部保护。
+   保留 `action_head.model` 的大图速度收益，同时让 `transformer_blocks.8..15.ff` 走 eager path，观察能否压低 spike。
 
 2. 统一统计 rollout 级指标。
    对每个 case 记录 success、action calls、server/client p50/p90、episode wall time。速度收益要和成功率一起读，不能只看单步 latency。
 
 3. 尝试更保守的数值路径。
-   对比更小 compile scope、禁用部分 Inductor 重排、或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
+   对后半 FFN 使用 `torch._dynamo.disable`、手工 graph break，或控制 matmul/reduction 精度，看是否能压低 action spike，同时保留主要速度收益。
 
 4. 研究 CUDA graph / tensor-only denoise loop。
    如果 compile 的行为扰动来自 Inductor 重排，可以尝试 CUDA graph 捕获 eager kernel 序列，理论上可能更接近数值等价。

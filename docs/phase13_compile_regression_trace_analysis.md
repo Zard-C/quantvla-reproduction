@@ -208,6 +208,26 @@ toy_quantvla/results/phase13_torch_compile_online_drift_4_6_6_0_v1_trace/
 - `6:0` 没有 `4:6` 那么极端的单点尖峰，但持续 `0.2-0.4%` 量级 action drift 也足以在前面 closed-loop compiled rollout 中造成厘米级分叉。
 - 这个 replay 进一步排除了“RNG 没控住”的解释。eager 控制轨迹成功，compiled 只旁路计算，因此差异来自 compile backend 的数值路径。
 
+## Compile Scope Probe
+
+进一步把 compile scope 拆成 DiT attention、DiT FFN、FFN 前后半，结果记录在：
+
+```text
+docs/phase13_compile_scope_probe.md
+```
+
+关键定位：
+
+- attention-only compile 显著降低 `4:6` 的同观测尖峰，raw max abs diff 从整块 DiT 的 `0.142975` 降到 `0.021942`，但 closed-loop server p50 仍是 `153.2 ms`，基本没有速度收益。
+- FFN-only compile 仍会在 `4:6` 出现大尖峰，raw max abs diff `0.107574`。
+- FFN 前后半切开后，`transformer_blocks.0..7.ff` raw max 只有 `0.018890`，`transformer_blocks.8..15.ff` raw max 达到 `0.115875`。
+
+因此当前最具体的风险定位是：
+
+```text
+后半 DiT FFN 是 task4:init6 大尖峰的主要来源。
+```
+
 ## 当前判断
 
 `torch.compile(action_head.model)` 的工程价值很高，但不能直接作为透明替换：

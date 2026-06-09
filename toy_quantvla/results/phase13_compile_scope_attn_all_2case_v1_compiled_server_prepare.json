@@ -1,0 +1,87 @@
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "profile_linear_modules": false,
+  "profile_scope": "dit_mlp_only",
+  "profile_scope_description": "DiT feed-forward Linear modules only",
+  "profile_max_modules": 0,
+  "profile_name_contains": [],
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_dit_attn_all",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "compiled_modules": [
+      "policy.model.action_head.model.transformer_blocks.0.attn1",
+      "policy.model.action_head.model.transformer_blocks.1.attn1",
+      "policy.model.action_head.model.transformer_blocks.2.attn1",
+      "policy.model.action_head.model.transformer_blocks.3.attn1",
+      "policy.model.action_head.model.transformer_blocks.4.attn1",
+      "policy.model.action_head.model.transformer_blocks.5.attn1",
+      "policy.model.action_head.model.transformer_blocks.6.attn1",
+      "policy.model.action_head.model.transformer_blocks.7.attn1",
+      "policy.model.action_head.model.transformer_blocks.8.attn1",
+      "policy.model.action_head.model.transformer_blocks.9.attn1",
+      "policy.model.action_head.model.transformer_blocks.10.attn1",
+      "policy.model.action_head.model.transformer_blocks.11.attn1",
+      "policy.model.action_head.model.transformer_blocks.12.attn1",
+      "policy.model.action_head.model.transformer_blocks.13.attn1",
+      "policy.model.action_head.model.transformer_blocks.14.attn1",
+      "policy.model.action_head.model.transformer_blocks.15.attn1"
+    ],
+    "wrap_seconds": 1.1697982586920261
+  },
+  "prewarm_observations": 1,
+  "prewarm_observation_source": "real",
+  "prewarm_indices": "115",
+  "video_backend": "torchvision_av",
+  "model_load_seconds": 10.871404442936182,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prepare_seconds": 18.65209137275815,
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av",
+    "prewarm_task_descriptions": [
+      "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "put both moka pots on the stove"
+    ],
+    "prewarm_observations_with_task_descriptions": 4
+  },
+  "prewarm_get_action_seconds": {
+    "count": 4,
+    "mean": 1.624310603365302,
+    "min": 0.08603696897625923,
+    "max": 3.7973476462066174,
+    "p50": 1.3069288991391659,
+    "p90": 3.078487963229418,
+    "p99": 3.7254616779088967
+  },
+  "prewarm_memory": {
+    "allocated_bytes": 5476782080,
+    "reserved_bytes": 5611978752,
+    "max_allocated_bytes": 5682666496,
+    "max_reserved_bytes": 5804916736
+  },
+  "prewarm_total_seconds": 6.610380470752716
+}

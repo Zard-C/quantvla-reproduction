@@ -16,19 +16,12 @@ from fp16_linear_profiler import (
     patch_timed_fp16_modules,
     reset_module_stats,
 )
+from phase13_compile_targets import TORCH_COMPILE_TARGETS, compile_policy_targets
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
 from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations, cuda_memory, synchronize
 from timing_utils import TimedPolicyWrapper, summarize_float
-
-
-TORCH_COMPILE_TARGETS = (
-    "none",
-    "backbone",
-    "action_head_model",
-    "backbone_action_head_model",
-)
 
 
 def load_object(spec: str) -> Any:
@@ -96,42 +89,6 @@ def build_prewarm_observations(args: argparse.Namespace, data_config: Any) -> tu
         base_seed=args.prewarm_base_seed,
     )
     return build_observations(prewarm_args, data_config)
-
-
-def compile_policy_targets(policy: Any, args: argparse.Namespace, torch_module: Any) -> dict[str, Any]:
-    """Install torch.compile wrappers on tensor-heavy policy submodules."""
-
-    target = str(args.torch_compile_target)
-    if target == "none":
-        return {"enabled": False, "target": target, "compiled_modules": []}
-
-    compile_kwargs: dict[str, Any] = {
-        "backend": args.torch_compile_backend,
-        "mode": args.torch_compile_mode,
-        "fullgraph": bool(args.torch_compile_fullgraph),
-    }
-    if args.torch_compile_dynamic is not None:
-        compile_kwargs["dynamic"] = bool(args.torch_compile_dynamic)
-
-    compiled_modules: list[str] = []
-    started = time.perf_counter()
-    if target in {"backbone", "backbone_action_head_model"}:
-        policy.model.backbone = torch_module.compile(policy.model.backbone, **compile_kwargs)
-        compiled_modules.append("policy.model.backbone")
-    if target in {"action_head_model", "backbone_action_head_model"}:
-        policy.model.action_head.model = torch_module.compile(policy.model.action_head.model, **compile_kwargs)
-        compiled_modules.append("policy.model.action_head.model")
-
-    return {
-        "enabled": True,
-        "target": target,
-        "backend": args.torch_compile_backend,
-        "mode": args.torch_compile_mode,
-        "fullgraph": bool(args.torch_compile_fullgraph),
-        "dynamic": args.torch_compile_dynamic,
-        "compiled_modules": compiled_modules,
-        "wrap_seconds": time.perf_counter() - started,
-    }
 
 
 def run_prewarm(policy: Any, observations: list[dict[str, Any]], *, device: str) -> tuple[dict[str, Any], dict[str, int]]:

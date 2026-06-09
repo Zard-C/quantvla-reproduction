@@ -24,13 +24,12 @@ import torch
 import tqdm
 from libero.libero import benchmark
 
-from phase3_fake_quant_forward import compare_actions, set_seed, set_submodule
+from phase13_compile_targets import TORCH_COMPILE_TARGETS, CompileTargetSwitcher
+from phase3_fake_quant_forward import compare_actions, set_seed
 from phase3_gr00t_smoke import _insert_paths
-from timing_utils import summarize_float
 
 
 ACTION_KEYS = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
-TORCH_COMPILE_TARGETS = ("action_head_model",)
 EPS = 1e-8
 
 
@@ -156,14 +155,12 @@ class CompileDriftPolicy:
         *,
         headless: bool,
         device: str,
-        compiled_action_head_model: Any,
-        eager_action_head_model: Any,
+        target_switcher: CompileTargetSwitcher,
     ):
         self.policy = policy
         self.headless = headless
         self.device = device
-        self.compiled_action_head_model = compiled_action_head_model
-        self.eager_action_head_model = eager_action_head_model
+        self.target_switcher = target_switcher
 
     def process_observation(self, obs: dict[str, Any], lang: str) -> dict[str, Any]:
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
@@ -189,7 +186,7 @@ class CompileDriftPolicy:
         return new_obs
 
     def get_eager_compiled(self, processed_obs: dict[str, Any], seed: int) -> tuple[dict[str, Any], dict[str, Any], dict[str, float]]:
-        set_submodule(self.policy.model, "action_head.model", self.eager_action_head_model)
+        self.target_switcher.use_eager()
         set_seed(seed)
         synchronize_if_cuda(self.device)
         eager_started = time.perf_counter()
@@ -198,7 +195,7 @@ class CompileDriftPolicy:
         synchronize_if_cuda(self.device)
         eager_seconds = time.perf_counter() - eager_started
 
-        set_submodule(self.policy.model, "action_head.model", self.compiled_action_head_model)
+        self.target_switcher.use_compiled()
         set_seed(seed)
         synchronize_if_cuda(self.device)
         compiled_started = time.perf_counter()
@@ -207,7 +204,7 @@ class CompileDriftPolicy:
         synchronize_if_cuda(self.device)
         compiled_seconds = time.perf_counter() - compiled_started
 
-        set_submodule(self.policy.model, "action_head.model", self.eager_action_head_model)
+        self.target_switcher.use_eager()
         return eager, compiled, {
             "eager_get_action_seconds": float(eager_seconds),
             "compiled_get_action_seconds": float(compiled_seconds),
@@ -301,24 +298,15 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
     synchronize_if_cuda(args.device)
     model_load_seconds = time.perf_counter() - load_started
 
-    eager_action_head_model = policy.model.action_head.model
-    compile_kwargs: dict[str, Any] = {
-        "backend": args.torch_compile_backend,
-        "mode": args.torch_compile_mode,
-        "fullgraph": bool(args.torch_compile_fullgraph),
-    }
-    if args.torch_compile_dynamic is not None:
-        compile_kwargs["dynamic"] = args.torch_compile_dynamic == "true"
     compile_started = time.perf_counter()
-    compiled_action_head_model = torch.compile(eager_action_head_model, **compile_kwargs)
+    target_switcher = CompileTargetSwitcher(policy, args, torch)
     compile_wrap_seconds = time.perf_counter() - compile_started
 
     local_policy = CompileDriftPolicy(
         policy,
         headless=args.headless,
         device=args.device,
-        compiled_action_head_model=compiled_action_head_model,
-        eager_action_head_model=eager_action_head_model,
+        target_switcher=target_switcher,
     )
 
     cases = parse_case_list(args.case_list)
@@ -343,14 +331,7 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
         "cuda_device_capability": list(torch.cuda.get_device_capability()) if torch.cuda.is_available() else None,
         "device": args.device,
         "model_load_seconds": float(model_load_seconds),
-        "torch_compile": {
-            "target": args.torch_compile_target,
-            "backend": args.torch_compile_backend,
-            "mode": args.torch_compile_mode,
-            "fullgraph": bool(args.torch_compile_fullgraph),
-            "dynamic": args.torch_compile_dynamic,
-            "wrap_seconds": float(compile_wrap_seconds),
-        },
+        "torch_compile": target_switcher.info(args) | {"wrap_seconds": float(compile_wrap_seconds)},
         "episode_summaries": [],
         "episode_trace_files": [],
     }
@@ -513,6 +494,8 @@ def main() -> None:
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase13_torch_compile_online_drift.json"))
     parser.add_argument("--output-md", type=Path, default=Path("docs/phase13_torch_compile_online_drift.md"))
     args = parser.parse_args()
+    if args.torch_compile_dynamic is not None:
+        args.torch_compile_dynamic = args.torch_compile_dynamic == "true"
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
