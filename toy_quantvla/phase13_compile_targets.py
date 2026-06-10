@@ -14,6 +14,8 @@ TORCH_COMPILE_TARGETS = (
     "none",
     "backbone",
     "action_head_model",
+    "action_head_model_blocks_4_15_eager",
+    "action_head_model_blocks_6_15_eager",
     "action_head_model_ff_8_15_eager",
     "action_head_model_blocks_8_15_eager",
     "backbone_action_head_model",
@@ -52,6 +54,10 @@ def compile_module_paths_for_target(target: str) -> list[str]:
         return ["backbone"]
     if target == "action_head_model":
         return ["action_head.model"]
+    if target == "action_head_model_blocks_4_15_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_6_15_eager":
+        return ["action_head.model"]
     if target == "action_head_model_ff_8_15_eager":
         return ["action_head.model"]
     if target == "action_head_model_blocks_8_15_eager":
@@ -84,6 +90,10 @@ def eager_island_paths_for_target(target: str) -> list[str]:
 
     if target == "action_head_model_ff_8_15_eager":
         return _dit_paths("ff", _block_indices(8, 15))
+    if target == "action_head_model_blocks_4_15_eager":
+        return _dit_paths("block", _block_indices(4, 15))
+    if target == "action_head_model_blocks_6_15_eager":
+        return _dit_paths("block", _block_indices(6, 15))
     if target == "action_head_model_blocks_8_15_eager":
         return _dit_paths("block", _block_indices(8, 15))
     return []
