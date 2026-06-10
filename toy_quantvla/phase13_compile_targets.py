@@ -14,10 +14,24 @@ TORCH_COMPILE_TARGETS = (
     "none",
     "backbone",
     "action_head_model",
+    "action_head_model_blocks_0_15_eager",
+    "action_head_model_blocks_0_7_eager",
+    "action_head_model_blocks_0_3_eager",
+    "action_head_model_blocks_0_0_eager",
+    "action_head_model_blocks_0_1_eager",
+    "action_head_model_blocks_1_1_eager",
+    "action_head_model_blocks_2_3_eager",
+    "action_head_model_blocks_2_2_eager",
+    "action_head_model_blocks_3_3_eager",
     "action_head_model_blocks_4_15_eager",
+    "action_head_model_blocks_4_7_eager",
+    "action_head_model_blocks_4_5_eager",
+    "action_head_model_blocks_6_7_eager",
     "action_head_model_blocks_6_15_eager",
     "action_head_model_ff_8_15_eager",
     "action_head_model_blocks_8_15_eager",
+    "action_head_model_attn_all_eager",
+    "action_head_model_ff_all_eager",
     "backbone_action_head_model",
     "action_head_dit_blocks_all",
     "action_head_dit_blocks_0_7",
@@ -54,13 +68,41 @@ def compile_module_paths_for_target(target: str) -> list[str]:
         return ["backbone"]
     if target == "action_head_model":
         return ["action_head.model"]
+    if target == "action_head_model_blocks_0_15_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_0_7_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_0_3_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_0_0_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_0_1_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_1_1_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_2_3_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_2_2_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_3_3_eager":
+        return ["action_head.model"]
     if target == "action_head_model_blocks_4_15_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_4_7_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_4_5_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_blocks_6_7_eager":
         return ["action_head.model"]
     if target == "action_head_model_blocks_6_15_eager":
         return ["action_head.model"]
     if target == "action_head_model_ff_8_15_eager":
         return ["action_head.model"]
     if target == "action_head_model_blocks_8_15_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_attn_all_eager":
+        return ["action_head.model"]
+    if target == "action_head_model_ff_all_eager":
         return ["action_head.model"]
     if target == "backbone_action_head_model":
         return ["backbone", "action_head.model"]
@@ -90,12 +132,40 @@ def eager_island_paths_for_target(target: str) -> list[str]:
 
     if target == "action_head_model_ff_8_15_eager":
         return _dit_paths("ff", _block_indices(8, 15))
+    if target == "action_head_model_blocks_0_15_eager":
+        return _dit_paths("block", _block_indices(0, 15))
+    if target == "action_head_model_blocks_0_7_eager":
+        return _dit_paths("block", _block_indices(0, 7))
+    if target == "action_head_model_blocks_0_3_eager":
+        return _dit_paths("block", _block_indices(0, 3))
+    if target == "action_head_model_blocks_0_0_eager":
+        return _dit_paths("block", _block_indices(0, 0))
+    if target == "action_head_model_blocks_0_1_eager":
+        return _dit_paths("block", _block_indices(0, 1))
+    if target == "action_head_model_blocks_1_1_eager":
+        return _dit_paths("block", _block_indices(1, 1))
+    if target == "action_head_model_blocks_2_3_eager":
+        return _dit_paths("block", _block_indices(2, 3))
+    if target == "action_head_model_blocks_2_2_eager":
+        return _dit_paths("block", _block_indices(2, 2))
+    if target == "action_head_model_blocks_3_3_eager":
+        return _dit_paths("block", _block_indices(3, 3))
     if target == "action_head_model_blocks_4_15_eager":
         return _dit_paths("block", _block_indices(4, 15))
+    if target == "action_head_model_blocks_4_7_eager":
+        return _dit_paths("block", _block_indices(4, 7))
+    if target == "action_head_model_blocks_4_5_eager":
+        return _dit_paths("block", _block_indices(4, 5))
+    if target == "action_head_model_blocks_6_7_eager":
+        return _dit_paths("block", _block_indices(6, 7))
     if target == "action_head_model_blocks_6_15_eager":
         return _dit_paths("block", _block_indices(6, 15))
     if target == "action_head_model_blocks_8_15_eager":
         return _dit_paths("block", _block_indices(8, 15))
+    if target == "action_head_model_attn_all_eager":
+        return _dit_paths("attn", DIT_BLOCKS)
+    if target == "action_head_model_ff_all_eager":
+        return _dit_paths("ff", DIT_BLOCKS)
     return []
 
 

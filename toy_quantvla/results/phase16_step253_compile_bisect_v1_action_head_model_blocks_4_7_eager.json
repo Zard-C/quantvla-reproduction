@@ -1,0 +1,475 @@
+{
+  "boundary": "focused eager-controlled same-observation replay around suspected compile drift spike",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "task_suite_name": "libero_10",
+  "case_list": "6:8",
+  "focus_policy_steps": [
+    253
+  ],
+  "seed_offsets": [
+    -2,
+    0,
+    2
+  ],
+  "repeats": 2,
+  "warmup_repeats": 1,
+  "denoising_steps": 8,
+  "num_steps_wait": 10,
+  "max_policy_steps": 254,
+  "base_seed": 20260613,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "device": "cuda",
+  "model_load_seconds": 11.415328342467546,
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model_blocks_4_7_eager",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "cudagraph_mark_step": false,
+    "cudagraph_mark_step_modules": [],
+    "compiled_modules": [
+      "policy.model.action_head.model"
+    ],
+    "eager_island_modules": [
+      "policy.model.action_head.model.transformer_blocks.4",
+      "policy.model.action_head.model.transformer_blocks.5",
+      "policy.model.action_head.model.transformer_blocks.6",
+      "policy.model.action_head.model.transformer_blocks.7"
+    ],
+    "wrap_seconds": 1.3735797591507435
+  },
+  "case_summaries": [
+    {
+      "task_id": 6,
+      "task_description": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "init_index": 8,
+      "success_before_window_end": false,
+      "exception": null,
+      "drive_policy_steps": 254,
+      "elapsed_seconds": 36.38904779776931,
+      "focus_steps_observed": [
+        253
+      ],
+      "focus_record_summary": {
+        "samples": 6,
+        "continuous_max_abs": {
+          "count": 6,
+          "mean": 0.018749237060546875,
+          "min": 0.00015735626220703125,
+          "max": 0.054931640625,
+          "p50": 0.0011587142944335938,
+          "p90": 0.054931640625,
+          "p99": 0.054931640625
+        },
+        "continuous_l2": {
+          "count": 6,
+          "mean": 0.026247216657909207,
+          "min": 0.00023971093036928565,
+          "max": 0.07695316086621351,
+          "p50": 0.0015487781771448348,
+          "p90": 0.07695316086621351,
+          "p99": 0.07695316086621351
+        },
+        "eager_get_action_seconds": {
+          "count": 6,
+          "mean": 0.12202888851364453,
+          "min": 0.09229112789034843,
+          "max": 0.1314358189702034,
+          "p50": 0.12309359386563301,
+          "p90": 0.13134437426924706,
+          "p99": 0.1314358189702034
+        },
+        "compiled_get_action_seconds": {
+          "count": 6,
+          "mean": 0.08931187229851882,
+          "min": 0.07290741801261902,
+          "max": 0.16099486127495766,
+          "p50": 0.07326486334204674,
+          "p90": 0.0804649218916893,
+          "p99": 0.16099486127495766
+        },
+        "compiled_over_eager_time": {
+          "count": 6,
+          "mean": 0.733707682502229,
+          "min": 0.5565970430180515,
+          "max": 1.225746151448627,
+          "p50": 0.5922925452335366,
+          "p90": 0.815163921870206,
+          "p99": 1.225746151448627
+        },
+        "same_seed_repeat_span": {
+          "count": 18,
+          "mean": 0.0,
+          "min": 0.0,
+          "max": 0.0,
+          "p50": 0.0,
+          "p90": 0.0,
+          "p99": 0.0
+        },
+        "top_record": {
+          "policy_step": 253,
+          "nominal_seed": 20868866,
+          "denoising_seed": 20868866,
+          "seed_offset": 0,
+          "repeat": 0,
+          "raw_diff": {
+            "x": 0.054931640625,
+            "y": -0.0067806243896484375,
+            "z": 0.04119873046875,
+            "roll": -0.0031431466341018677,
+            "pitch": 0.0339236855506897,
+            "yaw": -0.0005438327789306641,
+            "gripper": -0.0029296875
+          },
+          "continuous_l2": 0.07695316086621351,
+          "continuous_max_abs": 0.054931640625,
+          "max_dim": "x",
+          "eager_raw_action": {
+            "action.x": -0.09050440788269043,
+            "action.y": -0.02038097381591797,
+            "action.z": -0.14427709579467773,
+            "action.roll": 0.015276774764060974,
+            "action.pitch": 0.029131770133972168,
+            "action.yaw": -0.027124494314193726,
+            "action.gripper": 0.005848705768585205
+          },
+          "compiled_raw_action": {
+            "action.x": -0.03557276725769043,
+            "action.y": -0.027161598205566406,
+            "action.z": -0.10307836532592773,
+            "action.roll": 0.012133628129959106,
+            "action.pitch": 0.06305545568466187,
+            "action.yaw": -0.02766832709312439,
+            "action.gripper": 0.002919018268585205
+          },
+          "eager_libero_action": [
+            -0.09050440788269043,
+            -0.02038097381591797,
+            -0.14427709579467773,
+            0.015276774764060974,
+            0.029131770133972168,
+            -0.027124494314193726,
+            1.0
+          ],
+          "compiled_libero_action": [
+            -0.03557276725769043,
+            -0.027161598205566406,
+            -0.10307836532592773,
+            0.012133628129959106,
+            0.06305545568466187,
+            -0.02766832709312439,
+            1.0
+          ],
+          "raw_action_metrics": {
+            "mse": 0.03978151779782376,
+            "nmse": 0.4256463524680395,
+            "rmse": 0.1994530465995036,
+            "relative_rmse": 0.6524157818968204,
+            "cosine": 0.8388640250291054,
+            "max_abs_diff": 0.9915771484375,
+            "teacher_rms": 0.30571462575540076,
+            "student_rms": 0.36639949053541987,
+            "per_key": {
+              "action.gripper": {
+                "mse": 0.24395227931609054,
+                "nmse": 0.39484137371879324,
+                "max_abs_diff": 0.9915771484375,
+                "teacher_rms": 0.7860336037808976,
+                "student_rms": 0.9302012968147252
+              },
+              "action.pitch": {
+                "mse": 0.0005481246280711338,
+                "nmse": 0.21861603496734153,
+                "max_abs_diff": 0.0339236855506897,
+                "teacher_rms": 0.050072428073785355,
+                "student_rms": 0.04347956778479816
+              },
+              "action.roll": {
+                "mse": 9.859201284426189e-05,
+                "nmse": 0.65560576913321,
+                "max_abs_diff": 0.015388265252113342,
+                "teacher_rms": 0.012263077793692678,
+                "student_rms": 0.01217731136421959
+              },
+              "action.x": {
+                "mse": 0.006273507293120151,
+                "nmse": 6.767941593776821,
+                "max_abs_diff": 0.222015380859375,
+                "teacher_rms": 0.030445765815558568,
+                "student_rms": 0.07555045456731004
+              },
+              "action.y": {
+                "mse": 0.0006083088592845343,
+                "nmse": 1.5488141915792337,
+                "max_abs_diff": 0.03936767578125,
+                "teacher_rms": 0.019818118051252904,
+                "student_rms": 0.03220643835892171
+              },
+              "action.yaw": {
+                "mse": 6.609665343199067e-05,
+                "nmse": 0.05881585133572202,
+                "max_abs_diff": 0.01794615387916565,
+                "teacher_rms": 0.033522974116017665,
+                "student_rms": 0.03748391117529487
+              },
+              "action.z": {
+                "mse": 0.026923715821923766,
+                "nmse": 0.8607304800798128,
+                "max_abs_diff": 0.2760315537452698,
+                "teacher_rms": 0.17686174586274273,
+                "student_rms": 0.25352854844298006
+              }
+            }
+          },
+          "libero_action_metrics": {
+            "rmse": 0.029085560893192672,
+            "max_abs_diff": 0.054931640625,
+            "l2": 0.07695316086621351,
+            "eager_l2": 1.0154999214086426,
+            "compiled_l2": 1.0087205139844457,
+            "per_dim_diff": [
+              0.054931640625,
+              -0.0067806243896484375,
+              0.04119873046875,
+              -0.0031431466341018677,
+              0.0339236855506897,
+              -0.0005438327789306641,
+              0.0
+            ]
+          },
+          "timing": {
+            "eager_get_action_seconds": 0.1314358189702034,
+            "compiled_get_action_seconds": 0.07326486334204674,
+            "compiled_over_eager_time": 0.557419308648702
+          }
+        }
+      },
+      "focus_step_summaries": [
+        {
+          "policy_step": 253,
+          "pre_state": {
+            "robot0_eef_pos": [
+              0.17899150968399205,
+              0.03636495788414679,
+              0.5410142632511947
+            ],
+            "robot0_eef_quat": [
+              0.9623886421480761,
+              -0.23548644754726505,
+              -0.00521612460718987,
+              -0.1353773486593416
+            ],
+            "robot0_gripper_qpos": [
+              0.0026204835033558777,
+              -0.006527637302557414
+            ]
+          },
+          "summary": {
+            "samples": 6,
+            "continuous_max_abs": {
+              "count": 6,
+              "mean": 0.018749237060546875,
+              "min": 0.00015735626220703125,
+              "max": 0.054931640625,
+              "p50": 0.0011587142944335938,
+              "p90": 0.054931640625,
+              "p99": 0.054931640625
+            },
+            "continuous_l2": {
+              "count": 6,
+              "mean": 0.026247216657909207,
+              "min": 0.00023971093036928565,
+              "max": 0.07695316086621351,
+              "p50": 0.0015487781771448348,
+              "p90": 0.07695316086621351,
+              "p99": 0.07695316086621351
+            },
+            "eager_get_action_seconds": {
+              "count": 6,
+              "mean": 0.12202888851364453,
+              "min": 0.09229112789034843,
+              "max": 0.1314358189702034,
+              "p50": 0.12309359386563301,
+              "p90": 0.13134437426924706,
+              "p99": 0.1314358189702034
+            },
+            "compiled_get_action_seconds": {
+              "count": 6,
+              "mean": 0.08931187229851882,
+              "min": 0.07290741801261902,
+              "max": 0.16099486127495766,
+              "p50": 0.07326486334204674,
+              "p90": 0.0804649218916893,
+              "p99": 0.16099486127495766
+            },
+            "compiled_over_eager_time": {
+              "count": 6,
+              "mean": 0.733707682502229,
+              "min": 0.5565970430180515,
+              "max": 1.225746151448627,
+              "p50": 0.5922925452335366,
+              "p90": 0.815163921870206,
+              "p99": 1.225746151448627
+            },
+            "same_seed_repeat_span": {
+              "count": 18,
+              "mean": 0.0,
+              "min": 0.0,
+              "max": 0.0,
+              "p50": 0.0,
+              "p90": 0.0,
+              "p99": 0.0
+            },
+            "top_record": {
+              "policy_step": 253,
+              "nominal_seed": 20868866,
+              "denoising_seed": 20868866,
+              "seed_offset": 0,
+              "repeat": 0,
+              "raw_diff": {
+                "x": 0.054931640625,
+                "y": -0.0067806243896484375,
+                "z": 0.04119873046875,
+                "roll": -0.0031431466341018677,
+                "pitch": 0.0339236855506897,
+                "yaw": -0.0005438327789306641,
+                "gripper": -0.0029296875
+              },
+              "continuous_l2": 0.07695316086621351,
+              "continuous_max_abs": 0.054931640625,
+              "max_dim": "x",
+              "eager_raw_action": {
+                "action.x": -0.09050440788269043,
+                "action.y": -0.02038097381591797,
+                "action.z": -0.14427709579467773,
+                "action.roll": 0.015276774764060974,
+                "action.pitch": 0.029131770133972168,
+                "action.yaw": -0.027124494314193726,
+                "action.gripper": 0.005848705768585205
+              },
+              "compiled_raw_action": {
+                "action.x": -0.03557276725769043,
+                "action.y": -0.027161598205566406,
+                "action.z": -0.10307836532592773,
+                "action.roll": 0.012133628129959106,
+                "action.pitch": 0.06305545568466187,
+                "action.yaw": -0.02766832709312439,
+                "action.gripper": 0.002919018268585205
+              },
+              "eager_libero_action": [
+                -0.09050440788269043,
+                -0.02038097381591797,
+                -0.14427709579467773,
+                0.015276774764060974,
+                0.029131770133972168,
+                -0.027124494314193726,
+                1.0
+              ],
+              "compiled_libero_action": [
+                -0.03557276725769043,
+                -0.027161598205566406,
+                -0.10307836532592773,
+                0.012133628129959106,
+                0.06305545568466187,
+                -0.02766832709312439,
+                1.0
+              ],
+              "raw_action_metrics": {
+                "mse": 0.03978151779782376,
+                "nmse": 0.4256463524680395,
+                "rmse": 0.1994530465995036,
+                "relative_rmse": 0.6524157818968204,
+                "cosine": 0.8388640250291054,
+                "max_abs_diff": 0.9915771484375,
+                "teacher_rms": 0.30571462575540076,
+                "student_rms": 0.36639949053541987,
+                "per_key": {
+                  "action.gripper": {
+                    "mse": 0.24395227931609054,
+                    "nmse": 0.39484137371879324,
+                    "max_abs_diff": 0.9915771484375,
+                    "teacher_rms": 0.7860336037808976,
+                    "student_rms": 0.9302012968147252
+                  },
+                  "action.pitch": {
+                    "mse": 0.0005481246280711338,
+                    "nmse": 0.21861603496734153,
+                    "max_abs_diff": 0.0339236855506897,
+                    "teacher_rms": 0.050072428073785355,
+                    "student_rms": 0.04347956778479816
+                  },
+                  "action.roll": {
+                    "mse": 9.859201284426189e-05,
+                    "nmse": 0.65560576913321,
+                    "max_abs_diff": 0.015388265252113342,
+                    "teacher_rms": 0.012263077793692678,
+                    "student_rms": 0.01217731136421959
+                  },
+                  "action.x": {
+                    "mse": 0.006273507293120151,
+                    "nmse": 6.767941593776821,
+                    "max_abs_diff": 0.222015380859375,
+                    "teacher_rms": 0.030445765815558568,
+                    "student_rms": 0.07555045456731004
+                  },
+                  "action.y": {
+                    "mse": 0.0006083088592845343,
+                    "nmse": 1.5488141915792337,
+                    "max_abs_diff": 0.03936767578125,
+                    "teacher_rms": 0.019818118051252904,
+                    "student_rms": 0.03220643835892171
+                  },
+                  "action.yaw": {
+                    "mse": 6.609665343199067e-05,
+                    "nmse": 0.05881585133572202,
+                    "max_abs_diff": 0.01794615387916565,
+                    "teacher_rms": 0.033522974116017665,
+                    "student_rms": 0.03748391117529487
+                  },
+                  "action.z": {
+                    "mse": 0.026923715821923766,
+                    "nmse": 0.8607304800798128,
+                    "max_abs_diff": 0.2760315537452698,
+                    "teacher_rms": 0.17686174586274273,
+                    "student_rms": 0.25352854844298006
+                  }
+                }
+              },
+              "libero_action_metrics": {
+                "rmse": 0.029085560893192672,
+                "max_abs_diff": 0.054931640625,
+                "l2": 0.07695316086621351,
+                "eager_l2": 1.0154999214086426,
+                "compiled_l2": 1.0087205139844457,
+                "per_dim_diff": [
+                  0.054931640625,
+                  -0.0067806243896484375,
+                  0.04119873046875,
+                  -0.0031431466341018677,
+                  0.0339236855506897,
+                  -0.0005438327789306641,
+                  0.0
+                ]
+              },
+              "timing": {
+                "eager_get_action_seconds": 0.1314358189702034,
+                "compiled_get_action_seconds": 0.07326486334204674,
+                "compiled_over_eager_time": 0.557419308648702
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "trace_files": [
+    "toy_quantvla/results/phase16_step253_compile_bisect_v1_action_head_model_blocks_4_7_eager_trace/task=06--init=08--task=put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the.json"
+  ]
+}
