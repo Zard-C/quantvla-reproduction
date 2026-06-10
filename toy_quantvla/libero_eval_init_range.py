@@ -10,6 +10,7 @@ without repeating the accepted Phase 5 baseline inits.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import os
 import pprint
@@ -67,10 +68,15 @@ class GR00TPolicy:
         },
     }
 
-    def __init__(self, host="localhost", port=5555, headless=False):
+    def __init__(self, host="localhost", port=5555, headless=False, gripper_oracle_port=None):
         from gr00t.eval.service import ExternalRobotInferenceClient
 
         self.policy = ExternalRobotInferenceClient(host=host, port=port)
+        self.gripper_oracle_policy = (
+            ExternalRobotInferenceClient(host=host, port=gripper_oracle_port)
+            if gripper_oracle_port is not None
+            else None
+        )
         self.config = self.LIBERO_CONFIG
         self.action_keys = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
         self.headless = headless
@@ -85,14 +91,46 @@ class GR00TPolicy:
         preprocess_seconds = time.perf_counter() - started
         remote_started = time.perf_counter()
         action_chunk = self.policy.get_action(obs_dict)
-        remote_get_action_seconds = time.perf_counter() - remote_started
+        primary_remote_get_action_seconds = time.perf_counter() - remote_started
+        gripper_oracle_remote_get_action_seconds = 0.0
+        primary_gripper_action = None
+        oracle_gripper_action = None
+        if self.gripper_oracle_policy is not None:
+            oracle_started = time.perf_counter()
+            gripper_oracle_chunk = self.gripper_oracle_policy.get_action(obs_dict)
+            gripper_oracle_remote_get_action_seconds = time.perf_counter() - oracle_started
+            primary_gripper_action = copy.deepcopy(action_chunk["action.gripper"])
+            oracle_gripper_action = copy.deepcopy(gripper_oracle_chunk["action.gripper"])
+            action_chunk = {
+                key: value.copy() if hasattr(value, "copy") else copy.deepcopy(value)
+                for key, value in action_chunk.items()
+            }
+            action_chunk["action.gripper"] = (
+                gripper_oracle_chunk["action.gripper"].copy()
+                if hasattr(gripper_oracle_chunk["action.gripper"], "copy")
+                else copy.deepcopy(gripper_oracle_chunk["action.gripper"])
+            )
+        remote_get_action_seconds = (
+            primary_remote_get_action_seconds + gripper_oracle_remote_get_action_seconds
+        )
         postprocess_started = time.perf_counter()
         action_array = self._convert_to_libero_action(action_chunk, 0)
         action_trace = self._trace_action(action_chunk, 0)
+        if self.gripper_oracle_policy is not None:
+            action_trace["primary.action.gripper"] = float(
+                np.asarray(primary_gripper_action).reshape(-1)[0]
+            )
+            action_trace["gripper_oracle.action.gripper"] = float(
+                np.asarray(oracle_gripper_action).reshape(-1)[0]
+            )
         postprocess_seconds = time.perf_counter() - postprocess_started
         timing = {
             "preprocess_seconds": float(preprocess_seconds),
             "remote_get_action_seconds": float(remote_get_action_seconds),
+            "primary_remote_get_action_seconds": float(primary_remote_get_action_seconds),
+            "gripper_oracle_remote_get_action_seconds": float(
+                gripper_oracle_remote_get_action_seconds
+            ),
             "postprocess_seconds": float(postprocess_seconds),
             "policy_total_seconds": float(time.perf_counter() - started),
         }
@@ -269,7 +307,12 @@ def eval_libero(args: argparse.Namespace) -> None:
                 )
 
             env, task_description = get_libero_env(task, resolution=256)
-            gr00t_policy = GR00TPolicy(host="localhost", port=args.port, headless=args.headless)
+            gr00t_policy = GR00TPolicy(
+                host="localhost",
+                port=args.port,
+                headless=args.headless,
+                gripper_oracle_port=args.gripper_oracle_port,
+            )
 
             task_episodes, task_successes = 0, 0
             for init_index in tqdm.tqdm(task_init_indices):
@@ -462,6 +505,11 @@ def main() -> None:
     parser.add_argument("--init-start", type=int, default=5)
     parser.add_argument("--num-inits", type=int, default=10)
     parser.add_argument("--port", type=int, default=5555)
+    parser.add_argument(
+        "--gripper-oracle-port",
+        type=int,
+        help="Optional second inference server; use its same-observation gripper channel only.",
+    )
     parser.add_argument("--headless", action="store_true")
     parser.add_argument(
         "--case-list",
