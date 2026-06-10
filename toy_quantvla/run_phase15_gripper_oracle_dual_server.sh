@@ -15,6 +15,7 @@ COMPILED_PORT="${COMPILED_PORT:-5598}"
 GRIPPER_ORACLE_PORT="${GRIPPER_ORACLE_PORT:-5599}"
 TAG="${TAG:-phase15_gripper_oracle_dual_server_smoke}"
 POLICY_SEED_BASE="${POLICY_SEED_BASE:-20260613}"
+ORACLE_ACTION_KEYS="${ORACLE_ACTION_KEYS:-gripper}"
 COMPILE_TARGET="${COMPILE_TARGET:-action_head_model_blocks_8_15_eager}"
 COMPILE_MODE="${COMPILE_MODE:-reduce-overhead}"
 COMPILE_BACKEND="${COMPILE_BACKEND:-inductor}"
@@ -106,6 +107,7 @@ run_eval() {
       --headless \
       --port "${COMPILED_PORT}" \
       --gripper-oracle-port "${GRIPPER_ORACLE_PORT}" \
+      --oracle-action-keys "${ORACLE_ACTION_KEYS}" \
       --trace-dir "/tmp/${TAG}_compiled_gripper_oracle_trace" \
       --log-file "toy_quantvla/results/${TAG}_compiled_gripper_oracle_client.log" \
       --latency-json "toy_quantvla/results/${TAG}_compiled_gripper_oracle_client_latency.json" \
@@ -129,6 +131,7 @@ echo "TAG=${TAG}"
 echo "CASE_LIST=${CASE_LIST}"
 echo "COMPILED_PORT=${COMPILED_PORT}"
 echo "GRIPPER_ORACLE_PORT=${GRIPPER_ORACLE_PORT}"
+echo "ORACLE_ACTION_KEYS=${ORACLE_ACTION_KEYS}"
 echo "COMPILE_TARGET=${COMPILE_TARGET}"
 echo "COMPILE_MODE=${COMPILE_MODE}"
 echo "COMPILE_BACKEND=${COMPILE_BACKEND}"

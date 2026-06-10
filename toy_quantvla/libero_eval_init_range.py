@@ -25,6 +25,13 @@ import tqdm
 from libero.libero import benchmark
 from timing_utils import REQUEST_SEED_KEY, summarize_breakdowns, summarize_float
 
+ACTION_KEYS = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
+ACTION_KEY_GROUPS = {
+    "translation": ["x", "y", "z"],
+    "rotation": ["roll", "pitch", "yaw"],
+    "all": ACTION_KEYS,
+}
+
 
 def insert_paths(isaac_root: Path) -> None:
     sys.path.insert(0, str(isaac_root))
@@ -52,6 +59,34 @@ def show_obs_images_cv2(new_obs):
     cv2.waitKey(1)
 
 
+def parse_oracle_action_keys(spec: str) -> list[str]:
+    keys: list[str] = []
+    for item in str(spec).split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if item in ACTION_KEY_GROUPS:
+            keys.extend(ACTION_KEY_GROUPS[item])
+        elif item in ACTION_KEYS:
+            keys.append(item)
+        else:
+            raise ValueError(
+                f"Unknown oracle action key {item!r}; expected one of {ACTION_KEYS} "
+                f"or groups {sorted(ACTION_KEY_GROUPS)}"
+            )
+    out: list[str] = []
+    for key in ACTION_KEYS:
+        if key in keys and key not in out:
+            out.append(key)
+    if not out:
+        raise ValueError(f"No oracle action keys parsed from {spec!r}")
+    return out
+
+
+def action_scalar(value) -> float:
+    return float(np.asarray(value).reshape(-1)[0])
+
+
 class GR00TPolicy:
     """GR00T policy wrapper for LIBERO environments."""
 
@@ -68,7 +103,14 @@ class GR00TPolicy:
         },
     }
 
-    def __init__(self, host="localhost", port=5555, headless=False, gripper_oracle_port=None):
+    def __init__(
+        self,
+        host="localhost",
+        port=5555,
+        headless=False,
+        gripper_oracle_port=None,
+        oracle_action_keys="gripper",
+    ):
         from gr00t.eval.service import ExternalRobotInferenceClient
 
         self.policy = ExternalRobotInferenceClient(host=host, port=port)
@@ -78,7 +120,12 @@ class GR00TPolicy:
             else None
         )
         self.config = self.LIBERO_CONFIG
-        self.action_keys = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
+        self.action_keys = ACTION_KEYS
+        self.oracle_action_keys = (
+            parse_oracle_action_keys(oracle_action_keys)
+            if self.gripper_oracle_policy is not None
+            else []
+        )
         self.headless = headless
 
     def get_action(self, observation_dict, lang: str):
@@ -92,45 +139,47 @@ class GR00TPolicy:
         remote_started = time.perf_counter()
         action_chunk = self.policy.get_action(obs_dict)
         primary_remote_get_action_seconds = time.perf_counter() - remote_started
-        gripper_oracle_remote_get_action_seconds = 0.0
-        primary_gripper_action = None
-        oracle_gripper_action = None
+        oracle_remote_get_action_seconds = 0.0
+        oracle_trace_values = {}
         if self.gripper_oracle_policy is not None:
             oracle_started = time.perf_counter()
             gripper_oracle_chunk = self.gripper_oracle_policy.get_action(obs_dict)
-            gripper_oracle_remote_get_action_seconds = time.perf_counter() - oracle_started
-            primary_gripper_action = copy.deepcopy(action_chunk["action.gripper"])
-            oracle_gripper_action = copy.deepcopy(gripper_oracle_chunk["action.gripper"])
+            oracle_remote_get_action_seconds = time.perf_counter() - oracle_started
             action_chunk = {
                 key: value.copy() if hasattr(value, "copy") else copy.deepcopy(value)
                 for key, value in action_chunk.items()
             }
-            action_chunk["action.gripper"] = (
-                gripper_oracle_chunk["action.gripper"].copy()
-                if hasattr(gripper_oracle_chunk["action.gripper"], "copy")
-                else copy.deepcopy(gripper_oracle_chunk["action.gripper"])
-            )
+            for key in self.oracle_action_keys:
+                action_key = f"action.{key}"
+                oracle_trace_values[key] = (
+                    copy.deepcopy(action_chunk[action_key]),
+                    copy.deepcopy(gripper_oracle_chunk[action_key]),
+                )
+                action_chunk[action_key] = (
+                    gripper_oracle_chunk[action_key].copy()
+                    if hasattr(gripper_oracle_chunk[action_key], "copy")
+                    else copy.deepcopy(gripper_oracle_chunk[action_key])
+                )
         remote_get_action_seconds = (
-            primary_remote_get_action_seconds + gripper_oracle_remote_get_action_seconds
+            primary_remote_get_action_seconds + oracle_remote_get_action_seconds
         )
         postprocess_started = time.perf_counter()
         action_array = self._convert_to_libero_action(action_chunk, 0)
         action_trace = self._trace_action(action_chunk, 0)
         if self.gripper_oracle_policy is not None:
-            action_trace["primary.action.gripper"] = float(
-                np.asarray(primary_gripper_action).reshape(-1)[0]
-            )
-            action_trace["gripper_oracle.action.gripper"] = float(
-                np.asarray(oracle_gripper_action).reshape(-1)[0]
-            )
+            action_trace["oracle_action_keys"] = ",".join(self.oracle_action_keys)
+            for key, (primary_value, oracle_value) in oracle_trace_values.items():
+                action_trace[f"primary.action.{key}"] = action_scalar(primary_value)
+                action_trace[f"oracle.action.{key}"] = action_scalar(oracle_value)
+                if key == "gripper":
+                    action_trace["gripper_oracle.action.gripper"] = action_scalar(oracle_value)
         postprocess_seconds = time.perf_counter() - postprocess_started
         timing = {
             "preprocess_seconds": float(preprocess_seconds),
             "remote_get_action_seconds": float(remote_get_action_seconds),
             "primary_remote_get_action_seconds": float(primary_remote_get_action_seconds),
-            "gripper_oracle_remote_get_action_seconds": float(
-                gripper_oracle_remote_get_action_seconds
-            ),
+            "oracle_remote_get_action_seconds": float(oracle_remote_get_action_seconds),
+            "gripper_oracle_remote_get_action_seconds": float(oracle_remote_get_action_seconds),
             "postprocess_seconds": float(postprocess_seconds),
             "policy_total_seconds": float(time.perf_counter() - started),
         }
@@ -312,6 +361,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                 port=args.port,
                 headless=args.headless,
                 gripper_oracle_port=args.gripper_oracle_port,
+                oracle_action_keys=args.oracle_action_keys,
             )
 
             task_episodes, task_successes = 0, 0
@@ -508,7 +558,12 @@ def main() -> None:
     parser.add_argument(
         "--gripper-oracle-port",
         type=int,
-        help="Optional second inference server; use its same-observation gripper channel only.",
+        help="Optional second inference server; use selected same-observation action channels.",
+    )
+    parser.add_argument(
+        "--oracle-action-keys",
+        default="gripper",
+        help="Comma-separated action keys or groups to source from --gripper-oracle-port. Groups: translation, rotation, all.",
     )
     parser.add_argument("--headless", action="store_true")
     parser.add_argument(

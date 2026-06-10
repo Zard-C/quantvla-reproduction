@@ -1,0 +1,74 @@
+{
+  "phase": "phase15_action_channel_oracle",
+  "task_suite": "libero_10",
+  "cases": ["task4:init9", "task6:init8"],
+  "compile_target": "action_head_model_blocks_8_15_eager",
+  "compile_mode": "reduce-overhead",
+  "policy_seed_base": 20260613,
+  "runs": [
+    {
+      "label": "gripper_only",
+      "oracle_action_keys": ["gripper"],
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "steps_by_case": {"task4:init9": 990, "task6:init8": 990},
+      "client_policy_p50_seconds": 0.25118761509656906,
+      "primary_remote_p50_seconds": 0.13331636786460876,
+      "oracle_remote_p50_seconds": 0.11620642058551311
+    },
+    {
+      "label": "full_action",
+      "oracle_action_keys": ["x", "y", "z", "roll", "pitch", "yaw", "gripper"],
+      "total_successes": 2,
+      "total_episodes": 2,
+      "success_rate": 1.0,
+      "steps_by_case": {"task4:init9": 224, "task6:init8": 649},
+      "client_policy_p50_seconds": 0.2524430565536022,
+      "primary_remote_p50_seconds": 0.13074634969234467,
+      "oracle_remote_p50_seconds": 0.11879528686404228
+    },
+    {
+      "label": "translation_only",
+      "oracle_action_keys": ["x", "y", "z"],
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "steps_by_case": {"task4:init9": 990, "task6:init8": 990},
+      "client_policy_p50_seconds": 0.2523785401135683,
+      "primary_remote_p50_seconds": 0.12885279394686222,
+      "oracle_remote_p50_seconds": 0.1222636066377163
+    },
+    {
+      "label": "rotation_only",
+      "oracle_action_keys": ["roll", "pitch", "yaw"],
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "steps_by_case": {"task4:init9": 990, "task6:init8": 990},
+      "client_policy_p50_seconds": 0.25198541954159737,
+      "primary_remote_p50_seconds": 0.12906219437718391,
+      "oracle_remote_p50_seconds": 0.12135102413594723
+    },
+    {
+      "label": "continuous_action",
+      "oracle_action_keys": ["x", "y", "z", "roll", "pitch", "yaw"],
+      "total_successes": 2,
+      "total_episodes": 2,
+      "success_rate": 1.0,
+      "steps_by_case": {"task4:init9": 224, "task6:init8": 649},
+      "client_policy_p50_seconds": 0.252734512090683,
+      "primary_remote_p50_seconds": 0.1339024342596531,
+      "oracle_remote_p50_seconds": 0.11800879240036011
+    }
+  ],
+  "continuous_same_observation_abs_diff": {
+    "x": {"mean": 0.0006793003789611152, "p50": 0.000457763671875, "p99": 0.00274658203125, "max": 0.054931640625},
+    "y": {"mean": 0.0006378968283619395, "p50": 0.000457763671875, "p99": 0.00331878662109375, "max": 0.0068950653076171875},
+    "z": {"mean": 0.0007302962491056217, "p50": 0.0004792213439941406, "p99": 0.0029754638671875, "max": 0.0391387939453125},
+    "roll": {"mean": 0.00015988621651648384, "p50": 0.00013096630573272705, "p99": 0.0005238652229309082, "max": 0.0028812140226364136},
+    "pitch": {"mean": 0.0002023239554954695, "p50": 0.0001462101936340332, "p99": 0.0005849003791809082, "max": 0.03363123536109924},
+    "yaw": {"mean": 0.00017536311215141795, "p50": 0.0001812577247619629, "p99": 0.000725090503692627, "max": 0.0010876357555389404}
+  },
+  "interpretation": "Continuous translation and rotation channels jointly recover the two failing cases, while gripper-only, translation-only, and rotation-only do not. The compile-induced failure is best explained as multi-dimensional continuous-action micro-drift amplified by closed-loop simulation, with gripper mismatch acting as a downstream symptom."
+}
