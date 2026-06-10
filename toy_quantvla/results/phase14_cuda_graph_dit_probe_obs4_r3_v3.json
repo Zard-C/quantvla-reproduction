@@ -1,0 +1,2228 @@
+{
+  "boundary": "Fixed-observation CUDA graph replay for action_head.model.forward; not a simulator rollout",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115,
+      462,
+      632,
+      1063
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "video_backend": "torchvision_av",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "num_observations": 4,
+  "num_repeats": 3,
+  "repeat_seed_stride": 10000,
+  "cases": [
+    {
+      "case_index": 0,
+      "repeat": 0,
+      "observation_list_index": 0,
+      "dataset_index": 115,
+      "seed": 20260614
+    },
+    {
+      "case_index": 1,
+      "repeat": 0,
+      "observation_list_index": 1,
+      "dataset_index": 462,
+      "seed": 20260615
+    },
+    {
+      "case_index": 2,
+      "repeat": 0,
+      "observation_list_index": 2,
+      "dataset_index": 632,
+      "seed": 20260616
+    },
+    {
+      "case_index": 3,
+      "repeat": 0,
+      "observation_list_index": 3,
+      "dataset_index": 1063,
+      "seed": 20260617
+    },
+    {
+      "case_index": 4,
+      "repeat": 1,
+      "observation_list_index": 0,
+      "dataset_index": 115,
+      "seed": 20270614
+    },
+    {
+      "case_index": 5,
+      "repeat": 1,
+      "observation_list_index": 1,
+      "dataset_index": 462,
+      "seed": 20270615
+    },
+    {
+      "case_index": 6,
+      "repeat": 1,
+      "observation_list_index": 2,
+      "dataset_index": 632,
+      "seed": 20270616
+    },
+    {
+      "case_index": 7,
+      "repeat": 1,
+      "observation_list_index": 3,
+      "dataset_index": 1063,
+      "seed": 20270617
+    },
+    {
+      "case_index": 8,
+      "repeat": 2,
+      "observation_list_index": 0,
+      "dataset_index": 115,
+      "seed": 20280614
+    },
+    {
+      "case_index": 9,
+      "repeat": 2,
+      "observation_list_index": 1,
+      "dataset_index": 462,
+      "seed": 20280615
+    },
+    {
+      "case_index": 10,
+      "repeat": 2,
+      "observation_list_index": 2,
+      "dataset_index": 632,
+      "seed": 20280616
+    },
+    {
+      "case_index": 11,
+      "repeat": 2,
+      "observation_list_index": 3,
+      "dataset_index": 1063,
+      "seed": 20280617
+    }
+  ],
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "cuda_device_capability": [
+    12,
+    0
+  ],
+  "model_load_seconds": 11.15692250058055,
+  "model_load_memory": {
+    "allocated_bytes": 5525459456,
+    "reserved_bytes": 6121586688,
+    "max_allocated_bytes": 5732249088,
+    "max_reserved_bytes": 6121586688
+  },
+  "eager_replay": {
+    "get_action_seconds": {
+      "count": 12,
+      "mean": 0.14527686033397913,
+      "min": 0.08410269767045975,
+      "max": 0.6450474932789803,
+      "p50": 0.09862564690411091,
+      "p90": 0.126339678093791,
+      "p99": 0.5880398306250575
+    },
+    "per_case": [
+      {
+        "case_index": 0,
+        "repeat": 0,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20260614,
+        "get_action_seconds": 0.6450474932789803,
+        "action_size": 112,
+        "action_summary": {
+          "numel": 112,
+          "mean": 0.22152472926037653,
+          "std": 0.41511494830620366,
+          "min": -0.15434962511062622,
+          "max": 1.0019216537475586
+        }
+      },
+      {
+        "case_index": 1,
+        "repeat": 0,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20260615,
+        "get_action_seconds": 0.08876820653676987,
+        "action_size": 112
+      },
+      {
+        "case_index": 2,
+        "repeat": 0,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20260616,
+        "get_action_seconds": 0.08558501675724983,
+        "action_size": 112
+      },
+      {
+        "case_index": 3,
+        "repeat": 0,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20260617,
+        "get_action_seconds": 0.09427428245544434,
+        "action_size": 112
+      },
+      {
+        "case_index": 4,
+        "repeat": 1,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20270614,
+        "get_action_seconds": 0.08410269767045975,
+        "action_size": 112
+      },
+      {
+        "case_index": 5,
+        "repeat": 1,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20270615,
+        "get_action_seconds": 0.08489720150828362,
+        "action_size": 112
+      },
+      {
+        "case_index": 6,
+        "repeat": 1,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20270616,
+        "get_action_seconds": 0.10667537152767181,
+        "action_size": 112
+      },
+      {
+        "case_index": 7,
+        "repeat": 1,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20270617,
+        "get_action_seconds": 0.12679601460695267,
+        "action_size": 112
+      },
+      {
+        "case_index": 8,
+        "repeat": 2,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20280614,
+        "get_action_seconds": 0.12223264947533607,
+        "action_size": 112
+      },
+      {
+        "case_index": 9,
+        "repeat": 2,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20280615,
+        "get_action_seconds": 0.08915067836642265,
+        "action_size": 112
+      },
+      {
+        "case_index": 10,
+        "repeat": 2,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20280616,
+        "get_action_seconds": 0.10297701135277748,
+        "action_size": 112
+      },
+      {
+        "case_index": 11,
+        "repeat": 2,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20280617,
+        "get_action_seconds": 0.11281570047140121,
+        "action_size": 112
+      }
+    ]
+  },
+  "eager_aa": {
+    "get_action_seconds": {
+      "count": 12,
+      "mean": 0.12356818498422702,
+      "min": 0.08652721717953682,
+      "max": 0.20066116750240326,
+      "p50": 0.11040393263101578,
+      "p90": 0.19062903448939325,
+      "p99": 0.19982490830123426
+    },
+    "per_case": [
+      {
+        "case_index": 0,
+        "repeat": 0,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20260614,
+        "get_action_seconds": 0.16876104474067688,
+        "action_size": 112,
+        "action_summary": {
+          "numel": 112,
+          "mean": 0.22152472926037653,
+          "std": 0.41511494830620366,
+          "min": -0.15434962511062622,
+          "max": 1.0019216537475586
+        },
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995967105,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.4705248516084409,
+        "student_rms": 0.4705248516084409,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.995134680279926,
+            "student_rms": 0.995134680279926
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06485148008463262,
+            "student_rms": 0.06485148008463262
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.03741536491931843,
+            "student_rms": 0.03741536491931843
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09596865403441164,
+            "student_rms": 0.09596865403441164
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7336600925046267,
+            "student_rms": 0.7336600925046267
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07894194250371361,
+            "student_rms": 0.07894194250371361
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.012563908374364397,
+            "student_rms": 0.012563908374364397
+          }
+        }
+      },
+      {
+        "case_index": 1,
+        "repeat": 0,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20260615,
+        "get_action_seconds": 0.11736047640442848,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994380856,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3986170238123942,
+        "student_rms": 0.3986170238123942,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9943573965838068,
+            "student_rms": 0.9943573965838068
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09247869642076738,
+            "student_rms": 0.09247869642076738
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004263911187337779,
+            "student_rms": 0.004263911187337779
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.2133078732293763,
+            "student_rms": 0.2133078732293763
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20625768149414114,
+            "student_rms": 0.20625768149414114
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07247554514367262,
+            "student_rms": 0.07247554514367262
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14716118625263022,
+            "student_rms": 0.14716118625263022
+          }
+        }
+      },
+      {
+        "case_index": 2,
+        "repeat": 0,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20260616,
+        "get_action_seconds": 0.09615707397460938,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982838831,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22809594898576357,
+        "student_rms": 0.22809594898576357,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004751971968057106,
+            "student_rms": 0.004751971968057106
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06268773886045483,
+            "student_rms": 0.06268773886045483
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11515798198933787,
+            "student_rms": 0.11515798198933787
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11230322103528954,
+            "student_rms": 0.11230322103528954
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5760136225930164,
+            "student_rms": 0.5760136225930164
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04745936661578942,
+            "student_rms": 0.04745936661578942
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.01801501046158592,
+            "student_rms": 0.01801501046158592
+          }
+        }
+      },
+      {
+        "case_index": 3,
+        "repeat": 0,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20260617,
+        "get_action_seconds": 0.20066116750240326,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999996912228,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.5377349139002641,
+        "student_rms": 0.5377349139002641,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9968037027829028,
+            "student_rms": 0.9968037027829028
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.041977008874633695,
+            "student_rms": 0.041977008874633695
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.056858917212616766,
+            "student_rms": 0.056858917212616766
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8569973842598794,
+            "student_rms": 0.8569973842598794
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.3052447624065771,
+            "student_rms": 0.3052447624065771
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.16030109688212457,
+            "student_rms": 0.16030109688212457
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.4149504940379966,
+            "student_rms": 0.4149504940379966
+          }
+        }
+      },
+      {
+        "case_index": 4,
+        "repeat": 1,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20270614,
+        "get_action_seconds": 0.08713400736451149,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995963389,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.470308308141027,
+        "student_rms": 0.470308308141027,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9939507791795539,
+            "student_rms": 0.9939507791795539
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06558734912030846,
+            "student_rms": 0.06558734912030846
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.038107231491100485,
+            "student_rms": 0.038107231491100485
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09733049580839165,
+            "student_rms": 0.09733049580839165
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7339723258364165,
+            "student_rms": 0.7339723258364165
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07905979487268294,
+            "student_rms": 0.07905979487268294
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.014080780653147482,
+            "student_rms": 0.014080780653147482
+          }
+        }
+      },
+      {
+        "case_index": 5,
+        "repeat": 1,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20270615,
+        "get_action_seconds": 0.10293350368738174,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994361767,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3979417521221919,
+        "student_rms": 0.3979417521221919,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9943894743774554,
+            "student_rms": 0.9943894743774554
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09128110720821339,
+            "student_rms": 0.09128110720821339
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004261155972909717,
+            "student_rms": 0.004261155972909717
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.21101192431730742,
+            "student_rms": 0.21101192431730742
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20326672557280276,
+            "student_rms": 0.20326672557280276
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0733211735994074,
+            "student_rms": 0.0733211735994074
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14185645354134926,
+            "student_rms": 0.14185645354134926
+          }
+        }
+      },
+      {
+        "case_index": 6,
+        "repeat": 1,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20270616,
+        "get_action_seconds": 0.1930588111281395,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982871819,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22831551361189026,
+        "student_rms": 0.22831551361189026,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.007132024759924286,
+            "student_rms": 0.007132024759924286
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06362299985571443,
+            "student_rms": 0.06362299985571443
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11416337217696278,
+            "student_rms": 0.11416337217696278
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.1187128322383798,
+            "student_rms": 0.1187128322383798
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5753856270192008,
+            "student_rms": 0.5753856270192008
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.047967278794590645,
+            "student_rms": 0.047967278794590645
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.017365848758468402,
+            "student_rms": 0.017365848758468402
+          }
+        }
+      },
+      {
+        "case_index": 7,
+        "repeat": 1,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20270617,
+        "get_action_seconds": 0.10911671817302704,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.99999999968816,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.5350877011201337,
+        "student_rms": 0.5350877011201337,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9954136721622663,
+            "student_rms": 0.9954136721622663
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04212296210809581,
+            "student_rms": 0.04212296210809581
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.057115541735147324,
+            "student_rms": 0.057115541735147324
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8514830503430953,
+            "student_rms": 0.8514830503430953
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.3042511051095641,
+            "student_rms": 0.3042511051095641
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.15987988506741624,
+            "student_rms": 0.15987988506741624
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.406439823131341,
+            "student_rms": 0.406439823131341
+          }
+        }
+      },
+      {
+        "case_index": 8,
+        "repeat": 2,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20280614,
+        "get_action_seconds": 0.11169114708900452,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995969505,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.4706649988405948,
+        "student_rms": 0.4706649988405948,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.995342763997452,
+            "student_rms": 0.995342763997452
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0649627152126467,
+            "student_rms": 0.0649627152126467
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.037400412331091225,
+            "student_rms": 0.037400412331091225
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09889413569568947,
+            "student_rms": 0.09889413569568947
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7336036648633341,
+            "student_rms": 0.7336036648633341
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07895627884111596,
+            "student_rms": 0.07895627884111596
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.01281185929319913,
+            "student_rms": 0.01281185929319913
+          }
+        }
+      },
+      {
+        "case_index": 9,
+        "repeat": 2,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20280615,
+        "get_action_seconds": 0.08652721717953682,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994375122,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3984138841402749,
+        "student_rms": 0.3984138841402749,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9946362355311493,
+            "student_rms": 0.9946362355311493
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09184477011499559,
+            "student_rms": 0.09184477011499559
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0043551572433686144,
+            "student_rms": 0.0043551572433686144
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.2125616691269304,
+            "student_rms": 0.2125616691269304
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20519660576371931,
+            "student_rms": 0.20519660576371931
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07281450524499973,
+            "student_rms": 0.07281450524499973
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14418609133152963,
+            "student_rms": 0.14418609133152963
+          }
+        }
+      },
+      {
+        "case_index": 10,
+        "repeat": 2,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20280616,
+        "get_action_seconds": 0.11515025421977043,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982877186,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22835128295746085,
+        "student_rms": 0.22835128295746085,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.006911507565089925,
+            "student_rms": 0.006911507565089925
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06312653169554515,
+            "student_rms": 0.06312653169554515
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11442824551455781,
+            "student_rms": 0.11442824551455781
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11646869601429957,
+            "student_rms": 0.11646869601429957
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5759823582205007,
+            "student_rms": 0.5759823582205007
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04798862873898641,
+            "student_rms": 0.04798862873898641
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.016126532956242643,
+            "student_rms": 0.016126532956242643
+          }
+        }
+      },
+      {
+        "case_index": 11,
+        "repeat": 2,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20280617,
+        "get_action_seconds": 0.09426679834723473,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999996886133,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.535477197226674,
+        "student_rms": 0.535477197226674,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9953360154331412,
+            "student_rms": 0.9953360154331412
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04162303077292909,
+            "student_rms": 0.04162303077292909
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.056112717595342525,
+            "student_rms": 0.056112717595342525
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8508869033724978,
+            "student_rms": 0.8508869033724978
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.30891110008799666,
+            "student_rms": 0.30891110008799666
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.16045552258711998,
+            "student_rms": 0.16045552258711998
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.40791584799568376,
+            "student_rms": 0.40791584799568376
+          }
+        }
+      }
+    ],
+    "metrics": {
+      "observations": 12,
+      "mse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "nmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "rmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "relative_rmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "cosine": {
+        "mean": 0.9999999992523794,
+        "max": 0.9999999996912228,
+        "min": 0.9999999982838831
+      },
+      "max_abs_diff": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "teacher_rms": {
+        "mean": 0.4082944480389259,
+        "max": 0.5377349139002641,
+        "min": 0.22809594898576357
+      },
+      "student_rms": {
+        "mean": 0.4082944480389259,
+        "max": 0.5377349139002641,
+        "min": 0.22809594898576357
+      }
+    }
+  },
+  "cuda_graph": {
+    "max_captures": 8,
+    "graph_cache_size": 3,
+    "capture_count": 3,
+    "capture_seconds": 0.47164564207196236,
+    "capture_seconds_by_key": {
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.2218397930264473,
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.12457142770290375,
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 559, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.1252344213426113
+    },
+    "graph_calls": 128,
+    "eager_fallback_calls": 0,
+    "mismatch_calls": 2,
+    "failed": false,
+    "error": null,
+    "num_positional_args": 0,
+    "kwarg_keys": [
+      "hidden_states",
+      "encoder_hidden_states",
+      "timestep"
+    ],
+    "flat_specs": [
+      {
+        "kind": "tensor",
+        "shape": [
+          1,
+          49,
+          1536
+        ],
+        "dtype": "torch.bfloat16",
+        "device": "cuda:0",
+        "requires_grad": false
+      },
+      {
+        "kind": "tensor",
+        "shape": [
+          1,
+          566,
+          2048
+        ],
+        "dtype": "torch.float32",
+        "device": "cuda:0",
+        "requires_grad": false
+      },
+      {
+        "kind": "tensor",
+        "shape": [
+          1
+        ],
+        "dtype": "torch.int64",
+        "device": "cuda:0",
+        "requires_grad": false
+      }
+    ],
+    "flat_specs_by_key": {
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            566,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ],
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            565,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ],
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 559, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            559,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ]
+    }
+  },
+  "cuda_graph_prewarm": {
+    "get_action_seconds": {
+      "count": 4,
+      "mean": 0.18834053725004196,
+      "min": 0.07143747806549072,
+      "max": 0.2835708335042,
+      "p50": 0.19917691871523857,
+      "p90": 0.2589469611644745,
+      "p99": 0.2811084462702274
+    },
+    "per_case": [
+      {
+        "case_index": 0,
+        "repeat": 0,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20260614,
+        "get_action_seconds": 0.2835708335042,
+        "action_size": 112,
+        "action_summary": {
+          "numel": 112,
+          "mean": 0.22152472926037653,
+          "std": 0.41511494830620366,
+          "min": -0.15434962511062622,
+          "max": 1.0019216537475586
+        }
+      },
+      {
+        "case_index": 1,
+        "repeat": 0,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20260615,
+        "get_action_seconds": 0.1968625783920288,
+        "action_size": 112
+      },
+      {
+        "case_index": 2,
+        "repeat": 0,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20260616,
+        "get_action_seconds": 0.20149125903844833,
+        "action_size": 112
+      },
+      {
+        "case_index": 3,
+        "repeat": 0,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20260617,
+        "get_action_seconds": 0.07143747806549072,
+        "action_size": 112
+      }
+    ]
+  },
+  "cuda_graph_replay": {
+    "get_action_seconds": {
+      "count": 12,
+      "mean": 0.09277072704086702,
+      "min": 0.05014900863170624,
+      "max": 0.12488851323723793,
+      "p50": 0.1006636694073677,
+      "p90": 0.10926171652972698,
+      "p99": 0.1232398695498705
+    },
+    "per_case": [
+      {
+        "case_index": 0,
+        "repeat": 0,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20260614,
+        "get_action_seconds": 0.09336043521761894,
+        "action_size": 112,
+        "action_summary": {
+          "numel": 112,
+          "mean": 0.22152472926037653,
+          "std": 0.41511494830620366,
+          "min": -0.15434962511062622,
+          "max": 1.0019216537475586
+        },
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995967105,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.4705248516084409,
+        "student_rms": 0.4705248516084409,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.995134680279926,
+            "student_rms": 0.995134680279926
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06485148008463262,
+            "student_rms": 0.06485148008463262
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.03741536491931843,
+            "student_rms": 0.03741536491931843
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09596865403441164,
+            "student_rms": 0.09596865403441164
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7336600925046267,
+            "student_rms": 0.7336600925046267
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07894194250371361,
+            "student_rms": 0.07894194250371361
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.012563908374364397,
+            "student_rms": 0.012563908374364397
+          }
+        }
+      },
+      {
+        "case_index": 1,
+        "repeat": 0,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20260615,
+        "get_action_seconds": 0.10990084335207939,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994380856,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3986170238123942,
+        "student_rms": 0.3986170238123942,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9943573965838068,
+            "student_rms": 0.9943573965838068
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09247869642076738,
+            "student_rms": 0.09247869642076738
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004263911187337779,
+            "student_rms": 0.004263911187337779
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.2133078732293763,
+            "student_rms": 0.2133078732293763
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20625768149414114,
+            "student_rms": 0.20625768149414114
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07247554514367262,
+            "student_rms": 0.07247554514367262
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14716118625263022,
+            "student_rms": 0.14716118625263022
+          }
+        }
+      },
+      {
+        "case_index": 2,
+        "repeat": 0,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20260616,
+        "get_action_seconds": 0.1011136993765831,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982838831,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22809594898576357,
+        "student_rms": 0.22809594898576357,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004751971968057106,
+            "student_rms": 0.004751971968057106
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06268773886045483,
+            "student_rms": 0.06268773886045483
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11515798198933787,
+            "student_rms": 0.11515798198933787
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11230322103528954,
+            "student_rms": 0.11230322103528954
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5760136225930164,
+            "student_rms": 0.5760136225930164
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04745936661578942,
+            "student_rms": 0.04745936661578942
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.01801501046158592,
+            "student_rms": 0.01801501046158592
+          }
+        }
+      },
+      {
+        "case_index": 3,
+        "repeat": 0,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20260617,
+        "get_action_seconds": 0.09321258589625359,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999996912228,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.5377349139002641,
+        "student_rms": 0.5377349139002641,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9968037027829028,
+            "student_rms": 0.9968037027829028
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.041977008874633695,
+            "student_rms": 0.041977008874633695
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.056858917212616766,
+            "student_rms": 0.056858917212616766
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8569973842598794,
+            "student_rms": 0.8569973842598794
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.3052447624065771,
+            "student_rms": 0.3052447624065771
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.16030109688212457,
+            "student_rms": 0.16030109688212457
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.4149504940379966,
+            "student_rms": 0.4149504940379966
+          }
+        }
+      },
+      {
+        "case_index": 4,
+        "repeat": 1,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20270614,
+        "get_action_seconds": 0.10071791335940361,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995963389,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.470308308141027,
+        "student_rms": 0.470308308141027,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9939507791795539,
+            "student_rms": 0.9939507791795539
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06558734912030846,
+            "student_rms": 0.06558734912030846
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.038107231491100485,
+            "student_rms": 0.038107231491100485
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09733049580839165,
+            "student_rms": 0.09733049580839165
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7339723258364165,
+            "student_rms": 0.7339723258364165
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07905979487268294,
+            "student_rms": 0.07905979487268294
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.014080780653147482,
+            "student_rms": 0.014080780653147482
+          }
+        }
+      },
+      {
+        "case_index": 5,
+        "repeat": 1,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20270615,
+        "get_action_seconds": 0.1035095751285553,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994361767,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3979417521221919,
+        "student_rms": 0.3979417521221919,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9943894743774554,
+            "student_rms": 0.9943894743774554
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09128110720821339,
+            "student_rms": 0.09128110720821339
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.004261155972909717,
+            "student_rms": 0.004261155972909717
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.21101192431730742,
+            "student_rms": 0.21101192431730742
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20326672557280276,
+            "student_rms": 0.20326672557280276
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0733211735994074,
+            "student_rms": 0.0733211735994074
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14185645354134926,
+            "student_rms": 0.14185645354134926
+          }
+        }
+      },
+      {
+        "case_index": 6,
+        "repeat": 1,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20270616,
+        "get_action_seconds": 0.1006094254553318,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982871819,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22831551361189026,
+        "student_rms": 0.22831551361189026,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.007132024759924286,
+            "student_rms": 0.007132024759924286
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06362299985571443,
+            "student_rms": 0.06362299985571443
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11416337217696278,
+            "student_rms": 0.11416337217696278
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.1187128322383798,
+            "student_rms": 0.1187128322383798
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5753856270192008,
+            "student_rms": 0.5753856270192008
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.047967278794590645,
+            "student_rms": 0.047967278794590645
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.017365848758468402,
+            "student_rms": 0.017365848758468402
+          }
+        }
+      },
+      {
+        "case_index": 7,
+        "repeat": 1,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20270617,
+        "get_action_seconds": 0.06594983488321304,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.99999999968816,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.5350877011201337,
+        "student_rms": 0.5350877011201337,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9954136721622663,
+            "student_rms": 0.9954136721622663
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04212296210809581,
+            "student_rms": 0.04212296210809581
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.057115541735147324,
+            "student_rms": 0.057115541735147324
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8514830503430953,
+            "student_rms": 0.8514830503430953
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.3042511051095641,
+            "student_rms": 0.3042511051095641
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.15987988506741624,
+            "student_rms": 0.15987988506741624
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.406439823131341,
+            "student_rms": 0.406439823131341
+          }
+        }
+      },
+      {
+        "case_index": 8,
+        "repeat": 2,
+        "observation_list_index": 0,
+        "dataset_index": 115,
+        "seed": 20280614,
+        "get_action_seconds": 0.12488851323723793,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999995969505,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.4706649988405948,
+        "student_rms": 0.4706649988405948,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.995342763997452,
+            "student_rms": 0.995342763997452
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0649627152126467,
+            "student_rms": 0.0649627152126467
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.037400412331091225,
+            "student_rms": 0.037400412331091225
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09889413569568947,
+            "student_rms": 0.09889413569568947
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.7336036648633341,
+            "student_rms": 0.7336036648633341
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07895627884111596,
+            "student_rms": 0.07895627884111596
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.01281185929319913,
+            "student_rms": 0.01281185929319913
+          }
+        }
+      },
+      {
+        "case_index": 9,
+        "repeat": 2,
+        "observation_list_index": 1,
+        "dataset_index": 462,
+        "seed": 20280615,
+        "get_action_seconds": 0.05014900863170624,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999994375122,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.3984138841402749,
+        "student_rms": 0.3984138841402749,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9946362355311493,
+            "student_rms": 0.9946362355311493
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.09184477011499559,
+            "student_rms": 0.09184477011499559
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.0043551572433686144,
+            "student_rms": 0.0043551572433686144
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.2125616691269304,
+            "student_rms": 0.2125616691269304
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.20519660576371931,
+            "student_rms": 0.20519660576371931
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.07281450524499973,
+            "student_rms": 0.07281450524499973
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.14418609133152963,
+            "student_rms": 0.14418609133152963
+          }
+        }
+      },
+      {
+        "case_index": 10,
+        "repeat": 2,
+        "observation_list_index": 2,
+        "dataset_index": 632,
+        "seed": 20280616,
+        "get_action_seconds": 0.06873826682567596,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999982877186,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.22835128295746085,
+        "student_rms": 0.22835128295746085,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.006911507565089925,
+            "student_rms": 0.006911507565089925
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.06312653169554515,
+            "student_rms": 0.06312653169554515
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11442824551455781,
+            "student_rms": 0.11442824551455781
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.11646869601429957,
+            "student_rms": 0.11646869601429957
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.5759823582205007,
+            "student_rms": 0.5759823582205007
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04798862873898641,
+            "student_rms": 0.04798862873898641
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.016126532956242643,
+            "student_rms": 0.016126532956242643
+          }
+        }
+      },
+      {
+        "case_index": 11,
+        "repeat": 2,
+        "observation_list_index": 3,
+        "dataset_index": 1063,
+        "seed": 20280617,
+        "get_action_seconds": 0.10109862312674522,
+        "action_size": 112,
+        "mse": 0.0,
+        "nmse": 0.0,
+        "rmse": 0.0,
+        "relative_rmse": 0.0,
+        "cosine": 0.9999999996886133,
+        "max_abs_diff": 0.0,
+        "teacher_rms": 0.535477197226674,
+        "student_rms": 0.535477197226674,
+        "per_key": {
+          "action.gripper": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.9953360154331412,
+            "student_rms": 0.9953360154331412
+          },
+          "action.pitch": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.04162303077292909,
+            "student_rms": 0.04162303077292909
+          },
+          "action.roll": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.056112717595342525,
+            "student_rms": 0.056112717595342525
+          },
+          "action.x": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.8508869033724978,
+            "student_rms": 0.8508869033724978
+          },
+          "action.y": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.30891110008799666,
+            "student_rms": 0.30891110008799666
+          },
+          "action.yaw": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.16045552258711998,
+            "student_rms": 0.16045552258711998
+          },
+          "action.z": {
+            "mse": 0.0,
+            "nmse": 0.0,
+            "max_abs_diff": 0.0,
+            "teacher_rms": 0.40791584799568376,
+            "student_rms": 0.40791584799568376
+          }
+        }
+      }
+    ],
+    "metrics": {
+      "observations": 12,
+      "mse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "nmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "rmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "relative_rmse": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "cosine": {
+        "mean": 0.9999999992523794,
+        "max": 0.9999999996912228,
+        "min": 0.9999999982838831
+      },
+      "max_abs_diff": {
+        "mean": 0.0,
+        "max": 0.0,
+        "min": 0.0
+      },
+      "teacher_rms": {
+        "mean": 0.4082944480389259,
+        "max": 0.5377349139002641,
+        "min": 0.22809594898576357
+      },
+      "student_rms": {
+        "mean": 0.4082944480389259,
+        "max": 0.5377349139002641,
+        "min": 0.22809594898576357
+      }
+    }
+  },
+  "final_memory": {
+    "allocated_bytes": 5525459456,
+    "reserved_bytes": 6121586688,
+    "max_allocated_bytes": 5732249088,
+    "max_reserved_bytes": 6121586688
+  }
+}
