@@ -100,6 +100,50 @@ def compile_kwargs_from_args(args: Any) -> dict[str, Any]:
     return compile_kwargs
 
 
+def should_mark_cudagraph_step(args: Any) -> bool:
+    return bool(getattr(args, "torch_compile_cudagraph_mark_step", False))
+
+
+def cudagraph_mark_step_paths_for_target(target: str) -> list[str]:
+    """Return outer module paths that bound repeated compiled submodule calls."""
+
+    if target.startswith("action_head_dit_"):
+        return ["action_head.model"]
+    return []
+
+
+def install_cudagraph_step_markers(policy: Any, paths: list[str], torch_module: Any) -> list[str]:
+    """Call cudagraph_mark_step_begin at safe outer forward boundaries.
+
+    For block-level DiT compile targets, the compiled block outputs are consumed
+    by later eager blocks in the same DiT forward. Marking every compiled block
+    call as a new CUDAGraph step is therefore too fine-grained. The safe boundary
+    is the outer DiT invocation, repeated by the denoising loop.
+    """
+
+    compiler = getattr(torch_module, "compiler", None)
+    mark_step = getattr(compiler, "cudagraph_mark_step_begin", None)
+    if mark_step is None:
+        return []
+
+    installed: list[str] = []
+    for path in paths:
+        module = get_submodule(policy.model, path)
+        if getattr(module, "_phase13_cudagraph_step_marker", False):
+            installed.append(f"policy.model.{path}")
+            continue
+        original_forward = module.forward
+
+        def marked_forward(*args: Any, __original_forward: Any = original_forward, **kwargs: Any) -> Any:
+            mark_step()
+            return __original_forward(*args, **kwargs)
+
+        module.forward = marked_forward
+        module._phase13_cudagraph_step_marker = True
+        installed.append(f"policy.model.{path}")
+    return installed
+
+
 def compile_policy_targets(policy: Any, args: Any, torch_module: Any) -> dict[str, Any]:
     """Install torch.compile wrappers on selected policy.model submodules."""
 
@@ -112,10 +156,19 @@ def compile_policy_targets(policy: Any, args: Any, torch_module: Any) -> dict[st
     compile_kwargs = compile_kwargs_from_args(args)
     compiled_modules: list[str] = []
     eager_island_modules = install_eager_islands(policy, eager_island_paths, torch_module)
+    cudagraph_mark_step = should_mark_cudagraph_step(args)
+    cudagraph_mark_step_modules = []
+    if cudagraph_mark_step:
+        cudagraph_mark_step_modules = install_cudagraph_step_markers(
+            policy,
+            cudagraph_mark_step_paths_for_target(target),
+            torch_module,
+        )
     started = time.perf_counter()
     for path in paths:
         module = get_submodule(policy.model, path)
-        set_submodule(policy.model, path, torch_module.compile(module, **compile_kwargs))
+        compiled_module = torch_module.compile(module, **compile_kwargs)
+        set_submodule(policy.model, path, compiled_module)
         compiled_modules.append(f"policy.model.{path}")
 
     return {
@@ -125,6 +178,8 @@ def compile_policy_targets(policy: Any, args: Any, torch_module: Any) -> dict[st
         "mode": args.torch_compile_mode,
         "fullgraph": bool(args.torch_compile_fullgraph),
         "dynamic": args.torch_compile_dynamic,
+        "cudagraph_mark_step": cudagraph_mark_step,
+        "cudagraph_mark_step_modules": cudagraph_mark_step_modules,
         "compiled_modules": compiled_modules,
         "eager_island_modules": eager_island_modules,
         "wrap_seconds": time.perf_counter() - started,
@@ -160,11 +215,19 @@ class CompileTargetSwitcher:
             self.eager_island_paths,
             torch_module,
         )
+        self.cudagraph_mark_step = should_mark_cudagraph_step(args)
+        self.cudagraph_mark_step_modules = []
+        if self.cudagraph_mark_step:
+            self.cudagraph_mark_step_modules = install_cudagraph_step_markers(
+                policy,
+                cudagraph_mark_step_paths_for_target(self.target),
+                torch_module,
+            )
         self.eager_modules = {path: get_submodule(policy.model, path) for path in self.paths}
-        self.compiled_modules = {
-            path: torch_module.compile(module, **self.compile_kwargs)
-            for path, module in self.eager_modules.items()
-        }
+        self.compiled_modules = {}
+        for path, module in self.eager_modules.items():
+            compiled_module = torch_module.compile(module, **self.compile_kwargs)
+            self.compiled_modules[path] = compiled_module
 
     def use_eager(self) -> None:
         for path, module in self.eager_modules.items():
@@ -184,6 +247,8 @@ class CompileTargetSwitcher:
             "mode": args.torch_compile_mode,
             "fullgraph": bool(args.torch_compile_fullgraph),
             "dynamic": args.torch_compile_dynamic,
+            "cudagraph_mark_step": self.cudagraph_mark_step,
+            "cudagraph_mark_step_modules": self.cudagraph_mark_step_modules,
             "compiled_modules": [f"policy.model.{path}" for path in self.paths],
             "eager_island_modules": self.eager_island_modules,
         }

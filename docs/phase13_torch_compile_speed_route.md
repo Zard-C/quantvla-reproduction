@@ -218,6 +218,14 @@ docs/phase13_block_island_30case_mem_v1.md
 
 这说明速度路线仍然很强，server p50 约 `2.04x`；steady-state 显存几乎不变。但它仍不是透明替换，成功率从 `16/30` 降到 `13/30`。下一步应优先做更保守的 patch scope 或 CUDA graph 捕获 eager denoising loop，而不是继续盲目扩大 rollout。
 
+Phase 13.2 进一步测试了更小的 block-scope compile：
+
+```text
+docs/phase13_blocks_0_7_markstep_probe.md
+```
+
+结论是 `action_head_dit_blocks_0_7` 不适合作为主路线。`reduce-overhead` 需要在外层 DiT forward 前调用 `torch.compiler.cudagraph_mark_step_begin()` 才能避开 CUDAGraph overwrite；修复后能跑，但 `4:9` 仍从 baseline success 变 fail，server p50 也只有约 `121 ms`，明显慢于 blocks 8-15 eager island 的约 `76.5 ms`。
+
 ## RNG 与 Fixed-Observation Replay 复查
 
 上一节 rollout 对比还不能证明“同一策略透明加速”，因为 baseline 和 compiled 是两条独立闭环轨迹。即使每个 request 都设置了 deterministic policy seed，只要第一步动作有微小差异，下一帧 observation 就会不同，后面就不再是严格 paired comparison。

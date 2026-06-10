@@ -23,6 +23,7 @@ COMPILE_MODE="${COMPILE_MODE:-reduce-overhead}"
 COMPILE_BACKEND="${COMPILE_BACKEND:-inductor}"
 COMPILE_FULLGRAPH="${COMPILE_FULLGRAPH:-0}"
 COMPILE_DYNAMIC="${COMPILE_DYNAMIC:-}"
+COMPILE_CUDAGRAPH_MARK_STEP="${COMPILE_CUDAGRAPH_MARK_STEP:-0}"
 
 TASK4_DESC="put the white mug on the left plate and put the yellow and white mug on the right plate"
 TASK6_DESC="put the white mug on the plate and put the chocolate pudding to the right of the plate"
@@ -43,6 +44,9 @@ if [ "${COMPILE_FULLGRAPH}" = "1" ]; then
 fi
 if [ -n "${COMPILE_DYNAMIC}" ]; then
   COMPILE_ARGS+=(--torch-compile-dynamic "${COMPILE_DYNAMIC}")
+fi
+if [ "${COMPILE_CUDAGRAPH_MARK_STEP}" = "1" ]; then
+  COMPILE_ARGS+=(--torch-compile-cudagraph-mark-step)
 fi
 
 kill_if_running() {
@@ -157,6 +161,7 @@ echo "COMPILE_MODE=${COMPILE_MODE}"
 echo "COMPILE_BACKEND=${COMPILE_BACKEND}"
 echo "COMPILE_FULLGRAPH=${COMPILE_FULLGRAPH}"
 echo "COMPILE_DYNAMIC=${COMPILE_DYNAMIC}"
+echo "COMPILE_CUDAGRAPH_MARK_STEP=${COMPILE_CUDAGRAPH_MARK_STEP}"
 echo "DETERMINISTIC_POLICY_SEEDS=${DETERMINISTIC_POLICY_SEEDS}"
 echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
 

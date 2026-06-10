@@ -132,6 +132,11 @@ def main() -> None:
     parser.add_argument("--torch-compile-mode", default="reduce-overhead")
     parser.add_argument("--torch-compile-fullgraph", action="store_true")
     parser.add_argument("--torch-compile-dynamic", choices=["true", "false"])
+    parser.add_argument(
+        "--torch-compile-cudagraph-mark-step",
+        action="store_true",
+        help="Call torch.compiler.cudagraph_mark_step_begin before each compiled submodule invocation.",
+    )
     parser.add_argument("--prewarm-observations", type=int, default=0)
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
     parser.add_argument("--prewarm-indices", default="115")
@@ -181,6 +186,7 @@ def main() -> None:
             "mode": args.torch_compile_mode,
             "fullgraph": bool(args.torch_compile_fullgraph),
             "dynamic": args.torch_compile_dynamic,
+            "cudagraph_mark_step": bool(args.torch_compile_cudagraph_mark_step),
         },
         "prewarm_observations": int(args.prewarm_observations),
         "prewarm_observation_source": args.prewarm_observation_source,
