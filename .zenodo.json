@@ -1,0 +1,30 @@
+{
+  "title": "When Small Action Errors Matter: Closed-Loop Analysis of Post-Training Quantization for VLA Policies",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "A reproduction-oriented study of post-training quantization for vision-language-action robot policies. The paper analyzes selective W4A8 fake quantization for a GR00T N1.5 policy on LIBERO-10 as a closed-loop policy perturbation problem, emphasizing paired repair/regression rollout analysis and control-theoretic interpretation of small action errors.",
+  "creators": [
+    {
+      "name": "zhang, patrick"
+    }
+  ],
+  "keywords": [
+    "vision-language-action models",
+    "robot learning",
+    "post-training quantization",
+    "closed-loop control",
+    "policy perturbation",
+    "LIBERO",
+    "GR00T"
+  ],
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "version": "paper-v1",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Zard-C/quantvla-reproduction",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

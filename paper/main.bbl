@@ -1,0 +1,125 @@
+\begin{thebibliography}{13}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{{\AA}str{\"o}m} and Murray(2008)]{astrom2008feedback}
+Karl~Johan {{\AA}str{\"o}m} and Richard~M. Murray.
+\newblock \emph{Feedback Systems: An Introduction for Scientists and
+  Engineers}.
+\newblock Princeton University Press, 2008.
+\newblock URL \url{https://fbsbook.org}.
+
+\bibitem[Brohan et~al.(2022)Brohan, Brown, Carbajal, Chebotar, Dabis, Finn,
+  Gopalakrishnan, Hausman, Herzog, Hsu, et~al.]{rt1}
+Anthony Brohan, Noah Brown, Justice Carbajal, Yevgen Chebotar, Joseph Dabis,
+  Chelsea Finn, Keerthana Gopalakrishnan, Karol Hausman, Alexander Herzog,
+  Jasmine Hsu, et~al.
+\newblock {RT-1}: Robotics transformer for real-world control at scale.
+\newblock \emph{arXiv preprint arXiv:2212.06817}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2212.06817}.
+
+\bibitem[Brohan et~al.(2023)Brohan, Brown, Carbajal, Chebotar, Chen,
+  Choromanski, Ding, Driess, Dubey, Finn, et~al.]{rt2}
+Anthony Brohan, Noah Brown, Justice Carbajal, Yevgen Chebotar, Xi~Chen,
+  Krzysztof Choromanski, Tianli Ding, Danny Driess, Avinava Dubey, Chelsea
+  Finn, et~al.
+\newblock {RT-2}: Vision-language-action models transfer web knowledge to
+  robotic control.
+\newblock \emph{arXiv preprint arXiv:2307.15818}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2307.15818}.
+
+\bibitem[Chi et~al.(2023)Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, and
+  Song]{diffusionpolicy}
+Cheng Chi, Zhenjia Xu, Siyuan Feng, Eric Cousineau, Yilun Du, Benjamin
+  Burchfiel, Russ Tedrake, and Shuran Song.
+\newblock Diffusion policy: Visuomotor policy learning via action diffusion.
+\newblock \emph{arXiv preprint arXiv:2303.04137}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2303.04137}.
+
+\bibitem[Dettmers et~al.(2022)Dettmers, Lewis, Belkada, and
+  Zettlemoyer]{llmint8}
+Tim Dettmers, Mike Lewis, Younes Belkada, and Luke Zettlemoyer.
+\newblock {LLM.int8()}: 8-bit matrix multiplication for transformers at scale.
+\newblock \emph{arXiv preprint arXiv:2208.07339}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2208.07339}.
+
+\bibitem[Frantar et~al.(2022)Frantar, Ashkboos, Hoefler, and Alistarh]{gptq}
+Elias Frantar, Saleh Ashkboos, Torsten Hoefler, and Dan Alistarh.
+\newblock {GPTQ}: Accurate post-training quantization for generative
+  pre-trained transformers.
+\newblock \emph{arXiv preprint arXiv:2210.17323}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2210.17323}.
+
+\bibitem[Kim et~al.(2024)Kim, Pertsch, Karamcheti, Xiao, Balakrishna, Nair,
+  Rafailov, Foster, Sanketi, Vuong, Kollar, Tedrake, Sadigh, Levine, Liang, and
+  Finn]{openvla}
+Moo~Jin Kim, Karl Pertsch, Siddharth Karamcheti, Ted Xiao, Ashwin Balakrishna,
+  Suraj Nair, Rafael Rafailov, Ethan Foster, Pannag Sanketi, Quan Vuong, Thomas
+  Kollar, Russ Tedrake, Dorsa Sadigh, Sergey Levine, Percy Liang, and Chelsea
+  Finn.
+\newblock {OpenVLA}: An open-source vision-language-action model.
+\newblock \emph{arXiv preprint arXiv:2406.09246}, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.09246}.
+
+\bibitem[Lin et~al.(2023)Lin, Tang, Tang, Yang, Chen, Wang, Xiao, Dang, Gan,
+  and Han]{awq}
+Ji~Lin, Jiaming Tang, Haotian Tang, Shang Yang, Wei-Ming Chen, Wei-Chen Wang,
+  Guangxuan Xiao, Xingyu Dang, Chuang Gan, and Song Han.
+\newblock {AWQ}: Activation-aware weight quantization for {LLM} compression and
+  acceleration.
+\newblock \emph{arXiv preprint arXiv:2306.00978}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.00978}.
+
+\bibitem[Liu et~al.(2023)Liu, Zhu, Gao, Feng, Liu, Zhu, and Stone]{libero}
+Bo~Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu, and Peter
+  Stone.
+\newblock {LIBERO}: Benchmarking knowledge transfer for lifelong robot
+  learning.
+\newblock \emph{arXiv preprint arXiv:2306.03310}, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.03310}.
+
+\bibitem[{NVIDIA} et~al.(2025){NVIDIA}, Bjorck, Casta{\~n}eda, Cherniadev, Da,
+  Ding, Fan, Fang, Fox, Hu, Huang, Jang, Jiang, Kautz, Kundalia, Lao, Li, Lin,
+  Lin, Liu, Llontop, Magne, Mandlekar, Narayan, Nasiriany, Reed, Tan, Wang,
+  Wang, Wang, Wang, Xiang, Xie, Xu, Xu, Ye, Yu, Zhang, Zhang, Zhao, Zheng, and
+  Zhu]{grootn1}
+{NVIDIA}, Johan Bjorck, Fernando Casta{\~n}eda, Nikita Cherniadev, Xingye Da,
+  Runyu Ding, Linxi Fan, Yu~Fang, Dieter Fox, Fengyuan Hu, Spencer Huang, Joel
+  Jang, Zhenyu Jiang, Jan Kautz, Kaushil Kundalia, Lawrence Lao, Zhiqi Li,
+  Zongyu Lin, Kevin Lin, Guilin Liu, Edith Llontop, Loic Magne, Ajay Mandlekar,
+  Avnish Narayan, Soroush Nasiriany, Scott Reed, You~Liang Tan, Guanzhi Wang,
+  Zu~Wang, Jing Wang, Qi~Wang, Jiannan Xiang, Yuqi Xie, Yinzhen Xu, Zhenjia Xu,
+  Seonghyeon Ye, Zhiding Yu, Ao~Zhang, Hao Zhang, Yizhou Zhao, Ruijie Zheng,
+  and Yuke Zhu.
+\newblock {GR00T N1}: An open foundation model for generalist humanoid robots.
+\newblock \emph{arXiv preprint arXiv:2503.14734}, 2025.
+\newblock URL \url{https://arxiv.org/abs/2503.14734}.
+
+\bibitem[Ross et~al.(2010)Ross, Gordon, and Bagnell]{dagger}
+Stephane Ross, Geoffrey~J. Gordon, and J.~Andrew Bagnell.
+\newblock A reduction of imitation learning and structured prediction to
+  no-regret online learning.
+\newblock \emph{arXiv preprint arXiv:1011.0686}, 2010.
+\newblock URL \url{https://arxiv.org/abs/1011.0686}.
+
+\bibitem[Xiao et~al.(2022)Xiao, Lin, Seznec, Wu, Demouth, and Han]{smoothquant}
+Guangxuan Xiao, Ji~Lin, Mickael Seznec, Hao Wu, Julien Demouth, and Song Han.
+\newblock {SmoothQuant}: Accurate and efficient post-training quantization for
+  large language models.
+\newblock \emph{arXiv preprint arXiv:2211.10438}, 2022.
+\newblock URL \url{https://arxiv.org/abs/2211.10438}.
+
+\bibitem[Zhang et~al.(2026)Zhang, Hsieh, Wan, Lin, Wang, Wang, Lei, and
+  Zhang]{quantvla}
+Jingxuan Zhang, Yunta Hsieh, Zhongwei Wan, Haokun Lin, Xin Wang, Ziqi Wang,
+  Yingtie Lei, and Mi~Zhang.
+\newblock {QuantVLA}: Scale-calibrated post-training quantization for
+  vision-language-action models.
+\newblock \emph{arXiv preprint arXiv:2602.20309}, 2026.
+\newblock \doi{10.48550/arXiv.2602.20309}.
+\newblock URL \url{https://arxiv.org/abs/2602.20309}.
+
+\end{thebibliography}

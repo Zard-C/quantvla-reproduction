@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="210" viewBox="0 0 720 210">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Helvetica,Arial,sans-serif;fill:#222222}.label{font-size:11px}.small{font-size:9.5px;fill:#666666}.axis{font-size:9px;fill:#666666}.panel{font-size:12px;font-weight:700}</style>
+<text x="20" y="61" class="label" text-anchor="start">ATM vs none</text>
+<rect x="128" y="42" width="42.46666666666667" height="28" fill="#54a24b" rx="0"/>
+<text x="149.23333333333335" y="61" class="axis" text-anchor="middle" style="fill:white" font-weight="700">14</text>
+<rect x="170.46666666666667" y="42" width="39.43333333333333" height="28" fill="#e45756" rx="0"/>
+<text x="190.18333333333334" y="61" class="axis" text-anchor="middle" style="fill:white" font-weight="700">13</text>
+<rect x="209.9" y="42" width="303.3333333333333" height="28" fill="#4c78a8" rx="0"/>
+<text x="361.56666666666666" y="61" class="axis" text-anchor="middle" style="fill:white" font-weight="700">100</text>
+<rect x="513.2333333333333" y="42" width="69.76666666666667" height="28" fill="#9d9d9d" rx="0"/>
+<text x="548.1166666666667" y="61" class="axis" text-anchor="middle" style="fill:#222222" font-weight="700">23</text>
+<text x="601" y="61" class="label" text-anchor="start" font-weight="700">net +1</text>
+<text x="20" y="107" class="label" text-anchor="start">OHB vs none</text>
+<rect x="128" y="88" width="48.53333333333333" height="28" fill="#54a24b" rx="0"/>
+<text x="152.26666666666665" y="107" class="axis" text-anchor="middle" style="fill:white" font-weight="700">16</text>
+<rect x="176.53333333333333" y="88" width="39.43333333333333" height="28" fill="#e45756" rx="0"/>
+<text x="196.25" y="107" class="axis" text-anchor="middle" style="fill:white" font-weight="700">13</text>
+<rect x="215.96666666666667" y="88" width="303.3333333333333" height="28" fill="#4c78a8" rx="0"/>
+<text x="367.6333333333333" y="107" class="axis" text-anchor="middle" style="fill:white" font-weight="700">100</text>
+<rect x="519.3" y="88" width="63.699999999999996" height="28" fill="#9d9d9d" rx="0"/>
+<text x="551.15" y="107" class="axis" text-anchor="middle" style="fill:#222222" font-weight="700">21</text>
+<text x="601" y="107" class="label" text-anchor="start" font-weight="700">net +3</text>
+<text x="20" y="153" class="label" text-anchor="start">OHB vs ATM</text>
+<rect x="128" y="134" width="45.5" height="28" fill="#54a24b" rx="0"/>
+<text x="150.75" y="153" class="axis" text-anchor="middle" style="fill:white" font-weight="700">15</text>
+<rect x="173.5" y="134" width="39.43333333333333" height="28" fill="#e45756" rx="0"/>
+<text x="193.21666666666667" y="153" class="axis" text-anchor="middle" style="fill:white" font-weight="700">13</text>
+<rect x="212.93333333333334" y="134" width="306.3666666666667" height="28" fill="#4c78a8" rx="0"/>
+<text x="366.1166666666667" y="153" class="axis" text-anchor="middle" style="fill:white" font-weight="700">101</text>
+<rect x="519.3" y="134" width="63.699999999999996" height="28" fill="#9d9d9d" rx="0"/>
+<text x="551.15" y="153" class="axis" text-anchor="middle" style="fill:#222222" font-weight="700">21</text>
+<text x="601" y="153" class="label" text-anchor="start" font-weight="700">net +2</text>
+<line x1="128.0" y1="34" x2="128.0" y2="170" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="128.0" y="28" class="axis" text-anchor="middle">0</text>
+<line x1="279.66666666666663" y1="34" x2="279.66666666666663" y2="170" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="279.66666666666663" y="28" class="axis" text-anchor="middle">50</text>
+<line x1="431.3333333333333" y1="34" x2="431.3333333333333" y2="170" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="431.3333333333333" y="28" class="axis" text-anchor="middle">100</text>
+<line x1="583.0" y1="34" x2="583.0" y2="170" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="583.0" y="28" class="axis" text-anchor="middle">150</text>
+<rect x="122" y="175" width="11" height="11" fill="#54a24b" rx="0"/>
+<text x="139" y="184" class="small" text-anchor="start">repair</text>
+<rect x="250" y="175" width="11" height="11" fill="#e45756" rx="0"/>
+<text x="267" y="184" class="small" text-anchor="start">regress</text>
+<rect x="378" y="175" width="11" height="11" fill="#4c78a8" rx="0"/>
+<text x="395" y="184" class="small" text-anchor="start">same success</text>
+<rect x="506" y="175" width="11" height="11" fill="#9d9d9d" rx="0"/>
+<text x="523" y="184" class="small" text-anchor="start">same fail</text>
+</svg>

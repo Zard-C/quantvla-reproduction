@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="250" viewBox="0 0 720 250">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Helvetica,Arial,sans-serif;fill:#222222}.label{font-size:11px}.small{font-size:9.5px;fill:#666666}.axis{font-size:9px;fill:#666666}.panel{font-size:12px;font-weight:700}</style>
+<text x="54" y="24" class="panel" text-anchor="start">(a) mean rel. RMSE reduction</text>
+<line x1="60" y1="193" x2="320" y2="193" stroke="#222222" stroke-width="0.8" fill="none"/>
+<line x1="60" y1="48" x2="60" y2="193" stroke="#222222" stroke-width="0.8" fill="none"/>
+<line x1="60" y1="193.0" x2="320" y2="193.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="55" y="196.0" class="axis" text-anchor="end">0</text>
+<line x1="60" y1="156.75" x2="320" y2="156.75" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="55" y="159.75" class="axis" text-anchor="end">0.004</text>
+<line x1="60" y1="120.5" x2="320" y2="120.5" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="55" y="123.5" class="axis" text-anchor="end">0.008</text>
+<line x1="60" y1="84.25" x2="320" y2="84.25" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="55" y="87.25" class="axis" text-anchor="end">0.012</text>
+<line x1="60" y1="48.0" x2="320" y2="48.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="55" y="51.0" class="axis" text-anchor="end">0.016</text>
+<rect x="88" y="193.0" width="28" height="0.0" fill="#9d9d9d" rx="0"/>
+<text x="102" y="208" class="axis" text-anchor="middle">id</text>
+<text x="102" y="188.0" class="axis" text-anchor="middle">0.000</text>
+<rect x="144" y="122.9697125" width="28" height="70.0302875" fill="#f58518" rx="0"/>
+<text x="158" y="208" class="axis" text-anchor="middle">ATM</text>
+<text x="158" y="117.9697125" class="axis" text-anchor="middle">0.008</text>
+<rect x="200" y="77.45312500000001" width="28" height="115.54687499999999" fill="#54a24b" rx="0"/>
+<text x="214" y="208" class="axis" text-anchor="middle">OHB</text>
+<text x="214" y="72.45312500000001" class="axis" text-anchor="middle">0.013</text>
+<rect x="256" y="63.70168750000002" width="28" height="129.29831249999998" fill="#7f6dba" rx="0"/>
+<text x="270" y="208" class="axis" text-anchor="middle">A+O</text>
+<text x="270" y="58.70168750000002" class="axis" text-anchor="middle">0.014</text>
+<text x="190.0" y="226" class="small" text-anchor="middle">higher is better</text>
+<text x="412" y="24" class="panel" text-anchor="start">(b) observations worse by NMSE</text>
+<line x1="420" y1="193" x2="660" y2="193" stroke="#222222" stroke-width="0.8" fill="none"/>
+<line x1="420" y1="48" x2="420" y2="193" stroke="#222222" stroke-width="0.8" fill="none"/>
+<line x1="420" y1="193.0" x2="660" y2="193.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="415" y="196.0" class="axis" text-anchor="end">0</text>
+<line x1="420" y1="156.75" x2="660" y2="156.75" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="415" y="159.75" class="axis" text-anchor="end">10</text>
+<line x1="420" y1="120.5" x2="660" y2="120.5" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="415" y="123.5" class="axis" text-anchor="end">20</text>
+<line x1="420" y1="84.25" x2="660" y2="84.25" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="415" y="87.25" class="axis" text-anchor="end">30</text>
+<line x1="420" y1="48.0" x2="660" y2="48.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="415" y="51.0" class="axis" text-anchor="end">40</text>
+<rect x="446" y="193.0" width="28" height="0.0" fill="#9d9d9d" rx="0"/>
+<text x="460" y="208" class="axis" text-anchor="middle">id</text>
+<text x="460" y="188.0" class="axis" text-anchor="middle">0</text>
+<rect x="498" y="58.875" width="28" height="134.125" fill="#f58518" rx="0"/>
+<text x="512" y="208" class="axis" text-anchor="middle">ATM</text>
+<text x="512" y="53.875" class="axis" text-anchor="middle">37</text>
+<rect x="550" y="106.0" width="28" height="87.0" fill="#54a24b" rx="0"/>
+<text x="564" y="208" class="axis" text-anchor="middle">OHB</text>
+<text x="564" y="101.0" class="axis" text-anchor="middle">24</text>
+<rect x="602" y="69.75" width="28" height="123.25" fill="#7f6dba" rx="0"/>
+<text x="616" y="208" class="axis" text-anchor="middle">A+O</text>
+<text x="616" y="64.75" class="axis" text-anchor="middle">34</text>
+<text x="540.0" y="226" class="small" text-anchor="middle">lower is better</text>
+</svg>
