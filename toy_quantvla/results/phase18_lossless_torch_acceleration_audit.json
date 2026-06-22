@@ -1,0 +1,191 @@
+{
+  "boundary": "Offline lossless Torch-level acceleration audit; no GPU execution in this phase.",
+  "fp16_baseline": {
+    "sources": [
+      "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_client_latency.json",
+      "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_server_latency.json",
+      "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_server_prepare.json"
+    ],
+    "episodes": 30,
+    "successes": 16,
+    "success_rate": 0.5333,
+    "client_policy_p50_ms": 161.132,
+    "client_policy_p90_ms": 166.479,
+    "server_get_action_p50_ms": 156.236,
+    "server_get_action_p90_ms": 161.48,
+    "client_preprocess_p50_ms": 0.113,
+    "client_postprocess_p50_ms": 0.101,
+    "client_remote_p50_ms": 160.91,
+    "client_minus_server_p50_ms": 4.674,
+    "prepare_seconds": 11.884,
+    "prewarm_total_seconds": 0.868,
+    "prewarm_p50_ms": 89.84,
+    "reserved_mib": 5512.0,
+    "allocated_mib": 5223.1
+  },
+  "fp16_profiles": {
+    "sources": [
+      "toy_quantvla/results/phase8_fp16_profiled_server_dit_mlp_task6_init1_latency.json",
+      "toy_quantvla/results/phase10_fp16_hotspot_llm_dit_mlp_obs4_r3.json"
+    ],
+    "dit_mlp_linear_modules": 32,
+    "dit_mlp_calls": 62208,
+    "dit_mlp_per_get_action_ms": 13.318,
+    "dit_mlp_share_of_profiled_server_mean": 0.084,
+    "dit_mlp_share_of_baseline_p50": 0.0852,
+    "llm_dit_selected_modules": 116,
+    "llm_dit_selected_per_request_ms": 17.556,
+    "llm_dit_selected_share_of_offline_profile_p50": 0.1712,
+    "family_breakdown_ms_per_request": {
+      "dit_mlp": 11.398,
+      "llm_attn": 2.167,
+      "llm_mlp": 3.991
+    }
+  },
+  "existing_routes": {
+    "torch_compile_block_island": {
+      "sources": [
+        "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_client_latency.json",
+        "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_server_latency.json",
+        "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_server_prepare.json"
+      ],
+      "successes": 13,
+      "episodes": 30,
+      "baseline_successes": 16,
+      "baseline_episodes": 30,
+      "server_p50_ms": 76.457,
+      "baseline_server_p50_ms": 156.236,
+      "p50_speedup": 2.0434,
+      "server_p90_ms": 145.473,
+      "prepare_seconds": 19.103,
+      "prewarm_total_seconds": 6.888,
+      "prewarm_p50_ms": 1316.515,
+      "lossless_judgement": "not_lossless"
+    },
+    "cuda_graph_dit_forward": {
+      "sources": [
+        "toy_quantvla/results/phase14_cuda_graph_dit_probe_obs4_r10_v1.json"
+      ],
+      "cases": 40,
+      "eager_p50_ms": 102.834,
+      "graph_p50_ms": 101.048,
+      "p50_speedup": 1.0177,
+      "eager_p90_ms": 167.963,
+      "graph_p90_ms": 111.692,
+      "p90_speedup": 1.5038,
+      "max_abs_diff": 0.0,
+      "rel_rmse_mean": 0.0,
+      "graph_cache_size": 3,
+      "capture_seconds": 0.489,
+      "lossless_judgement": "fixed_observation_bit_exact"
+    }
+  },
+  "static_findings": [
+    {
+      "topic": "client preprocessing/postprocessing",
+      "finding": "LIBERO client 图像/状态预处理和 action 后处理的 p50 都约为 0.1 ms。",
+      "judgement": "not_a_primary_bottleneck",
+      "evidence": [
+        "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_client_latency.json",
+        "toy_quantvla/libero_eval_init_range.py"
+      ]
+    },
+    {
+      "topic": "env.step(action.tolist())",
+      "finding": "这里的 action 已经是 simulator client 侧的 NumPy 数组，不是 server GPU tensor 的 D2H。",
+      "judgement": "do_not_optimize_first",
+      "evidence": [
+        "toy_quantvla/libero_eval_init_range.py"
+      ]
+    },
+    {
+      "topic": "request trace and summary flushing",
+      "finding": "per-request JSONL trace 每行都会 flush；latency summary flush 也可能在 rollout 中写文件。",
+      "judgement": "disable_for_deployment_or_buffer",
+      "evidence": [
+        "toy_quantvla/timing_utils.py",
+        "toy_quantvla/timed_fp16_inference_service.py"
+      ]
+    },
+    {
+      "topic": "explicit CUDA synchronize",
+      "finding": "server request CUDA sync 是显式 opt-in，应继续只用于 profiling；module profiler 的 synchronize 也是诊断用途。",
+      "judgement": "safe_when_disabled",
+      "evidence": [
+        "toy_quantvla/timing_utils.py",
+        "toy_quantvla/fp16_linear_profiler.py"
+      ]
+    },
+    {
+      "topic": "fixed shapes",
+      "finding": "task description 长度会改变 encoder_hidden_states shape；已有 warmdesc prewarm，应在 rollout 前覆盖所有 eval task description。",
+      "judgement": "required_for_compile_or_kernel_cache_paths",
+      "evidence": [
+        "toy_quantvla/timed_fp16_inference_service.py",
+        "docs/phase8_cutlass_fp4_server_rollout_smoke.md"
+      ]
+    },
+    {
+      "topic": "hidden D2H / scalar sync inside GR00T policy",
+      "finding": "当前 wrapper 层审计不能证明 Isaac-GR00T 内部没有隐藏 D2H/scalar sync，必须在 5090 上用 torch.profiler 验证。",
+      "judgement": "needs_gpu_profile",
+      "evidence": [
+        "external GR00T policy internals not vendored in this repo"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "name": "低扰动 torch.profiler 审计",
+      "lossless": true,
+      "expected_speedup": "先测量",
+      "why": "改代码前先找隐藏 cudaMemcpyDtoH、aten::item、aten::_local_scalar_dense、CPU wait 和 shape-cache miss。",
+      "risk": "profiler 本身会扰动 timing，所以只跑短 fixed-observation 或短 rollout。",
+      "gate": "找到每 request 反复出现且超过 1 ms 的 sync/D2H，或确认这类问题不存在。"
+    },
+    {
+      "rank": 2,
+      "name": "部署态 timing hygiene",
+      "lossless": true,
+      "expected_speedup": "小",
+      "why": "部署跑法里禁用 per-request JSONL trace、summary flush、CUDA sync 和 module profiler。",
+      "risk": "不减少模型计算量，主要移除测量开销。",
+      "gate": "同一 30-case set 下 server p50/p90 不变差，成功率不变。"
+    },
+    {
+      "rank": 3,
+      "name": "shape-aware prewarm contract",
+      "lossless": true,
+      "expected_speedup": "只改善冷启动/长尾",
+      "why": "把 task-description shape miss 和 kernel/graph cache 构造前移到 server 启动阶段。",
+      "risk": "需要 serving 前知道 task set；未见过的 description 仍可能 miss。",
+      "gate": "request-time 没有 cold spike，也没有新的 graph/compile/cache miss 记录。"
+    },
+    {
+      "rank": 4,
+      "name": "eager DiT forward 的 CUDA graph replay",
+      "lossless": true,
+      "expected_speedup": "p50 ~1.02x, p90 better",
+      "why": "已有 fixed-observation replay 是 bit-exact，可以减少 launch/Python 调度开销。",
+      "risk": "p50 收益小；server 集成需要 shape cache 和 fallback 策略。",
+      "gate": "matched rollout 的 success/action trace 与 FP16 对齐，同时 server p90 改善。"
+    },
+    {
+      "rank": 5,
+      "name": "torch.compile block-island",
+      "lossless": false,
+      "expected_speedup": "p50 ~2.04x",
+      "why": "目前最强的速度信号。",
+      "risk": "已经把 30-case success 从 16/30 改成 13/30。",
+      "gate": "不是无损路径；只能配合 behavior guard 或闭环修正使用。"
+    }
+  ],
+  "remote_commands": [
+    "# 1. 纯 FP16 hygiene run：不打开 request trace、不打开 server cuda sync、不打开 module profiler。",
+    "python toy_quantvla/timed_fp16_inference_service.py --port 5555 --prewarm-observations 1 --prewarm-indices 115 --prewarm-task-description 'put the white mug on the left plate and put the yellow and white mug on the right plate' --prewarm-task-description 'put the white mug on the plate and put the chocolate pudding to the right of the plate' --prewarm-task-description 'put both moka pots on the stove' --server-latency-json toy_quantvla/results/phase18_fp16_hygiene_server_latency.json",
+    "python toy_quantvla/libero_eval_init_range.py --task-suite-name libero_10 --case-list 4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9,8:10 --headless --port 5555 --deterministic-policy-seeds --policy-seed-base 20260613 --latency-json toy_quantvla/results/phase18_fp16_hygiene_client_latency.json",
+    "# 2. profiler probe：包住短 fixed-observation 或短 rollout，重点 grep cudaMemcpyDtoH、aten::item、aten::_local_scalar_dense、cudaDeviceSynchronize。",
+    "# 3. 如果 profiler 没有发现隐藏 sync/D2H，就不要继续在 D2H 上耗时间；改测 CUDA graph DiT 的 p90-only clean optimization。"
+  ]
+}
