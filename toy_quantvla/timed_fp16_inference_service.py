@@ -139,7 +139,9 @@ def main() -> None:
         help="Call torch.compiler.cudagraph_mark_step_begin before each compiled submodule invocation.",
     )
     parser.add_argument("--prewarm-observations", type=int, default=0)
+    parser.add_argument("--lossless-cache-eagle-tokenizer", action="store_true")
     parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
+    parser.add_argument("--lossless-cache-static-normalized-input", action="store_true")
     parser.add_argument("--lossless-cache-action-head-static", action="store_true")
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
     parser.add_argument("--prewarm-indices", default="115")
@@ -192,7 +194,9 @@ def main() -> None:
             "cudagraph_mark_step": bool(args.torch_compile_cudagraph_mark_step),
         },
         "lossless_cache": {
+            "eagle_tokenizer_cache": bool(args.lossless_cache_eagle_tokenizer),
             "prepare_input_pruning": bool(args.lossless_cache_prepare_input_pruning),
+            "static_normalized_input_cache": bool(args.lossless_cache_static_normalized_input),
             "action_head_static_cache": bool(args.lossless_cache_action_head_static),
         },
         "prewarm_observations": int(args.prewarm_observations),
@@ -218,7 +222,9 @@ def main() -> None:
     result["torch_compile"] = compile_policy_targets(policy, args, torch)
     result["lossless_cache"] = install_lossless_cache_patches(
         policy,
+        eagle_tokenizer_cache=bool(args.lossless_cache_eagle_tokenizer),
         prepare_input_pruning=bool(args.lossless_cache_prepare_input_pruning),
+        static_normalized_input_cache=bool(args.lossless_cache_static_normalized_input),
         action_head_static_cache=bool(args.lossless_cache_action_head_static),
     )
     result["prepare_seconds"] = result["model_load_seconds"]

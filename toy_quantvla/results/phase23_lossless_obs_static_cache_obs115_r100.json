@@ -1,0 +1,207 @@
+{
+  "boundary": "Lossless cache A/B probe; no torch.compile",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "warmup_requests": 5,
+  "compare_requests": 3,
+  "profile_requests": 100,
+  "load_seconds": 11.433448944240808,
+  "patch_request": {
+    "eagle_tokenizer_cache": true,
+    "prepare_input_pruning": true,
+    "static_normalized_input_cache": true,
+    "action_head_static_cache": false
+  },
+  "patch_result": {
+    "eagle_tokenizer_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache Eagle tokenizer outputs keyed by expanded prompt text and tokenizer kwargs."
+    },
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "static_normalized_input_cache": true,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": false
+    }
+  },
+  "baseline_warmup_seconds": {
+    "count": 5,
+    "mean": 0.1713423751294613,
+    "min": 0.08885499835014343,
+    "max": 0.48469166457653046,
+    "p50": 0.09320565313100815,
+    "p90": 0.33052626997232437,
+    "p99": 0.46927512511610986
+  },
+  "baseline_compare_seconds": {
+    "count": 3,
+    "mean": 0.12716423099239668,
+    "min": 0.09917471930384636,
+    "max": 0.18294736742973328,
+    "p50": 0.09937060624361038,
+    "p90": 0.1662320151925087,
+    "p99": 0.18127583220601082
+  },
+  "baseline_profile_seconds": {
+    "count": 100,
+    "mean": 0.11386712294071913,
+    "min": 0.08631814643740654,
+    "max": 0.19697143509984016,
+    "p50": 0.10432427376508713,
+    "p90": 0.17766850367188458,
+    "p99": 0.1956834986805916
+  },
+  "baseline_profile_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_seconds": {
+    "count": 5,
+    "mean": 0.11701406687498092,
+    "min": 0.09497638046741486,
+    "max": 0.18815963715314865,
+    "p50": 0.1029423400759697,
+    "p90": 0.1544845312833786,
+    "p99": 0.18479212656617164
+  },
+  "cached_compare_seconds": {
+    "count": 3,
+    "mean": 0.10256351282199223,
+    "min": 0.0978102833032608,
+    "max": 0.10745733603835106,
+    "p50": 0.10242291912436485,
+    "p90": 0.10645045265555382,
+    "p99": 0.10735664770007133
+  },
+  "cached_profile_seconds": {
+    "count": 100,
+    "mean": 0.10778840783983469,
+    "min": 0.08561194315552711,
+    "max": 0.18249399214982986,
+    "p50": 0.10268352925777435,
+    "p90": 0.11480695605278018,
+    "p99": 0.1817997707426548
+  },
+  "cached_profile_memory": {
+    "allocated_bytes": 5476791296,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682051584,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_memory": {
+    "allocated_bytes": 5476791296,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682051584,
+    "max_reserved_bytes": 5779750912
+  },
+  "action_comparisons": [
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.976693009307075,
+      "candidate_norm": 4.976693009307075,
+      "cosine": 1.0000000000000002,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.990609430785703,
+      "candidate_norm": 4.990609430785703,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.972746054680102,
+      "candidate_norm": 4.972746054680102,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    }
+  ],
+  "action_summary": {
+    "all_bitwise_equal_after_unapply": true,
+    "allclose_1e_6": true,
+    "max_abs_diff": 0.0
+  },
+  "speedup": {
+    "p50": 1.015978653238475,
+    "baseline_p50_seconds": 0.10432427376508713,
+    "cached_p50_seconds": 0.10268352925777435
+  },
+  "cache_stats": {
+    "eagle_tokenizer_cache": {
+      "calls": 108,
+      "hits": 107,
+      "misses": 1,
+      "cached_entries": 1,
+      "last_text_count": 1
+    },
+    "prepare_input_pruning": {
+      "calls": 108,
+      "backbone_keys": [
+        "eagle_attention_mask",
+        "eagle_image_sizes",
+        "eagle_input_ids",
+        "eagle_pixel_values"
+      ],
+      "action_keys": [
+        "embodiment_id",
+        "state"
+      ],
+      "moved_backbone_values": 432,
+      "moved_action_values": 216,
+      "static_cuda_cache_enabled": true,
+      "static_cuda_hits": 428,
+      "static_cuda_misses": 4,
+      "static_cuda_hits_by_key": {
+        "eagle_input_ids": 107,
+        "eagle_attention_mask": 107,
+        "eagle_image_sizes": 107,
+        "embodiment_id": 107
+      },
+      "static_cuda_misses_by_key": {
+        "eagle_input_ids": 1,
+        "eagle_attention_mask": 1,
+        "eagle_image_sizes": 1,
+        "embodiment_id": 1
+      },
+      "static_cuda_cache_size": 4
+    }
+  }
+}

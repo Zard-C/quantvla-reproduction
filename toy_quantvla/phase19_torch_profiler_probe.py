@@ -17,6 +17,7 @@ from typing import Any
 
 import torch
 
+from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase8_cutlass_blockscaled_fp4_real_activation_bench import (
@@ -147,6 +148,10 @@ def main() -> None:
     parser.add_argument("--record-shapes", action="store_true")
     parser.add_argument("--profile-memory", action="store_true")
     parser.add_argument("--with-stack", action="store_true")
+    parser.add_argument("--lossless-cache-eagle-tokenizer", action="store_true")
+    parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
+    parser.add_argument("--lossless-cache-static-normalized-input", action="store_true")
+    parser.add_argument("--lossless-cache-action-head-static", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase19_torch_profiler_probe.json"))
     parser.add_argument("--cpu-table", type=Path, default=Path("toy_quantvla/results/phase19_torch_profiler_cpu_table.txt"))
     parser.add_argument("--cuda-table", type=Path, default=Path("toy_quantvla/results/phase19_torch_profiler_cuda_table.txt"))
@@ -178,6 +183,13 @@ def main() -> None:
     )
     synchronize(args.device)
     load_seconds = time.perf_counter() - load_started
+    lossless_cache = install_lossless_cache_patches(
+        policy,
+        eagle_tokenizer_cache=bool(args.lossless_cache_eagle_tokenizer),
+        prepare_input_pruning=bool(args.lossless_cache_prepare_input_pruning),
+        static_normalized_input_cache=bool(args.lossless_cache_static_normalized_input),
+        action_head_static_cache=bool(args.lossless_cache_action_head_static),
+    )
 
     warmup = run_requests(policy, warmup_observations, device=args.device)
     profile_latencies: list[float] = []
@@ -231,6 +243,8 @@ def main() -> None:
         "record_shapes": bool(args.record_shapes),
         "profile_memory_enabled": bool(args.profile_memory),
         "with_stack": bool(args.with_stack),
+        "lossless_cache": lossless_cache,
+        "lossless_cache_stats": lossless_cache_stats(policy),
         "top_self_cpu_events": top_events(events, sort_key="self_cpu_time_total_us", limit=args.top_k),
         "top_self_cuda_events": top_events(events, sort_key="self_cuda_time_total_us", limit=args.top_k),
         "sync_or_d2h_candidate_events": matching_events(events, SYNC_PATTERNS),

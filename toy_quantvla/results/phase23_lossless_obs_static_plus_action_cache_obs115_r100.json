@@ -1,0 +1,223 @@
+{
+  "boundary": "Lossless cache A/B probe; no torch.compile",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "warmup_requests": 5,
+  "compare_requests": 3,
+  "profile_requests": 100,
+  "load_seconds": 11.346833903342485,
+  "patch_request": {
+    "eagle_tokenizer_cache": true,
+    "prepare_input_pruning": true,
+    "static_normalized_input_cache": true,
+    "action_head_static_cache": true
+  },
+  "patch_result": {
+    "eagle_tokenizer_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache Eagle tokenizer outputs keyed by expanded prompt text and tokenizer kwargs."
+    },
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "static_normalized_input_cache": true,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache denoising timestep tensors, action position embeddings, and expanded future tokens."
+    }
+  },
+  "baseline_warmup_seconds": {
+    "count": 5,
+    "mean": 0.1786283351480961,
+    "min": 0.08700503781437874,
+    "max": 0.5171243250370026,
+    "p50": 0.08832615986466408,
+    "p90": 0.35563831180334093,
+    "p99": 0.5009757237136364
+  },
+  "baseline_compare_seconds": {
+    "count": 3,
+    "mean": 0.11290060356259346,
+    "min": 0.09808501601219177,
+    "max": 0.1390160694718361,
+    "p50": 0.10160072520375252,
+    "p90": 0.13153300061821938,
+    "p99": 0.1382677625864744
+  },
+  "baseline_profile_seconds": {
+    "count": 100,
+    "mean": 0.11985111504793167,
+    "min": 0.09315383806824684,
+    "max": 0.20960765704512596,
+    "p50": 0.10496018081903458,
+    "p90": 0.18573613464832306,
+    "p99": 0.19904789872467524
+  },
+  "baseline_profile_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_seconds": {
+    "count": 5,
+    "mean": 0.09986457377672195,
+    "min": 0.08923008665442467,
+    "max": 0.1088513657450676,
+    "p50": 0.10296881198883057,
+    "p90": 0.10662641227245331,
+    "p99": 0.10862887039780617
+  },
+  "cached_compare_seconds": {
+    "count": 3,
+    "mean": 0.0981345276037852,
+    "min": 0.08716632798314095,
+    "max": 0.10459811240434647,
+    "p50": 0.10263914242386818,
+    "p90": 0.10420631840825081,
+    "p99": 0.1045589330047369
+  },
+  "cached_profile_seconds": {
+    "count": 100,
+    "mean": 0.10887125104665757,
+    "min": 0.08574062213301659,
+    "max": 0.1968475766479969,
+    "p50": 0.10242338478565216,
+    "p90": 0.13034143000841147,
+    "p99": 0.18375424727797515
+  },
+  "cached_profile_memory": {
+    "allocated_bytes": 5476844544,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_memory": {
+    "allocated_bytes": 5476844544,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "action_comparisons": [
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.976693009307075,
+      "candidate_norm": 4.976693009307075,
+      "cosine": 1.0000000000000002,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.990609430785703,
+      "candidate_norm": 4.990609430785703,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.972746054680102,
+      "candidate_norm": 4.972746054680102,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    }
+  ],
+  "action_summary": {
+    "all_bitwise_equal_after_unapply": true,
+    "allclose_1e_6": true,
+    "max_abs_diff": 0.0
+  },
+  "speedup": {
+    "p50": 1.024767742627246,
+    "baseline_p50_seconds": 0.10496018081903458,
+    "cached_p50_seconds": 0.10242338478565216
+  },
+  "cache_stats": {
+    "eagle_tokenizer_cache": {
+      "calls": 108,
+      "hits": 107,
+      "misses": 1,
+      "cached_entries": 1,
+      "last_text_count": 1
+    },
+    "prepare_input_pruning": {
+      "calls": 108,
+      "backbone_keys": [
+        "eagle_attention_mask",
+        "eagle_image_sizes",
+        "eagle_input_ids",
+        "eagle_pixel_values"
+      ],
+      "action_keys": [
+        "embodiment_id",
+        "state"
+      ],
+      "moved_backbone_values": 432,
+      "moved_action_values": 216,
+      "static_cuda_cache_enabled": true,
+      "static_cuda_hits": 428,
+      "static_cuda_misses": 4,
+      "static_cuda_hits_by_key": {
+        "eagle_input_ids": 107,
+        "eagle_attention_mask": 107,
+        "eagle_image_sizes": 107,
+        "embodiment_id": 107
+      },
+      "static_cuda_misses_by_key": {
+        "eagle_input_ids": 1,
+        "eagle_attention_mask": 1,
+        "eagle_image_sizes": 1,
+        "embodiment_id": 1
+      },
+      "static_cuda_cache_size": 4
+    },
+    "action_head_static_cache": {
+      "calls": 108,
+      "timestep_hits": 856,
+      "timestep_misses": 8,
+      "position_embedding_hits": 863,
+      "position_embedding_misses": 1,
+      "future_token_hits": 107,
+      "future_token_misses": 1
+    },
+    "action_head_static_cache_sizes": {
+      "timesteps": 8,
+      "position_embeddings": 1,
+      "future_tokens": 1
+    }
+  }
+}

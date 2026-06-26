@@ -136,7 +136,9 @@ def main() -> None:
     parser.add_argument("--warmup-repeats", type=int, default=2)
     parser.add_argument("--profile-repeats", type=int, default=10)
     parser.add_argument("--compare-repeats", type=int, default=3)
+    parser.add_argument("--eagle-tokenizer-cache", action="store_true")
     parser.add_argument("--prepare-input-pruning", action="store_true")
+    parser.add_argument("--static-normalized-input-cache", action="store_true")
     parser.add_argument("--action-head-static-cache", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase20_lossless_cache_probe.json"))
     args = parser.parse_args()
@@ -188,7 +190,9 @@ def main() -> None:
 
     patch_result = install_lossless_cache_patches(
         policy,
+        eagle_tokenizer_cache=bool(args.eagle_tokenizer_cache),
         prepare_input_pruning=bool(args.prepare_input_pruning),
+        static_normalized_input_cache=bool(args.static_normalized_input_cache),
         action_head_static_cache=bool(args.action_head_static_cache),
     )
     cached_warmup, cached_warmup_memory, _ = run_requests(
@@ -236,7 +240,9 @@ def main() -> None:
         "profile_requests": len(profile_observations),
         "load_seconds": float(load_seconds),
         "patch_request": {
+            "eagle_tokenizer_cache": bool(args.eagle_tokenizer_cache),
             "prepare_input_pruning": bool(args.prepare_input_pruning),
+            "static_normalized_input_cache": bool(args.static_normalized_input_cache),
             "action_head_static_cache": bool(args.action_head_static_cache),
         },
         "patch_result": patch_result,
@@ -284,4 +290,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
