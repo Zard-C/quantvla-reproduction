@@ -1,0 +1,71 @@
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "profile_linear_modules": false,
+  "profile_scope": "dit_mlp_only",
+  "profile_scope_description": "DiT feed-forward Linear modules only",
+  "profile_max_modules": 0,
+  "profile_name_contains": [],
+  "torch_compile": {
+    "enabled": false,
+    "target": "none",
+    "compiled_modules": []
+  },
+  "lossless_cache": {
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache denoising timestep tensors, action position embeddings, and expanded future tokens."
+    }
+  },
+  "prewarm_observations": 1,
+  "prewarm_observation_source": "real",
+  "prewarm_indices": "115",
+  "video_backend": "torchvision_av",
+  "model_load_seconds": 11.518410220742226,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prepare_seconds": 12.136907868087292,
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "prewarm_get_action_seconds": {
+    "count": 1,
+    "mean": 0.4896170571446419,
+    "min": 0.4896170571446419,
+    "max": 0.4896170571446419,
+    "p50": 0.4896170571446419,
+    "p90": 0.4896170571446419,
+    "p99": 0.4896170571446419
+  },
+  "prewarm_memory": {
+    "allocated_bytes": 5476834304,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682051584,
+    "max_reserved_bytes": 5779750912
+  },
+  "prewarm_total_seconds": 0.6175606176257133
+}

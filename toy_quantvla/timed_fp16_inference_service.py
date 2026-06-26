@@ -16,6 +16,7 @@ from fp16_linear_profiler import (
     patch_timed_fp16_modules,
     reset_module_stats,
 )
+from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
 from phase13_compile_targets import TORCH_COMPILE_TARGETS, compile_policy_targets
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
@@ -138,6 +139,8 @@ def main() -> None:
         help="Call torch.compiler.cudagraph_mark_step_begin before each compiled submodule invocation.",
     )
     parser.add_argument("--prewarm-observations", type=int, default=0)
+    parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
+    parser.add_argument("--lossless-cache-action-head-static", action="store_true")
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
     parser.add_argument("--prewarm-indices", default="115")
     parser.add_argument("--prewarm-start-index", type=int, default=0)
@@ -188,6 +191,10 @@ def main() -> None:
             "dynamic": args.torch_compile_dynamic,
             "cudagraph_mark_step": bool(args.torch_compile_cudagraph_mark_step),
         },
+        "lossless_cache": {
+            "prepare_input_pruning": bool(args.lossless_cache_prepare_input_pruning),
+            "action_head_static_cache": bool(args.lossless_cache_action_head_static),
+        },
         "prewarm_observations": int(args.prewarm_observations),
         "prewarm_observation_source": args.prewarm_observation_source,
         "prewarm_indices": args.prewarm_indices,
@@ -209,6 +216,11 @@ def main() -> None:
     result["model_load_memory"] = cuda_memory(args.device)
 
     result["torch_compile"] = compile_policy_targets(policy, args, torch)
+    result["lossless_cache"] = install_lossless_cache_patches(
+        policy,
+        prepare_input_pruning=bool(args.lossless_cache_prepare_input_pruning),
+        action_head_static_cache=bool(args.lossless_cache_action_head_static),
+    )
     result["prepare_seconds"] = result["model_load_seconds"]
 
     profiled_modules = {}
@@ -268,7 +280,10 @@ def main() -> None:
     reset_cuda_peak(args.device)
 
     def server_extra_summary() -> dict[str, Any]:
-        summary: dict[str, Any] = {"server_memory": cuda_memory(args.device)}
+        summary: dict[str, Any] = {
+            "server_memory": cuda_memory(args.device),
+            "lossless_cache_stats": lossless_cache_stats(policy),
+        }
         if args.profile_linear_modules:
             summary["profile_module_results"] = module_results(profiled_modules)
         return summary

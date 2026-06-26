@@ -1,0 +1,52 @@
+{
+  "label": "fp16_official",
+  "writes": 8,
+  "get_action_seconds": {
+    "count": 800,
+    "mean": 0.14325594474561512,
+    "min": 0.08258460462093353,
+    "max": 0.2045811042189598,
+    "p50": 0.15251093916594982,
+    "p90": 0.1605439607053995,
+    "p99": 0.17872695095837113
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_bytes": 5476834304,
+      "reserved_bytes": 5779750912,
+      "max_allocated_bytes": 5682104832,
+      "max_reserved_bytes": 5779750912
+    },
+    "lossless_cache_stats": {
+      "prepare_input_pruning": {
+        "calls": 801,
+        "backbone_keys": [
+          "eagle_attention_mask",
+          "eagle_image_sizes",
+          "eagle_input_ids",
+          "eagle_pixel_values"
+        ],
+        "action_keys": [
+          "embodiment_id",
+          "state"
+        ],
+        "moved_backbone_values": 3204,
+        "moved_action_values": 1602
+      },
+      "action_head_static_cache": {
+        "calls": 801,
+        "timestep_hits": 6400,
+        "timestep_misses": 8,
+        "position_embedding_hits": 6407,
+        "position_embedding_misses": 1,
+        "future_token_hits": 800,
+        "future_token_misses": 1
+      },
+      "action_head_static_cache_sizes": {
+        "timesteps": 8,
+        "position_embeddings": 1,
+        "future_tokens": 1
+      }
+    }
+  }
+}

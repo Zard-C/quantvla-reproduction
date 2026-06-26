@@ -1,0 +1,90 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Initialized dataset libero_10_subset with new_embodiment
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.23s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.19it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.12it/s]
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+{
+  "profile_requests": 20,
+  "patch_request": {
+    "prepare_input_pruning": true,
+    "action_head_static_cache": true
+  },
+  "action_summary": {
+    "all_bitwise_equal_after_unapply": true,
+    "allclose_1e_6": true,
+    "max_abs_diff": 0.0
+  },
+  "speedup": {
+    "p50": 1.0098125445199229,
+    "baseline_p50_seconds": 0.10480921901762486,
+    "cached_p50_seconds": 0.1037907674908638
+  },
+  "baseline_profile_seconds": {
+    "count": 20,
+    "mean": 0.11902901753783227,
+    "min": 0.09596937522292137,
+    "max": 0.19354400038719177,
+    "p50": 0.10480921901762486,
+    "p90": 0.17969346195459365,
+    "p99": 0.19156365640461442
+  },
+  "cached_profile_seconds": {
+    "count": 20,
+    "mean": 0.1147698625922203,
+    "min": 0.09159579128026962,
+    "max": 0.1885933242738247,
+    "p50": 0.1037907674908638,
+    "p90": 0.18371113240718842,
+    "p99": 0.18844088781625032
+  },
+  "cache_stats": {
+    "prepare_input_pruning": {
+      "calls": 28,
+      "backbone_keys": [
+        "eagle_attention_mask",
+        "eagle_image_sizes",
+        "eagle_input_ids",
+        "eagle_pixel_values"
+      ],
+      "action_keys": [
+        "embodiment_id",
+        "state"
+      ],
+      "moved_backbone_values": 112,
+      "moved_action_values": 56
+    },
+    "action_head_static_cache": {
+      "calls": 28,
+      "timestep_hits": 216,
+      "timestep_misses": 8,
+      "position_embedding_hits": 223,
+      "position_embedding_misses": 1,
+      "future_token_hits": 27,
+      "future_token_misses": 1
+    },
+    "action_head_static_cache_sizes": {
+      "timesteps": 8,
+      "position_embeddings": 1,
+      "future_tokens": 1
+    }
+  },
+  "output_json": "toy_quantvla/results/phase20_lossless_cache_probe_static_prune_obs115_r20.json"
+}

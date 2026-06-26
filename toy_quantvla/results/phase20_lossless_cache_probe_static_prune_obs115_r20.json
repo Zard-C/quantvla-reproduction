@@ -1,0 +1,218 @@
+{
+  "boundary": "Lossless cache A/B probe; no torch.compile",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "warmup_requests": 3,
+  "compare_requests": 5,
+  "profile_requests": 20,
+  "load_seconds": 11.354412347078323,
+  "patch_request": {
+    "prepare_input_pruning": true,
+    "action_head_static_cache": true
+  },
+  "patch_result": {
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache denoising timestep tensors, action position embeddings, and expanded future tokens."
+    }
+  },
+  "baseline_warmup_seconds": {
+    "count": 3,
+    "mean": 0.26899203037222225,
+    "min": 0.08545893430709839,
+    "max": 0.6338946521282196,
+    "p50": 0.0876225046813488,
+    "p90": 0.5246402226388455,
+    "p99": 0.6229692091792822
+  },
+  "baseline_compare_seconds": {
+    "count": 5,
+    "mean": 0.113454420119524,
+    "min": 0.0907423347234726,
+    "max": 0.18026912957429886,
+    "p50": 0.09852268174290657,
+    "p90": 0.14822623282670977,
+    "p99": 0.17706483989953994
+  },
+  "baseline_profile_seconds": {
+    "count": 20,
+    "mean": 0.11902901753783227,
+    "min": 0.09596937522292137,
+    "max": 0.19354400038719177,
+    "p50": 0.10480921901762486,
+    "p90": 0.17969346195459365,
+    "p99": 0.19156365640461442
+  },
+  "baseline_profile_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_seconds": {
+    "count": 3,
+    "mean": 0.1092462179561456,
+    "min": 0.09345949441194534,
+    "max": 0.12090319022536278,
+    "p50": 0.11337596923112869,
+    "p90": 0.11939774602651596,
+    "p99": 0.12075264580547809
+  },
+  "cached_compare_seconds": {
+    "count": 5,
+    "mean": 0.11873193830251694,
+    "min": 0.09686750546097755,
+    "max": 0.1830456629395485,
+    "p50": 0.10424695536494255,
+    "p90": 0.15201623886823656,
+    "p99": 0.1799427205324173
+  },
+  "cached_profile_seconds": {
+    "count": 20,
+    "mean": 0.1147698625922203,
+    "min": 0.09159579128026962,
+    "max": 0.1885933242738247,
+    "p50": 0.1037907674908638,
+    "p90": 0.18371113240718842,
+    "p99": 0.18844088781625032
+  },
+  "cached_profile_memory": {
+    "allocated_bytes": 5476834304,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "cached_warmup_memory": {
+    "allocated_bytes": 5476834304,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "action_comparisons": [
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.976693009307075,
+      "candidate_norm": 4.976693009307075,
+      "cosine": 1.0000000000000002,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.990609430785703,
+      "candidate_norm": 4.990609430785703,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.972746054680102,
+      "candidate_norm": 4.972746054680102,
+      "cosine": 0.9999999999999999,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.968542655176131,
+      "candidate_norm": 4.968542655176131,
+      "cosine": 1.0000000000000002,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    },
+    {
+      "shape_equal": true,
+      "numel": 112,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "rmse": 0.0,
+      "reference_norm": 4.972329331166747,
+      "candidate_norm": 4.972329331166747,
+      "cosine": 1.0,
+      "allclose_rtol0_atol0": true,
+      "allclose_rtol1e_6_atol1e_6": true,
+      "allclose_rtol1e_5_atol1e_5": true
+    }
+  ],
+  "action_summary": {
+    "all_bitwise_equal_after_unapply": true,
+    "allclose_1e_6": true,
+    "max_abs_diff": 0.0
+  },
+  "speedup": {
+    "p50": 1.0098125445199229,
+    "baseline_p50_seconds": 0.10480921901762486,
+    "cached_p50_seconds": 0.1037907674908638
+  },
+  "cache_stats": {
+    "prepare_input_pruning": {
+      "calls": 28,
+      "backbone_keys": [
+        "eagle_attention_mask",
+        "eagle_image_sizes",
+        "eagle_input_ids",
+        "eagle_pixel_values"
+      ],
+      "action_keys": [
+        "embodiment_id",
+        "state"
+      ],
+      "moved_backbone_values": 112,
+      "moved_action_values": 56
+    },
+    "action_head_static_cache": {
+      "calls": 28,
+      "timestep_hits": 216,
+      "timestep_misses": 8,
+      "position_embedding_hits": 223,
+      "position_embedding_misses": 1,
+      "future_token_hits": 27,
+      "future_token_misses": 1
+    },
+    "action_head_static_cache_sizes": {
+      "timesteps": 8,
+      "position_embeddings": 1,
+      "future_tokens": 1
+    }
+  }
+}
