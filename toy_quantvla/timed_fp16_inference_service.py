@@ -18,6 +18,7 @@ from fp16_linear_profiler import (
 )
 from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
 from phase13_compile_targets import TORCH_COMPILE_TARGETS, compile_policy_targets
+from phase14_cuda_graph_dit_probe import install_cuda_graph_dit_forward
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, scope_description
@@ -143,6 +144,8 @@ def main() -> None:
     parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
     parser.add_argument("--lossless-cache-static-normalized-input", action="store_true")
     parser.add_argument("--lossless-cache-action-head-static", action="store_true")
+    parser.add_argument("--cuda-graph-dit-forward", action="store_true")
+    parser.add_argument("--cuda-graph-max-captures", type=int, default=8)
     parser.add_argument("--prewarm-observation-source", choices=["real", "synthetic"], default="real")
     parser.add_argument("--prewarm-indices", default="115")
     parser.add_argument("--prewarm-start-index", type=int, default=0)
@@ -157,6 +160,11 @@ def main() -> None:
     args = parser.parse_args()
     if args.torch_compile_dynamic is not None:
         args.torch_compile_dynamic = args.torch_compile_dynamic == "true"
+    if args.cuda_graph_dit_forward and args.lossless_cache_action_head_static:
+        raise ValueError(
+            "--cuda-graph-dit-forward must not be combined with "
+            "--lossless-cache-action-head-static; Phase22 measured nonzero action drift for that pair."
+        )
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
     os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -199,6 +207,10 @@ def main() -> None:
             "static_normalized_input_cache": bool(args.lossless_cache_static_normalized_input),
             "action_head_static_cache": bool(args.lossless_cache_action_head_static),
         },
+        "cuda_graph": {
+            "dit_forward": bool(args.cuda_graph_dit_forward),
+            "max_captures": int(args.cuda_graph_max_captures),
+        },
         "prewarm_observations": int(args.prewarm_observations),
         "prewarm_observation_source": args.prewarm_observation_source,
         "prewarm_indices": args.prewarm_indices,
@@ -227,6 +239,14 @@ def main() -> None:
         static_normalized_input_cache=bool(args.lossless_cache_static_normalized_input),
         action_head_static_cache=bool(args.lossless_cache_action_head_static),
     )
+    cuda_graph_state = None
+    if args.cuda_graph_dit_forward:
+        cuda_graph_state = install_cuda_graph_dit_forward(
+            policy,
+            device=args.device,
+            max_captures=args.cuda_graph_max_captures,
+        )
+        result["cuda_graph"] = cuda_graph_state.summary()
     result["prepare_seconds"] = result["model_load_seconds"]
 
     profiled_modules = {}
@@ -271,6 +291,8 @@ def main() -> None:
     if args.profile_linear_modules:
         result["profile_module_results_after_prewarm"] = module_results(profiled_modules)
         reset_module_stats(profiled_modules)
+    if cuda_graph_state is not None:
+        result["cuda_graph_after_prewarm"] = cuda_graph_state.summary()
 
     result["prepare_seconds"] = time.perf_counter() - started
     write_json(args.output_json, result)
@@ -290,6 +312,8 @@ def main() -> None:
             "server_memory": cuda_memory(args.device),
             "lossless_cache_stats": lossless_cache_stats(policy),
         }
+        if cuda_graph_state is not None:
+            summary["cuda_graph"] = cuda_graph_state.summary()
         if args.profile_linear_modules:
             summary["profile_module_results"] = module_results(profiled_modules)
         return summary

@@ -190,7 +190,7 @@ class CudaGraphForwardState:
             "graph_cache_size": int(len(self.graphs)),
             "capture_count": int(self.capture_count),
             "capture_seconds": float(self.capture_seconds),
-            "capture_seconds_by_key": self.capture_seconds_by_key,
+            "capture_seconds_by_key": dict(self.capture_seconds_by_key),
             "graph_calls": int(self.graph_calls),
             "eager_fallback_calls": int(self.eager_fallback_calls),
             "mismatch_calls": int(self.mismatch_calls),
@@ -198,8 +198,11 @@ class CudaGraphForwardState:
             "error": self.error,
             "num_positional_args": int(self.num_positional_args),
             "kwarg_keys": list(self.kwarg_keys),
-            "flat_specs": self.flat_specs,
-            "flat_specs_by_key": self.flat_specs_by_key,
+            "flat_specs": [dict(item) for item in self.flat_specs],
+            "flat_specs_by_key": {
+                key: [dict(item) for item in value]
+                for key, value in self.flat_specs_by_key.items()
+            },
         }
 
 
