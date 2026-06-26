@@ -1,0 +1,221 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Initialized dataset libero_10_subset with new_embodiment
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.30s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.15it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.07it/s]
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+{
+  "profile_requests": 3,
+  "profile_request_seconds": {
+    "count": 3,
+    "mean": 0.17627382402618727,
+    "min": 0.1517222337424755,
+    "max": 0.21391865238547325,
+    "p50": 0.16318058595061302,
+    "p90": 0.2037710390985012,
+    "p99": 0.21290389105677604
+  },
+  "top_self_cuda_events": [
+    {
+      "key": "aten::addmm",
+      "count": 3357,
+      "self_cpu_time_total_us": 41601.534000000654,
+      "cpu_time_total_us": 57230.01699999959,
+      "self_cuda_time_total_us": 54526.9470000028,
+      "cuda_time_total_us": 54526.9470000028,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_128x2_tn_align8::Params)",
+      "count": 1884,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 23084.38700000194,
+      "cuda_time_total_us": 23084.38700000194,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::mm",
+      "count": 258,
+      "self_cpu_time_total_us": 3224.2580000003472,
+      "cpu_time_total_us": 4535.073999999793,
+      "self_cuda_time_total_us": 18236.55899999982,
+      "cuda_time_total_us": 18236.55899999982,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_32x6_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_32x6_tn_align8::Params)",
+      "count": 435,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 11288.9249999998,
+      "cuda_time_total_us": 11288.9249999998,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::copy_",
+      "count": 4134,
+      "self_cpu_time_total_us": 15032.670000001128,
+      "cpu_time_total_us": 32419.031000000512,
+      "self_cuda_time_total_us": 7699.555999998573,
+      "cuda_time_total_us": 7772.932999998524,
+      "cpu_memory_usage": 128,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x6_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x128_32x6_tn_align8::Params)",
+      "count": 72,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 7210.321999999927,
+      "cuda_time_total_us": 7210.321999999927,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_64x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_32x32_64x2_tn_align8::Params)",
+      "count": 384,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 6604.314000000333,
+      "cuda_time_total_us": 6604.314000000333,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8::Params)",
+      "count": 3,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 5145.529999999977,
+      "cuda_time_total_us": 5145.529999999977,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_64x4_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_64x4_tn_align8::Params)",
+      "count": 111,
+      "self_cpu_time_total_us": 0.0,
+      "cpu_time_total_us": 0.0,
+      "self_cuda_time_total_us": 4581.940999999773,
+      "cuda_time_total_us": 4581.940999999773,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::add",
+      "count": 2286,
+      "self_cpu_time_total_us": 11879.572000000857,
+      "cpu_time_total_us": 22520.386000001585,
+      "self_cuda_time_total_us": 4312.444999998972,
+      "cuda_time_total_us": 4312.444999998972,
+      "cpu_memory_usage": 2704,
+      "cuda_memory_usage": 0
+    }
+  ],
+  "sync_or_d2h_candidate_events": [
+    {
+      "key": "aten::copy_",
+      "count": 4134,
+      "self_cpu_time_total_us": 15032.670000001128,
+      "cpu_time_total_us": 32419.031000000512,
+      "self_cuda_time_total_us": 7699.555999998573,
+      "cuda_time_total_us": 7772.932999998524,
+      "cpu_memory_usage": 128,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::_to_copy",
+      "count": 3948,
+      "self_cpu_time_total_us": 10021.232000000888,
+      "cpu_time_total_us": 51524.33200000104,
+      "self_cuda_time_total_us": 0.0,
+      "cuda_time_total_us": 6573.6289999982,
+      "cpu_memory_usage": 12854808,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::to",
+      "count": 4635,
+      "self_cpu_time_total_us": 3592.7220000012576,
+      "cpu_time_total_us": 55117.0540000023,
+      "self_cuda_time_total_us": 0.0,
+      "cuda_time_total_us": 6573.6289999982,
+      "cpu_memory_usage": 12854808,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "cudaMemcpyAsync",
+      "count": 90,
+      "self_cpu_time_total_us": 1221.7939999997961,
+      "cpu_time_total_us": 1221.7939999997961,
+      "self_cuda_time_total_us": 0.0,
+      "cuda_time_total_us": 0.0,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "cudaStreamSynchronize",
+      "count": 90,
+      "self_cpu_time_total_us": 394.1800000001422,
+      "cpu_time_total_us": 394.1800000001422,
+      "self_cuda_time_total_us": 0.0,
+      "cuda_time_total_us": 0.0,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::_local_scalar_dense",
+      "count": 96,
+      "self_cpu_time_total_us": 168.5569999997433,
+      "cpu_time_total_us": 682.2069999998685,
+      "self_cuda_time_total_us": 13.278999999918597,
+      "cuda_time_total_us": 13.278999999918597,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "aten::item",
+      "count": 96,
+      "self_cpu_time_total_us": 111.60600000036175,
+      "cpu_time_total_us": 793.8130000002302,
+      "self_cuda_time_total_us": 0.0,
+      "cuda_time_total_us": 13.278999999918597,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    },
+    {
+      "key": "cudaDeviceSynchronize",
+      "count": 4,
+      "self_cpu_time_total_us": 53.190000000060536,
+      "cpu_time_total_us": 53.190000000060536,
+      "self_cuda_time_total_us": 9.34399999998277,
+      "cuda_time_total_us": 9.34399999998277,
+      "cpu_memory_usage": 0,
+      "cuda_memory_usage": 0
+    }
+  ],
+  "output_json": "toy_quantvla/results/phase19_torch_profiler_probe_obs115_r3_v2.json",
+  "chrome_trace": "toy_quantvla/results/phase19_torch_profiler_probe_obs115_r3_v2_trace.json"
+}
