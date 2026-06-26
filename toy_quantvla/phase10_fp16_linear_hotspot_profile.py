@@ -24,6 +24,7 @@ from fp16_linear_profiler import (
     patch_timed_fp16_modules,
     reset_module_stats,
 )
+from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase6_w4a16_scopes import SCOPE_CHOICES, module_family, scope_description
@@ -79,6 +80,8 @@ def summarize_modules(records: dict[str, Any], raw_results: dict[str, Any], *, t
         stats = result["stats"]["forward_seconds"]
         calls = int(stats["count"])
         total_seconds = float(stats["mean"]) * calls
+        p50_times_calls_seconds = float(stats["p50"]) * calls
+        p90_times_calls_seconds = float(stats["p90"]) * calls
         family = module_family(name) or str(records.get(name, {}).get("family", "unknown"))
         suffix = name.rsplit(".", 1)[-1]
         row = {
@@ -87,6 +90,8 @@ def summarize_modules(records: dict[str, Any], raw_results: dict[str, Any], *, t
             "suffix": suffix,
             "calls": calls,
             "total_seconds": total_seconds,
+            "p50_times_calls_seconds": p50_times_calls_seconds,
+            "p90_times_calls_seconds": p90_times_calls_seconds,
             "mean_seconds": float(stats["mean"]),
             "p50_seconds": float(stats["p50"]),
             "p90_seconds": float(stats["p90"]),
@@ -99,21 +104,47 @@ def summarize_modules(records: dict[str, Any], raw_results: dict[str, Any], *, t
 
         for key, bucket in ((family, by_family), (suffix, by_suffix)):
             if key not in bucket:
-                bucket[key] = {"modules": 0, "calls": 0, "total_seconds": 0.0}
+                bucket[key] = {
+                    "modules": 0,
+                    "calls": 0,
+                    "total_seconds": 0.0,
+                    "p50_times_calls_seconds": 0.0,
+                    "p90_times_calls_seconds": 0.0,
+                }
             bucket[key]["modules"] = int(bucket[key]["modules"]) + 1
             bucket[key]["calls"] = int(bucket[key]["calls"]) + calls
             bucket[key]["total_seconds"] = float(bucket[key]["total_seconds"]) + total_seconds
+            bucket[key]["p50_times_calls_seconds"] = (
+                float(bucket[key]["p50_times_calls_seconds"]) + p50_times_calls_seconds
+            )
+            bucket[key]["p90_times_calls_seconds"] = (
+                float(bucket[key]["p90_times_calls_seconds"]) + p90_times_calls_seconds
+            )
 
     rows.sort(key=lambda row: float(row["total_seconds"]), reverse=True)
     total_profiled_seconds = sum(float(row["total_seconds"]) for row in rows)
+    total_profiled_p50_times_calls_seconds = sum(float(row["p50_times_calls_seconds"]) for row in rows)
+    total_profiled_p90_times_calls_seconds = sum(float(row["p90_times_calls_seconds"]) for row in rows)
     for bucket in (by_family, by_suffix):
         for value in bucket.values():
             value["share_of_profiled_linear_seconds"] = (
                 float(value["total_seconds"]) / total_profiled_seconds if total_profiled_seconds else 0.0
             )
+            value["share_of_profiled_linear_p50_times_calls_seconds"] = (
+                float(value["p50_times_calls_seconds"]) / total_profiled_p50_times_calls_seconds
+                if total_profiled_p50_times_calls_seconds
+                else 0.0
+            )
+            value["share_of_profiled_linear_p90_times_calls_seconds"] = (
+                float(value["p90_times_calls_seconds"]) / total_profiled_p90_times_calls_seconds
+                if total_profiled_p90_times_calls_seconds
+                else 0.0
+            )
 
     return {
         "total_profiled_linear_seconds": total_profiled_seconds,
+        "total_profiled_linear_p50_times_calls_seconds": total_profiled_p50_times_calls_seconds,
+        "total_profiled_linear_p90_times_calls_seconds": total_profiled_p90_times_calls_seconds,
         "top_modules": rows[: int(top_k)],
         "by_family": dict(sorted(by_family.items())),
         "by_suffix": dict(sorted(by_suffix.items())),
@@ -144,6 +175,8 @@ def main() -> None:
     parser.add_argument("--warmup-repeats", type=int, default=1)
     parser.add_argument("--profile-repeats", type=int, default=1)
     parser.add_argument("--top-k", type=int, default=40)
+    parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
+    parser.add_argument("--lossless-cache-action-head-static", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase10_fp16_linear_hotspot_profile.json"))
     args = parser.parse_args()
 
@@ -171,6 +204,11 @@ def main() -> None:
     )
     synchronize(args.device)
     load_seconds = time.perf_counter() - load_started
+    lossless_cache = install_lossless_cache_patches(
+        policy,
+        prepare_input_pruning=bool(args.lossless_cache_prepare_input_pruning),
+        action_head_static_cache=bool(args.lossless_cache_action_head_static),
+    )
 
     patch_started = time.perf_counter()
     records, profiled_modules = patch_timed_fp16_modules(
@@ -204,6 +242,8 @@ def main() -> None:
         "observation_meta": observation_meta,
         "warmup_requests": len(warmup_observations),
         "profile_requests": len(profile_observations),
+        "lossless_cache": lossless_cache,
+        "lossless_cache_stats": lossless_cache_stats(policy),
         "load_seconds": float(load_seconds),
         "patch_seconds": float(patch_seconds),
         "profiled_modules": len(records),
@@ -221,6 +261,8 @@ def main() -> None:
         "scope": args.scope,
         "profiled_modules": len(records),
         "profile_requests": len(profile_observations),
+        "lossless_cache": lossless_cache,
+        "lossless_cache_stats": lossless_cache_stats(policy),
         "profile_request_seconds": profile_summary,
         "by_family": module_summary["by_family"],
         "by_suffix": module_summary["by_suffix"],

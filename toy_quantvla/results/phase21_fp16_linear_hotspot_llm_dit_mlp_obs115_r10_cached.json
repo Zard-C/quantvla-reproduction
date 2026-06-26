@@ -1,0 +1,4041 @@
+{
+  "boundary": "Offline FP16 synchronized Linear hotspot profile",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "scope": "llm_dit_mlp",
+  "scope_description": "Phase 5-compatible full selected scope: LLM attention, LLM MLP, and DiT MLP",
+  "name_contains": [],
+  "max_modules": 0,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "warmup_requests": 3,
+  "profile_requests": 10,
+  "lossless_cache": {
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache denoising timestep tensors, action position embeddings, and expanded future tokens."
+    }
+  },
+  "lossless_cache_stats": {
+    "prepare_input_pruning": {
+      "calls": 13,
+      "backbone_keys": [
+        "eagle_attention_mask",
+        "eagle_image_sizes",
+        "eagle_input_ids",
+        "eagle_pixel_values"
+      ],
+      "action_keys": [
+        "embodiment_id",
+        "state"
+      ],
+      "moved_backbone_values": 52,
+      "moved_action_values": 26
+    },
+    "action_head_static_cache": {
+      "calls": 13,
+      "timestep_hits": 96,
+      "timestep_misses": 8,
+      "position_embedding_hits": 103,
+      "position_embedding_misses": 1,
+      "future_token_hits": 12,
+      "future_token_misses": 1
+    },
+    "action_head_static_cache_sizes": {
+      "timesteps": 8,
+      "position_embeddings": 1,
+      "future_tokens": 1
+    }
+  },
+  "load_seconds": 11.090720895677805,
+  "patch_seconds": 0.005130808800458908,
+  "profiled_modules": 116,
+  "profile_patch_records": {
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.q_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.q_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.k_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.k_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.v_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.v_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj",
+      "family": "llm_attn",
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj",
+      "family": "llm_mlp",
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj": {
+      "module": "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj",
+      "family": "llm_mlp",
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.0.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.1.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.2.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.3.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.4.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.4.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.5.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.5.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.6.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.6.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.7.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.7.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.8.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.8.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.9.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.9.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.10.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.10.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.11.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.11.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.12.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.12.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.13.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.13.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.14.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.14.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "module": "action_head.model.transformer_blocks.15.ff.net.0.proj",
+      "family": "dit_mlp",
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "module": "action_head.model.transformer_blocks.15.ff.net.2",
+      "family": "dit_mlp",
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "original_weight_dtype": "torch.bfloat16"
+    }
+  },
+  "warmup_request_seconds": {
+    "count": 3,
+    "mean": 0.23517376308639845,
+    "min": 0.09762117266654968,
+    "max": 0.5025217495858669,
+    "p50": 0.10537836700677872,
+    "p90": 0.4230930730700493,
+    "p99": 0.4945788819342852
+  },
+  "profile_request_seconds": {
+    "count": 10,
+    "mean": 0.11199693642556667,
+    "min": 0.09711308777332306,
+    "max": 0.18481743335723877,
+    "p50": 0.10260848142206669,
+    "p90": 0.1324436645954847,
+    "p99": 0.17958005648106337
+  },
+  "warmup_memory": {
+    "allocated_bytes": 5476834304,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "profile_memory": {
+    "allocated_bytes": 5476834304,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682104832,
+    "max_reserved_bytes": 5779750912
+  },
+  "module_summary": {
+    "total_profiled_linear_seconds": 0.2794106639921665,
+    "top_modules": [
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj",
+        "family": "llm_mlp",
+        "suffix": "down_proj",
+        "calls": 10,
+        "total_seconds": 0.07545046135783195,
+        "mean_seconds": 0.007545046135783195,
+        "p50_seconds": 9.248591959476471e-05,
+        "p90_seconds": 0.0075540136545896265,
+        "p99_seconds": 0.06790052097290755,
+        "in_features": 6144,
+        "out_features": 2048,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj",
+        "family": "llm_attn",
+        "suffix": "o_proj",
+        "calls": 10,
+        "total_seconds": 0.0270468071103096,
+        "mean_seconds": 0.00270468071103096,
+        "p50_seconds": 5.110912024974823e-05,
+        "p90_seconds": 0.0027055870741605663,
+        "p99_seconds": 0.02419854532927275,
+        "in_features": 2048,
+        "out_features": 2048,
+        "bias": false
+      },
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.011995144188404083,
+        "mean_seconds": 0.00014993930235505105,
+        "p50_seconds": 4.6135857701301575e-05,
+        "p90_seconds": 0.000717519968748094,
+        "p99_seconds": 0.0009920623898506164,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.004349499940872192,
+        "mean_seconds": 0.00043494999408721924,
+        "p50_seconds": 0.00011889263987541199,
+        "p90_seconds": 0.00043831467628478894,
+        "p99_seconds": 0.0029914752393960958,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.003830462694168091,
+        "mean_seconds": 4.7880783677101134e-05,
+        "p50_seconds": 4.3040141463279724e-05,
+        "p90_seconds": 4.353560507297516e-05,
+        "p99_seconds": 0.0001276408135890937,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.003585983067750931,
+        "mean_seconds": 4.4824788346886635e-05,
+        "p50_seconds": 4.446692764759064e-05,
+        "p90_seconds": 4.65400516986847e-05,
+        "p99_seconds": 4.933539777994153e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0035276710987091064,
+        "mean_seconds": 4.409588873386383e-05,
+        "p50_seconds": 4.3682754039764404e-05,
+        "p90_seconds": 4.438832402229309e-05,
+        "p99_seconds": 5.14925643801689e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0034980587661266327,
+        "mean_seconds": 4.372573457658291e-05,
+        "p50_seconds": 4.365108907222748e-05,
+        "p90_seconds": 4.428774118423462e-05,
+        "p99_seconds": 4.678491503000259e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0034810341894626617,
+        "mean_seconds": 4.351292736828327e-05,
+        "p50_seconds": 4.344433546066284e-05,
+        "p90_seconds": 4.4127553701400755e-05,
+        "p99_seconds": 4.524741321802139e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0034542307257652283,
+        "mean_seconds": 4.3177884072065355e-05,
+        "p50_seconds": 4.296936094760895e-05,
+        "p90_seconds": 4.3657422065734866e-05,
+        "p99_seconds": 4.6947449445724476e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0034529119729995728,
+        "mean_seconds": 4.316139966249466e-05,
+        "p50_seconds": 4.317425191402435e-05,
+        "p90_seconds": 4.368089139461517e-05,
+        "p99_seconds": 4.4451281428337094e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0034415163099765778,
+        "mean_seconds": 4.301895387470722e-05,
+        "p50_seconds": 4.288181662559509e-05,
+        "p90_seconds": 4.3692812323570254e-05,
+        "p99_seconds": 4.6997070312499994e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.003411799669265747,
+        "mean_seconds": 4.264749586582184e-05,
+        "p50_seconds": 4.223175346851349e-05,
+        "p90_seconds": 4.2844563722610474e-05,
+        "p99_seconds": 5.0290003418922346e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0033939555287361145,
+        "mean_seconds": 4.242444410920143e-05,
+        "p50_seconds": 4.237517714500427e-05,
+        "p90_seconds": 4.30721789598465e-05,
+        "p99_seconds": 4.428450018167495e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0033927373588085175,
+        "mean_seconds": 4.240921698510647e-05,
+        "p50_seconds": 4.2362138628959656e-05,
+        "p90_seconds": 4.303827881813049e-05,
+        "p99_seconds": 4.371196031570434e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.003377538174390793,
+        "mean_seconds": 4.221922717988491e-05,
+        "p50_seconds": 4.152767360210419e-05,
+        "p90_seconds": 4.216991364955902e-05,
+        "p99_seconds": 5.788560956716524e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0033310316503047943,
+        "mean_seconds": 4.163789562880993e-05,
+        "p50_seconds": 4.151090979576111e-05,
+        "p90_seconds": 4.205219447612762e-05,
+        "p99_seconds": 4.5033358037471735e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0033271275460720062,
+        "mean_seconds": 4.1589094325900075e-05,
+        "p50_seconds": 4.1507184505462646e-05,
+        "p90_seconds": 4.2164698243141174e-05,
+        "p99_seconds": 4.381224513053893e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.0.proj",
+        "family": "dit_mlp",
+        "suffix": "proj",
+        "calls": 80,
+        "total_seconds": 0.0033076442778110504,
+        "mean_seconds": 4.134555347263813e-05,
+        "p50_seconds": 4.127621650695801e-05,
+        "p90_seconds": 4.19963151216507e-05,
+        "p99_seconds": 4.3065063655376416e-05,
+        "in_features": 1536,
+        "out_features": 6144,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.1.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.003215208649635315,
+        "mean_seconds": 4.019010812044144e-05,
+        "p50_seconds": 4.020892083644867e-05,
+        "p90_seconds": 4.143044352531433e-05,
+        "p99_seconds": 4.3466798961162556e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.0.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031878575682640076,
+        "mean_seconds": 3.984821960330009e-05,
+        "p50_seconds": 3.967992961406708e-05,
+        "p90_seconds": 4.1801854968070985e-05,
+        "p99_seconds": 4.3381005525588976e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.15.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031804144382476807,
+        "mean_seconds": 3.975518047809601e-05,
+        "p50_seconds": 3.977678716182709e-05,
+        "p90_seconds": 4.045367240905762e-05,
+        "p99_seconds": 4.1178651154041275e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.9.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031768083572387695,
+        "mean_seconds": 3.971010446548462e-05,
+        "p50_seconds": 3.970786929130554e-05,
+        "p90_seconds": 4.076249897480011e-05,
+        "p99_seconds": 4.35227900743484e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.11.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.003172878175973892,
+        "mean_seconds": 3.9660977199673654e-05,
+        "p50_seconds": 3.9793550968170166e-05,
+        "p90_seconds": 4.0275603532791136e-05,
+        "p99_seconds": 4.09809872508049e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.3.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.003168143332004547,
+        "mean_seconds": 3.960179165005684e-05,
+        "p50_seconds": 3.9773061871528625e-05,
+        "p90_seconds": 4.07833606004715e-05,
+        "p99_seconds": 4.127264022827148e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.5.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031594932079315186,
+        "mean_seconds": 3.949366509914398e-05,
+        "p50_seconds": 3.950484097003937e-05,
+        "p90_seconds": 4.039779305458069e-05,
+        "p99_seconds": 4.249237477779384e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.13.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031421631574630737,
+        "mean_seconds": 3.927703946828842e-05,
+        "p50_seconds": 3.935955464839935e-05,
+        "p90_seconds": 4.021041095256805e-05,
+        "p99_seconds": 4.0887333452701564e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.7.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0031395889818668365,
+        "mean_seconds": 3.9244862273335455e-05,
+        "p50_seconds": 3.938935697078705e-05,
+        "p90_seconds": 4.022270441055298e-05,
+        "p99_seconds": 4.074838012456894e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.6.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029998905956745148,
+        "mean_seconds": 3.749863244593143e-05,
+        "p50_seconds": 3.747083246707916e-05,
+        "p90_seconds": 3.8218125700950624e-05,
+        "p99_seconds": 4.265874624252318e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.10.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029913634061813354,
+        "mean_seconds": 3.7392042577266694e-05,
+        "p50_seconds": 3.768131136894226e-05,
+        "p90_seconds": 3.8242712616920474e-05,
+        "p99_seconds": 3.984030336141584e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.4.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029780827462673187,
+        "mean_seconds": 3.7226034328341485e-05,
+        "p50_seconds": 3.70759516954422e-05,
+        "p90_seconds": 3.8364529609680174e-05,
+        "p99_seconds": 3.995276987552642e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.14.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.002977333962917328,
+        "mean_seconds": 3.72166745364666e-05,
+        "p50_seconds": 3.7202611565589905e-05,
+        "p90_seconds": 3.8302317261695865e-05,
+        "p99_seconds": 4.2216069996356954e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.8.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029759109020233154,
+        "mean_seconds": 3.719888627529144e-05,
+        "p50_seconds": 3.731250762939453e-05,
+        "p90_seconds": 3.8284063339233396e-05,
+        "p99_seconds": 3.9866194128990146e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.12.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029723122715950012,
+        "mean_seconds": 3.715390339493751e-05,
+        "p50_seconds": 3.7243589758872986e-05,
+        "p90_seconds": 3.829896450042724e-05,
+        "p99_seconds": 3.979738801717757e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "action_head.model.transformer_blocks.2.ff.net.2",
+        "family": "dit_mlp",
+        "suffix": "2",
+        "calls": 80,
+        "total_seconds": 0.0029640793800354004,
+        "mean_seconds": 3.70509922504425e-05,
+        "p50_seconds": 3.6971643567085266e-05,
+        "p90_seconds": 3.8105249404907224e-05,
+        "p99_seconds": 3.8723349571228025e-05,
+        "in_features": 6144,
+        "out_features": 1536,
+        "bias": true
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0013282671570777893,
+        "mean_seconds": 0.00013282671570777894,
+        "p50_seconds": 0.0001291520893573761,
+        "p90_seconds": 0.00014289952814579008,
+        "p99_seconds": 0.00015461642295122146,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012382492423057556,
+        "mean_seconds": 0.00012382492423057556,
+        "p50_seconds": 0.00012405775487422943,
+        "p90_seconds": 0.00012517720460891724,
+        "p99_seconds": 0.00012526772916316987,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012381859123706818,
+        "mean_seconds": 0.0001238185912370682,
+        "p50_seconds": 0.00012306123971939087,
+        "p90_seconds": 0.00012636519968509675,
+        "p99_seconds": 0.00012895721942186356,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012379810214042664,
+        "mean_seconds": 0.00012379810214042665,
+        "p50_seconds": 0.00012222863733768463,
+        "p90_seconds": 0.00012566521763801575,
+        "p99_seconds": 0.0001355323940515518,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012376271188259125,
+        "mean_seconds": 0.00012376271188259126,
+        "p50_seconds": 0.0001221727579832077,
+        "p90_seconds": 0.0001243922859430313,
+        "p99_seconds": 0.00013565655797719955,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012298934161663055,
+        "mean_seconds": 0.00012298934161663054,
+        "p50_seconds": 0.00012254901230335236,
+        "p90_seconds": 0.0001261424273252487,
+        "p99_seconds": 0.00012650754302740097,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012295208871364594,
+        "mean_seconds": 0.00012295208871364592,
+        "p50_seconds": 0.00012283772230148315,
+        "p90_seconds": 0.00012366920709609984,
+        "p99_seconds": 0.00012409768998622895,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012284889817237854,
+        "mean_seconds": 0.00012284889817237854,
+        "p50_seconds": 0.00012266263365745544,
+        "p90_seconds": 0.0001236163079738617,
+        "p99_seconds": 0.0001241292804479599,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012284740805625916,
+        "mean_seconds": 0.00012284740805625915,
+        "p50_seconds": 0.00012265890836715698,
+        "p90_seconds": 0.00012415722012519835,
+        "p99_seconds": 0.00012452535331249236,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.0012256018817424774,
+        "mean_seconds": 0.00012256018817424774,
+        "p50_seconds": 0.0001226421445608139,
+        "p90_seconds": 0.00012315474450588226,
+        "p99_seconds": 0.00012385178357362747,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.001223888248205185,
+        "mean_seconds": 0.0001223888248205185,
+        "p50_seconds": 0.00012217462062835693,
+        "p90_seconds": 0.00012318603694438934,
+        "p99_seconds": 0.0001247098669409752,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj",
+        "family": "llm_mlp",
+        "suffix": "gate_proj",
+        "calls": 10,
+        "total_seconds": 0.001223146915435791,
+        "mean_seconds": 0.0001223146915435791,
+        "p50_seconds": 0.00012236088514328003,
+        "p90_seconds": 0.00012282393872737886,
+        "p99_seconds": 0.00012316491454839707,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011960715055465698,
+        "mean_seconds": 0.00011960715055465698,
+        "p50_seconds": 0.00011939182877540588,
+        "p90_seconds": 0.00012027919292449951,
+        "p99_seconds": 0.00012085855007171631,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011889003217220306,
+        "mean_seconds": 0.00011889003217220306,
+        "p50_seconds": 0.00011822953820228577,
+        "p90_seconds": 0.00012098178267478943,
+        "p99_seconds": 0.00012275606393814088,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011879093945026398,
+        "mean_seconds": 0.00011879093945026398,
+        "p50_seconds": 0.00011868961155414581,
+        "p90_seconds": 0.00011930465698242187,
+        "p99_seconds": 0.00012046940624713897,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011872537434101105,
+        "mean_seconds": 0.00011872537434101104,
+        "p50_seconds": 0.0001187548041343689,
+        "p90_seconds": 0.00011928342282772065,
+        "p99_seconds": 0.00011970285326242447,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011866427958011627,
+        "mean_seconds": 0.00011866427958011627,
+        "p50_seconds": 0.00011868029832839966,
+        "p90_seconds": 0.00011900477111339569,
+        "p99_seconds": 0.0001204260066151619,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011863820254802704,
+        "mean_seconds": 0.00011863820254802704,
+        "p50_seconds": 0.00011867471039295197,
+        "p90_seconds": 0.00011898614466190338,
+        "p99_seconds": 0.00011914003640413284,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011861473321914673,
+        "mean_seconds": 0.00011861473321914673,
+        "p50_seconds": 0.00011849962174892426,
+        "p90_seconds": 0.00011910684406757355,
+        "p99_seconds": 0.00011972542852163315,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011852271854877472,
+        "mean_seconds": 0.00011852271854877472,
+        "p50_seconds": 0.00011841952800750732,
+        "p90_seconds": 0.00011899881064891815,
+        "p99_seconds": 0.00011925529688596725,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.00118362158536911,
+        "mean_seconds": 0.000118362158536911,
+        "p50_seconds": 0.00011821836233139038,
+        "p90_seconds": 0.00011932626366615296,
+        "p99_seconds": 0.00011939868330955505,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011834576725959778,
+        "mean_seconds": 0.00011834576725959778,
+        "p50_seconds": 0.00011796504259109497,
+        "p90_seconds": 0.00011967532336711883,
+        "p99_seconds": 0.00012037236243486404,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj",
+        "family": "llm_mlp",
+        "suffix": "up_proj",
+        "calls": 10,
+        "total_seconds": 0.0011830776929855347,
+        "mean_seconds": 0.00011830776929855347,
+        "p50_seconds": 0.00011812709271907806,
+        "p90_seconds": 0.00011885575950145721,
+        "p99_seconds": 0.00012021664530038834,
+        "in_features": 2048,
+        "out_features": 6144,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj",
+        "family": "llm_mlp",
+        "suffix": "down_proj",
+        "calls": 10,
+        "total_seconds": 0.0009412169456481934,
+        "mean_seconds": 9.412169456481933e-05,
+        "p50_seconds": 9.417533874511719e-05,
+        "p90_seconds": 9.448453783988953e-05,
+        "p99_seconds": 9.52690839767456e-05,
+        "in_features": 6144,
+        "out_features": 2048,
+        "bias": false
+      },
+      {
+        "module": "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj",
+        "family": "llm_mlp",
+        "suffix": "down_proj",
+        "calls": 10,
+        "total_seconds": 0.0009350776672363281,
+        "mean_seconds": 9.350776672363281e-05,
+        "p50_seconds": 9.279698133468628e-05,
+        "p90_seconds": 9.470582008361816e-05,
+        "p99_seconds": 9.933464229106903e-05,
+        "in_features": 6144,
+        "out_features": 2048,
+        "bias": false
+      }
+    ],
+    "by_family": {
+      "dit_mlp": {
+        "modules": 32,
+        "calls": 2560,
+        "total_seconds": 0.11321037635207176,
+        "share_of_profiled_linear_seconds": 0.40517557467042736
+      },
+      "llm_attn": {
+        "modules": 48,
+        "calls": 480,
+        "total_seconds": 0.04823979735374451,
+        "share_of_profiled_linear_seconds": 0.17264837592274912
+      },
+      "llm_mlp": {
+        "modules": 36,
+        "calls": 360,
+        "total_seconds": 0.11796049028635025,
+        "share_of_profiled_linear_seconds": 0.4221760494068235
+      }
+    },
+    "by_suffix": {
+      "2": {
+        "modules": 16,
+        "calls": 1280,
+        "total_seconds": 0.049401529133319855,
+        "share_of_profiled_linear_seconds": 0.17680616919726752
+      },
+      "down_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.08568697422742844,
+        "share_of_profiled_linear_seconds": 0.30667037901542205
+      },
+      "gate_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.014869324862957,
+        "share_of_profiled_linear_seconds": 0.053216740730317555
+      },
+      "k_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.004922904074192047,
+        "share_of_profiled_linear_seconds": 0.017618883989088063
+      },
+      "o_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.03284698724746704,
+        "share_of_profiled_linear_seconds": 0.11755810167785125
+      },
+      "proj": {
+        "modules": 16,
+        "calls": 1280,
+        "total_seconds": 0.06380884721875191,
+        "share_of_profiled_linear_seconds": 0.22836940547315987
+      },
+      "q_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.005781341344118118,
+        "share_of_profiled_linear_seconds": 0.020691197900307063
+      },
+      "up_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.017404191195964813,
+        "share_of_profiled_linear_seconds": 0.06228892966108392
+      },
+      "v_proj": {
+        "modules": 12,
+        "calls": 120,
+        "total_seconds": 0.0046885646879673,
+        "share_of_profiled_linear_seconds": 0.01678019235550275
+      }
+    }
+  },
+  "raw_module_results": {
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 7.166117429733277e-05,
+          "min": 6.493180990219116e-05,
+          "max": 9.366124868392944e-05,
+          "p50": 6.688013672828674e-05,
+          "p90": 8.180588483810424e-05,
+          "p99": 9.247571229934693e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.0461292266845704e-05,
+          "min": 4.613026976585388e-05,
+          "max": 6.305798888206482e-05,
+          "p50": 4.789978265762329e-05,
+          "p90": 5.503818392753601e-05,
+          "p99": 6.225600838661194e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.013627767562866e-05,
+          "min": 3.856047987937927e-05,
+          "max": 4.3179839849472046e-05,
+          "p50": 3.951415419578552e-05,
+          "p90": 4.17415052652359e-05,
+          "p99": 4.303600639104843e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.7289376854896545e-05,
+          "min": 5.4601579904556274e-05,
+          "max": 6.29127025604248e-05,
+          "p50": 5.659833550453186e-05,
+          "p90": 5.972757935523987e-05,
+          "p99": 6.259419023990631e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00013282671570777894,
+          "min": 0.0001269020140171051,
+          "max": 0.00015591830015182495,
+          "p50": 0.0001291520893573761,
+          "p90": 0.00014289952814579008,
+          "p99": 0.00015461642295122146
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011960715055465698,
+          "min": 0.00011879950761795044,
+          "max": 0.00012092292308807373,
+          "p50": 0.00011939182877540588,
+          "p90": 0.00012027919292449951,
+          "p99": 0.00012085855007171631
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.0.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.412169456481933e-05,
+          "min": 9.321048855781555e-05,
+          "max": 9.535625576972961e-05,
+          "p50": 9.417533874511719e-05,
+          "p90": 9.448453783988953e-05,
+          "p99": 9.52690839767456e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.670508205890655e-05,
+          "min": 4.5787543058395386e-05,
+          "max": 4.971399903297424e-05,
+          "p50": 4.615075886249542e-05,
+          "p90": 4.8121437430381775e-05,
+          "p99": 4.9554742872714996e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.1149184107780455e-05,
+          "min": 3.8586556911468506e-05,
+          "max": 4.3433159589767456e-05,
+          "p50": 4.143081605434418e-05,
+          "p90": 4.2360275983810425e-05,
+          "p99": 4.3325871229171756e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.913156688213348e-05,
+          "min": 3.7297606468200684e-05,
+          "max": 4.30867075920105e-05,
+          "p50": 3.89590859413147e-05,
+          "p90": 4.0562078356742856e-05,
+          "p99": 4.283424466848373e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.424395203590393e-05,
+          "min": 5.23887574672699e-05,
+          "max": 5.8736652135849e-05,
+          "p50": 5.344487726688385e-05,
+          "p90": 5.687586963176727e-05,
+          "p99": 5.8550573885440824e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012382492423057556,
+          "min": 0.00012236088514328003,
+          "max": 0.0001252777874469757,
+          "p50": 0.00012405775487422943,
+          "p90": 0.00012517720460891724,
+          "p99": 0.00012526772916316987
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011863820254802704,
+          "min": 0.00011821091175079346,
+          "max": 0.00011915713548660278,
+          "p50": 0.00011867471039295197,
+          "p90": 0.00011898614466190338,
+          "p99": 0.00011914003640413284
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.1.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.309761226177216e-05,
+          "min": 9.25213098526001e-05,
+          "max": 9.357556700706482e-05,
+          "p50": 9.306520223617554e-05,
+          "p90": 9.353533387184143e-05,
+          "p99": 9.357154369354247e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.588887095451355e-05,
+          "min": 4.5042484998703e-05,
+          "max": 4.720315337181091e-05,
+          "p50": 4.583783447742462e-05,
+          "p90": 4.625767469406128e-05,
+          "p99": 4.710860550403595e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.052668809890747e-05,
+          "min": 3.911927342414856e-05,
+          "max": 4.253163933753967e-05,
+          "p50": 4.0490180253982544e-05,
+          "p90": 4.132464528083801e-05,
+          "p99": 4.241093993186951e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.8737058639526366e-05,
+          "min": 3.739073872566223e-05,
+          "max": 3.968551754951477e-05,
+          "p50": 3.883242607116699e-05,
+          "p90": 3.966540098190308e-05,
+          "p99": 3.96835058927536e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.2941218018531797e-05,
+          "min": 5.1587820053100586e-05,
+          "max": 5.4895877838134766e-05,
+          "p50": 5.260482430458069e-05,
+          "p90": 5.4362788796424864e-05,
+          "p99": 5.484256893396378e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012295208871364592,
+          "min": 0.00012148916721343994,
+          "max": 0.00012414529919624329,
+          "p50": 0.00012283772230148315,
+          "p90": 0.00012366920709609984,
+          "p99": 0.00012409768998622895
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011861473321914673,
+          "min": 0.00011752918362617493,
+          "max": 0.00011979416012763977,
+          "p50": 0.00011849962174892426,
+          "p90": 0.00011910684406757355,
+          "p99": 0.00011972542852163315
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.2.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.293556213378907e-05,
+          "min": 9.184703230857849e-05,
+          "max": 9.477511048316956e-05,
+          "p50": 9.283237159252167e-05,
+          "p90": 9.363181889057159e-05,
+          "p99": 9.466078132390976e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.604831337928772e-05,
+          "min": 4.560127854347229e-05,
+          "max": 4.6797096729278564e-05,
+          "p50": 4.59570437669754e-05,
+          "p90": 4.643164575099945e-05,
+          "p99": 4.6760551631450655e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.9993226528167726e-05,
+          "min": 3.911927342414856e-05,
+          "max": 4.127621650695801e-05,
+          "p50": 3.9929524064064026e-05,
+          "p90": 4.091747105121613e-05,
+          "p99": 4.124034196138382e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.848336637020111e-05,
+          "min": 3.727525472640991e-05,
+          "max": 3.933534026145935e-05,
+          "p50": 3.888271749019623e-05,
+          "p90": 3.9231404662132265e-05,
+          "p99": 3.932494670152664e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.193576216697693e-05,
+          "min": 5.137920379638672e-05,
+          "max": 5.310773849487305e-05,
+          "p50": 5.190260708332062e-05,
+          "p90": 5.248747766017914e-05,
+          "p99": 5.304571241140366e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.0001223146915435791,
+          "min": 0.00012153759598731995,
+          "max": 0.00012320280075073242,
+          "p50": 0.00012236088514328003,
+          "p90": 0.00012282393872737886,
+          "p99": 0.00012316491454839707
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.000118362158536911,
+          "min": 0.00011754035949707031,
+          "max": 0.00011940672993659973,
+          "p50": 0.00011821836233139038,
+          "p90": 0.00011932626366615296,
+          "p99": 0.00011939868330955505
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.3.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.267106652259827e-05,
+          "min": 9.216740727424622e-05,
+          "max": 9.393692016601562e-05,
+          "p50": 9.247474372386932e-05,
+          "p90": 9.35681164264679e-05,
+          "p99": 9.390003979206085e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.56150621175766e-05,
+          "min": 4.4114887714385986e-05,
+          "max": 4.721805453300476e-05,
+          "p50": 4.5686960220336914e-05,
+          "p90": 4.603788256645203e-05,
+          "p99": 4.7100037336349486e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.998801112174988e-05,
+          "min": 3.822147846221924e-05,
+          "max": 4.079192876815796e-05,
+          "p50": 4.013814032077789e-05,
+          "p90": 4.0500238537788394e-05,
+          "p99": 4.0762759745121e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.8712844252586363e-05,
+          "min": 3.738328814506531e-05,
+          "max": 3.952533006668091e-05,
+          "p50": 3.884732723236084e-05,
+          "p90": 3.925040364265442e-05,
+          "p99": 3.949783742427826e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.1886960864067075e-05,
+          "min": 5.060061812400818e-05,
+          "max": 5.447119474411011e-05,
+          "p50": 5.159340798854828e-05,
+          "p90": 5.290545523166657e-05,
+          "p99": 5.431462079286575e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012379810214042665,
+          "min": 0.00012130290269851685,
+          "max": 0.00013662874698638916,
+          "p50": 0.00012222863733768463,
+          "p90": 0.00012566521763801575,
+          "p99": 0.0001355323940515518
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00043494999408721924,
+          "min": 0.00011819973587989807,
+          "max": 0.0032751597464084625,
+          "p50": 0.00011889263987541199,
+          "p90": 0.00043831467628478894,
+          "p99": 0.0029914752393960958
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.4.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.350776672363281e-05,
+          "min": 9.223446249961853e-05,
+          "max": 9.984895586967468e-05,
+          "p50": 9.279698133468628e-05,
+          "p90": 9.470582008361816e-05,
+          "p99": 9.933464229106903e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.590414464473724e-05,
+          "min": 4.4889748096466064e-05,
+          "max": 4.827231168746948e-05,
+          "p50": 4.5729801058769226e-05,
+          "p90": 4.6914443373680115e-05,
+          "p99": 4.813652485609054e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.972724080085755e-05,
+          "min": 3.831833600997925e-05,
+          "max": 4.208460450172424e-05,
+          "p50": 3.9618462324142456e-05,
+          "p90": 4.1266530752182005e-05,
+          "p99": 4.200279712677002e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.8759782910346985e-05,
+          "min": 3.644824028015137e-05,
+          "max": 4.009157419204712e-05,
+          "p50": 3.894604742527008e-05,
+          "p90": 3.992393612861633e-05,
+          "p99": 4.007481038570404e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.20709902048111e-05,
+          "min": 5.09507954120636e-05,
+          "max": 5.4098665714263916e-05,
+          "p50": 5.177222192287445e-05,
+          "p90": 5.284138023853302e-05,
+          "p99": 5.3972937166690826e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012284889817237854,
+          "min": 0.00012200325727462769,
+          "max": 0.00012418627738952637,
+          "p50": 0.00012266263365745544,
+          "p90": 0.0001236163079738617,
+          "p99": 0.0001241292804479599
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011872537434101104,
+          "min": 0.00011780112981796265,
+          "max": 0.00011974945664405823,
+          "p50": 0.0001187548041343689,
+          "p90": 0.00011928342282772065,
+          "p99": 0.00011970285326242447
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.5.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.276196360588073e-05,
+          "min": 9.212642908096313e-05,
+          "max": 9.42125916481018e-05,
+          "p50": 9.25697386264801e-05,
+          "p90": 9.340792894363403e-05,
+          "p99": 9.413212537765503e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.551820456981659e-05,
+          "min": 4.452839493751526e-05,
+          "max": 4.653260111808777e-05,
+          "p50": 4.5534223318099976e-05,
+          "p90": 4.6043097972869874e-05,
+          "p99": 4.648365080356598e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.1908398270607e-05,
+          "min": 3.857538104057312e-05,
+          "max": 5.457177758216858e-05,
+          "p50": 4.049576818943024e-05,
+          "p90": 4.5965239405632015e-05,
+          "p99": 5.371112376451493e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.987438976764679e-05,
+          "min": 3.740191459655762e-05,
+          "max": 4.499778151512146e-05,
+          "p50": 3.970041871070862e-05,
+          "p90": 4.08269464969635e-05,
+          "p99": 4.458069801330567e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.297325551509857e-05,
+          "min": 5.060434341430664e-05,
+          "max": 6.714090704917908e-05,
+          "p50": 5.1194801926612854e-05,
+          "p90": 5.4205954074859616e-05,
+          "p99": 6.584741175174713e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012284740805625915,
+          "min": 0.0001217573881149292,
+          "max": 0.00012456625699996948,
+          "p50": 0.00012265890836715698,
+          "p90": 0.00012415722012519835,
+          "p99": 0.00012452535331249236
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011852271854877472,
+          "min": 0.00011814385652542114,
+          "max": 0.00011928379535675049,
+          "p50": 0.00011841952800750732,
+          "p90": 0.00011899881064891815,
+          "p99": 0.00011925529688596725
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.6.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.345076978206635e-05,
+          "min": 9.239837527275085e-05,
+          "max": 9.800493717193604e-05,
+          "p50": 9.286776185035706e-05,
+          "p90": 9.419284760951996e-05,
+          "p99": 9.762372821569443e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.5892968773841855e-05,
+          "min": 4.521757364273071e-05,
+          "max": 4.7013163566589355e-05,
+          "p50": 4.589930176734924e-05,
+          "p90": 4.6174973249435425e-05,
+          "p99": 4.692934453487396e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.9643421769142154e-05,
+          "min": 3.8895756006240845e-05,
+          "max": 4.07584011554718e-05,
+          "p50": 3.9519742131233215e-05,
+          "p90": 4.033595323562622e-05,
+          "p99": 4.071615636348724e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.978870809078217e-05,
+          "min": 3.7997961044311523e-05,
+          "max": 4.547089338302612e-05,
+          "p50": 3.946945071220398e-05,
+          "p90": 4.038140177726745e-05,
+          "p99": 4.496194422245026e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00270468071103096,
+          "min": 5.0324946641922e-05,
+          "max": 0.02658665180206299,
+          "p50": 5.110912024974823e-05,
+          "p90": 0.0027055870741605663,
+          "p99": 0.02419854532927275
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012376271188259126,
+          "min": 0.00012193620204925537,
+          "max": 0.0001369081437587738,
+          "p50": 0.0001221727579832077,
+          "p90": 0.0001243922859430313,
+          "p99": 0.00013565655797719955
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011866427958011627,
+          "min": 0.00011759623885154724,
+          "max": 0.0001205839216709137,
+          "p50": 0.00011868029832839966,
+          "p90": 0.00011900477111339569,
+          "p99": 0.0001204260066151619
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.7.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.256638586521148e-05,
+          "min": 9.13962721824646e-05,
+          "max": 9.367242455482483e-05,
+          "p50": 9.245984256267548e-05,
+          "p90": 9.361207485198974e-05,
+          "p99": 9.366638958454132e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.6174973249435425e-05,
+          "min": 4.5083463191986084e-05,
+          "max": 4.9091875553131104e-05,
+          "p50": 4.592724144458771e-05,
+          "p90": 4.667453467845917e-05,
+          "p99": 4.885014146566391e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.9684772491455075e-05,
+          "min": 3.814324736595154e-05,
+          "max": 4.259869456291199e-05,
+          "p50": 3.961287438869476e-05,
+          "p90": 4.048310220241547e-05,
+          "p99": 4.238713532686234e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.90857458114624e-05,
+          "min": 3.736838698387146e-05,
+          "max": 4.0765851736068726e-05,
+          "p50": 3.906339406967163e-05,
+          "p90": 3.9739906787872316e-05,
+          "p99": 4.066325724124909e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.1565468311309814e-05,
+          "min": 5.0399452447891235e-05,
+          "max": 5.613267421722412e-05,
+          "p50": 5.1176175475120544e-05,
+          "p90": 5.208924412727356e-05,
+          "p99": 5.572833120822907e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012298934161663054,
+          "min": 0.00012053176760673523,
+          "max": 0.00012654811143875122,
+          "p50": 0.00012254901230335236,
+          "p90": 0.0001261424273252487,
+          "p99": 0.00012650754302740097
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011879093945026398,
+          "min": 0.00011803582310676575,
+          "max": 0.00012059882283210754,
+          "p50": 0.00011868961155414581,
+          "p90": 0.00011930465698242187,
+          "p99": 0.00012046940624713897
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.8.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.007545046135783195,
+          "min": 9.204074740409851e-05,
+          "max": 0.07460568845272064,
+          "p50": 9.248591959476471e-05,
+          "p90": 0.0075540136545896265,
+          "p99": 0.06790052097290755
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.631988704204559e-05,
+          "min": 4.558265209197998e-05,
+          "max": 4.845857620239258e-05,
+          "p50": 4.589930176734924e-05,
+          "p90": 4.755668342113495e-05,
+          "p99": 4.836838692426682e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.008300602436066e-05,
+          "min": 3.793835639953613e-05,
+          "max": 4.239007830619812e-05,
+          "p50": 4.001334309577942e-05,
+          "p90": 4.16390597820282e-05,
+          "p99": 4.231497645378113e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.91148030757904e-05,
+          "min": 3.722682595252991e-05,
+          "max": 4.100799560546875e-05,
+          "p50": 3.951229155063629e-05,
+          "p90": 4.0508434176445006e-05,
+          "p99": 4.0958039462566376e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.121156573295593e-05,
+          "min": 4.996359348297119e-05,
+          "max": 5.2053481340408325e-05,
+          "p50": 5.1472336053848267e-05,
+          "p90": 5.203336477279663e-05,
+          "p99": 5.205146968364715e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00012256018817424774,
+          "min": 0.00012167170643806458,
+          "max": 0.0001239292323589325,
+          "p50": 0.0001226421445608139,
+          "p90": 0.00012315474450588226,
+          "p99": 0.00012385178357362747
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011889003217220306,
+          "min": 0.00011749193072319031,
+          "max": 0.00012295320630073547,
+          "p50": 0.00011822953820228577,
+          "p90": 0.00012098178267478943,
+          "p99": 0.00012275606393814088
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.9.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.294860064983368e-05,
+          "min": 9.187310934066772e-05,
+          "max": 9.484216570854187e-05,
+          "p50": 9.289011359214783e-05,
+          "p90": 9.363852441310883e-05,
+          "p99": 9.472180157899856e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.580765962600708e-05,
+          "min": 4.507601261138916e-05,
+          "max": 4.674866795539856e-05,
+          "p50": 4.572048783302307e-05,
+          "p90": 4.636980593204498e-05,
+          "p99": 4.67107817530632e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.9480626583099365e-05,
+          "min": 3.873184323310852e-05,
+          "max": 4.053488373756409e-05,
+          "p50": 3.937818109989166e-05,
+          "p90": 4.025660455226898e-05,
+          "p99": 4.050705581903458e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.845579922199249e-05,
+          "min": 3.652647137641907e-05,
+          "max": 3.976374864578247e-05,
+          "p50": 3.8640573620796204e-05,
+          "p90": 3.970004618167877e-05,
+          "p99": 3.9757378399372104e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.238540470600128e-05,
+          "min": 5.029141902923584e-05,
+          "max": 5.6978315114974976e-05,
+          "p50": 5.1332637667655945e-05,
+          "p90": 5.619712173938751e-05,
+          "p99": 5.690019577741623e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.0001238185912370682,
+          "min": 0.0001217089593410492,
+          "max": 0.00012924522161483765,
+          "p50": 0.00012306123971939087,
+          "p90": 0.00012636519968509675,
+          "p99": 0.00012895721942186356
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011830776929855347,
+          "min": 0.00011753663420677185,
+          "max": 0.0001203678548336029,
+          "p50": 0.00011812709271907806,
+          "p90": 0.00011885575950145721,
+          "p99": 0.00012021664530038834
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.10.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.29124653339386e-05,
+          "min": 9.157881140708923e-05,
+          "max": 9.544938802719116e-05,
+          "p50": 9.255111217498779e-05,
+          "p90": 9.384676814079284e-05,
+          "p99": 9.528912603855133e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.q_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 4.659779369831085e-05,
+          "min": 4.536658525466919e-05,
+          "max": 5.28581440448761e-05,
+          "p50": 4.5802444219589233e-05,
+          "p90": 4.775859415531158e-05,
+          "p99": 5.234818905591965e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.k_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.964453935623169e-05,
+          "min": 3.851205110549927e-05,
+          "max": 4.1116029024124146e-05,
+          "p50": 3.9635226130485535e-05,
+          "p90": 4.0358304977416994e-05,
+          "p99": 4.104025661945343e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.v_proj": {
+      "in_features": 2048,
+      "out_features": 1024,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 3.8576126098632815e-05,
+          "min": 3.6913901567459106e-05,
+          "max": 4.007667303085327e-05,
+          "p50": 3.8877129554748535e-05,
+          "p90": 3.94430011510849e-05,
+          "p99": 4.0013305842876434e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.self_attn.o_proj": {
+      "in_features": 2048,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 5.151405930519104e-05,
+          "min": 5.01386821269989e-05,
+          "max": 5.402415990829468e-05,
+          "p50": 5.120038986206055e-05,
+          "p90": 5.301833152770996e-05,
+          "p99": 5.3923577070236206e-05
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.gate_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.0001223888248205185,
+          "min": 0.00012120231986045837,
+          "max": 0.00012487918138504028,
+          "p50": 0.00012217462062835693,
+          "p90": 0.00012318603694438934,
+          "p99": 0.0001247098669409752
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.up_proj": {
+      "in_features": 2048,
+      "out_features": 6144,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 0.00011834576725959778,
+          "min": 0.0001176781952381134,
+          "max": 0.00012044981122016907,
+          "p50": 0.00011796504259109497,
+          "p90": 0.00011967532336711883,
+          "p99": 0.00012037236243486404
+        }
+      }
+    },
+    "backbone.eagle_model.language_model.model.layers.11.mlp.down_proj": {
+      "in_features": 6144,
+      "out_features": 2048,
+      "bias": false,
+      "profile": true,
+      "stats": {
+        "calls": 10,
+        "forward_seconds": {
+          "count": 10,
+          "mean": 9.267739951610566e-05,
+          "min": 9.191781282424927e-05,
+          "max": 9.366869926452637e-05,
+          "p50": 9.256228804588318e-05,
+          "p90": 9.34842973947525e-05,
+          "p99": 9.365025907754898e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 0.00014993930235505105,
+          "min": 4.4751912355422974e-05,
+          "max": 0.000994216650724411,
+          "p50": 4.6135857701301575e-05,
+          "p90": 0.000717519968748094,
+          "p99": 0.0009920623898506164
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.0.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.984821960330009e-05,
+          "min": 3.7223100662231445e-05,
+          "max": 4.544109106063843e-05,
+          "p50": 3.967992961406708e-05,
+          "p90": 4.1801854968070985e-05,
+          "p99": 4.3381005525588976e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.4824788346886635e-05,
+          "min": 4.36343252658844e-05,
+          "max": 5.344673991203308e-05,
+          "p50": 4.446692764759064e-05,
+          "p90": 4.65400516986847e-05,
+          "p99": 4.933539777994153e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.1.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.019010812044144e-05,
+          "min": 3.828108310699463e-05,
+          "max": 4.5064836740493774e-05,
+          "p50": 4.020892083644867e-05,
+          "p90": 4.143044352531433e-05,
+          "p99": 4.3466798961162556e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.242444410920143e-05,
+          "min": 4.1428953409194946e-05,
+          "max": 4.4558197259902954e-05,
+          "p50": 4.237517714500427e-05,
+          "p90": 4.30721789598465e-05,
+          "p99": 4.428450018167495e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.2.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.70509922504425e-05,
+          "min": 3.489851951599121e-05,
+          "max": 3.9111822843551636e-05,
+          "p50": 3.6971643567085266e-05,
+          "p90": 3.8105249404907224e-05,
+          "p99": 3.8723349571228025e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.372573457658291e-05,
+          "min": 4.2051076889038086e-05,
+          "max": 4.711747169494629e-05,
+          "p50": 4.365108907222748e-05,
+          "p90": 4.428774118423462e-05,
+          "p99": 4.678491503000259e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.3.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.960179165005684e-05,
+          "min": 3.762543201446533e-05,
+          "max": 4.134327173233032e-05,
+          "p50": 3.9773061871528625e-05,
+          "p90": 4.07833606004715e-05,
+          "p99": 4.127264022827148e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.240921698510647e-05,
+          "min": 4.122033715248108e-05,
+          "max": 4.490092396736145e-05,
+          "p50": 4.2362138628959656e-05,
+          "p90": 4.303827881813049e-05,
+          "p99": 4.371196031570434e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.4.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.7226034328341485e-05,
+          "min": 3.556162118911743e-05,
+          "max": 4.05237078666687e-05,
+          "p50": 3.70759516954422e-05,
+          "p90": 3.8364529609680174e-05,
+          "p99": 3.995276987552642e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.351292736828327e-05,
+          "min": 4.225224256515503e-05,
+          "max": 4.578009247779846e-05,
+          "p50": 4.344433546066284e-05,
+          "p90": 4.4127553701400755e-05,
+          "p99": 4.524741321802139e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.5.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.949366509914398e-05,
+          "min": 3.777071833610535e-05,
+          "max": 4.7866255044937134e-05,
+          "p50": 3.950484097003937e-05,
+          "p90": 4.039779305458069e-05,
+          "p99": 4.249237477779384e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.264749586582184e-05,
+          "min": 4.124641418457031e-05,
+          "max": 6.0360878705978394e-05,
+          "p50": 4.223175346851349e-05,
+          "p90": 4.2844563722610474e-05,
+          "p99": 5.0290003418922346e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.6.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.749863244593143e-05,
+          "min": 3.571435809135437e-05,
+          "max": 4.434213042259216e-05,
+          "p50": 3.747083246707916e-05,
+          "p90": 3.8218125700950624e-05,
+          "p99": 4.265874624252318e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.409588873386383e-05,
+          "min": 4.28520143032074e-05,
+          "max": 5.350261926651001e-05,
+          "p50": 4.3682754039764404e-05,
+          "p90": 4.438832402229309e-05,
+          "p99": 5.14925643801689e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.7.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.9244862273335455e-05,
+          "min": 3.784149885177612e-05,
+          "max": 4.1075050830841064e-05,
+          "p50": 3.938935697078705e-05,
+          "p90": 4.022270441055298e-05,
+          "p99": 4.074838012456894e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.163789562880993e-05,
+          "min": 4.061684012413025e-05,
+          "max": 4.960969090461731e-05,
+          "p50": 4.151090979576111e-05,
+          "p90": 4.205219447612762e-05,
+          "p99": 4.5033358037471735e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.8.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.719888627529144e-05,
+          "min": 3.546103835105896e-05,
+          "max": 4.295632243156433e-05,
+          "p50": 3.731250762939453e-05,
+          "p90": 3.8284063339233396e-05,
+          "p99": 3.9866194128990146e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.316139966249466e-05,
+          "min": 4.183128476142883e-05,
+          "max": 4.512816667556763e-05,
+          "p50": 4.317425191402435e-05,
+          "p90": 4.368089139461517e-05,
+          "p99": 4.4451281428337094e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.9.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.971010446548462e-05,
+          "min": 3.73348593711853e-05,
+          "max": 4.9367547035217285e-05,
+          "p50": 3.970786929130554e-05,
+          "p90": 4.076249897480011e-05,
+          "p99": 4.35227900743484e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.1589094325900075e-05,
+          "min": 4.030391573905945e-05,
+          "max": 4.515424370765686e-05,
+          "p50": 4.1507184505462646e-05,
+          "p90": 4.2164698243141174e-05,
+          "p99": 4.381224513053893e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.10.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.7392042577266694e-05,
+          "min": 3.5610049962997437e-05,
+          "max": 4.2650848627090454e-05,
+          "p50": 3.768131136894226e-05,
+          "p90": 3.8242712616920474e-05,
+          "p99": 3.984030336141584e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.301895387470722e-05,
+          "min": 4.159659147262573e-05,
+          "max": 4.731491208076477e-05,
+          "p50": 4.288181662559509e-05,
+          "p90": 4.3692812323570254e-05,
+          "p99": 4.6997070312499994e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.11.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.9660977199673654e-05,
+          "min": 3.8076192140579224e-05,
+          "max": 4.120171070098877e-05,
+          "p50": 3.9793550968170166e-05,
+          "p90": 4.0275603532791136e-05,
+          "p99": 4.09809872508049e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.134555347263813e-05,
+          "min": 4.034861922264099e-05,
+          "max": 4.5534223318099976e-05,
+          "p50": 4.127621650695801e-05,
+          "p90": 4.19963151216507e-05,
+          "p99": 4.3065063655376416e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.12.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.715390339493751e-05,
+          "min": 3.5259872674942017e-05,
+          "max": 4.080682992935181e-05,
+          "p50": 3.7243589758872986e-05,
+          "p90": 3.829896450042724e-05,
+          "p99": 3.979738801717757e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.3177884072065355e-05,
+          "min": 4.217028617858887e-05,
+          "max": 4.876032471656799e-05,
+          "p50": 4.296936094760895e-05,
+          "p90": 4.3657422065734866e-05,
+          "p99": 4.6947449445724476e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.13.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.927703946828842e-05,
+          "min": 3.734976053237915e-05,
+          "max": 4.159659147262573e-05,
+          "p50": 3.935955464839935e-05,
+          "p90": 4.021041095256805e-05,
+          "p99": 4.0887333452701564e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.221922717988491e-05,
+          "min": 4.052743315696716e-05,
+          "max": 7.482245564460754e-05,
+          "p50": 4.152767360210419e-05,
+          "p90": 4.216991364955902e-05,
+          "p99": 5.788560956716524e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.14.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.72166745364666e-05,
+          "min": 3.561750054359436e-05,
+          "max": 4.383176565170288e-05,
+          "p50": 3.7202611565589905e-05,
+          "p90": 3.8302317261695865e-05,
+          "p99": 4.2216069996356954e-05
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.0.proj": {
+      "in_features": 1536,
+      "out_features": 6144,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 4.7880783677101134e-05,
+          "min": 4.195794463157654e-05,
+          "max": 0.0004254467785358429,
+          "p50": 4.3040141463279724e-05,
+          "p90": 4.353560507297516e-05,
+          "p99": 0.0001276408135890937
+        }
+      }
+    },
+    "action_head.model.transformer_blocks.15.ff.net.2": {
+      "in_features": 6144,
+      "out_features": 1536,
+      "bias": true,
+      "profile": true,
+      "stats": {
+        "calls": 80,
+        "forward_seconds": {
+          "count": 80,
+          "mean": 3.975518047809601e-05,
+          "min": 3.764405846595764e-05,
+          "max": 4.312396049499512e-05,
+          "p50": 3.977678716182709e-05,
+          "p90": 4.045367240905762e-05,
+          "p99": 4.1178651154041275e-05
+        }
+      }
+    }
+  }
+}
