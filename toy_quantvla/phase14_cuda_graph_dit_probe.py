@@ -17,6 +17,7 @@ from pathlib import Path
 import time
 from typing import Any
 
+from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
 from phase3_fake_quant_forward import aggregate_metrics, action_to_vector, compare_actions, set_seed
 from phase3_gr00t_smoke import _insert_paths
 from phase8_cutlass_blockscaled_fp4_real_activation_bench import build_observations
@@ -306,7 +307,7 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
     graph_metrics = result["cuda_graph_replay"].get("metrics", {})
     aa_metrics = result["eager_aa"].get("metrics", {})
     lines = [
-        "# Phase 14 CUDA Graph DiT Probe",
+        "# CUDA Graph DiT Probe",
         "",
         "Boundary: fixed-observation offline replay. This does not run the LIBERO simulator.",
         "",
@@ -316,6 +317,8 @@ def write_markdown(result: dict[str, Any], path: Path) -> None:
         f"- Cases: `{len(result['cases'])}` from `{result['num_observations']}` observations x `{result['num_repeats']}` repeats",
         f"- Denoising steps: `{result['denoising_steps']}`",
         f"- Capture target: `policy.model.action_head.model.forward`",
+        f"- Prepare-input pruning: `{result['lossless_cache']['request']['prepare_input_pruning']}`",
+        f"- Action-head static cache: `{result['lossless_cache']['request']['action_head_static_cache']}`",
         f"- CUDA graph failed: `{graph_info['failed']}`",
         f"- CUDA graph error: `{graph_info['error']}`",
         f"- CUDA graph cache size: `{graph_info['graph_cache_size']}` / `{graph_info['max_captures']}`",
@@ -389,6 +392,8 @@ def main() -> None:
     parser.add_argument("--repeat-seed-stride", type=int, default=10000)
     parser.add_argument("--graph-prewarm-actions", type=int, default=4)
     parser.add_argument("--cuda-graph-max-captures", type=int, default=8)
+    parser.add_argument("--lossless-cache-prepare-input-pruning", action="store_true")
+    parser.add_argument("--lossless-cache-action-head-static", action="store_true")
     parser.add_argument("--output-json", type=Path, default=Path("toy_quantvla/results/phase14_cuda_graph_dit_probe.json"))
     parser.add_argument("--output-md", type=Path, default=Path("docs/phase14_cuda_graph_dit_probe.md"))
     args = parser.parse_args()
@@ -422,6 +427,11 @@ def main() -> None:
     )
     synchronize(args.device)
     model_load_seconds = time.perf_counter() - load_started
+    lossless_cache = install_lossless_cache_patches(
+        policy,
+        prepare_input_pruning=bool(args.lossless_cache_prepare_input_pruning),
+        action_head_static_cache=bool(args.lossless_cache_action_head_static),
+    )
 
     eager_actions, eager_replay = run_cases(policy, cases, device=args.device)
     _aa_actions, eager_aa = run_cases(
@@ -473,11 +483,19 @@ def main() -> None:
         "cuda_device_capability": list(torch.cuda.get_device_capability()) if torch.cuda.is_available() else None,
         "model_load_seconds": float(model_load_seconds),
         "model_load_memory": cuda_memory(args.device),
+        "lossless_cache": {
+            "request": {
+                "prepare_input_pruning": bool(args.lossless_cache_prepare_input_pruning),
+                "action_head_static_cache": bool(args.lossless_cache_action_head_static),
+            },
+            "patch_result": lossless_cache,
+        },
         "eager_replay": eager_replay,
         "eager_aa": eager_aa,
         "cuda_graph": graph_state.summary(),
         "cuda_graph_prewarm": graph_prewarm,
         "cuda_graph_replay": cuda_graph_replay,
+        "lossless_cache_stats": lossless_cache_stats(policy),
         "final_memory": cuda_memory(args.device),
     }
 
@@ -490,6 +508,8 @@ def main() -> None:
         "output_md": str(args.output_md),
         "eager_get_action_seconds": eager_replay["get_action_seconds"],
         "cuda_graph_get_action_seconds": cuda_graph_replay["get_action_seconds"],
+        "lossless_cache": result["lossless_cache"],
+        "lossless_cache_stats": result["lossless_cache_stats"],
         "cuda_graph": result["cuda_graph"],
         "eager_aa": {
             "relative_rmse_mean": metric_value(eager_aa, "relative_rmse", "mean"),
