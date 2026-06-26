@@ -1,0 +1,121 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Initialized dataset libero_10_subset with new_embodiment
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.27s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.19it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.11it/s]
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+{
+  "cache_blocks": [
+    12,
+    13,
+    14,
+    15
+  ],
+  "cache_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "cache_stats": {
+    "patched_blocks": 4,
+    "patched_block_calls": 128,
+    "full_compute_calls": 32,
+    "cache_hits": 96,
+    "patched_block_hit_rate": 0.75,
+    "all_dit_block_calls": 512,
+    "all_dit_block_skip_rate": 0.1875
+  },
+  "timing": {
+    "teacher_seconds": 0.3992781974375248,
+    "student_seconds": 0.4860433042049408,
+    "student_over_teacher_time": 1.217304894993652,
+    "teacher_request_seconds": {
+      "count": 4,
+      "mean": 0.09967273194342852,
+      "min": 0.09496753290295601,
+      "max": 0.10412975773215294,
+      "p50": 0.09979681856930256,
+      "p90": 0.10393715724349022,
+      "p99": 0.10411049768328667
+    },
+    "student_request_seconds": {
+      "count": 4,
+      "mean": 0.12133306637406349,
+      "min": 0.08834128826856613,
+      "max": 0.1826314926147461,
+      "p50": 0.10717974230647087,
+      "p90": 0.16062320657074453,
+      "p99": 0.1804306640103459
+    }
+  },
+  "summary": {
+    "observations": 4,
+    "mse": {
+      "mean": 3.0317294746330463e-06,
+      "max": 5.162159329195694e-06,
+      "min": 1.0672437285328247e-06
+    },
+    "nmse": {
+      "mean": 3.4634487480603356e-05,
+      "max": 8.395205262477235e-05,
+      "min": 4.831051314468182e-06
+    },
+    "rmse": {
+      "mean": 0.0016824797986371843,
+      "max": 0.0022720385844425474,
+      "min": 0.0010330748900892058
+    },
+    "relative_rmse": {
+      "mean": 0.005291706223449667,
+      "max": 0.009162535272770979,
+      "min": 0.0021979652668930377
+    },
+    "cosine": {
+      "mean": 0.9999847393416204,
+      "max": 0.9999976341711168,
+      "min": 0.9999585710999088
+    },
+    "max_abs_diff": {
+      "mean": 0.0063629150390625,
+      "max": 0.00885009765625,
+      "min": 0.0040340423583984375
+    },
+    "teacher_rms": {
+      "mean": 0.35788657717209704,
+      "max": 0.4700142016118036,
+      "min": 0.2479705143612971
+    },
+    "student_rms": {
+      "mean": 0.35845814267988396,
+      "max": 0.47016187544233246,
+      "min": 0.24822018317041053
+    }
+  },
+  "output_json": "toy_quantvla/results/phase11_dit_residual_cache_b12_15_range_s1_6_obs4.json"
+}

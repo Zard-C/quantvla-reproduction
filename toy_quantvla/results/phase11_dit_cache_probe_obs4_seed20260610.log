@@ -1,0 +1,1126 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Initialized dataset libero_10_subset with new_embodiment
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.40s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.07it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.00s/it]
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+{
+  "observations": 4,
+  "dit_blocks": 16,
+  "probe_rows": 512,
+  "request_seconds": {
+    "count": 4,
+    "mean": 7.598946635611355,
+    "min": 7.111976187676191,
+    "max": 8.287620898336172,
+    "p50": 7.498094728216529,
+    "p90": 8.07458704970777,
+    "p99": 8.266317513473332
+  },
+  "top_cache_candidates": [
+    {
+      "key": "b15:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.04351791366934776,
+      "output_relative_l1_mean": 0.0437618475407362,
+      "output_cosine_mean": 0.9993296712636948,
+      "residual_relative_rmse_mean": 0.009648020146414638,
+      "residual_relative_l1_mean": 0.011340266792103648,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05462429206818342,
+          "min": 0.05250551924109459,
+          "max": 0.05578213185071945,
+          "p50": 0.05558253824710846,
+          "p90": 0.05578213185071945
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.05668323766440153,
+          "min": 0.056091610342264175,
+          "max": 0.05775733292102814,
+          "p50": 0.0565386526286602,
+          "p90": 0.05775733292102814
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9991557896137238,
+          "min": 0.9991040825843811,
+          "max": 0.9992406368255615,
+          "p50": 0.9991415739059448,
+          "p90": 0.9992406368255615
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.04351791366934776,
+          "min": 0.041232749819755554,
+          "max": 0.04542659595608711,
+          "p50": 0.04437154904007912,
+          "p90": 0.04542659595608711
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.0437618475407362,
+          "min": 0.04253925010561943,
+          "max": 0.04479554295539856,
+          "p50": 0.04397992044687271,
+          "p90": 0.04479554295539856
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9993296712636948,
+          "min": 0.9992880821228027,
+          "max": 0.9993955492973328,
+          "p50": 0.9993299841880798,
+          "p90": 0.9993955492973328
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.009648020146414638,
+          "min": 0.008559991605579853,
+          "max": 0.011310896836221218,
+          "p50": 0.009628906846046448,
+          "p90": 0.011310896836221218
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.011340266792103648,
+          "min": 0.0107506662607193,
+          "max": 0.012412839569151402,
+          "p50": 0.01125728152692318,
+          "p90": 0.012412839569151402
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9999587088823318,
+          "min": 0.9999480247497559,
+          "max": 0.9999673962593079,
+          "p50": 0.9999628663063049,
+          "p90": 0.9999673962593079
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 33.52637338638306,
+          "min": 31.985403060913086,
+          "max": 34.81834411621094,
+          "p50": 33.93570327758789,
+          "p90": 34.81834411621094
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 52.79467964172363,
+          "min": 51.45928192138672,
+          "max": 53.8153190612793,
+          "p50": 53.20379638671875,
+          "p90": 53.8153190612793
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 40.02523708343506,
+          "min": 39.824283599853516,
+          "max": 40.2855110168457,
+          "p50": 40.010597229003906,
+          "p90": 40.2855110168457
+        }
+      }
+    },
+    {
+      "key": "b14:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.05462429206818342,
+      "output_relative_l1_mean": 0.05668323766440153,
+      "output_cosine_mean": 0.9991557896137238,
+      "residual_relative_rmse_mean": 0.02831581048667431,
+      "residual_relative_l1_mean": 0.028208204079419374,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05568444449454546,
+          "min": 0.053233321756124496,
+          "max": 0.056780941784381866,
+          "p50": 0.056399594992399216,
+          "p90": 0.056780941784381866
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.060803783126175404,
+          "min": 0.06010565906763077,
+          "max": 0.061667341738939285,
+          "p50": 0.061027538031339645,
+          "p90": 0.061667341738939285
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.99913190305233,
+          "min": 0.999076783657074,
+          "max": 0.9992225170135498,
+          "p50": 0.9991222620010376,
+          "p90": 0.9992225170135498
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05462429206818342,
+          "min": 0.05250551924109459,
+          "max": 0.05578213185071945,
+          "p50": 0.05558253824710846,
+          "p90": 0.05578213185071945
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.05668323766440153,
+          "min": 0.056091610342264175,
+          "max": 0.05775733292102814,
+          "p50": 0.0565386526286602,
+          "p90": 0.05775733292102814
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9991557896137238,
+          "min": 0.9991040825843811,
+          "max": 0.9992406368255615,
+          "p50": 0.9991415739059448,
+          "p90": 0.9992406368255615
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.02831581048667431,
+          "min": 0.02375628612935543,
+          "max": 0.034432489424943924,
+          "p50": 0.02953163906931877,
+          "p90": 0.034432489424943924
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.028208204079419374,
+          "min": 0.025439884513616562,
+          "max": 0.030816365033388138,
+          "p50": 0.028378019109368324,
+          "p90": 0.030816365033388138
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9996120780706406,
+          "min": 0.9994221925735474,
+          "max": 0.9997390508651733,
+          "p50": 0.9997078776359558,
+          "p90": 0.9997390508651733
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 5.1401286125183105,
+          "min": 4.3559889793396,
+          "max": 6.161755561828613,
+          "p50": 5.2138872146606445,
+          "p90": 6.161755561828613
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 40.02523708343506,
+          "min": 39.824283599853516,
+          "max": 40.2855110168457,
+          "p50": 40.010597229003906,
+          "p90": 40.2855110168457
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 38.99587631225586,
+          "min": 38.89236068725586,
+          "max": 39.0926513671875,
+          "p50": 39.04583740234375,
+          "p90": 39.0926513671875
+        }
+      }
+    },
+    {
+      "key": "b13:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.05568444449454546,
+      "output_relative_l1_mean": 0.060803783126175404,
+      "output_cosine_mean": 0.99913190305233,
+      "residual_relative_rmse_mean": 0.05549327563494444,
+      "residual_relative_l1_mean": 0.04524943511933088,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.056155876256525517,
+          "min": 0.05373797193169594,
+          "max": 0.05710263177752495,
+          "p50": 0.05695449933409691,
+          "p90": 0.05710263177752495
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06190978363156319,
+          "min": 0.06098604202270508,
+          "max": 0.06293026357889175,
+          "p50": 0.062344636768102646,
+          "p90": 0.06293026357889175
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9991093873977661,
+          "min": 0.9990597367286682,
+          "max": 0.9991979002952576,
+          "p50": 0.999103844165802,
+          "p90": 0.9991979002952576
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05568444449454546,
+          "min": 0.053233321756124496,
+          "max": 0.056780941784381866,
+          "p50": 0.056399594992399216,
+          "p90": 0.056780941784381866
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.060803783126175404,
+          "min": 0.06010565906763077,
+          "max": 0.061667341738939285,
+          "p50": 0.061027538031339645,
+          "p90": 0.061667341738939285
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.99913190305233,
+          "min": 0.999076783657074,
+          "max": 0.9992225170135498,
+          "p50": 0.9991222620010376,
+          "p90": 0.9992225170135498
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05549327563494444,
+          "min": 0.050994232296943665,
+          "max": 0.05914253368973732,
+          "p50": 0.05795736983418465,
+          "p90": 0.05914253368973732
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.04524943511933088,
+          "min": 0.04330345615744591,
+          "max": 0.04762594774365425,
+          "p50": 0.04525971785187721,
+          "p90": 0.04762594774365425
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9985988885164261,
+          "min": 0.9984056949615479,
+          "max": 0.9988768100738525,
+          "p50": 0.9986663460731506,
+          "p90": 0.9988768100738525
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 2.8711934089660645,
+          "min": 2.641724109649658,
+          "max": 3.3504528999328613,
+          "p50": 2.8411600589752197,
+          "p90": 3.3504528999328613
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 38.99587631225586,
+          "min": 38.89236068725586,
+          "max": 39.0926513671875,
+          "p50": 39.04583740234375,
+          "p90": 39.0926513671875
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 38.27527141571045,
+          "min": 38.12614822387695,
+          "max": 38.37753677368164,
+          "p50": 38.32536697387695,
+          "p90": 38.37753677368164
+        }
+      }
+    },
+    {
+      "key": "b12:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.056155876256525517,
+      "output_relative_l1_mean": 0.06190978363156319,
+      "output_cosine_mean": 0.9991093873977661,
+      "residual_relative_rmse_mean": 0.017327615059912205,
+      "residual_relative_l1_mean": 0.029643515590578318,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05932565871626139,
+          "min": 0.0576750673353672,
+          "max": 0.06033123657107353,
+          "p50": 0.0598735511302948,
+          "p90": 0.06033123657107353
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06652416102588177,
+          "min": 0.06529375910758972,
+          "max": 0.06764782965183258,
+          "p50": 0.06722527742385864,
+          "p90": 0.06764782965183258
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990656226873398,
+          "min": 0.9990137219429016,
+          "max": 0.9991441369056702,
+          "p50": 0.9990791082382202,
+          "p90": 0.9991441369056702
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.056155876256525517,
+          "min": 0.05373797193169594,
+          "max": 0.05710263177752495,
+          "p50": 0.05695449933409691,
+          "p90": 0.05710263177752495
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06190978363156319,
+          "min": 0.06098604202270508,
+          "max": 0.06293026357889175,
+          "p50": 0.062344636768102646,
+          "p90": 0.06293026357889175
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9991093873977661,
+          "min": 0.9990597367286682,
+          "max": 0.9991979002952576,
+          "p50": 0.999103844165802,
+          "p90": 0.9991979002952576
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.017327615059912205,
+          "min": 0.015153525397181511,
+          "max": 0.018863297998905182,
+          "p50": 0.01784396730363369,
+          "p90": 0.018863297998905182
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.029643515590578318,
+          "min": 0.028711052611470222,
+          "max": 0.03057979978621006,
+          "p50": 0.029718460515141487,
+          "p90": 0.03057979978621006
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9998682141304016,
+          "min": 0.9998342990875244,
+          "max": 0.9999070763587952,
+          "p50": 0.999876856803894,
+          "p90": 0.9999070763587952
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 14.501836776733398,
+          "min": 13.772802352905273,
+          "max": 16.249616622924805,
+          "p50": 14.109844207763672,
+          "p90": 16.249616622924805
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 38.27527141571045,
+          "min": 38.12614822387695,
+          "max": 38.37753677368164,
+          "p50": 38.32536697387695,
+          "p90": 38.37753677368164
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 35.04181957244873,
+          "min": 34.42255783081055,
+          "max": 35.41623306274414,
+          "p50": 35.317970275878906,
+          "p90": 35.41623306274414
+        }
+      }
+    },
+    {
+      "key": "b11:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.05932565871626139,
+      "output_relative_l1_mean": 0.06652416102588177,
+      "output_cosine_mean": 0.9990656226873398,
+      "residual_relative_rmse_mean": 0.055297342129051685,
+      "residual_relative_l1_mean": 0.040763361379504204,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.059753019362688065,
+          "min": 0.058023594319820404,
+          "max": 0.06094092130661011,
+          "p50": 0.060211826115846634,
+          "p90": 0.06094092130661011
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06774656847119331,
+          "min": 0.06615681201219559,
+          "max": 0.06878075003623962,
+          "p50": 0.06868458539247513,
+          "p90": 0.06878075003623962
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990520030260086,
+          "min": 0.9989985823631287,
+          "max": 0.9991363883018494,
+          "p50": 0.9990671873092651,
+          "p90": 0.9991363883018494
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05932565871626139,
+          "min": 0.0576750673353672,
+          "max": 0.06033123657107353,
+          "p50": 0.0598735511302948,
+          "p90": 0.06033123657107353
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06652416102588177,
+          "min": 0.06529375910758972,
+          "max": 0.06764782965183258,
+          "p50": 0.06722527742385864,
+          "p90": 0.06764782965183258
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990656226873398,
+          "min": 0.9990137219429016,
+          "max": 0.9991441369056702,
+          "p50": 0.9990791082382202,
+          "p90": 0.9991441369056702
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.055297342129051685,
+          "min": 0.048492591828107834,
+          "max": 0.059500087052583694,
+          "p50": 0.05748729407787323,
+          "p90": 0.059500087052583694
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.040763361379504204,
+          "min": 0.035343486815690994,
+          "max": 0.045053426176309586,
+          "p50": 0.041552066802978516,
+          "p90": 0.045053426176309586
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9985799044370651,
+          "min": 0.9982966184616089,
+          "max": 0.9988756775856018,
+          "p50": 0.9985880255699158,
+          "p90": 0.9988756775856018
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 1.8999173939228058,
+          "min": 1.6891756057739258,
+          "max": 2.1717116832733154,
+          "p50": 1.8901103734970093,
+          "p90": 2.1717116832733154
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 35.04181957244873,
+          "min": 34.42255783081055,
+          "max": 35.41623306274414,
+          "p50": 35.317970275878906,
+          "p90": 35.41623306274414
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 34.67260932922363,
+          "min": 34.13275909423828,
+          "max": 35.050376892089844,
+          "p50": 34.936729431152344,
+          "p90": 35.050376892089844
+        }
+      }
+    },
+    {
+      "key": "b10:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.059753019362688065,
+      "output_relative_l1_mean": 0.06774656847119331,
+      "output_cosine_mean": 0.9990520030260086,
+      "residual_relative_rmse_mean": 0.05889642797410488,
+      "residual_relative_l1_mean": 0.038673597387969494,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05987319257110357,
+          "min": 0.05806756019592285,
+          "max": 0.061039362102746964,
+          "p50": 0.06042206287384033,
+          "p90": 0.061039362102746964
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06964723020792007,
+          "min": 0.0682155191898346,
+          "max": 0.07145074754953384,
+          "p50": 0.06948745250701904,
+          "p90": 0.07145074754953384
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990331679582596,
+          "min": 0.9989745020866394,
+          "max": 0.9991170167922974,
+          "p50": 0.9990478754043579,
+          "p90": 0.9991170167922974
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.059753019362688065,
+          "min": 0.058023594319820404,
+          "max": 0.06094092130661011,
+          "p50": 0.060211826115846634,
+          "p90": 0.06094092130661011
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06774656847119331,
+          "min": 0.06615681201219559,
+          "max": 0.06878075003623962,
+          "p50": 0.06868458539247513,
+          "p90": 0.06878075003623962
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990520030260086,
+          "min": 0.9989985823631287,
+          "max": 0.9991363883018494,
+          "p50": 0.9990671873092651,
+          "p90": 0.9991363883018494
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05889642797410488,
+          "min": 0.04740402474999428,
+          "max": 0.07950717955827713,
+          "p50": 0.05437290295958519,
+          "p90": 0.07950717955827713
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.038673597387969494,
+          "min": 0.03166322037577629,
+          "max": 0.05138084664940834,
+          "p50": 0.03584722429513931,
+          "p90": 0.05138084664940834
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9982443302869797,
+          "min": 0.9968835115432739,
+          "max": 0.998898446559906,
+          "p50": 0.9986068606376648,
+          "p90": 0.998898446559906
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 2.0445549190044403,
+          "min": 1.412073016166687,
+          "max": 2.40655517578125,
+          "p50": 2.1829581260681152,
+          "p90": 2.40655517578125
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 34.67260932922363,
+          "min": 34.13275909423828,
+          "max": 35.050376892089844,
+          "p50": 34.936729431152344,
+          "p90": 35.050376892089844
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 34.28580856323242,
+          "min": 33.76911163330078,
+          "max": 34.64091491699219,
+          "p50": 34.599456787109375,
+          "p90": 34.64091491699219
+        }
+      }
+    },
+    {
+      "key": "b9:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.05987319257110357,
+      "output_relative_l1_mean": 0.06964723020792007,
+      "output_cosine_mean": 0.9990331679582596,
+      "residual_relative_rmse_mean": 0.08532050251960754,
+      "residual_relative_l1_mean": 0.06279834918677807,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.060020340606570244,
+          "min": 0.058095838874578476,
+          "max": 0.061124950647354126,
+          "p50": 0.06068338826298714,
+          "p90": 0.061124950647354126
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07007624953985214,
+          "min": 0.06867776811122894,
+          "max": 0.07191864401102066,
+          "p50": 0.06990983337163925,
+          "p90": 0.07191864401102066
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990162998437881,
+          "min": 0.998957097530365,
+          "max": 0.9991095066070557,
+          "p50": 0.9990277886390686,
+          "p90": 0.9991095066070557
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.05987319257110357,
+          "min": 0.05806756019592285,
+          "max": 0.061039362102746964,
+          "p50": 0.06042206287384033,
+          "p90": 0.061039362102746964
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06964723020792007,
+          "min": 0.0682155191898346,
+          "max": 0.07145074754953384,
+          "p50": 0.06948745250701904,
+          "p90": 0.07145074754953384
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990331679582596,
+          "min": 0.9989745020866394,
+          "max": 0.9991170167922974,
+          "p50": 0.9990478754043579,
+          "p90": 0.9991170167922974
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.08532050251960754,
+          "min": 0.07999225705862045,
+          "max": 0.0887560173869133,
+          "p50": 0.08643843978643417,
+          "p90": 0.0887560173869133
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.06279834918677807,
+          "min": 0.0599990040063858,
+          "max": 0.06440063565969467,
+          "p50": 0.0636102631688118,
+          "p90": 0.06440063565969467
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9965382367372513,
+          "min": 0.9962942600250244,
+          "max": 0.9969163537025452,
+          "p50": 0.9965148568153381,
+          "p90": 0.9969163537025452
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 1.3605869710445404,
+          "min": 1.2690390348434448,
+          "max": 1.4326446056365967,
+          "p50": 1.4117470979690552,
+          "p90": 1.4326446056365967
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 34.28580856323242,
+          "min": 33.76911163330078,
+          "max": 34.64091491699219,
+          "p50": 34.599456787109375,
+          "p90": 34.64091491699219
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 34.0109167098999,
+          "min": 33.54094314575195,
+          "max": 34.348876953125,
+          "p50": 34.3012809753418,
+          "p90": 34.348876953125
+        }
+      }
+    },
+    {
+      "key": "b8:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.060020340606570244,
+      "output_relative_l1_mean": 0.07007624953985214,
+      "output_cosine_mean": 0.9990162998437881,
+      "residual_relative_rmse_mean": 0.06806457974016666,
+      "residual_relative_l1_mean": 0.04612541384994984,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06016083527356386,
+          "min": 0.05819135159254074,
+          "max": 0.06127670779824257,
+          "p50": 0.06082873418927193,
+          "p90": 0.06127670779824257
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07157757692039013,
+          "min": 0.06991513818502426,
+          "max": 0.07353580743074417,
+          "p50": 0.07165960967540741,
+          "p90": 0.07353580743074417
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990008324384689,
+          "min": 0.9989416599273682,
+          "max": 0.9990984797477722,
+          "p50": 0.999009907245636,
+          "p90": 0.9990984797477722
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.060020340606570244,
+          "min": 0.058095838874578476,
+          "max": 0.061124950647354126,
+          "p50": 0.06068338826298714,
+          "p90": 0.061124950647354126
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07007624953985214,
+          "min": 0.06867776811122894,
+          "max": 0.07191864401102066,
+          "p50": 0.06990983337163925,
+          "p90": 0.07191864401102066
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990162998437881,
+          "min": 0.998957097530365,
+          "max": 0.9991095066070557,
+          "p50": 0.9990277886390686,
+          "p90": 0.9991095066070557
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06806457974016666,
+          "min": 0.062180086970329285,
+          "max": 0.08031292259693146,
+          "p50": 0.06589234620332718,
+          "p90": 0.08031292259693146
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.04612541384994984,
+          "min": 0.0406622551381588,
+          "max": 0.05098225548863411,
+          "p50": 0.049462221562862396,
+          "p90": 0.05098225548863411
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.997877448797226,
+          "min": 0.9970329999923706,
+          "max": 0.9982713460922241,
+          "p50": 0.9981809258460999,
+          "p90": 0.9982713460922241
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 1.6838768124580383,
+          "min": 1.6010931730270386,
+          "max": 1.7939507961273193,
+          "p50": 1.7117879390716553,
+          "p90": 1.7939507961273193
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 34.0109167098999,
+          "min": 33.54094314575195,
+          "max": 34.348876953125,
+          "p50": 34.3012809753418,
+          "p90": 34.348876953125
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 33.70475959777832,
+          "min": 33.26446533203125,
+          "max": 34.0045051574707,
+          "p50": 33.9829216003418,
+          "p90": 34.0045051574707
+        }
+      }
+    },
+    {
+      "key": "b7:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.06016083527356386,
+      "output_relative_l1_mean": 0.07157757692039013,
+      "output_cosine_mean": 0.9990008324384689,
+      "residual_relative_rmse_mean": 0.11210728995501995,
+      "residual_relative_l1_mean": 0.07773913629353046,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06029529869556427,
+          "min": 0.05815534666180611,
+          "max": 0.06133827194571495,
+          "p50": 0.06110486015677452,
+          "p90": 0.06133827194571495
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07198186218738556,
+          "min": 0.07062052935361862,
+          "max": 0.0738629549741745,
+          "p50": 0.07178784161806107,
+          "p90": 0.0738629549741745
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9989797472953796,
+          "min": 0.9989175796508789,
+          "max": 0.9990798234939575,
+          "p50": 0.9989939332008362,
+          "p90": 0.9990798234939575
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06016083527356386,
+          "min": 0.05819135159254074,
+          "max": 0.06127670779824257,
+          "p50": 0.06082873418927193,
+          "p90": 0.06127670779824257
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07157757692039013,
+          "min": 0.06991513818502426,
+          "max": 0.07353580743074417,
+          "p50": 0.07165960967540741,
+          "p90": 0.07353580743074417
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9990008324384689,
+          "min": 0.9989416599273682,
+          "max": 0.9990984797477722,
+          "p50": 0.999009907245636,
+          "p90": 0.9990984797477722
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.11210728995501995,
+          "min": 0.098737932741642,
+          "max": 0.12448237836360931,
+          "p50": 0.11661209911108017,
+          "p90": 0.12448237836360931
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07773913629353046,
+          "min": 0.0660410225391388,
+          "max": 0.08940165489912033,
+          "p50": 0.08228875696659088,
+          "p90": 0.08940165489912033
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9948686212301254,
+          "min": 0.9939928650856018,
+          "max": 0.9958432912826538,
+          "p50": 0.9951663017272949,
+          "p90": 0.9958432912826538
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 1.2592284381389618,
+          "min": 1.0974448919296265,
+          "max": 1.405749797821045,
+          "p50": 1.2966872453689575,
+          "p90": 1.405749797821045
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 33.70475959777832,
+          "min": 33.26446533203125,
+          "max": 34.0045051574707,
+          "p50": 33.9829216003418,
+          "p90": 34.0045051574707
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 33.37190818786621,
+          "min": 32.969627380371094,
+          "max": 33.68986511230469,
+          "p50": 33.588523864746094,
+          "p90": 33.68986511230469
+        }
+      }
+    },
+    {
+      "key": "b6:0->1",
+      "calls": 4,
+      "output_relative_rmse_mean": 0.06029529869556427,
+      "output_relative_l1_mean": 0.07198186218738556,
+      "output_cosine_mean": 0.9989797472953796,
+      "residual_relative_rmse_mean": 0.08150533400475979,
+      "residual_relative_l1_mean": 0.053185091353952885,
+      "summary": {
+        "calls": 4,
+        "input_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06058303080499172,
+          "min": 0.05838264524936676,
+          "max": 0.0615164190530777,
+          "p50": 0.061440709978342056,
+          "p90": 0.0615164190530777
+        },
+        "input_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.0730313640087843,
+          "min": 0.07204762101173401,
+          "max": 0.07445462793111801,
+          "p50": 0.073295459151268,
+          "p90": 0.07445462793111801
+        },
+        "input_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9989612996578217,
+          "min": 0.9989009499549866,
+          "max": 0.9990679621696472,
+          "p50": 0.9989688396453857,
+          "p90": 0.9990679621696472
+        },
+        "output_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.06029529869556427,
+          "min": 0.05815534666180611,
+          "max": 0.06133827194571495,
+          "p50": 0.06110486015677452,
+          "p90": 0.06133827194571495
+        },
+        "output_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.07198186218738556,
+          "min": 0.07062052935361862,
+          "max": 0.0738629549741745,
+          "p50": 0.07178784161806107,
+          "p90": 0.0738629549741745
+        },
+        "output_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.9989797472953796,
+          "min": 0.9989175796508789,
+          "max": 0.9990798234939575,
+          "p50": 0.9989939332008362,
+          "p90": 0.9990798234939575
+        },
+        "residual_delta_vs_prev_step.relative_rmse": {
+          "count": 4,
+          "mean": 0.08150533400475979,
+          "min": 0.06845218688249588,
+          "max": 0.09329856187105179,
+          "p50": 0.08452117443084717,
+          "p90": 0.09329856187105179
+        },
+        "residual_delta_vs_prev_step.relative_l1": {
+          "count": 4,
+          "mean": 0.053185091353952885,
+          "min": 0.04469595476984978,
+          "max": 0.061414580792188644,
+          "p50": 0.0613543875515461,
+          "p90": 0.061414580792188644
+        },
+        "residual_delta_vs_prev_step.cosine": {
+          "count": 4,
+          "mean": 0.996845155954361,
+          "min": 0.9959659576416016,
+          "max": 0.9977047443389893,
+          "p50": 0.9969387650489807,
+          "p90": 0.9977047443389893
+        },
+        "residual_stats.rms": {
+          "count": 4,
+          "mean": 1.3839735090732574,
+          "min": 1.0979292392730713,
+          "max": 1.6926133632659912,
+          "p50": 1.4980740547180176,
+          "p90": 1.6926133632659912
+        },
+        "output_stats.rms": {
+          "count": 4,
+          "mean": 33.37190818786621,
+          "min": 32.969627380371094,
+          "max": 33.68986511230469,
+          "p50": 33.588523864746094,
+          "p90": 33.68986511230469
+        },
+        "input_stats.rms": {
+          "count": 4,
+          "mean": 33.07983684539795,
+          "min": 32.702945709228516,
+          "max": 33.340736389160156,
+          "p50": 33.28123092651367,
+          "p90": 33.340736389160156
+        }
+      }
+    }
+  ],
+  "output_json": "toy_quantvla/results/phase11_dit_cache_probe_obs4_seed20260610.json"
+}

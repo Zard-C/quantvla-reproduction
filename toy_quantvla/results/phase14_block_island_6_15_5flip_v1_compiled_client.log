@@ -1,0 +1,71 @@
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(4, 9), (6, 8), (8, 4), (8, 7), (8, 8)]
+Deterministic policy seeds: base=20260613, formula=base+task_id*100000+init_index*1000+policy_step
+
+Task: put the white mug on the left plate and put the yellow and white mug on the right plate
+Task id: 4
+Init index: 9
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_10/2026_06_10-13_34_51--episode=1--success=False--task=put_the_white_mug_on_the_left_plate_and_put_the_ye.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.11698502811154973, 'min': 0.07692332193255424, 'max': 1.6761245913803577, 'p50': 0.13037622347474098, 'p90': 0.15238388255238533, 'p99': 0.17419749274849894}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.11698502811154973, 'min': 0.07692332193255424, 'max': 1.6761245913803577, 'p50': 0.13037622347474098, 'p90': 0.15238388255238533, 'p99': 0.17419749274849894}, 'postprocess_seconds': {'count': 991, 'mean': 0.0001001625907288791, 'min': 3.734603524208069e-05, 'max': 0.0005034804344177246, 'p50': 9.759515523910522e-05, 'p90': 0.0001277625560760498, 'p99': 0.00015680082142353058}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010366065335562444, 'min': 4.144012928009033e-05, 'max': 0.0002947375178337097, 'p50': 0.00010465830564498901, 'p90': 0.0001196637749671936, 'p99': 0.00015685744583606728}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.11677836683154948, 'min': 0.07672470435500145, 'max': 1.675952274352312, 'p50': 0.13014927133917809, 'p90': 0.1521911323070526, 'p99': 0.17408641688525678}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+Current task success rate: 0.0
+Current total success rate: 0.0
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Task id: 6
+Init index: 8
+Starting episode 1...
+Saved rollout MP4 at path ./rollouts/2026_06_10/2026_06_10-13_34_51--episode=2--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 698, 'mean': 0.11381334458133553, 'min': 0.07630328088998795, 'max': 0.1827872321009636, 'p50': 0.13064792938530445, 'p90': 0.15243657790124415, 'p99': 0.16682182535529133}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 698, 'mean': 0.11381334458133553, 'min': 0.07630328088998795, 'max': 0.1827872321009636, 'p50': 0.13064792938530445, 'p90': 0.15243657790124415, 'p99': 0.16682182535529133}, 'postprocess_seconds': {'count': 698, 'mean': 9.521031298575907e-05, 'min': 3.849714994430542e-05, 'max': 0.0005242936313152313, 'p50': 9.280629456043243e-05, 'p90': 0.00010601989924907684, 'p99': 0.00013478524982929116}, 'preprocess_seconds': {'count': 698, 'mean': 0.00010357622622931242, 'min': 3.827735781669617e-05, 'max': 0.0004886612296104431, 'p50': 0.00010102242231369019, 'p90': 0.00011471733450889588, 'p99': 0.00013740591704845424}, 'remote_get_action_seconds': {'count': 698, 'mean': 0.11361201278822641, 'min': 0.07612887769937515, 'max': 0.18260937556624413, 'p50': 0.13044467195868492, 'p90': 0.15223744101822376, 'p99': 0.16663749720901247}}
+# episodes completed so far: 2
+# successes: 1 (50.0%)
+Current task success rate: 1.0
+Current total success rate: 0.5
+
+Task: put both moka pots on the stove
+Task id: 8
+Init index: 4
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_10/2026_06_10-13_34_51--episode=3--success=False--task=put_both_moka_pots_on_the_stove.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.11553067333176807, 'min': 0.07656858488917351, 'max': 0.18579072505235672, 'p50': 0.12976286560297012, 'p90': 0.15396836772561073, 'p99': 0.16941399835050108}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.11553067333176807, 'min': 0.07656858488917351, 'max': 0.18579072505235672, 'p50': 0.12976286560297012, 'p90': 0.15396836772561073, 'p99': 0.16941399835050108}, 'postprocess_seconds': {'count': 991, 'mean': 0.00010262049291015994, 'min': 3.482028841972351e-05, 'max': 0.0007180348038673401, 'p50': 9.954720735549927e-05, 'p90': 0.00011625885963439941, 'p99': 0.00015193559229373932}, 'preprocess_seconds': {'count': 991, 'mean': 0.00011331219635866245, 'min': 3.800913691520691e-05, 'max': 0.0005643777549266815, 'p50': 0.00011219456791877747, 'p90': 0.00012565404176712036, 'p99': 0.00015104413032531743}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.11531204253991485, 'min': 0.07636555284261703, 'max': 0.18554169312119484, 'p50': 0.12955408543348312, 'p90': 0.1537456065416336, 'p99': 0.16916420049965383}}
+# episodes completed so far: 3
+# successes: 1 (33.3%)
+
+Task: put both moka pots on the stove
+Task id: 8
+Init index: 7
+Starting episode 2...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_10/2026_06_10-13_34_51--episode=4--success=False--task=put_both_moka_pots_on_the_stove.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.11564808605402317, 'min': 0.07630082592368126, 'max': 0.1910015381872654, 'p50': 0.13667022064328194, 'p90': 0.15307500585913658, 'p99': 0.1652034290134907}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.11564808605402317, 'min': 0.07630082592368126, 'max': 0.1910015381872654, 'p50': 0.13667022064328194, 'p90': 0.15307500585913658, 'p99': 0.1652034290134907}, 'postprocess_seconds': {'count': 991, 'mean': 9.632278252562168e-05, 'min': 4.807859659194946e-05, 'max': 0.00032205134630203247, 'p50': 9.577721357345581e-05, 'p90': 0.00010604038834571838, 'p99': 0.00012549459934234618}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010947877114524033, 'min': 4.123523831367493e-05, 'max': 0.0004088468849658966, 'p50': 0.00011027976870536804, 'p90': 0.0001144111156463623, 'p99': 0.00013288818299770356}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.11543967675579304, 'min': 0.07608922198414803, 'max': 0.19079752266407013, 'p50': 0.13646098226308823, 'p90': 0.152869813144207, 'p99': 0.16501298323273658}}
+# episodes completed so far: 4
+# successes: 1 (25.0%)
+
+Task: put both moka pots on the stove
+Task id: 8
+Init index: 8
+Starting episode 3...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_10/2026_06_10-13_34_51--episode=5--success=False--task=put_both_moka_pots_on_the_stove.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.11634687791408371, 'min': 0.07640181109309196, 'max': 0.20235396549105644, 'p50': 0.13413641601800919, 'p90': 0.15316268801689148, 'p99': 0.1707137241959572}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.11634687791408371, 'min': 0.07640181109309196, 'max': 0.20235396549105644, 'p50': 0.13413641601800919, 'p90': 0.15316268801689148, 'p99': 0.1707137241959572}, 'postprocess_seconds': {'count': 991, 'mean': 9.402479717036189e-05, 'min': 3.754347562789917e-05, 'max': 0.00023810192942619324, 'p50': 9.213760495185852e-05, 'p90': 0.00010402500629425049, 'p99': 0.00013510361313819887}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010427041684101616, 'min': 3.999844193458557e-05, 'max': 0.0002554655075073242, 'p50': 0.00010329112410545349, 'p90': 0.00011381134390830994, 'p99': 0.00013061240315437322}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.1161460703657987, 'min': 0.07624432072043419, 'max': 0.20211497321724892, 'p50': 0.13393912091851234, 'p90': 0.15294399112462997, 'p99': 0.17050842829048635}}
+# episodes completed so far: 5
+# successes: 1 (20.0%)
+Current task success rate: 0.0
+Current total success rate: 0.2
+Final policy latency seconds: {'count': 4662, 'mean': 0.11578116343639941, 'min': 0.07630082592368126, 'max': 1.6761245913803577, 'p50': 0.13282261788845062, 'p90': 0.1531872395426035, 'p99': 0.1706053164601326}
+Final policy breakdown seconds: {'policy_total_seconds': {'count': 4662, 'mean': 0.11578116343639941, 'min': 0.07630082592368126, 'max': 1.6761245913803577, 'p50': 0.13282261788845062, 'p90': 0.1531872395426035, 'p99': 0.1706053164601326}, 'postprocess_seconds': {'count': 4662, 'mean': 9.782266963300455e-05, 'min': 3.482028841972351e-05, 'max': 0.0007180348038673401, 'p50': 9.593553841114044e-05, 'p90': 0.00011398419737815857, 'p99': 0.00014448255300521853}, 'preprocess_seconds': {'count': 4662, 'mean': 0.00010706601142627596, 'min': 3.800913691520691e-05, 'max': 0.0005643777549266815, 'p50': 0.0001082196831703186, 'p90': 0.00011929385364055634, 'p99': 0.00014791972935199738}, 'remote_get_action_seconds': {'count': 4662, 'mean': 0.11557362848794522, 'min': 0.07608922198414803, 'max': 1.675952274352312, 'p50': 0.132598539814353, 'p90': 0.15297003984451293, 'p99': 0.1704481674730778}}

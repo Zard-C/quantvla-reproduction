@@ -1,0 +1,470 @@
+{
+  "boundary": "Offline static residual-cache action drift smoke; selected DiT blocks skip configured denoising steps",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115,
+      215,
+      315,
+      415
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "observations": 4,
+  "cache_blocks": [
+    12,
+    14,
+    15
+  ],
+  "cache_steps": [
+    1,
+    3,
+    5
+  ],
+  "warmup_repeats": 1,
+  "warmup_seconds": 0.967907901853323,
+  "warmup_request_seconds": [
+    {
+      "count": 4,
+      "mean": 0.2413769057020545,
+      "min": 0.0854993537068367,
+      "max": 0.7057906799018383,
+      "p50": 0.0871087945997715,
+      "p90": 0.5205466110259296,
+      "p99": 0.6872662730142473
+    }
+  ],
+  "load_seconds": 11.276308983564377,
+  "patch_seconds": 0.0012102872133255005,
+  "teacher_seconds": 0.4190264903008938,
+  "student_seconds": 0.4146895222365856,
+  "student_over_teacher_time": 0.9896498952579492,
+  "teacher_request_seconds": {
+    "count": 4,
+    "mean": 0.1046126838773489,
+    "min": 0.08379532769322395,
+    "max": 0.13115856051445007,
+    "p50": 0.10174842365086079,
+    "p90": 0.12749061845242976,
+    "p99": 0.13079176630824804
+  },
+  "student_request_seconds": {
+    "count": 4,
+    "mean": 0.10348783805966377,
+    "min": 0.10208546742796898,
+    "max": 0.10483428835868835,
+    "p50": 0.10351579822599888,
+    "p90": 0.10450714603066444,
+    "p99": 0.10480157412588596
+  },
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "student_memory": {
+    "allocated_bytes": 5477232640,
+    "reserved_bytes": 5781848064,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5781848064
+  },
+  "cache_stats": {
+    "patched_blocks": 3,
+    "patched_block_calls": 96,
+    "full_compute_calls": 60,
+    "cache_hits": 36,
+    "patched_block_hit_rate": 0.375,
+    "all_dit_block_calls": 512,
+    "all_dit_block_skip_rate": 0.0703125
+  },
+  "wrapper_results": {
+    "action_head.model.transformer_blocks.12": {
+      "block_index": 12,
+      "block_name": "action_head.model.transformer_blocks.12",
+      "cache_steps": [
+        1,
+        3,
+        5
+      ],
+      "calls": 32,
+      "full_compute_calls": 20,
+      "cache_hits": 12,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.375,
+      "cache_hit_steps": {
+        "1": 4,
+        "3": 4,
+        "5": 4
+      },
+      "full_compute_steps": {
+        "0": 4,
+        "2": 4,
+        "4": 4,
+        "6": 4,
+        "7": 4
+      }
+    },
+    "action_head.model.transformer_blocks.14": {
+      "block_index": 14,
+      "block_name": "action_head.model.transformer_blocks.14",
+      "cache_steps": [
+        1,
+        3,
+        5
+      ],
+      "calls": 32,
+      "full_compute_calls": 20,
+      "cache_hits": 12,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.375,
+      "cache_hit_steps": {
+        "1": 4,
+        "3": 4,
+        "5": 4
+      },
+      "full_compute_steps": {
+        "0": 4,
+        "2": 4,
+        "4": 4,
+        "6": 4,
+        "7": 4
+      }
+    },
+    "action_head.model.transformer_blocks.15": {
+      "block_index": 15,
+      "block_name": "action_head.model.transformer_blocks.15",
+      "cache_steps": [
+        1,
+        3,
+        5
+      ],
+      "calls": 32,
+      "full_compute_calls": 20,
+      "cache_hits": 12,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.375,
+      "cache_hit_steps": {
+        "1": 4,
+        "3": 4,
+        "5": 4
+      },
+      "full_compute_steps": {
+        "0": 4,
+        "2": 4,
+        "4": 4,
+        "6": 4,
+        "7": 4
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 4.5715177506606377e-07,
+      "nmse": 2.069371432972017e-06,
+      "rmse": 0.0006761299986437991,
+      "relative_rmse": 0.0014385309982659453,
+      "cosine": 0.9999989861834198,
+      "max_abs_diff": 0.003662109375,
+      "teacher_rms": 0.4700142016118036,
+      "student_rms": 0.4699167748082299,
+      "per_key": {
+        "action.gripper": {
+          "mse": 4.984467523172498e-07,
+          "nmse": 5.039465139142898e-07,
+          "max_abs_diff": 0.001708984375,
+          "teacher_rms": 0.9945283386842305,
+          "student_rms": 0.994452964824173
+        },
+        "action.pitch": {
+          "mse": 2.9191181374899067e-08,
+          "nmse": 6.927935603428182e-06,
+          "max_abs_diff": 0.0002924501895904541,
+          "teacher_rms": 0.06491183921012386,
+          "student_rms": 0.06495335724357315
+        },
+        "action.roll": {
+          "mse": 2.507692588304966e-08,
+          "nmse": 1.7617636819964265e-05,
+          "max_abs_diff": 0.0005238354206085205,
+          "teacher_rms": 0.03772795989043486,
+          "student_rms": 0.0376720425781431
+        },
+        "action.x": {
+          "mse": 1.8683294911170378e-07,
+          "nmse": 1.9860720895535618e-05,
+          "max_abs_diff": 0.00102996826171875,
+          "teacher_rms": 0.09699050719560051,
+          "student_rms": 0.09709786112515209
+        },
+        "action.y": {
+          "mse": 2.2408698896470014e-06,
+          "nmse": 4.181453805452788e-06,
+          "max_abs_diff": 0.003662109375,
+          "teacher_rms": 0.7320566142272112,
+          "student_rms": 0.7317069021698923
+        },
+        "action.yaw": {
+          "mse": 9.583976084970303e-08,
+          "nmse": 1.5505831398124e-05,
+          "max_abs_diff": 0.0007251203060150146,
+          "teacher_rms": 0.07861860472927287,
+          "student_rms": 0.07861849630207104
+        },
+        "action.z": {
+          "mse": 1.2380496627883986e-07,
+          "nmse": 0.0007076356185683993,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.013227086409018884,
+          "student_rms": 0.01318153205943769
+        }
+      },
+      "seed": 20260610,
+      "dataset_index": 115,
+      "action_size": 112
+    },
+    {
+      "mse": 3.740149764837529e-07,
+      "nmse": 2.3708576288131576e-06,
+      "rmse": 0.0006115676385190381,
+      "relative_rmse": 0.0015397589515288286,
+      "cosine": 0.999998867061705,
+      "max_abs_diff": 0.003173828125,
+      "teacher_rms": 0.3971840124142885,
+      "student_rms": 0.39731294594379624,
+      "per_key": {
+        "action.gripper": {
+          "mse": 1.4649704098701477e-06,
+          "nmse": 1.4804090012771894e-06,
+          "max_abs_diff": 0.003173828125,
+          "teacher_rms": 0.9947720348330633,
+          "student_rms": 0.9950845297900301
+        },
+        "action.pitch": {
+          "mse": 3.0640470549681e-08,
+          "nmse": 9.867097335686044e-06,
+          "max_abs_diff": 0.0002924501895904541,
+          "teacher_rms": 0.055725376199682965,
+          "student_rms": 0.05583550674342512
+        },
+        "action.roll": {
+          "mse": 7.839795826414253e-09,
+          "nmse": 7.9046840471052e-06,
+          "max_abs_diff": 0.0002619326114654541,
+          "teacher_rms": 0.03149271611558963,
+          "student_rms": 0.03147546460503053
+        },
+        "action.x": {
+          "mse": 2.4409294585581165e-07,
+          "nmse": 9.234030791125312e-06,
+          "max_abs_diff": 0.00102996826171875,
+          "teacher_rms": 0.16258555400048041,
+          "student_rms": 0.16273643616236114
+        },
+        "action.y": {
+          "mse": 5.981775075269979e-07,
+          "nmse": 7.116011133183811e-06,
+          "max_abs_diff": 0.0021028518676757812,
+          "teacher_rms": 0.2899323862522405,
+          "student_rms": 0.28999791591512425
+        },
+        "action.yaw": {
+          "mse": 3.3982407054988784e-08,
+          "nmse": 0.010736539337047135,
+          "max_abs_diff": 0.0004532039165496826,
+          "teacher_rms": 0.0017790776714940722,
+          "student_rms": 0.0018158753745373623
+        },
+        "action.z": {
+          "mse": 2.3840129870222881e-07,
+          "nmse": 0.001995792759916918,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.010929406700585464,
+          "student_rms": 0.010782981758542098
+        }
+      },
+      "seed": 20260611,
+      "dataset_index": 215,
+      "action_size": 112
+    },
+    {
+      "mse": 3.9011412981761394e-07,
+      "nmse": 3.897447557842752e-06,
+      "rmse": 0.0006245911701406081,
+      "relative_rmse": 0.0019741954203783252,
+      "cosine": 0.9999981696196543,
+      "max_abs_diff": 0.00274658203125,
+      "teacher_rms": 0.316377580300999,
+      "student_rms": 0.3165315005914235,
+      "per_key": {
+        "action.gripper": {
+          "mse": 4.2167084757238626e-07,
+          "nmse": 0.018748119824241183,
+          "max_abs_diff": 0.0009765625,
+          "teacher_rms": 0.0047425064275946355,
+          "student_rms": 0.0047697912990717255
+        },
+        "action.pitch": {
+          "mse": 5.1051079752451045e-08,
+          "nmse": 3.1313104642901105e-05,
+          "max_abs_diff": 0.0004386603832244873,
+          "teacher_rms": 0.04037749772628296,
+          "student_rms": 0.04032300957577626
+        },
+        "action.roll": {
+          "mse": 1.1656806686577426e-08,
+          "nmse": 1.8656408321440013e-05,
+          "max_abs_diff": 0.0002619028091430664,
+          "teacher_rms": 0.02499630285821907,
+          "student_rms": 0.02503361772262724
+        },
+        "action.x": {
+          "mse": 1.474839650406068e-06,
+          "nmse": 2.985211674485353e-06,
+          "max_abs_diff": 0.00274658203125,
+          "teacher_rms": 0.7028859086965322,
+          "student_rms": 0.7033303965490485
+        },
+        "action.y": {
+          "mse": 4.780304152518511e-07,
+          "nmse": 2.410591791913202e-06,
+          "max_abs_diff": 0.0018310546875,
+          "teacher_rms": 0.44531356868899463,
+          "student_rms": 0.44537306048746317
+        },
+        "action.yaw": {
+          "mse": 2.0974546932617244e-08,
+          "nmse": 2.539117525782988e-05,
+          "max_abs_diff": 0.0003625452518463135,
+          "teacher_rms": 0.028741199727281633,
+          "student_rms": 0.02872803893199242
+        },
+        "action.z": {
+          "mse": 2.725755621213466e-07,
+          "nmse": 5.234858550288842e-05,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.07215907918573128,
+          "student_rms": 0.07220698097380435
+        }
+      },
+      "seed": 20260612,
+      "dataset_index": 315,
+      "action_size": 112
+    },
+    {
+      "mse": 5.207693765405372e-07,
+      "nmse": 8.469257788583782e-06,
+      "rmse": 0.0007216435245608022,
+      "relative_rmse": 0.002910198925947122,
+      "cosine": 0.9999957685779645,
+      "max_abs_diff": 0.00274658203125,
+      "teacher_rms": 0.2479705143612971,
+      "student_rms": 0.24794550404869695,
+      "per_key": {
+        "action.gripper": {
+          "mse": 7.376568191830302e-07,
+          "nmse": 0.01413085993099261,
+          "max_abs_diff": 0.001953125,
+          "teacher_rms": 0.007225083739757702,
+          "student_rms": 0.007095583742289574
+        },
+        "action.pitch": {
+          "mse": 2.3788901293286813e-08,
+          "nmse": 2.5908293150106542e-05,
+          "max_abs_diff": 0.0002924501895904541,
+          "teacher_rms": 0.030301755592692214,
+          "student_rms": 0.030320750446658343
+        },
+        "action.roll": {
+          "mse": 3.812355790777655e-08,
+          "nmse": 0.0003611592020441195,
+          "max_abs_diff": 0.0005238652229309082,
+          "teacher_rms": 0.010274184726754567,
+          "student_rms": 0.010296822385240966
+        },
+        "action.x": {
+          "mse": 1.5128762242966332e-06,
+          "nmse": 4.2272116072999405e-06,
+          "max_abs_diff": 0.00274658203125,
+          "teacher_rms": 0.5982389763022853,
+          "student_rms": 0.5980382929264997
+        },
+        "action.y": {
+          "mse": 2.431079337839037e-07,
+          "nmse": 7.431924451404986e-06,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.18086266380570026,
+          "student_rms": 0.1808418094461232
+        },
+        "action.yaw": {
+          "mse": 9.966402536587537e-09,
+          "nmse": 0.0005354320466819399,
+          "max_abs_diff": 0.00018128752708435059,
+          "teacher_rms": 0.004314366464404403,
+          "student_rms": 0.004333048585730157
+        },
+        "action.z": {
+          "mse": 1.079865796782542e-06,
+          "nmse": 2.7881977758864775e-05,
+          "max_abs_diff": 0.00194549560546875,
+          "teacher_rms": 0.1967990984870341,
+          "student_rms": 0.19720739316256639
+        }
+      },
+      "seed": 20260613,
+      "dataset_index": 415,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 4,
+    "mse": {
+      "mean": 4.3551256447699194e-07,
+      "max": 5.207693765405372e-07,
+      "min": 3.740149764837529e-07
+    },
+    "nmse": {
+      "mean": 4.201733602052927e-06,
+      "max": 8.469257788583782e-06,
+      "min": 2.069371432972017e-06
+    },
+    "rmse": {
+      "mean": 0.0006584830829660618,
+      "max": 0.0007216435245608022,
+      "min": 0.0006115676385190381
+    },
+    "relative_rmse": {
+      "mean": 0.001965671074030055,
+      "max": 0.002910198925947122,
+      "min": 0.0014385309982659453
+    },
+    "cosine": {
+      "mean": 0.9999979478606859,
+      "max": 0.9999989861834198,
+      "min": 0.9999957685779645
+    },
+    "max_abs_diff": {
+      "mean": 0.003082275390625,
+      "max": 0.003662109375,
+      "min": 0.00274658203125
+    },
+    "teacher_rms": {
+      "mean": 0.35788657717209704,
+      "max": 0.4700142016118036,
+      "min": 0.2479705143612971
+    },
+    "student_rms": {
+      "mean": 0.3579266813480366,
+      "max": 0.4699167748082299,
+      "min": 0.24794550404869695
+    }
+  }
+}

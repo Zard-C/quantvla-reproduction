@@ -1,0 +1,883 @@
+{
+  "phase": "phase17_closed_loop_sensitivity_mining",
+  "source_files": [
+    "docs/phase5_llm_dit_mlp_ablation_init0_14.md",
+    "docs/phase5_init5_14_generalization.md",
+    "docs/phase13_block_island_30case_mem_v1.md",
+    "toy_quantvla/results/phase14_first_divergence_blocks_8_15_4_9_analysis.json",
+    "toy_quantvla/results/phase15_action_channel_oracle_summary.json",
+    "toy_quantvla/results/phase16_compile_scope_continuous_4_9_6_8_s260_v1_summary.json"
+  ],
+  "phase5_ablation": {
+    "source": "docs/phase5_llm_dit_mlp_ablation_init0_14.md",
+    "task_rows": [
+      {
+        "task_id": 4,
+        "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+        "total": 15,
+        "none": 8,
+        "atm": 13,
+        "ohb": 12,
+        "atm_delta": 5,
+        "ohb_delta": 4,
+        "volatility": 5,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "task_id": 8,
+        "task": "put both moka pots on the stove",
+        "total": 15,
+        "none": 9,
+        "atm": 4,
+        "ohb": 6,
+        "atm_delta": -5,
+        "ohb_delta": -3,
+        "volatility": 5,
+        "best_mode": "none",
+        "worst_mode": "atm"
+      },
+      {
+        "task_id": 0,
+        "task": "put both the alphabet soup and the tomato sauce in the basket",
+        "total": 15,
+        "none": 10,
+        "atm": 11,
+        "ohb": 13,
+        "atm_delta": 1,
+        "ohb_delta": 3,
+        "volatility": 3,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "task_id": 2,
+        "task": "turn on the stove and put the moka pot on it",
+        "total": 15,
+        "none": 13,
+        "atm": 14,
+        "ohb": 15,
+        "atm_delta": 1,
+        "ohb_delta": 2,
+        "volatility": 2,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "task_id": 3,
+        "task": "put the black bowl in the bottom drawer of the cabinet and close it",
+        "total": 15,
+        "none": 15,
+        "atm": 13,
+        "ohb": 13,
+        "atm_delta": -2,
+        "ohb_delta": -2,
+        "volatility": 2,
+        "best_mode": "none",
+        "worst_mode": "atm"
+      },
+      {
+        "task_id": 6,
+        "task": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+        "total": 15,
+        "none": 9,
+        "atm": 10,
+        "ohb": 8,
+        "atm_delta": 1,
+        "ohb_delta": -1,
+        "volatility": 2,
+        "best_mode": "atm",
+        "worst_mode": "ohb"
+      },
+      {
+        "task_id": 9,
+        "task": "put the yellow and white mug in the microwave and close it",
+        "total": 15,
+        "none": 14,
+        "atm": 14,
+        "ohb": 12,
+        "atm_delta": 0,
+        "ohb_delta": -2,
+        "volatility": 2,
+        "best_mode": "none",
+        "worst_mode": "ohb"
+      },
+      {
+        "task_id": 1,
+        "task": "put both the cream cheese box and the butter in the basket",
+        "total": 15,
+        "none": 13,
+        "atm": 13,
+        "ohb": 14,
+        "atm_delta": 0,
+        "ohb_delta": 1,
+        "volatility": 1,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "task_id": 5,
+        "task": "pick up the book and place it in the back compartment of the caddy",
+        "total": 15,
+        "none": 14,
+        "atm": 14,
+        "ohb": 15,
+        "atm_delta": 0,
+        "ohb_delta": 1,
+        "volatility": 1,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "task_id": 7,
+        "task": "put both the alphabet soup and the cream cheese box in the basket",
+        "total": 15,
+        "none": 8,
+        "atm": 8,
+        "ohb": 8,
+        "atm_delta": 0,
+        "ohb_delta": 0,
+        "volatility": 0,
+        "best_mode": "none",
+        "worst_mode": "none"
+      }
+    ],
+    "init_rows": [
+      {
+        "init_index": 8,
+        "total": 10,
+        "none": 9,
+        "atm": 5,
+        "ohb": 9,
+        "volatility": 4,
+        "best_mode": "none",
+        "worst_mode": "atm"
+      },
+      {
+        "init_index": 1,
+        "total": 10,
+        "none": 6,
+        "atm": 6,
+        "ohb": 9,
+        "volatility": 3,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 5,
+        "total": 10,
+        "none": 7,
+        "atm": 8,
+        "ohb": 10,
+        "volatility": 3,
+        "best_mode": "ohb",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 0,
+        "total": 10,
+        "none": 7,
+        "atm": 6,
+        "ohb": 5,
+        "volatility": 2,
+        "best_mode": "none",
+        "worst_mode": "ohb"
+      },
+      {
+        "init_index": 2,
+        "total": 10,
+        "none": 8,
+        "atm": 6,
+        "ohb": 7,
+        "volatility": 2,
+        "best_mode": "none",
+        "worst_mode": "atm"
+      },
+      {
+        "init_index": 9,
+        "total": 10,
+        "none": 7,
+        "atm": 9,
+        "ohb": 7,
+        "volatility": 2,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 10,
+        "total": 10,
+        "none": 6,
+        "atm": 8,
+        "ohb": 7,
+        "volatility": 2,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 3,
+        "total": 10,
+        "none": 7,
+        "atm": 8,
+        "ohb": 8,
+        "volatility": 1,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 6,
+        "total": 10,
+        "none": 8,
+        "atm": 9,
+        "ohb": 9,
+        "volatility": 1,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 7,
+        "total": 10,
+        "none": 8,
+        "atm": 8,
+        "ohb": 7,
+        "volatility": 1,
+        "best_mode": "none",
+        "worst_mode": "ohb"
+      },
+      {
+        "init_index": 11,
+        "total": 10,
+        "none": 8,
+        "atm": 9,
+        "ohb": 8,
+        "volatility": 1,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 12,
+        "total": 10,
+        "none": 7,
+        "atm": 7,
+        "ohb": 6,
+        "volatility": 1,
+        "best_mode": "none",
+        "worst_mode": "ohb"
+      },
+      {
+        "init_index": 13,
+        "total": 10,
+        "none": 7,
+        "atm": 8,
+        "ohb": 7,
+        "volatility": 1,
+        "best_mode": "atm",
+        "worst_mode": "none"
+      },
+      {
+        "init_index": 14,
+        "total": 10,
+        "none": 9,
+        "atm": 8,
+        "ohb": 8,
+        "volatility": 1,
+        "best_mode": "none",
+        "worst_mode": "atm"
+      },
+      {
+        "init_index": 4,
+        "total": 10,
+        "none": 9,
+        "atm": 9,
+        "ohb": 9,
+        "volatility": 0,
+        "best_mode": "none",
+        "worst_mode": "none"
+      }
+    ],
+    "paired_outcomes": [
+      {
+        "comparison": "`atm` vs `none`",
+        "repairs": 14,
+        "regressions": 13,
+        "same_success": 100,
+        "same_failure": 23,
+        "net": 1,
+        "churn": 27,
+        "churn_rate": 0.18,
+        "exact_mcnemar_p": 1.0
+      },
+      {
+        "comparison": "`ohb` vs `none`",
+        "repairs": 16,
+        "regressions": 13,
+        "same_success": 100,
+        "same_failure": 21,
+        "net": 3,
+        "churn": 29,
+        "churn_rate": 0.19333333333333333,
+        "exact_mcnemar_p": 0.711071103811264
+      },
+      {
+        "comparison": "`ohb` vs `atm`",
+        "repairs": 15,
+        "regressions": 13,
+        "same_success": 101,
+        "same_failure": 21,
+        "net": 2,
+        "churn": 28,
+        "churn_rate": 0.18666666666666668,
+        "exact_mcnemar_p": 0.8505540192127228
+      }
+    ]
+  },
+  "phase5_fp16_vs_quant": {
+    "source": "docs/phase5_init5_14_generalization.md",
+    "task_rows": [
+      {
+        "task_id": 9,
+        "task": "put the yellow and white mug in the microwave and close it",
+        "total": 10,
+        "fp16": 9,
+        "quant_atm_ohb": 7,
+        "delta": -2
+      },
+      {
+        "task_id": 2,
+        "task": "turn on the stove and put the moka pot on it",
+        "total": 10,
+        "fp16": 9,
+        "quant_atm_ohb": 8,
+        "delta": -1
+      },
+      {
+        "task_id": 7,
+        "task": "put both the alphabet soup and the cream cheese box in the basket",
+        "total": 10,
+        "fp16": 7,
+        "quant_atm_ohb": 7,
+        "delta": 0
+      },
+      {
+        "task_id": 5,
+        "task": "pick up the book and place it in the back compartment of the caddy",
+        "total": 10,
+        "fp16": 10,
+        "quant_atm_ohb": 10,
+        "delta": 0
+      },
+      {
+        "task_id": 3,
+        "task": "put the black bowl in the bottom drawer of the cabinet and close it",
+        "total": 10,
+        "fp16": 10,
+        "quant_atm_ohb": 10,
+        "delta": 0
+      },
+      {
+        "task_id": 0,
+        "task": "put both the alphabet soup and the tomato sauce in the basket",
+        "total": 10,
+        "fp16": 8,
+        "quant_atm_ohb": 8,
+        "delta": 0
+      },
+      {
+        "task_id": 8,
+        "task": "put both moka pots on the stove",
+        "total": 10,
+        "fp16": 2,
+        "quant_atm_ohb": 3,
+        "delta": 1
+      },
+      {
+        "task_id": 6,
+        "task": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+        "total": 10,
+        "fp16": 3,
+        "quant_atm_ohb": 5,
+        "delta": 2
+      },
+      {
+        "task_id": 1,
+        "task": "put both the cream cheese box and the butter in the basket",
+        "total": 10,
+        "fp16": 8,
+        "quant_atm_ohb": 10,
+        "delta": 2
+      },
+      {
+        "task_id": 4,
+        "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+        "total": 10,
+        "fp16": 4,
+        "quant_atm_ohb": 8,
+        "delta": 4
+      }
+    ],
+    "paired_outcomes": {
+      "FP16 success, quant success": 62,
+      "FP16 failure, quant failure": 16,
+      "FP16 failure, quant success": 14,
+      "FP16 success, quant failure": 8
+    },
+    "paired_summary": {
+      "repairs": 14,
+      "regressions": 8,
+      "net": 6,
+      "churn": 22,
+      "churn_rate": 0.22,
+      "exact_mcnemar_p": 0.28627872467041016
+    }
+  },
+  "first_divergence": {
+    "source": "toy_quantvla/results/phase14_first_divergence_blocks_8_15_4_9_analysis.json",
+    "baseline_success": true,
+    "compiled_success": false,
+    "baseline_steps": 224,
+    "compiled_steps": 990,
+    "events": [
+      {
+        "event": "first_action_max_ge_0.005",
+        "policy_step": 8,
+        "action_dim": "y",
+        "action_max": 0.02105712890625,
+        "pre_pos_l2_m": 4.786578447842542e-05,
+        "baseline_gripper": -1.0,
+        "compiled_gripper": -1.0
+      },
+      {
+        "event": "first_pre_pos_l2_ge_0.5mm",
+        "policy_step": 15,
+        "action_dim": "z",
+        "action_max": 0.0020313262939453125,
+        "pre_pos_l2_m": 0.0005313506481010904,
+        "baseline_gripper": -1.0,
+        "compiled_gripper": -1.0
+      },
+      {
+        "event": "first_pre_pos_l2_ge_1mm",
+        "policy_step": 49,
+        "action_dim": "z",
+        "action_max": 0.037078857421875,
+        "pre_pos_l2_m": 0.0011133174150742386,
+        "baseline_gripper": 1.0,
+        "compiled_gripper": 1.0
+      },
+      {
+        "event": "first_pre_pos_l2_ge_5mm",
+        "policy_step": 57,
+        "action_dim": "z",
+        "action_max": 0.230712890625,
+        "pre_pos_l2_m": 0.005803178883184511,
+        "baseline_gripper": 1.0,
+        "compiled_gripper": 1.0
+      },
+      {
+        "event": "first_pre_pos_l2_ge_10mm",
+        "policy_step": 59,
+        "action_dim": "x",
+        "action_max": 0.267333984375,
+        "pre_pos_l2_m": 0.011053060781830024,
+        "baseline_gripper": 1.0,
+        "compiled_gripper": 1.0
+      },
+      {
+        "event": "first_gripper_binary_mismatch",
+        "policy_step": 46,
+        "action_dim": "gripper",
+        "action_max": 2.0,
+        "pre_pos_l2_m": 0.0006087085201935547,
+        "baseline_gripper": -1.0,
+        "compiled_gripper": 1.0
+      }
+    ],
+    "max_pre_pos_l2": {
+      "policy_step": 208,
+      "pre_pos_l2_m": 0.1725509094840519
+    }
+  },
+  "action_channel_oracle": {
+    "source": "toy_quantvla/results/phase15_action_channel_oracle_summary.json",
+    "runs": [
+      {
+        "label": "gripper_only",
+        "oracle_action_keys": [
+          "gripper"
+        ],
+        "successes": 0,
+        "episodes": 2,
+        "success_rate": 0.0,
+        "steps_by_case": {
+          "task4:init9": 990,
+          "task6:init8": 990
+        },
+        "client_policy_p50_ms": 251.18761509656906
+      },
+      {
+        "label": "full_action",
+        "oracle_action_keys": [
+          "x",
+          "y",
+          "z",
+          "roll",
+          "pitch",
+          "yaw",
+          "gripper"
+        ],
+        "successes": 2,
+        "episodes": 2,
+        "success_rate": 1.0,
+        "steps_by_case": {
+          "task4:init9": 224,
+          "task6:init8": 649
+        },
+        "client_policy_p50_ms": 252.44305655360222
+      },
+      {
+        "label": "translation_only",
+        "oracle_action_keys": [
+          "x",
+          "y",
+          "z"
+        ],
+        "successes": 0,
+        "episodes": 2,
+        "success_rate": 0.0,
+        "steps_by_case": {
+          "task4:init9": 990,
+          "task6:init8": 990
+        },
+        "client_policy_p50_ms": 252.3785401135683
+      },
+      {
+        "label": "rotation_only",
+        "oracle_action_keys": [
+          "roll",
+          "pitch",
+          "yaw"
+        ],
+        "successes": 0,
+        "episodes": 2,
+        "success_rate": 0.0,
+        "steps_by_case": {
+          "task4:init9": 990,
+          "task6:init8": 990
+        },
+        "client_policy_p50_ms": 251.98541954159737
+      },
+      {
+        "label": "continuous_action",
+        "oracle_action_keys": [
+          "x",
+          "y",
+          "z",
+          "roll",
+          "pitch",
+          "yaw"
+        ],
+        "successes": 2,
+        "episodes": 2,
+        "success_rate": 1.0,
+        "steps_by_case": {
+          "task4:init9": 224,
+          "task6:init8": 649
+        },
+        "client_policy_p50_ms": 252.73451209068298
+      }
+    ],
+    "continuous_same_observation_abs_diff": {
+      "x": {
+        "mean": 0.0006793003789611152,
+        "p50": 0.000457763671875,
+        "p99": 0.00274658203125,
+        "max": 0.054931640625
+      },
+      "y": {
+        "mean": 0.0006378968283619395,
+        "p50": 0.000457763671875,
+        "p99": 0.00331878662109375,
+        "max": 0.0068950653076171875
+      },
+      "z": {
+        "mean": 0.0007302962491056217,
+        "p50": 0.0004792213439941406,
+        "p99": 0.0029754638671875,
+        "max": 0.0391387939453125
+      },
+      "roll": {
+        "mean": 0.00015988621651648384,
+        "p50": 0.00013096630573272705,
+        "p99": 0.0005238652229309082,
+        "max": 0.0028812140226364136
+      },
+      "pitch": {
+        "mean": 0.0002023239554954695,
+        "p50": 0.0001462101936340332,
+        "p99": 0.0005849003791809082,
+        "max": 0.03363123536109924
+      },
+      "yaw": {
+        "mean": 0.00017536311215141795,
+        "p50": 0.0001812577247619629,
+        "p99": 0.000725090503692627,
+        "max": 0.0010876357555389404
+      }
+    }
+  },
+  "compile_scope_continuous": {
+    "source": "toy_quantvla/results/phase16_compile_scope_continuous_4_9_6_8_s260_v1_summary.json",
+    "runs": [
+      {
+        "target": "action_head_dit_ff_all",
+        "episodes": 2,
+        "successes": 1,
+        "valid_drift_steps": 484,
+        "compile_wrap_seconds": 1.3613091818988323,
+        "exception_count": 0,
+        "continuous_l2_mean": 0.0009048795137828131,
+        "continuous_l2_p50": 0.000781562140253891,
+        "continuous_l2_p99": 0.003216135074587293,
+        "continuous_l2_max": 0.006538581691011521,
+        "continuous_max_abs_mean": 0.0007703524729437079,
+        "continuous_max_abs_p50": 0.00057220458984375,
+        "continuous_max_abs_p99": 0.0029754638671875,
+        "continuous_max_abs_max": 0.00640869140625,
+        "translation_l2_mean": 0.0008425396962417167,
+        "translation_l2_p50": 0.0007237879166034803,
+        "translation_l2_p99": 0.0032125096544536286,
+        "translation_l2_max": 0.006538172999764572,
+        "rotation_l2_mean": 0.00022313114756677973,
+        "rotation_l2_p50": 0.00019274915062374073,
+        "rotation_l2_p99": 0.0006825342805605987,
+        "rotation_l2_max": 0.0008785059032427895,
+        "gripper_abs_mean": 0.00040177089616286855,
+        "gripper_abs_p50": 0.000244140625,
+        "gripper_abs_p99": 0.002685546875,
+        "gripper_abs_max": 0.003662109375,
+        "compiled_over_eager_time_mean": 1.3926828769284352,
+        "compiled_over_eager_time_p50": 1.2823064803457063,
+        "compiled_over_eager_time_p99": 2.428451555213165,
+        "compiled_over_eager_time_max": 4.033030488652471
+      },
+      {
+        "target": "action_head_dit_attn_all",
+        "episodes": 2,
+        "successes": 1,
+        "valid_drift_steps": 484,
+        "compile_wrap_seconds": 1.490692537277937,
+        "exception_count": 0,
+        "continuous_l2_mean": 0.0009164479375719529,
+        "continuous_l2_p50": 0.0007889945377076887,
+        "continuous_l2_p99": 0.003222685510329145,
+        "continuous_l2_max": 0.006417019008188945,
+        "continuous_max_abs_mean": 0.000787952899440261,
+        "continuous_max_abs_p50": 0.0006866455078125,
+        "continuous_max_abs_p99": 0.00308990478515625,
+        "continuous_max_abs_max": 0.00640869140625,
+        "translation_l2_mean": 0.0008669337849573656,
+        "translation_l2_p50": 0.0007237879166034803,
+        "translation_l2_p99": 0.003222685510329145,
+        "translation_l2_max": 0.00640869140625,
+        "rotation_l2_mean": 0.00020253377977770315,
+        "rotation_l2_p50": 0.00018129918944610683,
+        "rotation_l2_p99": 0.0006123136079336323,
+        "rotation_l2_max": 0.0007845842026682459,
+        "gripper_abs_mean": 0.0004182114335131054,
+        "gripper_abs_p50": 0.000244140625,
+        "gripper_abs_p99": 0.001953125,
+        "gripper_abs_max": 0.00390625,
+        "compiled_over_eager_time_mean": 1.207676049980445,
+        "compiled_over_eager_time_p50": 1.1140485466052839,
+        "compiled_over_eager_time_p99": 2.101971779935122,
+        "compiled_over_eager_time_max": 12.5362391634794
+      },
+      {
+        "target": "action_head_model_blocks_6_15_eager",
+        "episodes": 2,
+        "successes": 1,
+        "valid_drift_steps": 484,
+        "compile_wrap_seconds": 1.1950120516121387,
+        "exception_count": 0,
+        "continuous_l2_mean": 0.0016325886361348368,
+        "continuous_l2_p50": 0.0012928576575874332,
+        "continuous_l2_p99": 0.004222905442457641,
+        "continuous_l2_max": 0.07666773861121065,
+        "continuous_max_abs_mean": 0.0013251204259139447,
+        "continuous_max_abs_p50": 0.00091552734375,
+        "continuous_max_abs_p99": 0.004119873046875,
+        "continuous_max_abs_max": 0.054931640625,
+        "translation_l2_mean": 0.0015505950460872435,
+        "translation_l2_p50": 0.0012325664078829584,
+        "translation_l2_p99": 0.004220372523785196,
+        "translation_l2_max": 0.06869316101074219,
+        "rotation_l2_mean": 0.00041007846118884533,
+        "rotation_l2_p50": 0.00032043608821225283,
+        "rotation_l2_p99": 0.0009407512755614286,
+        "rotation_l2_max": 0.03404690549975386,
+        "gripper_abs_mean": 0.0008569881319999695,
+        "gripper_abs_p50": 0.000732421875,
+        "gripper_abs_p99": 0.0029296875,
+        "gripper_abs_max": 0.00439453125,
+        "compiled_over_eager_time_mean": 1.0161582208696158,
+        "compiled_over_eager_time_p50": 0.9101401893961749,
+        "compiled_over_eager_time_p99": 1.946906679299706,
+        "compiled_over_eager_time_max": 7.290314103991127
+      },
+      {
+        "target": "action_head_model",
+        "episodes": 2,
+        "successes": 1,
+        "valid_drift_steps": 484,
+        "compile_wrap_seconds": 1.199512593448162,
+        "exception_count": 0,
+        "continuous_l2_mean": 0.0018546315113033968,
+        "continuous_l2_p50": 0.001536874510990806,
+        "continuous_l2_p99": 0.00499544425951641,
+        "continuous_l2_max": 0.0773857710423978,
+        "continuous_max_abs_mean": 0.0015023581006310203,
+        "continuous_max_abs_p50": 0.0011444091796875,
+        "continuous_max_abs_p99": 0.0043487548828125,
+        "continuous_max_abs_max": 0.054931640625,
+        "translation_l2_mean": 0.0017539672295447785,
+        "translation_l2_p50": 0.0014520924614467071,
+        "translation_l2_p99": 0.00494253618011443,
+        "translation_l2_max": 0.06960962908728843,
+        "rotation_l2_mean": 0.0004887700885091939,
+        "rotation_l2_p50": 0.0003854753336772471,
+        "rotation_l2_p99": 0.0010698345929980306,
+        "rotation_l2_max": 0.03380912743855631,
+        "gripper_abs_mean": 0.0009753812443126332,
+        "gripper_abs_p50": 0.0009765625,
+        "gripper_abs_p99": 0.00341796875,
+        "gripper_abs_max": 0.004638671875,
+        "compiled_over_eager_time_mean": 0.606102301087994,
+        "compiled_over_eager_time_p50": 0.49734103574826694,
+        "compiled_over_eager_time_p99": 1.271312385671276,
+        "compiled_over_eager_time_max": 18.285428401052798
+      },
+      {
+        "target": "action_head_model_blocks_8_15_eager",
+        "episodes": 2,
+        "successes": 1,
+        "valid_drift_steps": 484,
+        "compile_wrap_seconds": 1.3049472458660603,
+        "exception_count": 0,
+        "continuous_l2_mean": 0.0016453170650065488,
+        "continuous_l2_p50": 0.0013273621650468524,
+        "continuous_l2_p99": 0.004657259037962348,
+        "continuous_l2_max": 0.0757392833263687,
+        "continuous_max_abs_mean": 0.0013406486058038128,
+        "continuous_max_abs_p50": 0.00091552734375,
+        "continuous_max_abs_p99": 0.00446319580078125,
+        "continuous_max_abs_max": 0.054931640625,
+        "translation_l2_mean": 0.0015508533311246544,
+        "translation_l2_p50": 0.0012947511862546647,
+        "translation_l2_p99": 0.004600467966211345,
+        "translation_l2_max": 0.06780023789666292,
+        "rotation_l2_mean": 0.0004382765293340586,
+        "rotation_l2_p50": 0.00035861100969597666,
+        "rotation_l2_p99": 0.0009200903782612969,
+        "rotation_l2_max": 0.033757469987365236,
+        "gripper_abs_mean": 0.0009408485421464463,
+        "gripper_abs_p50": 0.0009765625,
+        "gripper_abs_p99": 0.0030517578125,
+        "gripper_abs_max": 0.0048828125,
+        "compiled_over_eager_time_mean": 0.9400263728769043,
+        "compiled_over_eager_time_p50": 0.8377810489830825,
+        "compiled_over_eager_time_p99": 1.758204433971323,
+        "compiled_over_eager_time_max": 12.414463126119056
+      },
+      {
+        "target": "action_head_dit_blocks_0_7",
+        "episodes": 2,
+        "successes": 0,
+        "valid_drift_steps": 0,
+        "compile_wrap_seconds": 1.3490739278495312,
+        "exception_count": 1,
+        "continuous_l2_mean": 0.0,
+        "continuous_l2_p50": 0.0,
+        "continuous_l2_p99": 0.0,
+        "continuous_l2_max": 0.0,
+        "continuous_max_abs_mean": 0.0,
+        "continuous_max_abs_p50": 0.0,
+        "continuous_max_abs_p99": 0.0,
+        "continuous_max_abs_max": 0.0,
+        "translation_l2_mean": 0.0,
+        "translation_l2_p50": 0.0,
+        "translation_l2_p99": 0.0,
+        "translation_l2_max": 0.0,
+        "rotation_l2_mean": 0.0,
+        "rotation_l2_p50": 0.0,
+        "rotation_l2_p99": 0.0,
+        "rotation_l2_max": 0.0,
+        "gripper_abs_mean": 0.0,
+        "gripper_abs_p50": 0.0,
+        "gripper_abs_p99": 0.0,
+        "gripper_abs_max": 0.0,
+        "compiled_over_eager_time_mean": 0.0,
+        "compiled_over_eager_time_p50": 0.0,
+        "compiled_over_eager_time_p99": 0.0,
+        "compiled_over_eager_time_max": 0.0
+      }
+    ]
+  },
+  "phase13_speed_behavior": {
+    "source": "docs/phase13_block_island_30case_mem_v1.md",
+    "summary_rows": [
+      {
+        "policy": "FP16 baseline",
+        "success": "16/30",
+        "calls": "20050",
+        "client mean": "153.9 ms",
+        "client p50": "161.1 ms",
+        "client p90": "166.5 ms",
+        "server mean": "149.0 ms",
+        "server p50": "156.2 ms",
+        "server p90": "161.5 ms"
+      },
+      {
+        "policy": "blocks 8-15 eager island",
+        "success": "13/30",
+        "calls": "21316",
+        "client mean": "108.0 ms",
+        "client p50": "81.0 ms",
+        "client p90": "150.3 ms",
+        "server mean": "103.3 ms",
+        "server p50": "76.5 ms",
+        "server p90": "145.5 ms"
+      }
+    ],
+    "flip_rows": [
+      {
+        "case": "4:9",
+        "baseline": "success",
+        "blocks 8-15 eager island": "fail",
+        "direction": "regression"
+      },
+      {
+        "case": "6:8",
+        "baseline": "success",
+        "blocks 8-15 eager island": "fail",
+        "direction": "regression"
+      },
+      {
+        "case": "8:4",
+        "baseline": "fail",
+        "blocks 8-15 eager island": "success",
+        "direction": "rescue"
+      },
+      {
+        "case": "8:7",
+        "baseline": "success",
+        "blocks 8-15 eager island": "fail",
+        "direction": "regression"
+      },
+      {
+        "case": "8:8",
+        "baseline": "success",
+        "blocks 8-15 eager island": "fail",
+        "direction": "regression"
+      }
+    ]
+  }
+}

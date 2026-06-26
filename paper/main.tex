@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{pdflscape}
 \usepackage{float}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
@@ -13,7 +14,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
-\graphicspath{{figures_pdf/}{figures/}}
+\graphicspath{{figures_pdf/}{figures/}{figures_keyframes/}}
 \setlist[itemize]{leftmargin=1.5em}
 \setlist[enumerate]{leftmargin=1.5em}
 
@@ -59,12 +60,16 @@ We make three observations:
 Our contributions are:
 \begin{enumerate}
     \item We formulate PTQ for VLA policies as a closed-loop policy perturbation problem, where the main object is the induced state distribution rather than only local action approximation.
+    \item We derive local perturbation claims showing that quantization error matters through sensitivity-weighted propagation and terminal success-margin crossing, and formulate a closed-loop quantization criterion for future correction methods.
     \item We provide a reproduction-oriented GR00T/LIBERO case study showing that selective W4A8 fake quantization can remain in the FP16 behavioral range while changing which task-initialization pairs succeed.
     \item We show that offline mean drift and aggregate success rate can both obscure important structure, and advocate paired repair/regression analysis as a compact diagnostic for VLA quantization.
 \end{enumerate}
 
+\paragraph{From point solution to design-space map.}
+Our goal is not to present a single operating point in the VLA quantization design space. Instead, we use this operating point to expose structure in the problem: which perturbations are absorbed, which are amplified by closed-loop dynamics, which rollouts are repaired or regressed, and which modules or states should be protected by future methods. These properties are useful beyond our specific implementation. They suggest how later work might choose calibration states, design residual action corrections, select mixed-precision modules, or trigger high-precision fallback around fragile trajectory regions.
+
 \paragraph{Scope of claims.}
-This paper should be read as a behavior-level reproduction study and diagnostic analysis, not as a new quantization algorithm or a deployment benchmark. We make no latency, memory, or energy claim because our implementation uses fake quantization rather than packed low-precision kernels. We also do not treat small aggregate success-rate differences as evidence of policy dominance. The main claim is narrower: VLA quantization can preserve aggregate success while redistributing which closed-loop rollouts succeed, so paired rollout analysis is necessary to interpret the effect of small action perturbations.
+This paper should be read as a behavior-level reproduction study and diagnostic analysis, not as a new quantization algorithm or a deployment benchmark. We make no latency, memory, or energy claim because our implementation uses fake quantization rather than packed low-precision kernels. We also do not treat small aggregate success-rate differences as evidence of policy dominance. The main empirical claim is narrower: VLA quantization can preserve aggregate success while redistributing which closed-loop rollouts succeed, so paired rollout analysis is necessary to interpret the effect of small action perturbations. The resulting design principle is that VLA quantization should target sensitivity-weighted closed-loop perturbation rather than only average open-loop action error.
 
 \section{Related Work}
 
@@ -174,6 +179,143 @@ This is why manipulation success is not a smooth function of single-step action 
     \caption{Quantization as closed-loop policy perturbation. Offline action drift compares two actions on a fixed observation, while closed-loop execution lets each policy induce its own future observation distribution.}
     \label{fig:policy-perturbation}
 \end{figure}
+
+\paragraph{Claim 1: quantization error is filtered by closed-loop sensitivity.}
+The first-order expression above can be expanded over a horizon. Let $\eta_t=\pi_q(s_t,l)-\pi_\theta(s_t,l)$ be the local quantization-induced action perturbation on the nominal FP16 trajectory, let $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ be evaluated along that trajectory, and define the local closed-loop Jacobian
+\begin{equation}
+    F_t = A_t + B_tK_t .
+\end{equation}
+This claim is local and first-order: it assumes small perturbations around the FP16 trajectory, defines $\eta_t$ on that nominal trajectory, and approximates the quantized policy's local state Jacobian by the FP16 policy Jacobian, ignoring differences between $\partial\pi_q/\partial s$ and $\partial\pi_\theta/\partial s$ at this order. Under these assumptions, the terminal state perturbation satisfies
+\begin{equation}
+    \delta s_T
+    \approx
+    \sum_{t=0}^{T-1}
+    \left(F_{T-1}F_{T-2}\cdots F_{t+1}\right) B_t\eta_t ,
+    \label{eq:sensitivity-propagation}
+\end{equation}
+with the empty product interpreted as the identity. Thus the effect of quantization is not determined by $\|\eta_t\|$ alone, but by how its direction aligns with transition dynamics, policy feedback, and future closed-loop gain.
+
+\paragraph{Claim 2: rollout flips are margin-crossing events.}
+Let $h(s_T)$ be an implicit terminal success margin, with success when $h(s_T)>0$. For a small terminal perturbation,
+\begin{equation}
+    h(s_T^q)-h(s_T)
+    \approx \nabla h(s_T)^\top \delta s_T .
+\end{equation}
+A rollout can flip when the projected perturbation is comparable to the FP16 margin:
+\begin{equation}
+    \left|\nabla h(s_T)^\top \delta s_T\right|
+    \gtrsim \left|h(s_T)\right|.
+    \label{eq:margin-crossing}
+\end{equation}
+More precisely, the outcome flips when the perturbation changes the sign of the margin:
+\begin{equation}
+    \operatorname{sign}\!\left(h(s_T^q)\right)
+    \ne
+    \operatorname{sign}\!\left(h(s_T)\right).
+\end{equation}
+If the FP16 rollout succeeds, $h(s_T)>0$, a quantized regression requires
+\begin{equation}
+    \nabla h(s_T)^\top \delta s_T \lesssim -h(s_T).
+\end{equation}
+If the FP16 rollout fails, $h(s_T)<0$, a quantized repair requires
+\begin{equation}
+    \nabla h(s_T)^\top \delta s_T \gtrsim |h(s_T)|.
+\end{equation}
+Thus Equation~\ref{eq:margin-crossing} should be read as a magnitude condition for either flip direction; the sign determines whether the perturbation causes a repair or a regression. This explains why two rollouts with similar single-step action drift can behave differently: high-margin trajectories absorb the perturbation, while low-margin trajectories near contact or placement boundaries can cross the success threshold.
+
+\paragraph{Design principle: optimize sensitivity-weighted closed-loop perturbation.}
+Equations~\ref{eq:sensitivity-propagation} and~\ref{eq:margin-crossing} suggest that the relevant PTQ objective for VLA policies is not the average open-loop action deviation
+\begin{equation}
+    \min_Q \; \mathbb{E}\sum_t \|\eta_t(Q)\|^2 ,
+    \label{eq:open-loop-quant-objective}
+\end{equation}
+but a sensitivity-weighted perturbation objective of the form
+\begin{equation}
+    \min_Q \; \mathbb{E}\sum_t \eta_t(Q)^\top G_t \eta_t(Q),
+    \label{eq:closed-loop-quant-objective}
+\end{equation}
+where one local terminal-margin approximation is
+\begin{equation}
+    G_t =
+    B_t^\top \Phi_{t\to T}^\top
+    \nabla h(s_T)\nabla h(s_T)^\top
+    \Phi_{t\to T} B_t ,
+    \qquad
+    \Phi_{t\to T}=F_{T-1}\cdots F_{t+1}.
+    \label{eq:sensitivity-metric}
+\end{equation}
+Equation~\ref{eq:closed-loop-quant-objective} is a separable local surrogate, not the exact squared full-horizon terminal-margin objective. To see this, define the scalar contribution
+\[
+    \alpha_t =
+    \nabla h(s_T)^\top \Phi_{t\to T}B_t\eta_t
+    =
+    c_t^\top \eta_t,
+    \qquad
+    c_t = B_t^\top \Phi_{t\to T}^\top \nabla h(s_T).
+\]
+The first-order terminal margin perturbation is $\Delta h \approx \sum_t \alpha_t$. Its exact squared approximation expands as
+\[
+    (\Delta h)^2
+    \approx
+    \left(\sum_t \alpha_t\right)^2
+    =
+    \sum_t \alpha_t^2
+    +
+    2\sum_{i<j}\alpha_i\alpha_j .
+\]
+The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-quant-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between quantization errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
+In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce quantization error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. Layer-statistic corrections such as ATM and OHB can be useful proxies, but they do not by themselves optimize this closed-loop criterion.
+
+\paragraph{Claim 3: offline drift is incomplete without state-distribution control.}
+Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop quantized execution instead samples from $d_{\pi_q}$:
+\begin{equation}
+    \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
+    =
+    \mathbb{E}_{s\sim d_{\pi_\theta}}[\ell(s)]
+    +
+    \left(
+    \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
+    -
+    \mathbb{E}_{s\sim d_{\pi_\theta}}[\ell(s)]
+    \right).
+    \label{eq:distribution-shift-decomposition}
+\end{equation}
+Open-loop action drift controls only the fixed-distribution term. It does not by itself control the distribution-shift term induced by executing the perturbed policy. This term can matter because a small nominal action error can move the system away from the FP16 trajectory, after which the quantized policy may visit states with larger quantization error, higher closed-loop sensitivity, or smaller task margins.
+
+More formally, if $\ell$ is a nonnegative bounded loss with $0\le \ell(s)\le \|\ell\|_\infty$, then the distribution-shift contribution obeys
+\begin{equation}
+    \left|
+    \mathbb{E}_{d_{\pi_q}}[\ell]
+    -
+    \mathbb{E}_{d_{\pi_\theta}}[\ell]
+    \right|
+    \le
+    \|\ell\|_\infty\,
+    \mathrm{TV}(d_{\pi_q},d_{\pi_\theta}),
+\end{equation}
+under the standard definition $\mathrm{TV}(p,q)=\frac{1}{2}\|p-q\|_1$. If $\ell$ is $L$-Lipschitz under a state metric, an analogous Wasserstein bound gives
+\begin{equation}
+    \left|
+    \mathbb{E}_{d_{\pi_q}}[\ell]
+    -
+    \mathbb{E}_{d_{\pi_\theta}}[\ell]
+    \right|
+    \le
+    L\,W_1(d_{\pi_q},d_{\pi_\theta}).
+\end{equation}
+The point is not that these distances are easy to estimate in high-dimensional robot rollouts, but that fixed-distribution drift is only one term. Predicting rollout robustness also requires controlling how far the quantized policy moves the visited state distribution.
+
+\paragraph{Claim 4: aggregate success differences decompose exactly into repairs and regressions.}
+For matched cases $c\in\mathcal{C}$ and binary success indicators $S_A(c), S_B(c)\in\{0,1\}$,
+\begin{equation}
+    \sum_{c\in\mathcal{C}} S_B(c) - \sum_{c\in\mathcal{C}} S_A(c)
+    =
+    \sum_{c\in\mathcal{C}} \mathbf{1}\{S_A(c)=0,S_B(c)=1\}
+    -
+    \sum_{c\in\mathcal{C}} \mathbf{1}\{S_A(c)=1,S_B(c)=0\}.
+    \label{eq:repair-regression-identity}
+\end{equation}
+This identity is simple but important: a net success gain can hide substantial behavioral churn. Paired repairs and regressions are therefore not an optional diagnostic; they are the decomposition of the aggregate number.
 
 \section{Experimental Setup}
 
@@ -295,6 +437,83 @@ OHB vs ATM & 15 & 13 & 101 & 21 & +2 \\
 
 For the disjoint init 5--14 comparison between FP16 and ATM+OHB W4A8, we observe the same pattern: 14 FP16 failures are repaired, while 8 FP16 successes become quantized failures. The aggregate gain of 6/100 comes from this difference.
 
+\subsection{Keyframe-Based Trajectory Diagnostics}
+
+To make the paired flips more concrete, we inspected contact sheets for representative repaired and regressed rollouts. Each contact sheet contains three matched policy rows---FP16, W4A8 \texttt{none}, and W4A8 ATM+OHB---sampled uniformly over the rollout. The sheets are included in the repository keyframe directory; they are diagnostic artifacts rather than a new quantitative benchmark.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Representative keyframe diagnostics for paired rollout flips. Frame counts refer to the number of rendered rollout frames before success or horizon failure.}
+\label{tab:keyframe-diagnostics}
+\begin{tabular}{p{0.16\linewidth}p{0.23\linewidth}p{0.31\linewidth}p{0.22\linewidth}}
+\toprule
+Case & Outcome pattern & Keyframe-level observation & Interpretation \\
+\midrule
+Task 8 init 7 &
+FP16 fail 991; ATM+OHB fail 991; \texttt{none} success 388 &
+\texttt{none} enters a short successful approach branch early, while FP16 and ATM+OHB spend the late rollout in repeated correction. &
+Raw quantization can push a weak FP16 task slice out of a failure basin. \\
+\addlinespace
+Task 4 init 10 &
+FP16 fail 991; \texttt{none} fail 991; ATM+OHB success 242 &
+ATM+OHB completes the mug/plate interaction quickly; the other rows remain in horizon-length correction. &
+Compensation can repair a task by changing contact timing or object-interaction order. \\
+\addlinespace
+Task 0 init 3 &
+FP16 success 250; ATM+OHB success 267; \texttt{none} fail 991 &
+\texttt{none} disturbs an otherwise fast object-container relation and never recovers. &
+The same raw perturbation that repairs some cases can regress high-margin FP16 successes. \\
+\addlinespace
+Task 6 init 1 &
+FP16 success 222; \texttt{none} success 477; ATM+OHB fail 991 &
+ATM+OHB remains visually stable but under-progresses around the decisive placement phase. &
+Balancing can be too conservative or shift progress timing, even when it reduces mean offline drift. \\
+\addlinespace
+Task 8 init 0 &
+FP16 success 657; ATM+OHB fail 991; \texttt{none} fail 991 &
+Both quantized rows take the wrong side of a task-8 decision boundary that FP16 crosses successfully. &
+Task-level gains are not monotonic; the same task can contain repairs and regressions. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These examples support the trajectory-redistribution interpretation. The repaired cases do not look like small final-frame placement corrections; they usually branch earlier and terminate much sooner than the corresponding failures. The regressed cases show the complementary failure: a small policy perturbation can disrupt an early object relation or produce a stable but insufficiently progressive path. Thus the paired counts in Table~\ref{tab:paired} correspond to visible differences in trajectory basins, not only bookkeeping changes in aggregate success.
+
+\subsection{Empirical Support For The Theoretical Claims}
+
+The theoretical claims in Section~3 are not used as proof that one quantized policy is superior. They organize what must be measured. The experiments support the claims in the following sense.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{How the empirical results instantiate the perturbation claims.}
+\label{tab:claim-evidence}
+\begin{tabular}{p{0.25\linewidth}p{0.33\linewidth}p{0.34\linewidth}}
+\toprule
+Claim & Experimental evidence & Interpretation \\
+\midrule
+Sensitivity-weighted perturbation &
+Small action changes produce both repairs and regressions under the same model family. Keyframe repairs branch early rather than only correcting final placement. &
+The effect depends on where the perturbation enters the trajectory, not only on its norm. \\
+\addlinespace
+Margin crossing &
+Task 8 contains both directions: W4A8 \texttt{none} improves task 8 from 3/15 FP16 successes to 9/15, yet task 8 init 0 is a case where both quantized modes regress a successful FP16 rollout. &
+The same task can contain low-margin failures that are repaired and low-margin successes that are broken. \\
+\addlinespace
+Offline drift insufficiency &
+ATM+OHB has the best mean offline drift, but OHB has the highest aggregate closed-loop point estimate; ATM improves task 4 by 5 successes over \texttt{none} while regressing task 8 by 5. &
+Reducing average open-loop error does not imply monotonic closed-loop improvement. \\
+\addlinespace
+Repair/regression decomposition &
+OHB vs \texttt{none} has 16 repaired failures and 13 new regressions, yielding only a net +3 successes. ATM vs \texttt{none} is 14 repairs and 13 regressions. &
+Aggregate success changes hide substantial redistribution of which rollouts succeed. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Analysis}
 
 \paragraph{Why can a quantized policy improve a rollout?}
@@ -336,7 +555,17 @@ The minimum evidence package should include offline action drift on held-out rea
 VLA quantization should be evaluated as a closed-loop policy perturbation. Reporting only MSE or only aggregate success can be misleading. Paired rollout flips are a compact way to expose whether a method is a monotonic improvement or a redistribution of successes.
 
 \paragraph{Calibration.}
-Calibration should not only minimize average layerwise or action-level error. It should consider which errors matter for downstream control. A useful calibration set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware calibration objective would weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude.
+Calibration should not only minimize average layerwise or action-level error. It should consider which errors matter for downstream control. A useful calibration set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware calibration objective would approximate Equation~\ref{eq:closed-loop-quant-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, or risk-gated precision fallback as natural next steps beyond ATM/OHB-style statistic matching.
+
+\paragraph{Closed-loop credit assignment.}
+This perspective borrows an idea from reinforcement learning without requiring full policy optimization: local action errors should be assigned credit according to their downstream effect on future rollout outcomes. In standard PTQ, an error $\eta_t$ is usually priced by its immediate norm. In the closed-loop view, its risk is closer to $\eta_t^\top G_t\eta_t$, which assigns larger cost to directions that propagate through dynamics and reduce terminal task margin. This suggests a lightweight alternative to direct RL: use paired rollouts, first-divergence states, or low-margin states to estimate sensitivity proxies, then guide calibration, mixed precision, residual correction, or fallback decisions. Future experiments can test whether this RL-style credit assignment improves repair/regression balance without the instability and sample cost of optimizing the full VLA policy by reinforcement learning.
+
+\paragraph{Quantized acceleration.}
+For VLA or world-model deployment, layer selection should not be based only on parameter count or FLOPs. A useful low-precision candidate should have both high compute benefit and low closed-loop sensitivity. Informally, for a module $i$ with expected speed benefit $g_i$ and quantization-induced perturbation $\eta_i$, the relevant risk is closer to a sensitivity-weighted quantity,
+\begin{equation}
+    r_i \approx \mathbb{E}\left[\eta_i^\top G_i \eta_i\right],
+\end{equation}
+where $G_i$ summarizes downstream dynamics, feedback, and task-margin sensitivity. This suggests a mixed-precision selection rule: prioritize modules with large $g_i/r_i$, and leave routing-sensitive, contact-critical, or margin-critical components in higher precision unless closed-loop tests show otherwise.
 
 \paragraph{Fine-tuning.}
 Quantization-aware fine-tuning is policy adaptation under low-precision constraints. If the objective is only behavior cloning on static observations, it may still miss closed-loop state distribution shift. More policy-aware objectives may be needed, including rollout-informed calibration, DAgger-style data aggregation, or task-slice reweighting.
@@ -346,7 +575,7 @@ Our results are behavior-level evidence for fake W4A8 quantization. They do not 
 
 \section{Limitations}
 
-This study has several limitations. The quantized implementation uses fake quantization, not a final packed int4/int8 deployment backend. Results are from one GR00T N1.5 checkpoint and LIBERO-10, not multiple VLA families. The main closed-loop benchmark has 150 task-initialization pairs; larger runs would provide tighter statistical confidence, and the current aggregate success intervals overlap. We do not run real-robot experiments. ATM/OHB are implemented as reproduction-oriented calibration mechanisms; exact implementation details may differ from the original paper. We evaluate success-rate flips, but do not yet provide trajectory-level geometric diagnostics for each flip.
+This study has several limitations. The quantized implementation uses fake quantization, not a final packed int4/int8 deployment backend. Results are from one GR00T N1.5 checkpoint and LIBERO-10, not multiple VLA families. The main closed-loop benchmark has 150 task-initialization pairs; larger runs would provide tighter statistical confidence, and the current aggregate success intervals overlap. We do not run real-robot experiments. ATM/OHB are implemented as reproduction-oriented calibration mechanisms; exact implementation details may differ from the original paper. The keyframe diagnostics cover representative flips, but they are qualitative and not an exhaustive geometric measurement for every paired outcome.
 
 These limitations do not weaken the central methodological point: local action approximation and closed-loop policy behavior are distinct evaluation targets.
 
@@ -357,6 +586,50 @@ Post-training quantization of VLA policies should be viewed as policy perturbati
 The main lesson is practical: VLA quantization papers should report paired closed-loop rollouts, not only offline drift or aggregate success. Small action errors matter when they change the trajectory basin.
 
 \appendix
+
+\section{Keyframe Contact Sheets}
+\label{app:keyframe-sheets}
+
+The following contact sheets support the qualitative diagnostics in Table~\ref{tab:keyframe-diagnostics}. They are enlarged here for visual inspection. Each sheet shows matched FP16, W4A8 \texttt{none}, and W4A8 ATM+OHB rows sampled uniformly over the rollout.
+
+\begin{landscape}
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.98\linewidth]{none_repair_task8_init7.jpg}
+    \caption{Task 8 init 7: W4A8 \texttt{none} repairs FP16 and ATM+OHB horizon failures by entering a shorter successful branch.}
+    \label{fig:keyframe-none-repair-task8-init7}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.98\linewidth]{atmohb_repair_task4_init10.jpg}
+    \caption{Task 4 init 10: ATM+OHB repairs both FP16 and W4A8 \texttt{none} failures with an early mug/plate completion.}
+    \label{fig:keyframe-atmohb-repair-task4-init10}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.98\linewidth]{none_regress_task0_init3.jpg}
+    \caption{Task 0 init 3: W4A8 \texttt{none} regresses a fast FP16/ATM+OHB success by disturbing the early object-container relation.}
+    \label{fig:keyframe-none-regress-task0-init3}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.98\linewidth]{atmohb_regress_task6_init1.jpg}
+    \caption{Task 6 init 1: ATM+OHB remains visually stable but under-progresses around the decisive placement phase, while FP16 and W4A8 \texttt{none} succeed.}
+    \label{fig:keyframe-atmohb-regress-task6-init1}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.98\linewidth]{both_quant_regress_task8_init0.jpg}
+    \caption{Task 8 init 0: both quantized modes regress a successful FP16 rollout, showing that task 8 contains both quantization repairs and quantization regressions.}
+    \label{fig:keyframe-both-quant-regress-task8-init0}
+\end{figure}
+\end{landscape}
+
+\clearpage
 
 \section{Detailed Experimental Tables}
 \label{app:tables}

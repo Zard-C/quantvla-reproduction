@@ -1,0 +1,85 @@
+{
+  "label": "fp16_dit_residual_cache",
+  "writes": 226,
+  "get_action_seconds": {
+    "count": 11248,
+    "mean": 0.149248763354519,
+    "min": 0.08040724322199821,
+    "max": 0.46023204922676086,
+    "p50": 0.15609873458743095,
+    "p90": 0.16171873696148395,
+    "p99": 0.16895355224609376
+  },
+  "extra": {
+    "cache_summary": {
+      "patched_blocks": 2,
+      "patched_block_calls": 180032,
+      "full_compute_calls": 45008,
+      "cache_hits": 135024,
+      "cache_misses": 0,
+      "patched_block_hit_rate": 0.75,
+      "estimated_all_dit_block_calls": 1440256,
+      "estimated_all_dit_block_skip_rate": 0.09375,
+      "wrapper_results": {
+        "action_head.model.transformer_blocks.12": {
+          "block_index": 12,
+          "block_name": "action_head.model.transformer_blocks.12",
+          "cache_steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "calls": 90016,
+          "full_compute_calls": 22504,
+          "cache_hits": 67512,
+          "cache_misses": 0,
+          "cache_hit_rate": 0.75,
+          "cache_hit_steps": {
+            "1": 11252,
+            "2": 11252,
+            "3": 11252,
+            "4": 11252,
+            "5": 11252,
+            "6": 11252
+          },
+          "full_compute_steps": {
+            "0": 11252,
+            "7": 11252
+          }
+        },
+        "action_head.model.transformer_blocks.15": {
+          "block_index": 15,
+          "block_name": "action_head.model.transformer_blocks.15",
+          "cache_steps": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "calls": 90016,
+          "full_compute_calls": 22504,
+          "cache_hits": 67512,
+          "cache_misses": 0,
+          "cache_hit_rate": 0.75,
+          "cache_hit_steps": {
+            "1": 11252,
+            "2": 11252,
+            "3": 11252,
+            "4": 11252,
+            "5": 11252,
+            "6": 11252
+          },
+          "full_compute_steps": {
+            "0": 11252,
+            "7": 11252
+          }
+        }
+      }
+    }
+  }
+}

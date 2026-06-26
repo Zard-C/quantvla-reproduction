@@ -1,0 +1,173 @@
+{
+  "boundary": "FP16 GR00T inference server with static DiT residual-cache blocks",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "cache_blocks": [
+    12,
+    15
+  ],
+  "cache_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "model_load_seconds": 10.803672634065151,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "patch_seconds": 0.001333538442850113,
+  "patched_blocks": 2,
+  "wrapper_results_after_patch": {
+    "action_head.model.transformer_blocks.12": {
+      "block_index": 12,
+      "block_name": "action_head.model.transformer_blocks.12",
+      "cache_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "calls": 0,
+      "full_compute_calls": 0,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "cache_hit_steps": {},
+      "full_compute_steps": {}
+    },
+    "action_head.model.transformer_blocks.15": {
+      "block_index": 15,
+      "block_name": "action_head.model.transformer_blocks.15",
+      "cache_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "calls": 0,
+      "full_compute_calls": 0,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.0,
+      "cache_hit_steps": {},
+      "full_compute_steps": {}
+    }
+  },
+  "post_patch_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av",
+    "prewarm_task_descriptions": [
+      "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "put both moka pots on the stove"
+    ],
+    "prewarm_observations_with_task_descriptions": 4
+  },
+  "prewarm_seconds": 0.8369922637939453,
+  "prewarm_total_seconds": 0.9251120053231716,
+  "prewarm_memory": {
+    "allocated_bytes": 5477082112,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "cache_summary_after_prewarm": {
+    "patched_blocks": 2,
+    "patched_block_calls": 64,
+    "full_compute_calls": 16,
+    "cache_hits": 48,
+    "cache_misses": 0,
+    "patched_block_hit_rate": 0.75,
+    "estimated_all_dit_block_calls": 512,
+    "estimated_all_dit_block_skip_rate": 0.09375,
+    "wrapper_results": {
+      "action_head.model.transformer_blocks.12": {
+        "block_index": 12,
+        "block_name": "action_head.model.transformer_blocks.12",
+        "cache_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "calls": 32,
+        "full_compute_calls": 8,
+        "cache_hits": 24,
+        "cache_misses": 0,
+        "cache_hit_rate": 0.75,
+        "cache_hit_steps": {
+          "1": 4,
+          "2": 4,
+          "3": 4,
+          "4": 4,
+          "5": 4,
+          "6": 4
+        },
+        "full_compute_steps": {
+          "0": 4,
+          "7": 4
+        }
+      },
+      "action_head.model.transformer_blocks.15": {
+        "block_index": 15,
+        "block_name": "action_head.model.transformer_blocks.15",
+        "cache_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "calls": 32,
+        "full_compute_calls": 8,
+        "cache_hits": 24,
+        "cache_misses": 0,
+        "cache_hit_rate": 0.75,
+        "cache_hit_steps": {
+          "1": 4,
+          "2": 4,
+          "3": 4,
+          "4": 4,
+          "5": 4,
+          "6": 4
+        },
+        "full_compute_steps": {
+          "0": 4,
+          "7": 4
+        }
+      }
+    }
+  },
+  "prepare_seconds": 11.731066148728132
+}

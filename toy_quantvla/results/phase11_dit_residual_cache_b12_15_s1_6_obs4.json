@@ -1,0 +1,452 @@
+{
+  "boundary": "Offline static residual-cache action drift smoke; selected DiT blocks skip configured denoising steps",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "device": "cuda",
+  "denoising_steps": 8,
+  "observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115,
+      215,
+      315,
+      415
+    ],
+    "video_backend": "torchvision_av"
+  },
+  "observations": 4,
+  "cache_blocks": [
+    12,
+    15
+  ],
+  "cache_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "warmup_repeats": 1,
+  "warmup_seconds": 0.7506653293967247,
+  "warmup_request_seconds": [
+    {
+      "count": 4,
+      "mean": 0.18724320083856583,
+      "min": 0.08649836108088493,
+      "max": 0.4868514910340309,
+      "p50": 0.08781147561967373,
+      "p90": 0.3674103364348412,
+      "p99": 0.47490737557411183
+    }
+  ],
+  "load_seconds": 11.123436074703932,
+  "patch_seconds": 0.001165580004453659,
+  "teacher_seconds": 0.4574594423174858,
+  "student_seconds": 0.3898869715631008,
+  "student_over_teacher_time": 0.8522875155618967,
+  "teacher_request_seconds": {
+    "count": 4,
+    "mean": 0.11420270707458258,
+    "min": 0.09782921150326729,
+    "max": 0.14898629114031792,
+    "p50": 0.10499766282737255,
+    "p90": 0.13668642826378347,
+    "p99": 0.14775630485266447
+  },
+  "student_request_seconds": {
+    "count": 4,
+    "mean": 0.09730542916804552,
+    "min": 0.09405481442809105,
+    "max": 0.10201974958181381,
+    "p50": 0.09657357633113861,
+    "p90": 0.10089452490210533,
+    "p99": 0.10190722711384297
+  },
+  "teacher_memory": {
+    "allocated_bytes": 5476781056,
+    "reserved_bytes": 5779750912,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5779750912
+  },
+  "student_memory": {
+    "allocated_bytes": 5477082112,
+    "reserved_bytes": 5781848064,
+    "max_allocated_bytes": 5682665472,
+    "max_reserved_bytes": 5781848064
+  },
+  "cache_stats": {
+    "patched_blocks": 2,
+    "patched_block_calls": 64,
+    "full_compute_calls": 16,
+    "cache_hits": 48,
+    "patched_block_hit_rate": 0.75,
+    "all_dit_block_calls": 512,
+    "all_dit_block_skip_rate": 0.09375
+  },
+  "wrapper_results": {
+    "action_head.model.transformer_blocks.12": {
+      "block_index": 12,
+      "block_name": "action_head.model.transformer_blocks.12",
+      "cache_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "calls": 32,
+      "full_compute_calls": 8,
+      "cache_hits": 24,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.75,
+      "cache_hit_steps": {
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4
+      },
+      "full_compute_steps": {
+        "0": 4,
+        "7": 4
+      }
+    },
+    "action_head.model.transformer_blocks.15": {
+      "block_index": 15,
+      "block_name": "action_head.model.transformer_blocks.15",
+      "cache_steps": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "calls": 32,
+      "full_compute_calls": 8,
+      "cache_hits": 24,
+      "cache_misses": 0,
+      "cache_hit_rate": 0.75,
+      "cache_hit_steps": {
+        "1": 4,
+        "2": 4,
+        "3": 4,
+        "4": 4,
+        "5": 4,
+        "6": 4
+      },
+      "full_compute_steps": {
+        "0": 4,
+        "7": 4
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "mse": 7.002134248059098e-07,
+      "nmse": 3.169629294488579e-06,
+      "rmse": 0.0008367875625306042,
+      "relative_rmse": 0.0017803452739535046,
+      "cosine": 0.9999984406588355,
+      "max_abs_diff": 0.004119873046875,
+      "teacher_rms": 0.4700142016118036,
+      "student_rms": 0.4699065387978989,
+      "per_key": {
+        "action.gripper": {
+          "mse": 7.136986823752522e-07,
+          "nmse": 7.215734906410049e-07,
+          "max_abs_diff": 0.00146484375,
+          "teacher_rms": 0.9945283386842305,
+          "student_rms": 0.9944604512130737
+        },
+        "action.pitch": {
+          "mse": 4.455006817616347e-08,
+          "nmse": 1.057305627644756e-05,
+          "max_abs_diff": 0.00043867528438568115,
+          "teacher_rms": 0.06491183921012386,
+          "student_rms": 0.06493258576772688
+        },
+        "action.roll": {
+          "mse": 1.5711834069898067e-08,
+          "nmse": 1.103825037047732e-05,
+          "max_abs_diff": 0.0003274083137512207,
+          "teacher_rms": 0.03772795989043486,
+          "student_rms": 0.037720180691382665
+        },
+        "action.x": {
+          "mse": 1.7440129340684507e-07,
+          "nmse": 1.853921071546575e-05,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.09699050719560051,
+          "student_rms": 0.09711122396043455
+        },
+        "action.y": {
+          "mse": 3.655009095382411e-06,
+          "nmse": 6.820231625879388e-06,
+          "max_abs_diff": 0.004119873046875,
+          "teacher_rms": 0.7320566142272112,
+          "student_rms": 0.7316525798726675
+        },
+        "action.yaw": {
+          "mse": 5.5373179985718224e-08,
+          "nmse": 8.95877854059964e-06,
+          "max_abs_diff": 0.0005438327789306641,
+          "teacher_rms": 0.07861860472927287,
+          "student_rms": 0.078557700499666
+        },
+        "action.z": {
+          "mse": 2.4274982024508063e-07,
+          "nmse": 0.0013874921529367994,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.013227086409018884,
+          "student_rms": 0.013305822828607433
+        }
+      },
+      "seed": 20260610,
+      "dataset_index": 115,
+      "action_size": 112
+    },
+    {
+      "mse": 5.577121155810248e-07,
+      "nmse": 3.5353023462798056e-06,
+      "rmse": 0.0007468012557441402,
+      "relative_rmse": 0.0018802399703973442,
+      "cosine": 0.9999984357741617,
+      "max_abs_diff": 0.0029611587524414062,
+      "teacher_rms": 0.3971840124142885,
+      "student_rms": 0.3974370873421857,
+      "per_key": {
+        "action.gripper": {
+          "mse": 1.3891258276998997e-06,
+          "nmse": 1.403765130939293e-06,
+          "max_abs_diff": 0.0025634765625,
+          "teacher_rms": 0.9947720348330633,
+          "student_rms": 0.9951427587693188
+        },
+        "action.pitch": {
+          "mse": 7.983028865732322e-08,
+          "nmse": 2.57076087405558e-05,
+          "max_abs_diff": 0.0006580054759979248,
+          "teacher_rms": 0.055725376199682965,
+          "student_rms": 0.05590282072761494
+        },
+        "action.roll": {
+          "mse": 9.428438110803405e-08,
+          "nmse": 9.50647516514141e-05,
+          "max_abs_diff": 0.0005238652229309082,
+          "teacher_rms": 0.03149271611558963,
+          "student_rms": 0.03167168644362238
+        },
+        "action.x": {
+          "mse": 5.840961714298487e-07,
+          "nmse": 2.2096345361605277e-05,
+          "max_abs_diff": 0.0020241737365722656,
+          "teacher_rms": 0.16258555400048041,
+          "student_rms": 0.16307482569803694
+        },
+        "action.y": {
+          "mse": 1.2825324802179239e-06,
+          "nmse": 1.5257202574586406e-05,
+          "max_abs_diff": 0.0029611587524414062,
+          "teacher_rms": 0.2899323862522405,
+          "student_rms": 0.290757941280004
+        },
+        "action.yaw": {
+          "mse": 6.463840784842745e-08,
+          "nmse": 0.020422120405589574,
+          "max_abs_diff": 0.000725090503692627,
+          "teacher_rms": 0.0017790776714940722,
+          "student_rms": 0.0017957287461203685
+        },
+        "action.z": {
+          "mse": 4.094772521057166e-07,
+          "nmse": 0.0034279667919259686,
+          "max_abs_diff": 0.00102996826171875,
+          "teacher_rms": 0.010929406700585464,
+          "student_rms": 0.010933138214738463
+        }
+      },
+      "seed": 20260611,
+      "dataset_index": 215,
+      "action_size": 112
+    },
+    {
+      "mse": 6.781900602690984e-07,
+      "nmse": 6.7754792562493935e-06,
+      "rmse": 0.0008235229567347218,
+      "relative_rmse": 0.0026029750779155364,
+      "cosine": 0.9999970697303029,
+      "max_abs_diff": 0.00274658203125,
+      "teacher_rms": 0.316377580300999,
+      "student_rms": 0.31667957265423424,
+      "per_key": {
+        "action.gripper": {
+          "mse": 1.0873773135244846e-06,
+          "nmse": 0.04834643012549947,
+          "max_abs_diff": 0.001953125,
+          "teacher_rms": 0.0047425064275946355,
+          "student_rms": 0.0045976947167711
+        },
+        "action.pitch": {
+          "mse": 5.9157618026439707e-08,
+          "nmse": 3.628539675691662e-05,
+          "max_abs_diff": 0.0005849003791809082,
+          "teacher_rms": 0.04037749772628296,
+          "student_rms": 0.040435818885650114
+        },
+        "action.roll": {
+          "mse": 3.0750642643351256e-08,
+          "nmse": 4.921558371227399e-05,
+          "max_abs_diff": 0.0005238354206085205,
+          "teacher_rms": 0.02499630285821907,
+          "student_rms": 0.02506063298650474
+        },
+        "action.x": {
+          "mse": 1.6318628448530603e-06,
+          "nmse": 3.303041123333629e-06,
+          "max_abs_diff": 0.00274658203125,
+          "teacher_rms": 0.7028859086965322,
+          "student_rms": 0.7034409089631156
+        },
+        "action.y": {
+          "mse": 1.475018507335335e-06,
+          "nmse": 7.438161659293818e-06,
+          "max_abs_diff": 0.0020599365234375,
+          "teacher_rms": 0.44531356868899463,
+          "student_rms": 0.4459261190442029
+        },
+        "action.yaw": {
+          "mse": 7.762869141947348e-08,
+          "nmse": 9.39750315084346e-05,
+          "max_abs_diff": 0.0005438029766082764,
+          "teacher_rms": 0.028741199727281633,
+          "student_rms": 0.028884587357582817
+        },
+        "action.z": {
+          "mse": 3.855348040815443e-07,
+          "nmse": 7.404259390949082e-05,
+          "max_abs_diff": 0.00091552734375,
+          "teacher_rms": 0.07215907918573128,
+          "student_rms": 0.07213804231081085
+        }
+      },
+      "seed": 20260612,
+      "dataset_index": 315,
+      "action_size": 112
+    },
+    {
+      "mse": 6.013956106344047e-07,
+      "nmse": 9.780479976032269e-06,
+      "rmse": 0.00077549700878495,
+      "relative_rmse": 0.003127375892986366,
+      "cosine": 0.9999951551344092,
+      "max_abs_diff": 0.0029754638671875,
+      "teacher_rms": 0.2479705143612971,
+      "student_rms": 0.24804520893668808,
+      "per_key": {
+        "action.gripper": {
+          "mse": 1.0817893780767918e-06,
+          "nmse": 0.020723205939272665,
+          "max_abs_diff": 0.002197265625,
+          "teacher_rms": 0.007225083739757702,
+          "student_rms": 0.007042901267345904
+        },
+        "action.pitch": {
+          "mse": 8.509014526314473e-08,
+          "nmse": 9.267096451759296e-05,
+          "max_abs_diff": 0.0005849003791809082,
+          "teacher_rms": 0.030301755592692214,
+          "student_rms": 0.030401590257963
+        },
+        "action.roll": {
+          "mse": 6.298412401350983e-08,
+          "nmse": 0.0005966729554779308,
+          "max_abs_diff": 0.0005238652229309082,
+          "teacher_rms": 0.010274184726754567,
+          "student_rms": 0.01035766967488835
+        },
+        "action.x": {
+          "mse": 1.6778130884631537e-06,
+          "nmse": 4.688070873563129e-06,
+          "max_abs_diff": 0.0029754638671875,
+          "teacher_rms": 0.5982389763022853,
+          "student_rms": 0.5983703388791449
+        },
+        "action.y": {
+          "mse": 6.344237135635922e-07,
+          "nmse": 1.939463281184201e-05,
+          "max_abs_diff": 0.0018310546875,
+          "teacher_rms": 0.18086266380570026,
+          "student_rms": 0.18075621363318703
+        },
+        "action.yaw": {
+          "mse": 2.0199546868493456e-08,
+          "nmse": 0.0010851944502683517,
+          "max_abs_diff": 0.0003625452518463135,
+          "teacher_rms": 0.004314366464404403,
+          "student_rms": 0.004396231606958594
+        },
+        "action.z": {
+          "mse": 6.474692781921476e-07,
+          "nmse": 1.6717562559986383e-05,
+          "max_abs_diff": 0.002288818359375,
+          "teacher_rms": 0.1967990984870341,
+          "student_rms": 0.19714117072762077
+        }
+      },
+      "seed": 20260613,
+      "dataset_index": 415,
+      "action_size": 112
+    }
+  ],
+  "summary": {
+    "observations": 4,
+    "mse": {
+      "mean": 6.343778028226093e-07,
+      "max": 7.002134248059098e-07,
+      "min": 5.577121155810248e-07
+    },
+    "nmse": {
+      "mean": 5.815222718262512e-06,
+      "max": 9.780479976032269e-06,
+      "min": 3.169629294488579e-06
+    },
+    "rmse": {
+      "mean": 0.0007956521959486041,
+      "max": 0.0008367875625306042,
+      "min": 0.0007468012557441402
+    },
+    "relative_rmse": {
+      "mean": 0.0023477340538131876,
+      "max": 0.003127375892986366,
+      "min": 0.0017803452739535046
+    },
+    "cosine": {
+      "mean": 0.9999972753244273,
+      "max": 0.9999984406588355,
+      "min": 0.9999951551344092
+    },
+    "max_abs_diff": {
+      "mean": 0.0032007694244384766,
+      "max": 0.004119873046875,
+      "min": 0.00274658203125
+    },
+    "teacher_rms": {
+      "mean": 0.35788657717209704,
+      "max": 0.4700142016118036,
+      "min": 0.2479705143612971
+    },
+    "student_rms": {
+      "mean": 0.3580171019327517,
+      "max": 0.4699065387978989,
+      "min": 0.24804520893668808
+    }
+  }
+}

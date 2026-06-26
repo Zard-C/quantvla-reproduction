@@ -1,0 +1,1031 @@
+{
+  "sources": [
+    "toy_quantvla/results/phase13_action_head_modules_v1.json",
+    "toy_quantvla/results/phase16_compile_scope_continuous_4_9_6_8_s260_v1_summary.json",
+    "toy_quantvla/results/phase16_step253_compile_bisect_v1_summary.json",
+    "toy_quantvla/results/phase16_step253_block03_bisect_v1_summary.json",
+    "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_client_latency.json",
+    "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_client_latency.json",
+    "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_baseline_client_latency.json",
+    "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_compiled_client_latency.json",
+    "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp16_client_latency.json",
+    "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp4_up_proj_warmdesc_client_latency.json",
+    "toy_quantvla/results/phase10_seeded_matched_dit_mlp_only_v1_fp4_dit_mlp_only_warmdesc_client_latency.json",
+    "toy_quantvla/results/phase11_seeded_matched_residual_cache_v1_fp16_dit_residual_cache_b1215_s1to6_client_latency.json",
+    "toy_quantvla/results/phase7_online_drift_llm_mlp_20.json",
+    "toy_quantvla/results/phase7_online_drift_dit_mlp_40.json",
+    "toy_quantvla/results/phase7_online_drift_llm_dit_none_10_v2.json",
+    "toy_quantvla/results/phase7_online_drift_llm_dit_atm_ohb_10_v2.json"
+  ],
+  "action_head_structure": {
+    "source": "toy_quantvla/results/phase13_action_head_modules_v1.json",
+    "action_head_class": "FlowmatchingActionHead",
+    "action_head_model_class": "DiT",
+    "module_rows": 347,
+    "transformer_blocks": 16,
+    "block_params": {
+      "0": 34619904,
+      "1": 33047040,
+      "2": 34619904,
+      "3": 33047040,
+      "4": 34619904,
+      "5": 33047040,
+      "6": 34619904,
+      "7": 33047040,
+      "8": 34619904,
+      "9": 33047040,
+      "10": 34619904,
+      "11": 33047040,
+      "12": 34619904,
+      "13": 33047040,
+      "14": 34619904,
+      "15": 33047040
+    },
+    "block_linear_count": {
+      "0": 7,
+      "1": 7,
+      "2": 7,
+      "3": 7,
+      "4": 7,
+      "5": 7,
+      "6": 7,
+      "7": 7,
+      "8": 7,
+      "9": 7,
+      "10": 7,
+      "11": 7,
+      "12": 7,
+      "13": 7,
+      "14": 7,
+      "15": 7
+    },
+    "total_block_params": 541335552,
+    "class_counts": {
+      "DiT": 1,
+      "TimestepEncoder": 1,
+      "Timesteps": 1,
+      "TimestepEmbedding": 1,
+      "Linear": 116,
+      "SiLU": 17,
+      "ModuleList": 33,
+      "BasicTransformerBlock": 16,
+      "AdaLayerNorm": 16,
+      "LayerNorm": 33,
+      "Attention": 16,
+      "Dropout": 64,
+      "FeedForward": 16,
+      "GELU": 16
+    }
+  },
+  "compile_scope_drift": [
+    {
+      "target": "action_head_dit_ff_all",
+      "valid_steps": 484,
+      "continuous_max_p99": 0.002975,
+      "continuous_max_max": 0.006409,
+      "continuous_l2_p99": 0.003216,
+      "compiled_p50_ms": 123.5,
+      "eager_p50_ms": 90.5,
+      "p50_speedup": 0.73,
+      "sensitivity": "low-drift-slow",
+      "reason": "low same-observation drift but no useful speedup"
+    },
+    {
+      "target": "action_head_dit_attn_all",
+      "valid_steps": 484,
+      "continuous_max_p99": 0.00309,
+      "continuous_max_max": 0.006409,
+      "continuous_l2_p99": 0.003223,
+      "compiled_p50_ms": 102.9,
+      "eager_p50_ms": 92.3,
+      "p50_speedup": 0.9,
+      "sensitivity": "low-drift-slow",
+      "reason": "low same-observation drift but no useful speedup"
+    },
+    {
+      "target": "action_head_model_blocks_6_15_eager",
+      "valid_steps": 484,
+      "continuous_max_p99": 0.00412,
+      "continuous_max_max": 0.054932,
+      "continuous_l2_p99": 0.004223,
+      "compiled_p50_ms": 93.9,
+      "eager_p50_ms": 102.3,
+      "p50_speedup": 1.09,
+      "sensitivity": "high",
+      "reason": "contains deterministic continuous-action spike"
+    },
+    {
+      "target": "action_head_model",
+      "valid_steps": 484,
+      "continuous_max_p99": 0.004349,
+      "continuous_max_max": 0.054932,
+      "continuous_l2_p99": 0.004995,
+      "compiled_p50_ms": 63.3,
+      "eager_p50_ms": 130.6,
+      "p50_speedup": 2.06,
+      "sensitivity": "high",
+      "reason": "contains deterministic continuous-action spike"
+    },
+    {
+      "target": "action_head_model_blocks_8_15_eager",
+      "valid_steps": 484,
+      "continuous_max_p99": 0.004463,
+      "continuous_max_max": 0.054932,
+      "continuous_l2_p99": 0.004657,
+      "compiled_p50_ms": 87.9,
+      "eager_p50_ms": 105.7,
+      "p50_speedup": 1.2,
+      "sensitivity": "high",
+      "reason": "contains deterministic continuous-action spike"
+    },
+    {
+      "target": "action_head_dit_blocks_0_7",
+      "valid_steps": 0,
+      "continuous_max_p99": null,
+      "continuous_max_max": null,
+      "continuous_l2_p99": null,
+      "compiled_p50_ms": null,
+      "eager_p50_ms": null,
+      "p50_speedup": null,
+      "sensitivity": "invalid",
+      "reason": "no valid replay steps; CUDAGraph overwrite path"
+    }
+  ],
+  "step253_bisect": [
+    {
+      "target": "action_head_model",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054932,
+      "continuous_l2_p99": 0.077386,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 54.2,
+      "eager_p50_ms": 130.4,
+      "p50_speedup": 2.41,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054932,
+        "y": -0.005922,
+        "z": 0.042343,
+        "roll": -0.003405,
+        "pitch": 0.033631,
+        "yaw": -0.000634,
+        "gripper": -0.001953
+      }
+    },
+    {
+      "target": "action_head_model_blocks_0_15_eager",
+      "top_step": 253,
+      "top_dim": "z",
+      "continuous_max_abs": 0.000679,
+      "continuous_l2_p99": 0.000707,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 101.1,
+      "eager_p50_ms": 108.2,
+      "p50_speedup": 1.07,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.000679,
+        "roll": -0.00018,
+        "pitch": 7.3e-05,
+        "yaw": 0.0,
+        "gripper": 0.0
+      }
+    },
+    {
+      "target": "action_head_model_blocks_0_7_eager",
+      "top_step": 253,
+      "top_dim": "z",
+      "continuous_max_abs": 0.001388,
+      "continuous_l2_p99": 0.001826,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 85.2,
+      "eager_p50_ms": 117.6,
+      "p50_speedup": 1.38,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": -0.000801,
+        "y": -0.000687,
+        "z": -0.001388,
+        "roll": -0.000524,
+        "pitch": -0.000146,
+        "yaw": 0.0,
+        "gripper": -0.001221
+      }
+    },
+    {
+      "target": "action_head_model_blocks_0_3_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.001831,
+      "continuous_l2_p99": 0.002626,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 73.9,
+      "eager_p50_ms": 130.4,
+      "p50_speedup": 1.76,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": 0.001831,
+        "y": 0.0002,
+        "z": 0.001373,
+        "roll": -0.000524,
+        "pitch": -0.001024,
+        "yaw": -0.000544,
+        "gripper": 0.0
+      }
+    },
+    {
+      "target": "action_head_model_blocks_0_1_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.001574,
+      "continuous_l2_p99": 0.002068,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 75.7,
+      "eager_p50_ms": 130.4,
+      "p50_speedup": 1.72,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": -0.001574,
+        "y": -0.000229,
+        "z": -0.001245,
+        "roll": -0.000262,
+        "pitch": 0.0,
+        "yaw": -0.000363,
+        "gripper": -0.000977
+      }
+    },
+    {
+      "target": "action_head_model_blocks_0_0_eager",
+      "top_step": 253,
+      "top_dim": "z",
+      "continuous_max_abs": 0.001831,
+      "continuous_l2_p99": 0.002533,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 64.8,
+      "eager_p50_ms": 137.0,
+      "p50_speedup": 2.11,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": 0.001373,
+        "y": -5.7e-05,
+        "z": 0.001831,
+        "roll": -0.000524,
+        "pitch": -0.000877,
+        "yaw": -0.000363,
+        "gripper": -0.000977
+      }
+    },
+    {
+      "target": "action_head_model_blocks_2_3_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054932,
+      "continuous_l2_p99": 0.07658,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 74.0,
+      "eager_p50_ms": 136.4,
+      "p50_speedup": 1.84,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054932,
+        "y": -0.006895,
+        "z": 0.040741,
+        "roll": -0.002881,
+        "pitch": 0.033631,
+        "yaw": -0.000453,
+        "gripper": -0.002441
+      }
+    },
+    {
+      "target": "action_head_model_blocks_1_1_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054474,
+      "continuous_l2_p99": 0.076141,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 67.8,
+      "eager_p50_ms": 128.7,
+      "p50_speedup": 1.9,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054474,
+        "y": -0.006895,
+        "z": 0.040512,
+        "roll": -0.003143,
+        "pitch": 0.033631,
+        "yaw": -0.000544,
+        "gripper": -0.001465
+      }
+    },
+    {
+      "target": "action_head_model_blocks_2_2_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054932,
+      "continuous_l2_p99": 0.076448,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 66.9,
+      "eager_p50_ms": 131.9,
+      "p50_speedup": 1.97,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054932,
+        "y": -0.006781,
+        "z": 0.040512,
+        "roll": -0.002881,
+        "pitch": 0.033631,
+        "yaw": -0.000453,
+        "gripper": -0.002441
+      }
+    },
+    {
+      "target": "action_head_model_blocks_3_3_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.055389,
+      "continuous_l2_p99": 0.077135,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 64.7,
+      "eager_p50_ms": 137.8,
+      "p50_speedup": 2.13,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.055389,
+        "y": -0.006695,
+        "z": 0.041199,
+        "roll": -0.002881,
+        "pitch": 0.033631,
+        "yaw": -0.000544,
+        "gripper": -0.001465
+      }
+    },
+    {
+      "target": "action_head_model_blocks_4_7_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054932,
+      "continuous_l2_p99": 0.076953,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 73.3,
+      "eager_p50_ms": 123.1,
+      "p50_speedup": 1.68,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054932,
+        "y": -0.006781,
+        "z": 0.041199,
+        "roll": -0.003143,
+        "pitch": 0.033924,
+        "yaw": -0.000544,
+        "gripper": -0.00293
+      }
+    },
+    {
+      "target": "action_head_model_blocks_8_15_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054932,
+      "continuous_l2_p99": 0.075739,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 82.0,
+      "eager_p50_ms": 114.8,
+      "p50_speedup": 1.4,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054932,
+        "y": -0.006895,
+        "z": 0.039139,
+        "roll": -0.002881,
+        "pitch": 0.033631,
+        "yaw": -0.000453,
+        "gripper": -0.001465
+      }
+    },
+    {
+      "target": "action_head_model_attn_all_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054474,
+      "continuous_l2_p99": 0.076741,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 96.1,
+      "eager_p50_ms": 112.4,
+      "p50_speedup": 1.17,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054474,
+        "y": -0.006723,
+        "z": 0.041656,
+        "roll": -0.003143,
+        "pitch": 0.033631,
+        "yaw": -0.000544,
+        "gripper": -0.00293
+      }
+    },
+    {
+      "target": "action_head_model_ff_all_eager",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.054474,
+      "continuous_l2_p99": 0.075414,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 97.9,
+      "eager_p50_ms": 122.3,
+      "p50_speedup": 1.25,
+      "spike_removed_at_0p005": false,
+      "raw_diff": {
+        "x": 0.054474,
+        "y": -0.007067,
+        "z": 0.039139,
+        "roll": -0.002619,
+        "pitch": 0.033631,
+        "yaw": -0.000363,
+        "gripper": -0.001953
+      }
+    },
+    {
+      "target": "action_head_dit_attn_all",
+      "top_step": 253,
+      "top_dim": "x",
+      "continuous_max_abs": 0.001831,
+      "continuous_l2_p99": 0.002542,
+      "repeat_span": 0.0,
+      "compiled_p50_ms": 102.7,
+      "eager_p50_ms": 103.4,
+      "p50_speedup": 1.01,
+      "spike_removed_at_0p005": true,
+      "raw_diff": {
+        "x": 0.001831,
+        "y": 0.000315,
+        "z": 0.001602,
+        "roll": -0.000262,
+        "pitch": -0.000585,
+        "yaw": -0.000181,
+        "gripper": 0.0
+      }
+    }
+  ],
+  "layer_heatmap": [
+    {
+      "block_or_scope": "block0",
+      "evidence_target": "action_head_model_blocks_0_0_eager",
+      "continuous_max_abs": 0.001831,
+      "spike_removed": true,
+      "p50_speedup": 2.11,
+      "risk": "low for step253",
+      "note": "只保留 block0 eager 即可消除 step253 spike；当前最强层级定位。"
+    },
+    {
+      "block_or_scope": "block1",
+      "evidence_target": "action_head_model_blocks_1_1_eager",
+      "continuous_max_abs": 0.054474,
+      "spike_removed": false,
+      "p50_speedup": 1.9,
+      "risk": "high for step253",
+      "note": "单独 block1 eager 不能消除 step253 spike。"
+    },
+    {
+      "block_or_scope": "block2",
+      "evidence_target": "action_head_model_blocks_2_2_eager",
+      "continuous_max_abs": 0.054932,
+      "spike_removed": false,
+      "p50_speedup": 1.97,
+      "risk": "high for step253",
+      "note": "单独 block2 eager 不能消除 step253 spike。"
+    },
+    {
+      "block_or_scope": "block3",
+      "evidence_target": "action_head_model_blocks_3_3_eager",
+      "continuous_max_abs": 0.055389,
+      "spike_removed": false,
+      "p50_speedup": 2.13,
+      "risk": "high for step253",
+      "note": "单独 block3 eager 不能消除 step253 spike。"
+    },
+    {
+      "block_or_scope": "blocks2-3",
+      "evidence_target": "action_head_model_blocks_2_3_eager",
+      "continuous_max_abs": 0.054932,
+      "spike_removed": false,
+      "p50_speedup": 1.84,
+      "risk": "high for step253",
+      "note": "block2-3 eager 不能消除 step253 spike；问题不在这个后续小段。"
+    },
+    {
+      "block_or_scope": "blocks4-7",
+      "evidence_target": "action_head_model_blocks_4_7_eager",
+      "continuous_max_abs": 0.054932,
+      "spike_removed": false,
+      "p50_speedup": 1.68,
+      "risk": "high for step253",
+      "note": "block4-7 eager 不能消除 step253 spike。"
+    },
+    {
+      "block_or_scope": "blocks8-15",
+      "evidence_target": "action_head_model_blocks_8_15_eager",
+      "continuous_max_abs": 0.054932,
+      "spike_removed": false,
+      "p50_speedup": 1.4,
+      "risk": "high for step253",
+      "note": "历史上改善部分 15-case，但 30-case 净回归，且不消除 task6 step253 spike。"
+    }
+  ],
+  "matched_rollout_comparisons": {
+    "summaries": [
+      {
+        "source": "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_client_latency.json",
+        "label": "fp16_baseline_30",
+        "successes": 16,
+        "episodes": 30,
+        "success_rate": 0.5333,
+        "client_p50_ms": 161.1,
+        "client_p90_ms": 166.5,
+        "task_counts": {
+          "task4": {
+            "successes": 6,
+            "episodes": 10
+          },
+          "task6": {
+            "successes": 6,
+            "episodes": 10
+          },
+          "task8": {
+            "successes": 4,
+            "episodes": 10
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_client_latency.json",
+        "label": "compile_blocks_8_15_eager_30",
+        "successes": 13,
+        "episodes": 30,
+        "success_rate": 0.4333,
+        "client_p50_ms": 81.0,
+        "client_p90_ms": 150.3,
+        "task_counts": {
+          "task4": {
+            "successes": 5,
+            "episodes": 10
+          },
+          "task6": {
+            "successes": 5,
+            "episodes": 10
+          },
+          "task8": {
+            "successes": 3,
+            "episodes": 10
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_baseline_client_latency.json",
+        "label": "fp16_baseline_5_flip",
+        "successes": 3,
+        "episodes": 5,
+        "success_rate": 0.6,
+        "client_p50_ms": 161.1,
+        "client_p90_ms": 167.9,
+        "task_counts": {
+          "task4": {
+            "successes": 1,
+            "episodes": 1
+          },
+          "task6": {
+            "successes": 1,
+            "episodes": 1
+          },
+          "task8": {
+            "successes": 1,
+            "episodes": 3
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_compiled_client_latency.json",
+        "label": "compile_blocks_6_15_eager_5_flip",
+        "successes": 1,
+        "episodes": 5,
+        "success_rate": 0.2,
+        "client_p50_ms": 132.8,
+        "client_p90_ms": 153.2,
+        "task_counts": {
+          "task4": {
+            "successes": 0,
+            "episodes": 1
+          },
+          "task6": {
+            "successes": 1,
+            "episodes": 1
+          },
+          "task8": {
+            "successes": 0,
+            "episodes": 3
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp16_client_latency.json",
+        "label": "fp16_baseline_15_seeded",
+        "successes": 7,
+        "episodes": 15,
+        "success_rate": 0.4667,
+        "client_p50_ms": 95.2,
+        "client_p90_ms": 172.5,
+        "task_counts": {
+          "task4": {
+            "successes": 4,
+            "episodes": 5
+          },
+          "task6": {
+            "successes": 2,
+            "episodes": 5
+          },
+          "task8": {
+            "successes": 1,
+            "episodes": 5
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp4_up_proj_warmdesc_client_latency.json",
+        "label": "fp4_llm_up_proj_15_seeded",
+        "successes": 9,
+        "episodes": 15,
+        "success_rate": 0.6,
+        "client_p50_ms": 96.6,
+        "client_p90_ms": 180.6,
+        "task_counts": {
+          "task4": {
+            "successes": 4,
+            "episodes": 5
+          },
+          "task6": {
+            "successes": 4,
+            "episodes": 5
+          },
+          "task8": {
+            "successes": 1,
+            "episodes": 5
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase10_seeded_matched_dit_mlp_only_v1_fp4_dit_mlp_only_warmdesc_client_latency.json",
+        "label": "fp4_dit_mlp_15_seeded",
+        "successes": 7,
+        "episodes": 15,
+        "success_rate": 0.4667,
+        "client_p50_ms": 147.7,
+        "client_p90_ms": 215.9,
+        "task_counts": {
+          "task4": {
+            "successes": 3,
+            "episodes": 5
+          },
+          "task6": {
+            "successes": 3,
+            "episodes": 5
+          },
+          "task8": {
+            "successes": 1,
+            "episodes": 5
+          }
+        }
+      },
+      {
+        "source": "toy_quantvla/results/phase11_seeded_matched_residual_cache_v1_fp16_dit_residual_cache_b1215_s1to6_client_latency.json",
+        "label": "fp16_dit_residual_cache_b12_15_s1_6",
+        "successes": 5,
+        "episodes": 15,
+        "success_rate": 0.3333,
+        "client_p50_ms": 161.3,
+        "client_p90_ms": 166.9,
+        "task_counts": {
+          "task4": {
+            "successes": 2,
+            "episodes": 5
+          },
+          "task6": {
+            "successes": 2,
+            "episodes": 5
+          },
+          "task8": {
+            "successes": 1,
+            "episodes": 5
+          }
+        }
+      }
+    ],
+    "comparisons": [
+      {
+        "name": "blocks_8_15_eager_vs_fp16_30",
+        "baseline": {
+          "source": "toy_quantvla/results/phase13_block_island_30case_mem_v1_baseline_client_latency.json",
+          "label": "fp16_baseline_30",
+          "successes": 16,
+          "episodes": 30,
+          "success_rate": 0.5333,
+          "client_p50_ms": 161.1,
+          "client_p90_ms": 166.5,
+          "task_counts": {
+            "task4": {
+              "successes": 6,
+              "episodes": 10
+            },
+            "task6": {
+              "successes": 6,
+              "episodes": 10
+            },
+            "task8": {
+              "successes": 4,
+              "episodes": 10
+            }
+          }
+        },
+        "candidate": {
+          "source": "toy_quantvla/results/phase13_block_island_30case_mem_v1_compiled_client_latency.json",
+          "label": "compile_blocks_8_15_eager_30",
+          "successes": 13,
+          "episodes": 30,
+          "success_rate": 0.4333,
+          "client_p50_ms": 81.0,
+          "client_p90_ms": 150.3,
+          "task_counts": {
+            "task4": {
+              "successes": 5,
+              "episodes": 10
+            },
+            "task6": {
+              "successes": 5,
+              "episodes": 10
+            },
+            "task8": {
+              "successes": 3,
+              "episodes": 10
+            }
+          }
+        },
+        "delta_successes": -3,
+        "p50_speedup": 1.99
+      },
+      {
+        "name": "blocks_6_15_eager_vs_fp16_5_flip",
+        "baseline": {
+          "source": "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_baseline_client_latency.json",
+          "label": "fp16_baseline_5_flip",
+          "successes": 3,
+          "episodes": 5,
+          "success_rate": 0.6,
+          "client_p50_ms": 161.1,
+          "client_p90_ms": 167.9,
+          "task_counts": {
+            "task4": {
+              "successes": 1,
+              "episodes": 1
+            },
+            "task6": {
+              "successes": 1,
+              "episodes": 1
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 3
+            }
+          }
+        },
+        "candidate": {
+          "source": "toy_quantvla/results/phase14_block_island_6_15_5flip_v1_compiled_client_latency.json",
+          "label": "compile_blocks_6_15_eager_5_flip",
+          "successes": 1,
+          "episodes": 5,
+          "success_rate": 0.2,
+          "client_p50_ms": 132.8,
+          "client_p90_ms": 153.2,
+          "task_counts": {
+            "task4": {
+              "successes": 0,
+              "episodes": 1
+            },
+            "task6": {
+              "successes": 1,
+              "episodes": 1
+            },
+            "task8": {
+              "successes": 0,
+              "episodes": 3
+            }
+          }
+        },
+        "delta_successes": -2,
+        "p50_speedup": 1.21
+      },
+      {
+        "name": "fp4_llm_up_proj_vs_fp16_15",
+        "baseline": {
+          "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp16_client_latency.json",
+          "label": "fp16_baseline_15_seeded",
+          "successes": 7,
+          "episodes": 15,
+          "success_rate": 0.4667,
+          "client_p50_ms": 95.2,
+          "client_p90_ms": 172.5,
+          "task_counts": {
+            "task4": {
+              "successes": 4,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 2,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "candidate": {
+          "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp4_up_proj_warmdesc_client_latency.json",
+          "label": "fp4_llm_up_proj_15_seeded",
+          "successes": 9,
+          "episodes": 15,
+          "success_rate": 0.6,
+          "client_p50_ms": 96.6,
+          "client_p90_ms": 180.6,
+          "task_counts": {
+            "task4": {
+              "successes": 4,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 4,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "delta_successes": 2,
+        "p50_speedup": 0.99
+      },
+      {
+        "name": "fp4_dit_mlp_vs_fp16_15",
+        "baseline": {
+          "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp16_client_latency.json",
+          "label": "fp16_baseline_15_seeded",
+          "successes": 7,
+          "episodes": 15,
+          "success_rate": 0.4667,
+          "client_p50_ms": 95.2,
+          "client_p90_ms": 172.5,
+          "task_counts": {
+            "task4": {
+              "successes": 4,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 2,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "candidate": {
+          "source": "toy_quantvla/results/phase10_seeded_matched_dit_mlp_only_v1_fp4_dit_mlp_only_warmdesc_client_latency.json",
+          "label": "fp4_dit_mlp_15_seeded",
+          "successes": 7,
+          "episodes": 15,
+          "success_rate": 0.4667,
+          "client_p50_ms": 147.7,
+          "client_p90_ms": 215.9,
+          "task_counts": {
+            "task4": {
+              "successes": 3,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 3,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "delta_successes": 0,
+        "p50_speedup": 0.64
+      },
+      {
+        "name": "residual_cache_b12_15_vs_fp16_15",
+        "baseline": {
+          "source": "toy_quantvla/results/phase9_seeded_matched_t4_6_8_15_v1_fp16_client_latency.json",
+          "label": "fp16_baseline_15_seeded",
+          "successes": 7,
+          "episodes": 15,
+          "success_rate": 0.4667,
+          "client_p50_ms": 95.2,
+          "client_p90_ms": 172.5,
+          "task_counts": {
+            "task4": {
+              "successes": 4,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 2,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "candidate": {
+          "source": "toy_quantvla/results/phase11_seeded_matched_residual_cache_v1_fp16_dit_residual_cache_b1215_s1to6_client_latency.json",
+          "label": "fp16_dit_residual_cache_b12_15_s1_6",
+          "successes": 5,
+          "episodes": 15,
+          "success_rate": 0.3333,
+          "client_p50_ms": 161.3,
+          "client_p90_ms": 166.9,
+          "task_counts": {
+            "task4": {
+              "successes": 2,
+              "episodes": 5
+            },
+            "task6": {
+              "successes": 2,
+              "episodes": 5
+            },
+            "task8": {
+              "successes": 1,
+              "episodes": 5
+            }
+          }
+        },
+        "delta_successes": -2,
+        "p50_speedup": 0.59
+      }
+    ]
+  },
+  "online_quant_drift": [
+    {
+      "source": "toy_quantvla/results/phase7_online_drift_llm_mlp_20.json",
+      "scope": "llm_mlp_only",
+      "mode": "none",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "patched_modules": 36,
+      "episodes": 2,
+      "raw_relative_rmse_mean": 0.011908,
+      "raw_relative_rmse_max": 0.031984,
+      "libero_action_max_abs_diff_max": 0.026093,
+      "student_over_teacher_time_mean": null
+    },
+    {
+      "source": "toy_quantvla/results/phase7_online_drift_dit_mlp_40.json",
+      "scope": "dit_mlp_only",
+      "mode": "none",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "patched_modules": 32,
+      "episodes": 4,
+      "raw_relative_rmse_mean": 0.006719,
+      "raw_relative_rmse_max": 0.011616,
+      "libero_action_max_abs_diff_max": 0.012817,
+      "student_over_teacher_time_mean": null
+    },
+    {
+      "source": "toy_quantvla/results/phase7_online_drift_llm_dit_none_10_v2.json",
+      "scope": "llm_dit_mlp",
+      "mode": "none",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "patched_modules": 116,
+      "episodes": 2,
+      "raw_relative_rmse_mean": 0.026216,
+      "raw_relative_rmse_max": 0.051182,
+      "libero_action_max_abs_diff_max": 0.029755,
+      "student_over_teacher_time_mean": 8.64
+    },
+    {
+      "source": "toy_quantvla/results/phase7_online_drift_llm_dit_atm_ohb_10_v2.json",
+      "scope": "llm_dit_mlp",
+      "mode": "atm_ohb",
+      "quant_format": "fp4_e2m1_blockscaled_fake",
+      "patched_modules": 116,
+      "episodes": 2,
+      "raw_relative_rmse_mean": 0.026071,
+      "raw_relative_rmse_max": 0.053025,
+      "libero_action_max_abs_diff_max": 0.02655,
+      "student_over_teacher_time_mean": 5.809
+    }
+  ]
+}

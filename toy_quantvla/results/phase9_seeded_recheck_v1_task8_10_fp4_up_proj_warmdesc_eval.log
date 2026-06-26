@@ -1,0 +1,64 @@
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(8, 10)]
+Deterministic policy seeds: base=20260609, formula=base+task_id*100000+init_index*1000+policy_step
+  0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /root/.cache/libero/assets
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+100%|██████████| 1/1 [03:12<00:00, 192.42s/it][A100%|██████████| 1/1 [03:12<00:00, 192.42s/it]
+ 90%|█████████ | 9/10 [03:15<00:21, 21.68s/it]100%|██████████| 10/10 [03:15<00:00, 19.51s/it]
+
+Task: put both moka pots on the stove
+Init index: 10
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_09/2026_06_09-13_02_16--episode=1--success=False--task=put_both_moka_pots_on_the_stove.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.15594120053753002, 'min': 0.09409420192241669, 'max': 0.40599842369556427, 'p50': 0.16138944402337074, 'p90': 0.17269470915198326, 'p99': 0.2973869778215885}
+Policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.15594120053753002, 'min': 0.09409420192241669, 'max': 0.40599842369556427, 'p50': 0.16138944402337074, 'p90': 0.17269470915198326, 'p99': 0.2973869778215885}, 'postprocess_seconds': {'count': 991, 'mean': 0.00013517901135982587, 'min': 4.3895095586776733e-05, 'max': 0.002743881195783615, 'p50': 0.00013434141874313354, 'p90': 0.00015397369861602783, 'p99': 0.00019652619957923889}, 'preprocess_seconds': {'count': 991, 'mean': 0.00012836778981894947, 'min': 4.168599843978882e-05, 'max': 0.0009954571723937988, 'p50': 0.00013212114572525024, 'p90': 0.00014468654990196228, 'p99': 0.00019151121377944955}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.15567423090128196, 'min': 0.09400241449475288, 'max': 0.40575847774744034, 'p50': 0.16110884770751, 'p90': 0.17239995673298836, 'p99': 0.2971046146005392}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+Current task success rate: 0.0
+Current total success rate: 0.0
+Final policy latency seconds: {'count': 991, 'mean': 0.15594120053753002, 'min': 0.09409420192241669, 'max': 0.40599842369556427, 'p50': 0.16138944402337074, 'p90': 0.17269470915198326, 'p99': 0.2973869778215885}
+Final policy breakdown seconds: {'policy_total_seconds': {'count': 991, 'mean': 0.15594120053753002, 'min': 0.09409420192241669, 'max': 0.40599842369556427, 'p50': 0.16138944402337074, 'p90': 0.17269470915198326, 'p99': 0.2973869778215885}, 'postprocess_seconds': {'count': 991, 'mean': 0.00013517901135982587, 'min': 4.3895095586776733e-05, 'max': 0.002743881195783615, 'p50': 0.00013434141874313354, 'p90': 0.00015397369861602783, 'p99': 0.00019652619957923889}, 'preprocess_seconds': {'count': 991, 'mean': 0.00012836778981894947, 'min': 4.168599843978882e-05, 'max': 0.0009954571723937988, 'p50': 0.00013212114572525024, 'p90': 0.00014468654990196228, 'p99': 0.00019151121377944955}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.15567423090128196, 'min': 0.09400241449475288, 'max': 0.40575847774744034, 'p50': 0.16110884770751, 'p90': 0.17239995673298836, 'p99': 0.2971046146005392}}
+Exception ignored in: <function MjRenderContext.__del__ at 0x7ff9f8581240>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 199, in __del__
+    self.gl_ctx.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7ff9e6868840>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7ff9f9daf440>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7ff9f9daf440>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7ff9f9daf640>,
+	),
+	result = 0
+)
+Exception ignored in: <function EGLGLContext.__del__ at 0x7ff9f8581090>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 155, in __del__
+    self.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7ff9e6868840>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7ff9f9daf440>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7ff9f9daf440>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7ff9f9daf640>,
+	),
+	result = 0
+)
