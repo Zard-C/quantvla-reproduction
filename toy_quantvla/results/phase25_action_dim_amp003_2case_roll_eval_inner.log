@@ -1,0 +1,35 @@
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(4, 9), (6, 8)]
+Deterministic policy seeds: base=20260613, formula=base+task_id*100000+init_index*1000+policy_step
+Action perturbation: {'keys': ['roll'], 'amplitude': 0.03, 'sign': 1.0, 'normalize_by_num_keys': True, 'step_start': None, 'step_end': None, 'clip': True}
+
+Task: put the white mug on the left plate and put the yellow and white mug on the right plate
+Task id: 4
+Init index: 9
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_29/2026_06_29-15_29_48--episode=1--success=False--task=put_the_white_mug_on_the_left_plate_and_put_the_ye.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.07877442002762579, 'min': 0.05264220014214516, 'max': 0.1787743791937828, 'p50': 0.07055024802684784, 'p90': 0.1268709935247898, 'p99': 0.1606000792235136}
+Policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 991, 'mean': 0.07877442002762579, 'min': 0.05264220014214516, 'max': 0.1787743791937828, 'p50': 0.07055024802684784, 'p90': 0.1268709935247898, 'p99': 0.1606000792235136}, 'postprocess_seconds': {'count': 991, 'mean': 8.591674230654473e-05, 'min': 3.738328814506531e-05, 'max': 0.00019634515047073364, 'p50': 8.618459105491638e-05, 'p90': 0.00010969117283821106, 'p99': 0.00014591775834560394}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010131152138098939, 'min': 4.2457133531570435e-05, 'max': 0.00102943554520607, 'p50': 0.00010073184967041016, 'p90': 0.00011862441897392273, 'p99': 0.00016375966370105747}, 'primary_remote_get_action_seconds': {'count': 991, 'mean': 0.07858308939231272, 'min': 0.052473120391368866, 'max': 0.17866381630301476, 'p50': 0.07046078145503998, 'p90': 0.12668133154511452, 'p99': 0.1604235928505659}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.07858308939231272, 'min': 0.052473120391368866, 'max': 0.17866381630301476, 'p50': 0.07046078145503998, 'p90': 0.12668133154511452, 'p99': 0.1604235928505659}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+Current task success rate: 0.0
+Current total success rate: 0.0
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Task id: 6
+Init index: 8
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_29/2026_06_29-15_29_48--episode=2--success=False--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.08083372564627352, 'min': 0.05195814371109009, 'max': 0.2580748721957207, 'p50': 0.07259872183203697, 'p90': 0.13436021655797958, 'p99': 0.16405003033578397}
+Policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 991, 'mean': 0.08083372564627352, 'min': 0.05195814371109009, 'max': 0.2580748721957207, 'p50': 0.07259872183203697, 'p90': 0.13436021655797958, 'p99': 0.16405003033578397}, 'postprocess_seconds': {'count': 991, 'mean': 8.901120675680736e-05, 'min': 3.541633486747742e-05, 'max': 0.0004062280058860779, 'p50': 8.994713425636292e-05, 'p90': 0.00010604038834571838, 'p99': 0.00014131292700767534}, 'preprocess_seconds': {'count': 991, 'mean': 9.526835996977135e-05, 'min': 4.041939973831177e-05, 'max': 0.0003017634153366089, 'p50': 9.848922491073608e-05, 'p90': 0.0001120157539844513, 'p99': 0.00013441406190395358}, 'primary_remote_get_action_seconds': {'count': 991, 'mean': 0.08064592041368442, 'min': 0.05181189626455307, 'max': 0.25789448618888855, 'p50': 0.07240473851561546, 'p90': 0.1341332420706749, 'p99': 0.16385472156107428}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.08064592041368442, 'min': 0.05181189626455307, 'max': 0.25789448618888855, 'p50': 0.07240473851561546, 'p90': 0.1341332420706749, 'p99': 0.16385472156107428}}
+# episodes completed so far: 2
+# successes: 0 (0.0%)
+Current task success rate: 0.0
+Current total success rate: 0.0
+Final policy latency seconds: {'count': 1982, 'mean': 0.07980407283694965, 'min': 0.05195814371109009, 'max': 0.2580748721957207, 'p50': 0.07206815481185913, 'p90': 0.13125204779207708, 'p99': 0.1624988001585007}
+Final policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 1982, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 1982, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 1982, 'mean': 0.07980407283694965, 'min': 0.05195814371109009, 'max': 0.2580748721957207, 'p50': 0.07206815481185913, 'p90': 0.13125204779207708, 'p99': 0.1624988001585007}, 'postprocess_seconds': {'count': 1982, 'mean': 8.746397453167605e-05, 'min': 3.541633486747742e-05, 'max': 0.0004062280058860779, 'p50': 8.814409375190735e-05, 'p90': 0.00010702572762966157, 'p99': 0.0001459630206227303}, 'preprocess_seconds': {'count': 1982, 'mean': 9.828994067538037e-05, 'min': 4.041939973831177e-05, 'max': 0.00102943554520607, 'p50': 9.95248556137085e-05, 'p90': 0.00011586248874664306, 'p99': 0.0001507456600666047}, 'primary_remote_get_action_seconds': {'count': 1982, 'mean': 0.07961450490299857, 'min': 0.05181189626455307, 'max': 0.25789448618888855, 'p50': 0.07186888717114925, 'p90': 0.13106352388858797, 'p99': 0.16227927137166265}, 'remote_get_action_seconds': {'count': 1982, 'mean': 0.07961450490299857, 'min': 0.05181189626455307, 'max': 0.25789448618888855, 'p50': 0.07186888717114925, 'p90': 0.13106352388858797, 'p99': 0.16227927137166265}}

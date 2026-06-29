@@ -29,8 +29,10 @@ ACTION_KEYS = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
 ACTION_KEY_GROUPS = {
     "translation": ["x", "y", "z"],
     "rotation": ["roll", "pitch", "yaw"],
+    "continuous": ["x", "y", "z", "roll", "pitch", "yaw"],
     "all": ACTION_KEYS,
 }
+ACTION_KEY_TO_INDEX = {key: idx for idx, key in enumerate(ACTION_KEYS)}
 
 
 def insert_paths(isaac_root: Path) -> None:
@@ -80,6 +82,30 @@ def parse_oracle_action_keys(spec: str) -> list[str]:
             out.append(key)
     if not out:
         raise ValueError(f"No oracle action keys parsed from {spec!r}")
+    return out
+
+
+def parse_action_keys(spec: str | None) -> list[str]:
+    if not spec:
+        return []
+    keys: list[str] = []
+    for item in str(spec).split(","):
+        item = item.strip()
+        if not item:
+            continue
+        if item in ACTION_KEY_GROUPS:
+            keys.extend(ACTION_KEY_GROUPS[item])
+        elif item in ACTION_KEYS:
+            keys.append(item)
+        else:
+            raise ValueError(
+                f"Unknown action key {item!r}; expected one of {ACTION_KEYS} "
+                f"or groups {sorted(ACTION_KEY_GROUPS)}"
+            )
+    out: list[str] = []
+    for key in ACTION_KEYS:
+        if key in keys and key not in out:
+            out.append(key)
     return out
 
 
@@ -265,6 +291,74 @@ def deterministic_policy_seed(base_seed: int, task_id: int, init_index: int, pol
     return int(base_seed) + int(task_id) * 100_000 + int(init_index) * 1_000 + int(policy_step)
 
 
+def action_perturbation_config(args: argparse.Namespace) -> dict:
+    keys = parse_action_keys(args.action_perturb_keys)
+    return {
+        "keys": keys,
+        "amplitude": float(args.action_perturb_amplitude),
+        "sign": float(args.action_perturb_sign),
+        "normalize_by_num_keys": bool(args.action_perturb_normalize_by_num_keys),
+        "step_start": None if args.action_perturb_step_start is None else int(args.action_perturb_step_start),
+        "step_end": None if args.action_perturb_step_end is None else int(args.action_perturb_step_end),
+        "clip": bool(args.action_perturb_clip),
+    }
+
+
+def apply_action_perturbation(
+    action: np.ndarray,
+    *,
+    policy_step: int,
+    config: dict,
+) -> tuple[np.ndarray, dict]:
+    keys = config["keys"]
+    amplitude = float(config["amplitude"])
+    if not keys or amplitude == 0.0:
+        return action, {"enabled": False}
+
+    step_start = config["step_start"]
+    step_end = config["step_end"]
+    in_window = (
+        (step_start is None or policy_step >= step_start)
+        and (step_end is None or policy_step < step_end)
+    )
+    if not in_window:
+        return action, {
+            "enabled": True,
+            "applied": False,
+            "keys": keys,
+            "policy_step": int(policy_step),
+            "step_start": step_start,
+            "step_end": step_end,
+        }
+
+    delta_per_key = amplitude * float(config["sign"])
+    if config["normalize_by_num_keys"]:
+        delta_per_key /= float(np.sqrt(len(keys)))
+
+    perturbed = action.copy()
+    delta = np.zeros_like(perturbed, dtype=np.float32)
+    for key in keys:
+        idx = ACTION_KEY_TO_INDEX[key]
+        delta[idx] = np.float32(delta_per_key)
+        perturbed[idx] = np.float32(perturbed[idx] + delta[idx])
+    if config["clip"]:
+        perturbed = np.clip(perturbed, -1.0, 1.0).astype(np.float32)
+    return perturbed, {
+        "enabled": True,
+        "applied": True,
+        "keys": keys,
+        "policy_step": int(policy_step),
+        "step_start": step_start,
+        "step_end": step_end,
+        "amplitude": amplitude,
+        "sign": float(config["sign"]),
+        "normalize_by_num_keys": bool(config["normalize_by_num_keys"]),
+        "delta": as_float_list(delta),
+        "l2_norm": float(np.linalg.norm(delta.astype(np.float64))),
+        "clip": bool(config["clip"]),
+    }
+
+
 def write_episode_trace(
     trace_dir: Path | None,
     *,
@@ -342,6 +436,11 @@ def eval_libero(args: argparse.Namespace) -> None:
         all_policy_latencies: list[float] = []
         all_policy_breakdowns: list[dict[str, float]] = []
         episode_latency_rows: list[dict] = []
+        perturb_config = action_perturbation_config(args)
+        if perturb_config["keys"]:
+            perturb_line = f"Action perturbation: {perturb_config}"
+            print(perturb_line)
+            log_file.write(perturb_line + "\n")
         for task_id in tqdm.tqdm(range(num_tasks_in_suite)):
             if cases_by_task is not None and task_id not in cases_by_task:
                 continue
@@ -417,6 +516,12 @@ def eval_libero(args: argparse.Namespace) -> None:
                             task.language,
                             request_seed=request_seed,
                         )
+                        action_before_perturb = action.copy()
+                        action, perturb_trace = apply_action_perturbation(
+                            action,
+                            policy_step=policy_step,
+                            config=perturb_config,
+                        )
                         policy_latency_seconds = float(policy_timing["policy_total_seconds"])
                         episode_policy_latencies.append(policy_latency_seconds)
                         all_policy_latencies.append(policy_latency_seconds)
@@ -435,6 +540,8 @@ def eval_libero(args: argparse.Namespace) -> None:
                                 "post_robot0_eef_quat": as_float_list(obs.get("robot0_eef_quat", [])),
                                 "post_robot0_gripper_qpos": as_float_list(obs.get("robot0_gripper_qpos", [])),
                                 "raw_action": raw_action_trace,
+                                "action_perturbation": perturb_trace,
+                                "libero_action_before_perturb": as_float_list(action_before_perturb),
                                 "libero_action": as_float_list(action),
                                 "policy_latency_seconds": float(policy_latency_seconds),
                                 "policy_timing_seconds": policy_timing,
@@ -467,6 +574,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "policy_seed_base": int(args.policy_seed_base),
                         "policy_latency_seconds": episode_latency_summary,
                         "policy_breakdown_seconds": episode_breakdown_summary,
+                        "action_perturbation": perturb_config,
                     }
                 )
                 write_episode_trace(
@@ -539,6 +647,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                         "policy_seed_base": int(args.policy_seed_base),
                         "policy_latency_seconds": final_latency_summary,
                         "policy_breakdown_seconds": final_breakdown_summary,
+                        "action_perturbation": perturb_config,
                         "episodes": episode_latency_rows,
                     },
                     indent=2,
@@ -579,6 +688,26 @@ def main() -> None:
     parser.add_argument("--latency-json", type=Path, help="Optional JSON output for policy request latency statistics.")
     parser.add_argument("--deterministic-policy-seeds", action="store_true")
     parser.add_argument("--policy-seed-base", type=int, default=20260609)
+    parser.add_argument(
+        "--action-perturb-keys",
+        help="Comma-separated action keys or groups to perturb after policy inference. Groups: translation, rotation, continuous, all.",
+    )
+    parser.add_argument("--action-perturb-amplitude", type=float, default=0.0)
+    parser.add_argument("--action-perturb-sign", type=float, default=1.0)
+    parser.add_argument(
+        "--action-perturb-normalize-by-num-keys",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Divide per-key delta by sqrt(number of perturbed keys) to keep matched L2 norm.",
+    )
+    parser.add_argument("--action-perturb-step-start", type=int)
+    parser.add_argument("--action-perturb-step-end", type=int)
+    parser.add_argument(
+        "--action-perturb-clip",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Clip perturbed LIBERO actions to [-1, 1].",
+    )
     args = parser.parse_args()
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")

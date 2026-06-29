@@ -1,0 +1,755 @@
+{
+  "phase": "phase25_anisotropic_sensitivity",
+  "baseline": {
+    "source": "toy_quantvla/results/phase24_cuda_graph_service_2case_client_latency.json",
+    "total_successes": 2,
+    "total_episodes": 2,
+    "episodes": [
+      {
+        "task_id": 4,
+        "init_index": 9,
+        "case": "4:9",
+        "success": true,
+        "steps": 224,
+        "p50_ms": 71.68
+      },
+      {
+        "task_id": 6,
+        "init_index": 8,
+        "case": "6:8",
+        "success": true,
+        "steps": 649,
+        "p50_ms": 72.01
+      }
+    ]
+  },
+  "continuous_calibration": {
+    "source": "toy_quantvla/results/phase25_action_perturb_calib_continuous_amp003_2case_client_latency.json",
+    "perturbation": {
+      "keys": [
+        "x",
+        "y",
+        "z",
+        "roll",
+        "pitch",
+        "yaw"
+      ],
+      "amplitude": 0.03,
+      "sign": 1.0,
+      "normalize_by_num_keys": true,
+      "step_start": null,
+      "step_end": null,
+      "clip": true
+    },
+    "total_successes": 0,
+    "total_episodes": 2,
+    "episodes": [
+      {
+        "task_id": 4,
+        "init_index": 9,
+        "case": "4:9",
+        "success": false,
+        "steps": 991,
+        "p50_ms": 68.86
+      },
+      {
+        "task_id": 6,
+        "init_index": 8,
+        "case": "6:8",
+        "success": false,
+        "steps": 991,
+        "p50_ms": 69.89
+      }
+    ]
+  },
+  "dim_grid": [
+    {
+      "dimension": "x",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_x_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "x"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 1,
+      "total_episodes": 2,
+      "success_rate": 0.5,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": true,
+          "steps": 349,
+          "p50_ms": 68.88
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.36
+        }
+      ]
+    },
+    {
+      "dimension": "y",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_y_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.09
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 70.55
+        }
+      ]
+    },
+    {
+      "dimension": "z",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_z_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "z"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 2,
+      "total_episodes": 2,
+      "success_rate": 1.0,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": true,
+          "steps": 239,
+          "p50_ms": 70.19
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": true,
+          "steps": 666,
+          "p50_ms": 77.14
+        }
+      ]
+    },
+    {
+      "dimension": "roll",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_roll_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "roll"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 70.55
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.6
+        }
+      ]
+    },
+    {
+      "dimension": "pitch",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_pitch_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "pitch"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 67.6
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 70.48
+        }
+      ]
+    },
+    {
+      "dimension": "yaw",
+      "source": "toy_quantvla/results/phase25_action_dim_amp003_2case_yaw_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "yaw"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": null,
+        "step_end": null,
+        "clip": true
+      },
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "episodes": [
+        {
+          "task_id": 4,
+          "init_index": 9,
+          "case": "4:9",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.04
+        },
+        {
+          "task_id": 6,
+          "init_index": 8,
+          "case": "6:8",
+          "success": false,
+          "steps": 991,
+          "p50_ms": 73.17
+        }
+      ]
+    }
+  ],
+  "duration_grid": [
+    {
+      "tag": "task4_early",
+      "case": "task4:init9",
+      "phase": "early",
+      "window": "0:75",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task4_early_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 0,
+        "step_end": 75,
+        "clip": true
+      },
+      "success": false,
+      "steps": 991,
+      "p50_ms": 70.31
+    },
+    {
+      "tag": "task4_mid",
+      "case": "task4:init9",
+      "phase": "mid",
+      "window": "75:150",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task4_mid_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 75,
+        "step_end": 150,
+        "clip": true
+      },
+      "success": false,
+      "steps": 991,
+      "p50_ms": 69.91
+    },
+    {
+      "tag": "task4_late",
+      "case": "task4:init9",
+      "phase": "late",
+      "window": "150:225",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task4_late_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 150,
+        "step_end": 225,
+        "clip": true
+      },
+      "success": true,
+      "steps": 219,
+      "p50_ms": 72.12
+    },
+    {
+      "tag": "task6_early",
+      "case": "task6:init8",
+      "phase": "early",
+      "window": "0:200",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task6_early_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 0,
+        "step_end": 200,
+        "clip": true
+      },
+      "success": false,
+      "steps": 991,
+      "p50_ms": 74.17
+    },
+    {
+      "tag": "task6_mid",
+      "case": "task6:init8",
+      "phase": "mid",
+      "window": "200:450",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task6_mid_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 200,
+        "step_end": 450,
+        "clip": true
+      },
+      "success": true,
+      "steps": 697,
+      "p50_ms": 71.59
+    },
+    {
+      "tag": "task6_late",
+      "case": "task6:init8",
+      "phase": "late",
+      "window": "450:700",
+      "source": "toy_quantvla/results/phase25_duration_y_amp003_task6_late_client_latency.json",
+      "perturbation": {
+        "keys": [
+          "y"
+        ],
+        "amplitude": 0.03,
+        "sign": 1.0,
+        "normalize_by_num_keys": true,
+        "step_start": 450,
+        "step_end": 700,
+        "clip": true
+      },
+      "success": true,
+      "steps": 752,
+      "p50_ms": 72.83
+    }
+  ],
+  "layer_evidence": {
+    "source": "toy_quantvla/results/phase17_module_layer_sensitivity_map.json",
+    "high_scope_rows": [
+      {
+        "target": "action_head_model_blocks_6_15_eager",
+        "valid_steps": 484,
+        "continuous_max_p99": 0.00412,
+        "continuous_max_max": 0.054932,
+        "continuous_l2_p99": 0.004223,
+        "compiled_p50_ms": 93.9,
+        "eager_p50_ms": 102.3,
+        "p50_speedup": 1.09,
+        "sensitivity": "high",
+        "reason": "contains deterministic continuous-action spike"
+      },
+      {
+        "target": "action_head_model",
+        "valid_steps": 484,
+        "continuous_max_p99": 0.004349,
+        "continuous_max_max": 0.054932,
+        "continuous_l2_p99": 0.004995,
+        "compiled_p50_ms": 63.3,
+        "eager_p50_ms": 130.6,
+        "p50_speedup": 2.06,
+        "sensitivity": "high",
+        "reason": "contains deterministic continuous-action spike"
+      },
+      {
+        "target": "action_head_model_blocks_8_15_eager",
+        "valid_steps": 484,
+        "continuous_max_p99": 0.004463,
+        "continuous_max_max": 0.054932,
+        "continuous_l2_p99": 0.004657,
+        "compiled_p50_ms": 87.9,
+        "eager_p50_ms": 105.7,
+        "p50_speedup": 1.2,
+        "sensitivity": "high",
+        "reason": "contains deterministic continuous-action spike"
+      }
+    ],
+    "low_scope_rows": [
+      {
+        "target": "action_head_dit_ff_all",
+        "valid_steps": 484,
+        "continuous_max_p99": 0.002975,
+        "continuous_max_max": 0.006409,
+        "continuous_l2_p99": 0.003216,
+        "compiled_p50_ms": 123.5,
+        "eager_p50_ms": 90.5,
+        "p50_speedup": 0.73,
+        "sensitivity": "low-drift-slow",
+        "reason": "low same-observation drift but no useful speedup"
+      },
+      {
+        "target": "action_head_dit_attn_all",
+        "valid_steps": 484,
+        "continuous_max_p99": 0.00309,
+        "continuous_max_max": 0.006409,
+        "continuous_l2_p99": 0.003223,
+        "compiled_p50_ms": 102.9,
+        "eager_p50_ms": 92.3,
+        "p50_speedup": 0.9,
+        "sensitivity": "low-drift-slow",
+        "reason": "low same-observation drift but no useful speedup"
+      }
+    ],
+    "layer_heatmap": [
+      {
+        "block_or_scope": "block0",
+        "evidence_target": "action_head_model_blocks_0_0_eager",
+        "continuous_max_abs": 0.001831,
+        "spike_removed": true,
+        "p50_speedup": 2.11,
+        "risk": "low for step253",
+        "note": "只保留 block0 eager 即可消除 step253 spike；当前最强层级定位。"
+      },
+      {
+        "block_or_scope": "block1",
+        "evidence_target": "action_head_model_blocks_1_1_eager",
+        "continuous_max_abs": 0.054474,
+        "spike_removed": false,
+        "p50_speedup": 1.9,
+        "risk": "high for step253",
+        "note": "单独 block1 eager 不能消除 step253 spike。"
+      },
+      {
+        "block_or_scope": "block2",
+        "evidence_target": "action_head_model_blocks_2_2_eager",
+        "continuous_max_abs": 0.054932,
+        "spike_removed": false,
+        "p50_speedup": 1.97,
+        "risk": "high for step253",
+        "note": "单独 block2 eager 不能消除 step253 spike。"
+      },
+      {
+        "block_or_scope": "block3",
+        "evidence_target": "action_head_model_blocks_3_3_eager",
+        "continuous_max_abs": 0.055389,
+        "spike_removed": false,
+        "p50_speedup": 2.13,
+        "risk": "high for step253",
+        "note": "单独 block3 eager 不能消除 step253 spike。"
+      },
+      {
+        "block_or_scope": "blocks2-3",
+        "evidence_target": "action_head_model_blocks_2_3_eager",
+        "continuous_max_abs": 0.054932,
+        "spike_removed": false,
+        "p50_speedup": 1.84,
+        "risk": "high for step253",
+        "note": "block2-3 eager 不能消除 step253 spike；问题不在这个后续小段。"
+      },
+      {
+        "block_or_scope": "blocks4-7",
+        "evidence_target": "action_head_model_blocks_4_7_eager",
+        "continuous_max_abs": 0.054932,
+        "spike_removed": false,
+        "p50_speedup": 1.68,
+        "risk": "high for step253",
+        "note": "block4-7 eager 不能消除 step253 spike。"
+      },
+      {
+        "block_or_scope": "blocks8-15",
+        "evidence_target": "action_head_model_blocks_8_15_eager",
+        "continuous_max_abs": 0.054932,
+        "spike_removed": false,
+        "p50_speedup": 1.4,
+        "risk": "high for step253",
+        "note": "历史上改善部分 15-case，但 30-case 净回归，且不消除 task6 step253 spike。"
+      }
+    ],
+    "step253_top_rows": [
+      {
+        "target": "action_head_model",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.054932,
+        "continuous_l2_p99": 0.077386,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 54.2,
+        "eager_p50_ms": 130.4,
+        "p50_speedup": 2.41,
+        "spike_removed_at_0p005": false,
+        "raw_diff": {
+          "x": 0.054932,
+          "y": -0.005922,
+          "z": 0.042343,
+          "roll": -0.003405,
+          "pitch": 0.033631,
+          "yaw": -0.000634,
+          "gripper": -0.001953
+        }
+      },
+      {
+        "target": "action_head_model_blocks_0_15_eager",
+        "top_step": 253,
+        "top_dim": "z",
+        "continuous_max_abs": 0.000679,
+        "continuous_l2_p99": 0.000707,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 101.1,
+        "eager_p50_ms": 108.2,
+        "p50_speedup": 1.07,
+        "spike_removed_at_0p005": true,
+        "raw_diff": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.000679,
+          "roll": -0.00018,
+          "pitch": 7.3e-05,
+          "yaw": 0.0,
+          "gripper": 0.0
+        }
+      },
+      {
+        "target": "action_head_model_blocks_0_7_eager",
+        "top_step": 253,
+        "top_dim": "z",
+        "continuous_max_abs": 0.001388,
+        "continuous_l2_p99": 0.001826,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 85.2,
+        "eager_p50_ms": 117.6,
+        "p50_speedup": 1.38,
+        "spike_removed_at_0p005": true,
+        "raw_diff": {
+          "x": -0.000801,
+          "y": -0.000687,
+          "z": -0.001388,
+          "roll": -0.000524,
+          "pitch": -0.000146,
+          "yaw": 0.0,
+          "gripper": -0.001221
+        }
+      },
+      {
+        "target": "action_head_model_blocks_0_3_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.001831,
+        "continuous_l2_p99": 0.002626,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 73.9,
+        "eager_p50_ms": 130.4,
+        "p50_speedup": 1.76,
+        "spike_removed_at_0p005": true,
+        "raw_diff": {
+          "x": 0.001831,
+          "y": 0.0002,
+          "z": 0.001373,
+          "roll": -0.000524,
+          "pitch": -0.001024,
+          "yaw": -0.000544,
+          "gripper": 0.0
+        }
+      },
+      {
+        "target": "action_head_model_blocks_0_1_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.001574,
+        "continuous_l2_p99": 0.002068,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 75.7,
+        "eager_p50_ms": 130.4,
+        "p50_speedup": 1.72,
+        "spike_removed_at_0p005": true,
+        "raw_diff": {
+          "x": -0.001574,
+          "y": -0.000229,
+          "z": -0.001245,
+          "roll": -0.000262,
+          "pitch": 0.0,
+          "yaw": -0.000363,
+          "gripper": -0.000977
+        }
+      },
+      {
+        "target": "action_head_model_blocks_0_0_eager",
+        "top_step": 253,
+        "top_dim": "z",
+        "continuous_max_abs": 0.001831,
+        "continuous_l2_p99": 0.002533,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 64.8,
+        "eager_p50_ms": 137.0,
+        "p50_speedup": 2.11,
+        "spike_removed_at_0p005": true,
+        "raw_diff": {
+          "x": 0.001373,
+          "y": -5.7e-05,
+          "z": 0.001831,
+          "roll": -0.000524,
+          "pitch": -0.000877,
+          "yaw": -0.000363,
+          "gripper": -0.000977
+        }
+      },
+      {
+        "target": "action_head_model_blocks_2_3_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.054932,
+        "continuous_l2_p99": 0.07658,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 74.0,
+        "eager_p50_ms": 136.4,
+        "p50_speedup": 1.84,
+        "spike_removed_at_0p005": false,
+        "raw_diff": {
+          "x": 0.054932,
+          "y": -0.006895,
+          "z": 0.040741,
+          "roll": -0.002881,
+          "pitch": 0.033631,
+          "yaw": -0.000453,
+          "gripper": -0.002441
+        }
+      },
+      {
+        "target": "action_head_model_blocks_1_1_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.054474,
+        "continuous_l2_p99": 0.076141,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 67.8,
+        "eager_p50_ms": 128.7,
+        "p50_speedup": 1.9,
+        "spike_removed_at_0p005": false,
+        "raw_diff": {
+          "x": 0.054474,
+          "y": -0.006895,
+          "z": 0.040512,
+          "roll": -0.003143,
+          "pitch": 0.033631,
+          "yaw": -0.000544,
+          "gripper": -0.001465
+        }
+      },
+      {
+        "target": "action_head_model_blocks_2_2_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.054932,
+        "continuous_l2_p99": 0.076448,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 66.9,
+        "eager_p50_ms": 131.9,
+        "p50_speedup": 1.97,
+        "spike_removed_at_0p005": false,
+        "raw_diff": {
+          "x": 0.054932,
+          "y": -0.006781,
+          "z": 0.040512,
+          "roll": -0.002881,
+          "pitch": 0.033631,
+          "yaw": -0.000453,
+          "gripper": -0.002441
+        }
+      },
+      {
+        "target": "action_head_model_blocks_3_3_eager",
+        "top_step": 253,
+        "top_dim": "x",
+        "continuous_max_abs": 0.055389,
+        "continuous_l2_p99": 0.077135,
+        "repeat_span": 0.0,
+        "compiled_p50_ms": 64.7,
+        "eager_p50_ms": 137.8,
+        "p50_speedup": 2.13,
+        "spike_removed_at_0p005": false,
+        "raw_diff": {
+          "x": 0.055389,
+          "y": -0.006695,
+          "z": 0.041199,
+          "roll": -0.002881,
+          "pitch": 0.033631,
+          "yaw": -0.000544,
+          "gripper": -0.001465
+        }
+      }
+    ]
+  }
+}

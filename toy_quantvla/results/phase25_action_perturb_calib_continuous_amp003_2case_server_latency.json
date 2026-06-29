@@ -1,0 +1,183 @@
+{
+  "label": "fp16_official",
+  "writes": 41,
+  "get_action_seconds": {
+    "count": 1982,
+    "mean": 0.07420564142331165,
+    "min": 0.048607438802719116,
+    "max": 0.1752352938055992,
+    "p50": 0.06508057937026024,
+    "p90": 0.1301464930176735,
+    "p99": 0.1574285611510277
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_bytes": 5512128512,
+      "reserved_bytes": 5899288576,
+      "max_allocated_bytes": 5718056448,
+      "max_reserved_bytes": 5899288576
+    },
+    "lossless_cache_stats": {
+      "eagle_tokenizer_cache": {
+        "calls": 1985,
+        "hits": 1983,
+        "misses": 2,
+        "cached_entries": 2,
+        "last_text_count": 1
+      },
+      "prepare_input_pruning": {
+        "calls": 1985,
+        "backbone_keys": [
+          "eagle_attention_mask",
+          "eagle_image_sizes",
+          "eagle_input_ids",
+          "eagle_pixel_values"
+        ],
+        "action_keys": [
+          "embodiment_id",
+          "state"
+        ],
+        "moved_backbone_values": 7940,
+        "moved_action_values": 3970,
+        "static_cuda_cache_enabled": true,
+        "static_cuda_hits": 7934,
+        "static_cuda_misses": 6,
+        "static_cuda_hits_by_key": {
+          "eagle_input_ids": 1983,
+          "eagle_attention_mask": 1983,
+          "eagle_image_sizes": 1984,
+          "embodiment_id": 1984
+        },
+        "static_cuda_misses_by_key": {
+          "eagle_input_ids": 2,
+          "eagle_attention_mask": 2,
+          "eagle_image_sizes": 1,
+          "embodiment_id": 1
+        },
+        "static_cuda_cache_size": 6
+      }
+    },
+    "cuda_graph": {
+      "max_captures": 8,
+      "graph_cache_size": 2,
+      "capture_count": 2,
+      "capture_seconds": 0.46536073461174965,
+      "capture_seconds_by_key": {
+        "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.27833516150712967,
+        "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.18702557310461998
+      },
+      "graph_calls": 15880,
+      "eager_fallback_calls": 0,
+      "mismatch_calls": 1,
+      "failed": false,
+      "error": null,
+      "num_positional_args": 0,
+      "kwarg_keys": [
+        "hidden_states",
+        "encoder_hidden_states",
+        "timestep"
+      ],
+      "flat_specs": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            566,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ],
+      "flat_specs_by_key": {
+        "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+          {
+            "kind": "tensor",
+            "shape": [
+              1,
+              49,
+              1536
+            ],
+            "dtype": "torch.bfloat16",
+            "device": "cuda:0",
+            "requires_grad": false
+          },
+          {
+            "kind": "tensor",
+            "shape": [
+              1,
+              566,
+              2048
+            ],
+            "dtype": "torch.float32",
+            "device": "cuda:0",
+            "requires_grad": false
+          },
+          {
+            "kind": "tensor",
+            "shape": [
+              1
+            ],
+            "dtype": "torch.int64",
+            "device": "cuda:0",
+            "requires_grad": false
+          }
+        ],
+        "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+          {
+            "kind": "tensor",
+            "shape": [
+              1,
+              49,
+              1536
+            ],
+            "dtype": "torch.bfloat16",
+            "device": "cuda:0",
+            "requires_grad": false
+          },
+          {
+            "kind": "tensor",
+            "shape": [
+              1,
+              565,
+              2048
+            ],
+            "dtype": "torch.float32",
+            "device": "cuda:0",
+            "requires_grad": false
+          },
+          {
+            "kind": "tensor",
+            "shape": [
+              1
+            ],
+            "dtype": "torch.int64",
+            "device": "cuda:0",
+            "requires_grad": false
+          }
+        ]
+      }
+    }
+  }
+}

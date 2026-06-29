@@ -1,0 +1,243 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.12s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.29it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.21it/s]
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+Initialized dataset libero_10_subset with new_embodiment
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "profile_linear_modules": false,
+  "profile_scope": "dit_mlp_only",
+  "profile_scope_description": "DiT feed-forward Linear modules only",
+  "profile_max_modules": 0,
+  "profile_name_contains": [],
+  "torch_compile": {
+    "enabled": false,
+    "target": "none",
+    "compiled_modules": []
+  },
+  "lossless_cache": {
+    "eagle_tokenizer_cache": {
+      "enabled": true,
+      "already_installed": false,
+      "description": "Cache Eagle tokenizer outputs keyed by expanded prompt text and tokenizer kwargs."
+    },
+    "prepare_input_pruning": {
+      "enabled": true,
+      "already_installed": false,
+      "static_normalized_input_cache": true,
+      "description": "Move only eagle_* tensors to backbone and state/embodiment_id to action head."
+    },
+    "action_head_static_cache": {
+      "enabled": false
+    }
+  },
+  "cuda_graph": {
+    "max_captures": 8,
+    "graph_cache_size": 0,
+    "capture_count": 0,
+    "capture_seconds": 0.0,
+    "capture_seconds_by_key": {},
+    "graph_calls": 0,
+    "eager_fallback_calls": 0,
+    "mismatch_calls": 0,
+    "failed": false,
+    "error": null,
+    "num_positional_args": 0,
+    "kwarg_keys": [],
+    "flat_specs": [],
+    "flat_specs_by_key": {}
+  },
+  "prewarm_observations": 1,
+  "prewarm_observation_source": "real",
+  "prewarm_indices": "115",
+  "video_backend": "torchvision_av",
+  "model_load_seconds": 11.164198692888021,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prepare_seconds": 12.16279611364007,
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av",
+    "prewarm_task_descriptions": [
+      "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "put the white mug on the plate and put the chocolate pudding to the right of the plate"
+    ],
+    "prewarm_observations_with_task_descriptions": 3
+  },
+  "prewarm_get_action_seconds": {
+    "count": 3,
+    "mean": 0.2940695819755395,
+    "min": 0.053698647767305374,
+    "max": 0.6432819031178951,
+    "p50": 0.18522819504141808,
+    "p90": 0.5516711615025998,
+    "p99": 0.6341208289563656
+  },
+  "prewarm_memory": {
+    "allocated_bytes": 5512128512,
+    "reserved_bytes": 5706350592,
+    "max_allocated_bytes": 5704647680,
+    "max_reserved_bytes": 5857345536
+  },
+  "prewarm_total_seconds": 0.9977295882999897,
+  "cuda_graph_after_prewarm": {
+    "max_captures": 8,
+    "graph_cache_size": 2,
+    "capture_count": 2,
+    "capture_seconds": 0.34356966242194176,
+    "capture_seconds_by_key": {
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.20974181219935417,
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": 0.13382785022258759
+    },
+    "graph_calls": 24,
+    "eager_fallback_calls": 0,
+    "mismatch_calls": 1,
+    "failed": false,
+    "error": null,
+    "num_positional_args": 0,
+    "kwarg_keys": [
+      "hidden_states",
+      "encoder_hidden_states",
+      "timestep"
+    ],
+    "flat_specs": [
+      {
+        "kind": "tensor",
+        "shape": [
+          1,
+          49,
+          1536
+        ],
+        "dtype": "torch.bfloat16",
+        "device": "cuda:0",
+        "requires_grad": false
+      },
+      {
+        "kind": "tensor",
+        "shape": [
+          1,
+          566,
+          2048
+        ],
+        "dtype": "torch.float32",
+        "device": "cuda:0",
+        "requires_grad": false
+      },
+      {
+        "kind": "tensor",
+        "shape": [
+          1
+        ],
+        "dtype": "torch.int64",
+        "device": "cuda:0",
+        "requires_grad": false
+      }
+    ],
+    "flat_specs_by_key": {
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 566, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            566,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ],
+      "[{\"device\": \"cuda:0\", \"dtype\": \"torch.bfloat16\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 49, 1536]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.float32\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1, 565, 2048]}, {\"device\": \"cuda:0\", \"dtype\": \"torch.int64\", \"kind\": \"tensor\", \"requires_grad\": false, \"shape\": [1]}]": [
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            49,
+            1536
+          ],
+          "dtype": "torch.bfloat16",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1,
+            565,
+            2048
+          ],
+          "dtype": "torch.float32",
+          "device": "cuda:0",
+          "requires_grad": false
+        },
+        {
+          "kind": "tensor",
+          "shape": [
+            1
+          ],
+          "dtype": "torch.int64",
+          "device": "cuda:0",
+          "requires_grad": false
+        }
+      ]
+    }
+  }
+}
+Starting timed FP16 server on port 5555
+Server is ready and listening on tcp://0.0.0.0:5555
