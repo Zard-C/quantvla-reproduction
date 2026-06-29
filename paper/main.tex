@@ -50,7 +50,7 @@ When a VLA policy is post-training quantized, how should we interpret small acti
 
 Our answer is that PTQ should be treated as a policy perturbation. It maps a full-precision policy into a constrained low-precision function class, thereby changing both the conditional action distribution and the induced state distribution. The relevant empirical object is not only local action drift on fixed observations, but also how the perturbed policy redistributes success and failure across matched closed-loop rollouts.
 
-We make four observations:
+We make five observations:
 \begin{enumerate}
     \item Selective W4A8 quantization can be behaviorally robust even when it measurably changes action outputs.
     \item Attention-balancing corrections can improve mean offline drift while still worsening individual observations and task slices.
@@ -74,6 +74,9 @@ Our goal is not to present a single operating point in the VLA quantization desi
 
 \paragraph{Scope of claims.}
 This paper should be read as a behavior-level reproduction study and diagnostic analysis, not as a new quantization algorithm or a deployment benchmark. We make no latency, memory, or energy claim because our implementation uses fake quantization rather than packed low-precision kernels. We also do not treat small aggregate success-rate differences as evidence of policy dominance. The main empirical claim is narrower: VLA quantization can preserve aggregate success while redistributing which closed-loop rollouts succeed, so paired rollout analysis is necessary to interpret the effect of small action perturbations. The resulting design principle is that VLA quantization should target sensitivity-weighted closed-loop perturbation rather than only average open-loop action error.
+
+\paragraph{Experimental roadmap.}
+The experiments are intentionally staged. The first track studies quantization-induced perturbations: selective W4A8 fake quantization, ATM/OHB compensation, offline action drift, and 150 matched closed-loop rollouts. This is the main reproduction-oriented quantization study. The second track uses controlled action probes and prototype acceleration-boundary probes to test the same sensitivity framework beyond fake quantization. In particular, the \texttt{torch.compile} and eager-island experiments should not be read as a quantization method. They are implementation-induced policy perturbations used to ask whether a speed-oriented execution boundary can also be amplified by closed-loop dynamics, and whether sensitivity proxies can guide which boundaries to protect.
 
 \section{Related Work}
 
@@ -350,6 +353,9 @@ This identity is simple but important: a net success gain can hide substantial b
 
 \paragraph{Model and task.}
 We use the GR00T N1.5 LIBERO long-horizon checkpoint and evaluate on LIBERO-10~\citep{grootn1,libero}. The accepted FP16 baseline matches the official reference result of 38/50 on the standard 5-trial LIBERO-10 run. The evaluated policy predicts action chunks with seven action components: $x$, $y$, $z$, roll, pitch, yaw, and gripper. Unless noted otherwise, experiments use 8 denoising steps.
+
+\paragraph{Two perturbation tracks.}
+Track A is the quantization track. It applies selective W4A8 fake quantization and optional ATM/OHB compensation to the same FP16 policy, then evaluates both open-loop action drift and closed-loop rollout redistribution. Track B is the acceleration-boundary track. It keeps model weights in FP16, but changes the action-head execution boundary using \texttt{torch.compile} with optional eager islands around selected transformer blocks. Track B is included because deployment-oriented acceleration can introduce small numerical or graph-boundary differences even when the model semantics are unchanged. We use it as a controlled stress test of the same closed-loop sensitivity claims, not as evidence of final packed-kernel quantization speed.
 
 \paragraph{Quantization scope.}
 We study the selective \texttt{llm\_dit\_mlp} W4A8 fake-quantization scope: 84 selected LLM linear layers and 32 selected DiT MLP linear layers, for 116 quantized modules. DiT attention projections are intentionally left in floating point. This design matters because attention projections feed a softmax routing mechanism, while MLP errors are more often residual perturbations.
