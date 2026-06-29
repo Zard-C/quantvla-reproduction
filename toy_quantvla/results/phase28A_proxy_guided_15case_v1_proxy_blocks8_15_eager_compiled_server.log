@@ -1,0 +1,124 @@
+`use_fast` is set to `True` but the image processor class does not have a fast version.  Falling back to the slow version.
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Loading pretrained dual brain from /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone vision tower: True
+Tune backbone LLM: False
+Tune action head projector: True
+Tune action head DiT: True
+Model not found or avail in the huggingface hub. Loading from local path: /root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain
+Tune backbone llm: False
+Tune backbone visual: True
+Total number of DiT parameters:  550386688
+Total number of SelfAttentionTransformer parameters:  201433088
+Tune action head projector: True
+Tune action head diffusion model: True
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:00<00:00,  5.88it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.50it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:00<00:00,  5.55it/s]
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/torchvision/io/_video_deprecation_warning.py:5: UserWarning: The video decoding and encoding capabilities of torchvision are deprecated from version 0.22 and will be removed in version 0.24. We recommend that you migrate to TorchCodec, where we'll consolidate the future decoding/encoding capabilities of PyTorch: https://github.com/pytorch/torchcodec
+  warnings.warn(
+Tune backbone llm: False
+Tune backbone visual: True
+Tune action head projector: True
+Tune action head diffusion model: True
+Set action denoising steps to 8
+Initialized dataset libero_10_subset with new_embodiment
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "profile_linear_modules": false,
+  "profile_scope": "dit_mlp_only",
+  "profile_scope_description": "DiT feed-forward Linear modules only",
+  "profile_max_modules": 0,
+  "profile_name_contains": [],
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model_blocks_8_15_eager",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "cudagraph_mark_step": false,
+    "cudagraph_mark_step_modules": [],
+    "compiled_modules": [
+      "policy.model.action_head.model"
+    ],
+    "eager_island_modules": [
+      "policy.model.action_head.model.transformer_blocks.8",
+      "policy.model.action_head.model.transformer_blocks.9",
+      "policy.model.action_head.model.transformer_blocks.10",
+      "policy.model.action_head.model.transformer_blocks.11",
+      "policy.model.action_head.model.transformer_blocks.12",
+      "policy.model.action_head.model.transformer_blocks.13",
+      "policy.model.action_head.model.transformer_blocks.14",
+      "policy.model.action_head.model.transformer_blocks.15"
+    ],
+    "wrap_seconds": 1.2753381617367268
+  },
+  "lossless_cache": {
+    "eagle_tokenizer_cache": {
+      "enabled": false
+    },
+    "prepare_input_pruning": {
+      "enabled": false
+    },
+    "action_head_static_cache": {
+      "enabled": false
+    }
+  },
+  "cuda_graph": {
+    "dit_forward": false,
+    "max_captures": 8
+  },
+  "prewarm_observations": 1,
+  "prewarm_observation_source": "real",
+  "prewarm_indices": "115",
+  "video_backend": "torchvision_av",
+  "model_load_seconds": 9.276073597371578,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prepare_seconds": 17.264502003788948,
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av",
+    "prewarm_task_descriptions": [
+      "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "put both moka pots on the stove"
+    ],
+    "prewarm_observations_with_task_descriptions": 4
+  },
+  "prewarm_get_action_seconds": {
+    "count": 4,
+    "mean": 1.6492637200281024,
+    "min": 0.07588699087500572,
+    "max": 3.837470058351755,
+    "p50": 1.3418489154428244,
+    "p90": 3.1215641200542454,
+    "p99": 3.7658794645220035
+  },
+  "prewarm_memory": {
+    "allocated_bytes": 5476782080,
+    "reserved_bytes": 5614075904,
+    "max_allocated_bytes": 5682666496,
+    "max_reserved_bytes": 5807013888
+  },
+  "prewarm_total_seconds": 6.712022516876459
+}
+Starting timed FP16 server on port 5623
+Server is ready and listening on tcp://0.0.0.0:5623

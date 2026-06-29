@@ -15,15 +15,43 @@
 
 | run | policy | status | success | server p50 ms | speedup | prepare s |
 | --- | --- | --- | --- | --- | --- | --- |
-| FP16 baseline | no compile | missing | missing | - | - | - |
-| Speed-only compile | compile action_head.model | missing | missing | - | - | - |
-| Proxy-guided block0 eager | compile action_head.model; keep block0 eager | missing | missing | - | - | - |
-| Proxy-guided blocks8-15 eager | compile action_head.model; keep blocks8-15 eager | missing | missing | - | - | - |
-| Random/sanity block1 eager | compile action_head.model; keep block1 eager | missing | missing | - | - | - |
+| FP16 baseline | no compile | complete | 7/15 | 84.76 | 1.0x | 10.5 |
+| Speed-only compile | compile action_head.model | complete | 5/15 | 50.35 | 1.68x | 17.5 |
+| Proxy-guided block0 eager | compile action_head.model; keep block0 eager | complete | 6/15 | 50.96 | 1.66x | 19.91 |
+| Proxy-guided blocks8-15 eager | compile action_head.model; keep blocks8-15 eager | complete | 7/15 | 67.36 | 1.26x | 17.26 |
+| Random/sanity block1 eager | compile action_head.model; keep block1 eager | complete | 5/15 | 51.54 | 1.64x | 19.15 |
 
 ## Paired repair/regression
 
-结果尚未完整，paired comparison 暂不可用。
+| comparison | common | repaired | regressed | net | repaired cases | regressed cases |
+| --- | --- | --- | --- | --- | --- | --- |
+| speed_only vs baseline | 15 | 1 | 3 | -2 | 8:9 | 4:6, 6:0, 8:10 |
+| proxy_block0 vs baseline | 15 | 0 | 1 | -1 | - | 4:9 |
+| proxy_blocks8_15 vs baseline | 15 | 1 | 1 | 0 | 8:9 | 4:9 |
+| random_block1 vs baseline | 15 | 1 | 3 | -2 | 4:7 | 4:9, 6:0, 8:10 |
+| proxy_block0 vs speed_only | 15 | 3 | 2 | 1 | 4:6, 6:0, 8:10 | 4:9, 8:9 |
+| proxy_blocks8_15 vs speed_only | 15 | 3 | 1 | 2 | 4:6, 6:0, 8:10 | 4:9 |
+| random_block1 vs speed_only | 15 | 2 | 2 | 0 | 4:6, 4:7 | 4:9, 8:9 |
+
+## Per-case outcomes
+
+| case | baseline | speed_only | proxy_block0 | proxy_blocks8_15 | random_block1 |
+| --- | --- | --- | --- | --- | --- |
+| 4:10 | S212 | S244 | S215 | S212 | S213 |
+| 4:6 | S245 | F991 | S240 | S241 | S239 |
+| 4:7 | F991 | F991 | F991 | F991 | S940 |
+| 4:8 | F991 | F991 | F991 | F991 | F991 |
+| 4:9 | S224 | S222 | F991 | F991 | F991 |
+| 6:0 | S210 | F991 | S204 | S206 | F991 |
+| 6:1 | S589 | S236 | S233 | S234 | S235 |
+| 6:2 | S275 | S228 | S237 | S235 | S238 |
+| 6:3 | F991 | F991 | F991 | F991 | F991 |
+| 6:4 | F991 | F991 | F991 | F991 | F991 |
+| 8:10 | S385 | F991 | S444 | S604 | F991 |
+| 8:6 | F991 | F991 | F991 | F991 | F991 |
+| 8:7 | F991 | F991 | F991 | F991 | F991 |
+| 8:8 | F991 | F991 | F991 | F991 | F991 |
+| 8:9 | F991 | S476 | F991 | S424 | F991 |
 
 ## 初步判读规则
 

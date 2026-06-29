@@ -1,0 +1,1052 @@
+{
+  "phase": "phase28A_proxy_guided_mixed_precision",
+  "tag_prefix": "phase28A_proxy_guided_15case_v1",
+  "purpose": "test whether sensitivity-proxy-guided protection improves closed-loop behavior under similar acceleration budget",
+  "case_list": "4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9,8:10",
+  "policy_seed_base": 20260613,
+  "baseline_server_p50_ms": 84.76,
+  "runs": [
+    {
+      "name": "baseline",
+      "label": "FP16 baseline",
+      "policy": "no compile",
+      "status": "complete",
+      "client_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_baseline_baseline_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_baseline_baseline_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_baseline_baseline_server_prepare.json",
+      "total_successes": 7,
+      "total_episodes": 15,
+      "success_rate": 0.4666666666666667,
+      "client_p50_ms": 89.77,
+      "server_p50_ms": 84.76,
+      "speedup_vs_baseline_server_p50": 1.0,
+      "prepare_seconds": 10.5,
+      "torch_compile": {
+        "enabled": false,
+        "target": "none",
+        "compiled_modules": []
+      },
+      "episodes": [
+        {
+          "case": "4:6",
+          "task_id": 4,
+          "init_index": 6,
+          "success": true,
+          "steps": 245,
+          "p50_ms": 90.73
+        },
+        {
+          "case": "4:7",
+          "task_id": 4,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.3
+        },
+        {
+          "case": "4:8",
+          "task_id": 4,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.52
+        },
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": true,
+          "steps": 224,
+          "p50_ms": 89.77
+        },
+        {
+          "case": "4:10",
+          "task_id": 4,
+          "init_index": 10,
+          "success": true,
+          "steps": 212,
+          "p50_ms": 89.89
+        },
+        {
+          "case": "6:0",
+          "task_id": 6,
+          "init_index": 0,
+          "success": true,
+          "steps": 210,
+          "p50_ms": 89.69
+        },
+        {
+          "case": "6:1",
+          "task_id": 6,
+          "init_index": 1,
+          "success": true,
+          "steps": 589,
+          "p50_ms": 89.79
+        },
+        {
+          "case": "6:2",
+          "task_id": 6,
+          "init_index": 2,
+          "success": true,
+          "steps": 275,
+          "p50_ms": 89.47
+        },
+        {
+          "case": "6:3",
+          "task_id": 6,
+          "init_index": 3,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.13
+        },
+        {
+          "case": "6:4",
+          "task_id": 6,
+          "init_index": 4,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.72
+        },
+        {
+          "case": "8:6",
+          "task_id": 8,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.86
+        },
+        {
+          "case": "8:7",
+          "task_id": 8,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 89.96
+        },
+        {
+          "case": "8:8",
+          "task_id": 8,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 90.27
+        },
+        {
+          "case": "8:9",
+          "task_id": 8,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 90.06
+        },
+        {
+          "case": "8:10",
+          "task_id": 8,
+          "init_index": 10,
+          "success": true,
+          "steps": 385,
+          "p50_ms": 90.29
+        }
+      ],
+      "per_task": {
+        "4": {
+          "successes": 3,
+          "total": 5
+        },
+        "6": {
+          "successes": 3,
+          "total": 5
+        },
+        "8": {
+          "successes": 1,
+          "total": 5
+        }
+      }
+    },
+    {
+      "name": "speed_only",
+      "label": "Speed-only compile",
+      "policy": "compile action_head.model",
+      "status": "complete",
+      "client_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_speed_only_action_head_model_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_speed_only_action_head_model_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_speed_only_action_head_model_compiled_server_prepare.json",
+      "total_successes": 5,
+      "total_episodes": 15,
+      "success_rate": 0.3333333333333333,
+      "client_p50_ms": 54.65,
+      "server_p50_ms": 50.35,
+      "speedup_vs_baseline_server_p50": 1.68,
+      "prepare_seconds": 17.5,
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [],
+        "wrap_seconds": 1.2783841826021671
+      },
+      "episodes": [
+        {
+          "case": "4:6",
+          "task_id": 4,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 54.81
+        },
+        {
+          "case": "4:7",
+          "task_id": 4,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 54.89
+        },
+        {
+          "case": "4:8",
+          "task_id": 4,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 51.68
+        },
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": true,
+          "steps": 222,
+          "p50_ms": 54.12
+        },
+        {
+          "case": "4:10",
+          "task_id": 4,
+          "init_index": 10,
+          "success": true,
+          "steps": 244,
+          "p50_ms": 53.93
+        },
+        {
+          "case": "6:0",
+          "task_id": 6,
+          "init_index": 0,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.02
+        },
+        {
+          "case": "6:1",
+          "task_id": 6,
+          "init_index": 1,
+          "success": true,
+          "steps": 236,
+          "p50_ms": 53.89
+        },
+        {
+          "case": "6:2",
+          "task_id": 6,
+          "init_index": 2,
+          "success": true,
+          "steps": 228,
+          "p50_ms": 54.84
+        },
+        {
+          "case": "6:3",
+          "task_id": 6,
+          "init_index": 3,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.44
+        },
+        {
+          "case": "6:4",
+          "task_id": 6,
+          "init_index": 4,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 54.85
+        },
+        {
+          "case": "8:6",
+          "task_id": 8,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 54.64
+        },
+        {
+          "case": "8:7",
+          "task_id": 8,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 53.88
+        },
+        {
+          "case": "8:8",
+          "task_id": 8,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 53.69
+        },
+        {
+          "case": "8:9",
+          "task_id": 8,
+          "init_index": 9,
+          "success": true,
+          "steps": 476,
+          "p50_ms": 54.1
+        },
+        {
+          "case": "8:10",
+          "task_id": 8,
+          "init_index": 10,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 54.77
+        }
+      ],
+      "per_task": {
+        "4": {
+          "successes": 2,
+          "total": 5
+        },
+        "6": {
+          "successes": 2,
+          "total": 5
+        },
+        "8": {
+          "successes": 1,
+          "total": 5
+        }
+      }
+    },
+    {
+      "name": "proxy_block0",
+      "label": "Proxy-guided block0 eager",
+      "policy": "compile action_head.model; keep block0 eager",
+      "status": "complete",
+      "client_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_block0_eager_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_block0_eager_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_block0_eager_compiled_server_prepare.json",
+      "total_successes": 6,
+      "total_episodes": 15,
+      "success_rate": 0.4,
+      "client_p50_ms": 55.32,
+      "server_p50_ms": 50.96,
+      "speedup_vs_baseline_server_p50": 1.66,
+      "prepare_seconds": 19.91,
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_0_0_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.0"
+        ],
+        "wrap_seconds": 1.3013260290026665
+      },
+      "episodes": [
+        {
+          "case": "4:6",
+          "task_id": 4,
+          "init_index": 6,
+          "success": true,
+          "steps": 240,
+          "p50_ms": 55.38
+        },
+        {
+          "case": "4:7",
+          "task_id": 4,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.16
+        },
+        {
+          "case": "4:8",
+          "task_id": 4,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.17
+        },
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.32
+        },
+        {
+          "case": "4:10",
+          "task_id": 4,
+          "init_index": 10,
+          "success": true,
+          "steps": 215,
+          "p50_ms": 55.17
+        },
+        {
+          "case": "6:0",
+          "task_id": 6,
+          "init_index": 0,
+          "success": true,
+          "steps": 204,
+          "p50_ms": 55.31
+        },
+        {
+          "case": "6:1",
+          "task_id": 6,
+          "init_index": 1,
+          "success": true,
+          "steps": 233,
+          "p50_ms": 53.54
+        },
+        {
+          "case": "6:2",
+          "task_id": 6,
+          "init_index": 2,
+          "success": true,
+          "steps": 237,
+          "p50_ms": 55.57
+        },
+        {
+          "case": "6:3",
+          "task_id": 6,
+          "init_index": 3,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.24
+        },
+        {
+          "case": "6:4",
+          "task_id": 6,
+          "init_index": 4,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.16
+        },
+        {
+          "case": "8:6",
+          "task_id": 8,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.25
+        },
+        {
+          "case": "8:7",
+          "task_id": 8,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.34
+        },
+        {
+          "case": "8:8",
+          "task_id": 8,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.63
+        },
+        {
+          "case": "8:9",
+          "task_id": 8,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.51
+        },
+        {
+          "case": "8:10",
+          "task_id": 8,
+          "init_index": 10,
+          "success": true,
+          "steps": 444,
+          "p50_ms": 55.25
+        }
+      ],
+      "per_task": {
+        "4": {
+          "successes": 2,
+          "total": 5
+        },
+        "6": {
+          "successes": 3,
+          "total": 5
+        },
+        "8": {
+          "successes": 1,
+          "total": 5
+        }
+      }
+    },
+    {
+      "name": "proxy_blocks8_15",
+      "label": "Proxy-guided blocks8-15 eager",
+      "policy": "compile action_head.model; keep blocks8-15 eager",
+      "status": "complete",
+      "client_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_blocks8_15_eager_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_blocks8_15_eager_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_proxy_blocks8_15_eager_compiled_server_prepare.json",
+      "total_successes": 7,
+      "total_episodes": 15,
+      "success_rate": 0.4666666666666667,
+      "client_p50_ms": 71.82,
+      "server_p50_ms": 67.36,
+      "speedup_vs_baseline_server_p50": 1.26,
+      "prepare_seconds": 17.26,
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_8_15_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.8",
+          "policy.model.action_head.model.transformer_blocks.9",
+          "policy.model.action_head.model.transformer_blocks.10",
+          "policy.model.action_head.model.transformer_blocks.11",
+          "policy.model.action_head.model.transformer_blocks.12",
+          "policy.model.action_head.model.transformer_blocks.13",
+          "policy.model.action_head.model.transformer_blocks.14",
+          "policy.model.action_head.model.transformer_blocks.15"
+        ],
+        "wrap_seconds": 1.2753381617367268
+      },
+      "episodes": [
+        {
+          "case": "4:6",
+          "task_id": 4,
+          "init_index": 6,
+          "success": true,
+          "steps": 241,
+          "p50_ms": 72.57
+        },
+        {
+          "case": "4:7",
+          "task_id": 4,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.62
+        },
+        {
+          "case": "4:8",
+          "task_id": 4,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.01
+        },
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.66
+        },
+        {
+          "case": "4:10",
+          "task_id": 4,
+          "init_index": 10,
+          "success": true,
+          "steps": 212,
+          "p50_ms": 71.45
+        },
+        {
+          "case": "6:0",
+          "task_id": 6,
+          "init_index": 0,
+          "success": true,
+          "steps": 206,
+          "p50_ms": 71.94
+        },
+        {
+          "case": "6:1",
+          "task_id": 6,
+          "init_index": 1,
+          "success": true,
+          "steps": 234,
+          "p50_ms": 71.92
+        },
+        {
+          "case": "6:2",
+          "task_id": 6,
+          "init_index": 2,
+          "success": true,
+          "steps": 235,
+          "p50_ms": 71.71
+        },
+        {
+          "case": "6:3",
+          "task_id": 6,
+          "init_index": 3,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.72
+        },
+        {
+          "case": "6:4",
+          "task_id": 6,
+          "init_index": 4,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.98
+        },
+        {
+          "case": "8:6",
+          "task_id": 8,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.49
+        },
+        {
+          "case": "8:7",
+          "task_id": 8,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.63
+        },
+        {
+          "case": "8:8",
+          "task_id": 8,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 71.67
+        },
+        {
+          "case": "8:9",
+          "task_id": 8,
+          "init_index": 9,
+          "success": true,
+          "steps": 424,
+          "p50_ms": 71.46
+        },
+        {
+          "case": "8:10",
+          "task_id": 8,
+          "init_index": 10,
+          "success": true,
+          "steps": 604,
+          "p50_ms": 71.47
+        }
+      ],
+      "per_task": {
+        "4": {
+          "successes": 2,
+          "total": 5
+        },
+        "6": {
+          "successes": 3,
+          "total": 5
+        },
+        "8": {
+          "successes": 2,
+          "total": 5
+        }
+      }
+    },
+    {
+      "name": "random_block1",
+      "label": "Random/sanity block1 eager",
+      "policy": "compile action_head.model; keep block1 eager",
+      "status": "complete",
+      "client_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_random_block1_eager_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_random_block1_eager_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28A_proxy_guided_15case_v1_random_block1_eager_compiled_server_prepare.json",
+      "total_successes": 5,
+      "total_episodes": 15,
+      "success_rate": 0.3333333333333333,
+      "client_p50_ms": 55.8,
+      "server_p50_ms": 51.54,
+      "speedup_vs_baseline_server_p50": 1.64,
+      "prepare_seconds": 19.15,
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_1_1_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.1"
+        ],
+        "wrap_seconds": 1.1513606980443
+      },
+      "episodes": [
+        {
+          "case": "4:6",
+          "task_id": 4,
+          "init_index": 6,
+          "success": true,
+          "steps": 239,
+          "p50_ms": 54.86
+        },
+        {
+          "case": "4:7",
+          "task_id": 4,
+          "init_index": 7,
+          "success": true,
+          "steps": 940,
+          "p50_ms": 54.33
+        },
+        {
+          "case": "4:8",
+          "task_id": 4,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 56.03
+        },
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.71
+        },
+        {
+          "case": "4:10",
+          "task_id": 4,
+          "init_index": 10,
+          "success": true,
+          "steps": 213,
+          "p50_ms": 55.62
+        },
+        {
+          "case": "6:0",
+          "task_id": 6,
+          "init_index": 0,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.96
+        },
+        {
+          "case": "6:1",
+          "task_id": 6,
+          "init_index": 1,
+          "success": true,
+          "steps": 235,
+          "p50_ms": 55.95
+        },
+        {
+          "case": "6:2",
+          "task_id": 6,
+          "init_index": 2,
+          "success": true,
+          "steps": 238,
+          "p50_ms": 56.23
+        },
+        {
+          "case": "6:3",
+          "task_id": 6,
+          "init_index": 3,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.91
+        },
+        {
+          "case": "6:4",
+          "task_id": 6,
+          "init_index": 4,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.85
+        },
+        {
+          "case": "8:6",
+          "task_id": 8,
+          "init_index": 6,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.39
+        },
+        {
+          "case": "8:7",
+          "task_id": 8,
+          "init_index": 7,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.79
+        },
+        {
+          "case": "8:8",
+          "task_id": 8,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.88
+        },
+        {
+          "case": "8:9",
+          "task_id": 8,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.77
+        },
+        {
+          "case": "8:10",
+          "task_id": 8,
+          "init_index": 10,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 55.96
+        }
+      ],
+      "per_task": {
+        "4": {
+          "successes": 3,
+          "total": 5
+        },
+        "6": {
+          "successes": 2,
+          "total": 5
+        },
+        "8": {
+          "successes": 0,
+          "total": 5
+        }
+      }
+    }
+  ],
+  "paired_comparisons": [
+    {
+      "left": "baseline",
+      "right": "speed_only",
+      "common": 15,
+      "repaired": [
+        "8:9"
+      ],
+      "regressed": [
+        "4:6",
+        "6:0",
+        "8:10"
+      ],
+      "same_success": [
+        "4:10",
+        "4:9",
+        "6:1",
+        "6:2"
+      ],
+      "same_failure": [
+        "4:7",
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8"
+      ],
+      "net": -2
+    },
+    {
+      "left": "baseline",
+      "right": "proxy_block0",
+      "common": 15,
+      "repaired": [],
+      "regressed": [
+        "4:9"
+      ],
+      "same_success": [
+        "4:10",
+        "4:6",
+        "6:0",
+        "6:1",
+        "6:2",
+        "8:10"
+      ],
+      "same_failure": [
+        "4:7",
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8",
+        "8:9"
+      ],
+      "net": -1
+    },
+    {
+      "left": "baseline",
+      "right": "proxy_blocks8_15",
+      "common": 15,
+      "repaired": [
+        "8:9"
+      ],
+      "regressed": [
+        "4:9"
+      ],
+      "same_success": [
+        "4:10",
+        "4:6",
+        "6:0",
+        "6:1",
+        "6:2",
+        "8:10"
+      ],
+      "same_failure": [
+        "4:7",
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8"
+      ],
+      "net": 0
+    },
+    {
+      "left": "baseline",
+      "right": "random_block1",
+      "common": 15,
+      "repaired": [
+        "4:7"
+      ],
+      "regressed": [
+        "4:9",
+        "6:0",
+        "8:10"
+      ],
+      "same_success": [
+        "4:10",
+        "4:6",
+        "6:1",
+        "6:2"
+      ],
+      "same_failure": [
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8",
+        "8:9"
+      ],
+      "net": -2
+    },
+    {
+      "left": "speed_only",
+      "right": "proxy_block0",
+      "common": 15,
+      "repaired": [
+        "4:6",
+        "6:0",
+        "8:10"
+      ],
+      "regressed": [
+        "4:9",
+        "8:9"
+      ],
+      "same_success": [
+        "4:10",
+        "6:1",
+        "6:2"
+      ],
+      "same_failure": [
+        "4:7",
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8"
+      ],
+      "net": 1
+    },
+    {
+      "left": "speed_only",
+      "right": "proxy_blocks8_15",
+      "common": 15,
+      "repaired": [
+        "4:6",
+        "6:0",
+        "8:10"
+      ],
+      "regressed": [
+        "4:9"
+      ],
+      "same_success": [
+        "4:10",
+        "6:1",
+        "6:2",
+        "8:9"
+      ],
+      "same_failure": [
+        "4:7",
+        "4:8",
+        "6:3",
+        "6:4",
+        "8:6",
+        "8:7",
+        "8:8"
+      ],
+      "net": 2
+    },
+    {
+      "left": "speed_only",
+      "right": "random_block1",
+      "common": 15,
+      "repaired": [
+        "4:6",
+        "4:7"
+      ],
+      "regressed": [
+        "4:9",
+        "8:9"
+      ],
+      "same_success": [
+        "4:10",
+        "6:1",
+        "6:2"
+      ],
+      "same_failure": [
+        "4:8",
+        "6:0",
+        "6:3",
+        "6:4",
+        "8:10",
+        "8:6",
+        "8:7",
+        "8:8"
+      ],
+      "net": 0
+    }
+  ]
+}
