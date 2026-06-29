@@ -268,7 +268,32 @@ The first-order terminal margin perturbation is $\Delta h \approx \sum_t \alpha_
 The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-quant-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between quantization errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
 In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce quantization error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. Layer-statistic corrections such as ATM and OHB can be useful proxies, but they do not by themselves optimize this closed-loop criterion.
 
-\paragraph{Claim 3: offline drift is incomplete without state-distribution control.}
+\paragraph{Claim 3: closed-loop sensitivity is anisotropic.}
+The metric $G_t$ also implies that not all perturbations of the same norm are equally important. For a unit action coordinate $e_j$, an equal-magnitude perturbation $\eta_t=\epsilon e_j$ has local squared terminal-margin risk
+\begin{equation}
+    r_{t,j}
+    \approx
+    \epsilon^2 e_j^\top G_t e_j .
+    \label{eq:action-channel-risk}
+\end{equation}
+Thus action channels are only equally sensitive in the special case where the relevant diagonal and directional structure of $G_t$ is uniform. In manipulation, this is unlikely: Cartesian motion, wrist orientation, and gripper timing couple differently to contact dynamics and task margins.
+
+The same argument applies across time. For a fixed action perturbation direction $v$ injected at two different rollout steps, the local risk is
+\begin{equation}
+    r_t(v) \approx v^\top G_t v,
+\end{equation}
+and $G_t$ changes with $B_t$, $\Phi_{t\to T}$, and $\nabla h(s_T)$. Therefore early approach, contact, grasping, transfer, and placement windows can have different sensitivity even when the perturbation norm is unchanged.
+
+Finally, for a module- or layer-level perturbation $\zeta_{i,t}$ whose first-order effect on the action is $\eta_t\approx J_{i,t}\zeta_{i,t}$, the corresponding risk is
+\begin{equation}
+    r_{i,t}
+    \approx
+    \zeta_{i,t}^\top J_{i,t}^\top G_t J_{i,t}\zeta_{i,t}.
+    \label{eq:module-risk}
+\end{equation}
+This shows why layer selection for quantization or compilation cannot be based only on parameter count, FLOPs, or latency. A module is attractive for acceleration only if it has high speed benefit and low sensitivity-weighted risk under $J_{i,t}^\top G_tJ_{i,t}$. The practical consequence is the design rule we test later: not all action dimensions, rollout durations, or layer boundaries are equal.
+
+\paragraph{Claim 4: offline drift is incomplete without state-distribution control.}
 Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop quantized execution instead samples from $d_{\pi_q}$:
 \begin{equation}
     \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
@@ -307,7 +332,7 @@ under the standard definition $\mathrm{TV}(p,q)=\frac{1}{2}\|p-q\|_1$. If $\ell$
 \end{equation}
 The point is not that these distances are easy to estimate in high-dimensional robot rollouts, but that fixed-distribution drift is only one term. Predicting rollout robustness also requires controlling how far the quantized policy moves the visited state distribution.
 
-\paragraph{Claim 4: aggregate success differences decompose exactly into repairs and regressions.}
+\paragraph{Claim 5: aggregate success differences decompose exactly into repairs and regressions.}
 For matched cases $c\in\mathcal{C}$ and binary success indicators $S_A(c), S_B(c)\in\{0,1\}$,
 \begin{equation}
     \sum_{c\in\mathcal{C}} S_B(c) - \sum_{c\in\mathcal{C}} S_A(c)
@@ -572,25 +597,25 @@ The theoretical claims in Section~3 are not used as proof that one quantized pol
 \toprule
 Claim & Experimental evidence & Interpretation \\
 \midrule
-Sensitivity-weighted perturbation &
+Claim 1: sensitivity propagation &
 Small action changes produce both repairs and regressions under the same model family. Keyframe repairs branch early rather than only correcting final placement. &
 The effect depends on where the perturbation enters the trajectory, not only on its norm. \\
 \addlinespace
-Margin crossing &
+Claim 2: margin crossing &
 Task 8 contains both directions: W4A8 \texttt{none} improves task 8 from 3/15 FP16 successes to 9/15, yet task 8 init 0 is a case where both quantized modes regress a successful FP16 rollout. &
 The same task can contain low-margin failures that are repaired and low-margin successes that are broken. \\
 \addlinespace
-Offline drift insufficiency &
+Claim 3: anisotropic sensitivity &
+Equal-norm action probes differ by channel and phase; acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. &
+Perturbation risk is structured by action direction, future closed-loop gain, task margin, and module location. \\
+\addlinespace
+Claim 4: offline drift insufficiency &
 ATM+OHB has the best mean offline drift, but OHB has the highest aggregate closed-loop point estimate; ATM improves task 4 by 5 successes over \texttt{none} while regressing task 8 by 5. &
 Reducing average open-loop error does not imply monotonic closed-loop improvement. \\
 \addlinespace
-Repair/regression decomposition &
+Claim 5: repair/regression decomposition &
 OHB vs \texttt{none} has 16 repaired failures and 13 new regressions, yielding only a net +3 successes. ATM vs \texttt{none} is 14 repairs and 13 regressions. &
 Aggregate success changes hide substantial redistribution of which rollouts succeed. \\
-\addlinespace
-Anisotropic closed-loop sensitivity &
-Equal-norm action probes differ by channel and phase; acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. &
-Perturbation risk is structured by action direction, future closed-loop gain, task margin, and module location. \\
 \bottomrule
 \end{tabular}
 \end{table}
