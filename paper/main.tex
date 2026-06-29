@@ -34,7 +34,7 @@ Closed-Loop Analysis of Post-Training Quantization for VLA Policies}
 \begin{abstract}
 Post-training quantization (PTQ) is usually presented as a compression procedure: a full-precision model is mapped into a low-precision representation, and the resulting model is evaluated by output drift, task accuracy, or deployment efficiency. For vision-language-action (VLA) policies, this framing is incomplete. A VLA model is not only a predictor; it is a closed-loop controller. We argue that PTQ for VLA policies should be evaluated as a closed-loop policy perturbation. Quantization changes the implemented policy function, which can change the state distribution induced by robot-environment interaction. Small action errors can therefore be amplified by contact dynamics, receding-horizon feedback, and thresholded success conditions.
 
-We study this effect in a reproduction-oriented analysis of selective W4A8 fake quantization for a GR00T N1.5 policy on LIBERO-10. Offline teacher-student action drift shows that attention balancing methods can improve mean action error, but also worsen a non-trivial subset of held-out observations. In closed-loop simulation over 150 matched task-initialization pairs, selective W4A8 variants remain in the FP16 behavioral range under our evaluation protocol, but their gains are not monotonic: compensation methods repair some failed rollouts while introducing new failures elsewhere. The highest point-estimate single compensation mode, output head balancing (OHB), reaches 116/150 successes compared with 113/150 for uncompensated W4A8 and 108/150 for FP16, yet it still regresses several task slices. We do not claim statistically significant closed-loop superiority from these small aggregate gaps. Our study focuses on behavior under fake quantization rather than packed-kernel deployment efficiency. The results suggest that VLA quantization should be evaluated as policy perturbation, not merely as numerical approximation.
+We study this effect in a reproduction-oriented analysis of selective W4A8 fake quantization for a GR00T N1.5 policy on LIBERO-10. Offline teacher-student action drift shows that attention balancing methods can improve mean action error, but also worsen a non-trivial subset of held-out observations. In closed-loop simulation over 150 matched task-initialization pairs, selective W4A8 variants remain in the FP16 behavioral range under our evaluation protocol, but their gains are not monotonic: compensation methods repair some failed rollouts while introducing new failures elsewhere. The highest point-estimate single compensation mode, output head balancing (OHB), reaches 116/150 successes compared with 113/150 for uncompensated W4A8 and 108/150 for FP16, yet it still regresses several task slices. We further show through controlled perturbation and acceleration-boundary experiments that closed-loop sensitivity is anisotropic across action dimensions, rollout phases, and model-layer boundaries. We do not claim statistically significant closed-loop superiority from these small aggregate gaps. Our study focuses on behavior under fake quantization rather than packed-kernel deployment efficiency. The results suggest that VLA quantization should be evaluated as policy perturbation, not merely as numerical approximation.
 \end{abstract}
 
 \section{Introduction}
@@ -50,11 +50,12 @@ When a VLA policy is post-training quantized, how should we interpret small acti
 
 Our answer is that PTQ should be treated as a policy perturbation. It maps a full-precision policy into a constrained low-precision function class, thereby changing both the conditional action distribution and the induced state distribution. The relevant empirical object is not only local action drift on fixed observations, but also how the perturbed policy redistributes success and failure across matched closed-loop rollouts.
 
-We make three observations:
+We make four observations:
 \begin{enumerate}
     \item Selective W4A8 quantization can be behaviorally robust even when it measurably changes action outputs.
     \item Attention-balancing corrections can improve mean offline drift while still worsening individual observations and task slices.
     \item Paired closed-loop rollout flips expose repair/regression structure that aggregate success rates hide.
+    \item Closed-loop sensitivity is anisotropic: the same perturbation norm can have different effects depending on action channel, rollout phase, and layer/boundary location.
 \end{enumerate}
 
 Our contributions are:
@@ -63,6 +64,7 @@ Our contributions are:
     \item We derive local perturbation claims showing that quantization error matters through sensitivity-weighted propagation and terminal success-margin crossing, and formulate a closed-loop quantization criterion for future correction methods.
     \item We provide a reproduction-oriented GR00T/LIBERO case study showing that selective W4A8 fake quantization can remain in the FP16 behavioral range while changing which task-initialization pairs succeed.
     \item We show that offline mean drift and aggregate success rate can both obscure important structure, and advocate paired repair/regression analysis as a compact diagnostic for VLA quantization.
+    \item We empirically map closed-loop sensitivity across action dimensions, trajectory phases, and action-head layer boundaries, showing that safety and speed cannot be predicted from perturbation norm or latency alone.
 \end{enumerate}
 
 \paragraph{From point solution to design-space map.}
@@ -481,6 +483,81 @@ Task-level gains are not monotonic; the same task can contain repairs and regres
 
 These examples support the trajectory-redistribution interpretation. The repaired cases do not look like small final-frame placement corrections; they usually branch earlier and terminate much sooner than the corresponding failures. The regressed cases show the complementary failure: a small policy perturbation can disrupt an early object relation or produce a stable but insufficiently progressive path. Thus the paired counts in Table~\ref{tab:paired} correspond to visible differences in trajectory basins, not only bookkeeping changes in aggregate success.
 
+\subsection{Not All Perturbations Are Equal}
+
+The preceding results show that quantization changes which rollouts succeed. We next ask a more diagnostic question: which perturbations are closed-loop sensitive? To isolate this from implementation details of a particular quantizer, we ran small controlled perturbation probes on two FP16-success cases: task 4 init 9 and task 6 init 8. These probes should not be read as a quantization method. They are local interventions that reveal which directions, rollout windows, and module boundaries are fragile enough that a future quantization error could matter.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Controlled action perturbations on two FP16-success cases. All full-horizon single-channel probes use the same continuous-action perturbation norm, $\lVert\delta a\rVert_2=0.03$. S/F denotes success/failure and the number of policy requests; horizon failures usually reach 991 requests.}
+\label{tab:action-phase-anisotropy}
+\begin{tabular}{p{0.20\linewidth}p{0.18\linewidth}p{0.12\linewidth}p{0.40\linewidth}}
+\toprule
+Probe & Window & Successes & Per-case outcome \\
+\midrule
+No perturbation & Full & 2/2 & Task 4 init 9: S224; task 6 init 8: S649 \\
+6D continuous & Full & 0/2 & F991; F991 \\
+$x$ only & Full & 1/2 & S349; F991 \\
+$y$ only & Full & 0/2 & F991; F991 \\
+$z$ only & Full & 2/2 & S239; S666 \\
+Roll only & Full & 0/2 & F991; F991 \\
+Pitch only & Full & 0/2 & F991; F991 \\
+Yaw only & Full & 0/2 & F991; F991 \\
+\midrule
+$y$ only, task 4 & Early / middle / late & 1/3 & 0:75 F991; 75:150 F991; 150:225 S219 \\
+$y$ only, task 6 & Early / middle / late & 2/3 & 0:200 F991; 200:450 S697; 450:700 S752 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:action-phase-anisotropy} supports two practical claims. First, action dimensions are not equally sensitive. A $z$ perturbation of the same norm is absorbed in both cases, while $y$ and rotation perturbations are catastrophic in this small probe. Second, rollout time is not equally sensitive. The same $y$ perturbation is damaging early, but late-window perturbations can be absorbed after the task has entered a more stable phase. This matches the linearized view in Section~3: the relevant quantity is not only $\lVert\eta_t\rVert$, but also the direction of $\eta_t$ and the future closed-loop gain multiplying it.
+
+We also tested whether acceleration-oriented graph boundaries are behaviorally transparent. The following experiment compiles the action-head model while leaving either no block, block 0, or block 1 as an eager island. The variants have almost identical median server latency, but their closed-loop behavior differs sharply.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Layer/boundary sensitivity under acceleration-oriented action-head execution. The same two task-initialization pairs are used as in Table~\ref{tab:action-phase-anisotropy}.}
+\label{tab:layer-boundary-sensitivity}
+\begin{tabular}{p{0.30\linewidth}ccccc}
+\toprule
+Execution mode & Successes & Task 4 init 9 & Task 6 init 8 & p50 latency & Speedup \\
+\midrule
+FP16 baseline & 2/2 & S224 & S649 & 160.53 ms & 1.00$\times$ \\
+Compile \texttt{action\_head\_model} & 2/2 & S222 & S916 & 72.80 ms & 2.21$\times$ \\
+Compile + block 0 eager & 1/2 & F991 & S404 & 72.62 ms & 2.21$\times$ \\
+Compile + block 1 eager & 0/2 & F991 & F991 & 73.10 ms & 2.20$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The full compiled action head is fast and succeeds on both cases, but it is not exactly behavior-transparent: task 6 takes 916 requests instead of 649. More importantly, making a small eager island does not monotonically improve safety. Block 0 eager fails task 4 but succeeds task 6 faster than the full compiled variant, while block 1 eager fails both. Because all three accelerated variants have nearly the same p50 latency, the result cannot be explained by speed alone. It is a layer/boundary sensitivity effect: changing where numerical or graph-boundary differences enter the policy can move a rollout into a different basin.
+
+Finally, we compared closed-loop traces to locate the first divergence. Table~\ref{tab:first-divergence} summarizes direct comparisons from the accelerated runs. The main pattern is temporal separation: action differences appear first, millimeter-scale state differences appear later, and outcome flips occur much later through accumulated contact and progress changes.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\caption{First-divergence diagnostics for accelerated variants. Position thresholds are measured between matched simulator states; action thresholds use continuous-action coordinates.}
+\label{tab:first-divergence}
+\begin{tabular}{p{0.12\linewidth}p{0.15\linewidth}p{0.13\linewidth}p{0.16\linewidth}p{0.18\linewidth}p{0.14\linewidth}}
+\toprule
+Case & Pair & Outcome & First action $>0.01$ & First state $>1$ mm & Gripper mismatch \\
+\midrule
+Task 4 init 9 & Full $\to$ blk0-eager & S222 $\to$ F990 & Step 21 & Step 59, 1.186 mm, $z$ & Step 99 \\
+Task 4 init 9 & Full $\to$ blk1-eager & S222 $\to$ F990 & Step 8 & Step 59, 1.012 mm, $x$ & Step 97 \\
+Task 6 init 8 & Full $\to$ blk0-eager & S916 $\to$ S404 & Step 8 & Step 58, 1.041 mm, $x$ & Step 327 \\
+Task 6 init 8 & Full $\to$ blk1-eager & S916 $\to$ F990 & Step 53 & Step 58, 1.133 mm, $y$ & Step 261 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These first-divergence traces explain why latency-equivalent implementations can have different closed-loop outcomes. The decisive failure is rarely a single large action jump. Instead, small early action differences create a delayed state separation; depending on the task margin and contact phase, that separation is either absorbed, repaired into a shorter trajectory, or amplified into horizon failure. This supports a stronger diagnostic principle: for VLA quantization and acceleration, one should map sensitivity across action channels, rollout phases, and module boundaries before choosing what to quantize, compile, or protect.
+
 \subsection{Empirical Support For The Theoretical Claims}
 
 The theoretical claims in Section~3 are not used as proof that one quantized policy is superior. They organize what must be measured. The experiments support the claims in the following sense.
@@ -510,6 +587,10 @@ Reducing average open-loop error does not imply monotonic closed-loop improvemen
 Repair/regression decomposition &
 OHB vs \texttt{none} has 16 repaired failures and 13 new regressions, yielding only a net +3 successes. ATM vs \texttt{none} is 14 repairs and 13 regressions. &
 Aggregate success changes hide substantial redistribution of which rollouts succeed. \\
+\addlinespace
+Anisotropic closed-loop sensitivity &
+Equal-norm action probes differ by channel and phase; acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. &
+Perturbation risk is structured by action direction, future closed-loop gain, task margin, and module location. \\
 \bottomrule
 \end{tabular}
 \end{table}
