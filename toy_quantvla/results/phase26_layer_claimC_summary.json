@@ -1,0 +1,198 @@
+{
+  "phase": "phase26_layer_claimC",
+  "purpose": "closed-loop layer/boundary intervention for not-all-layers-are-equal",
+  "case_list": [
+    "4:9",
+    "6:8"
+  ],
+  "policy_seed_base": 20260613,
+  "baseline_p50_ms": 160.53,
+  "runs": [
+    {
+      "name": "fp16_baseline",
+      "label": "FP16 baseline",
+      "client_source": "toy_quantvla/results/phase26_layer_claimC_2case_action_head_model_baseline_client_latency.json",
+      "prepare_source": "toy_quantvla/results/phase26_layer_claimC_2case_action_head_model_baseline_server_prepare.json",
+      "torch_compile": {
+        "enabled": false,
+        "target": "none",
+        "compiled_modules": []
+      },
+      "total_successes": 2,
+      "total_episodes": 2,
+      "success_rate": 1.0,
+      "p50_ms": 160.53,
+      "speedup_vs_baseline_p50": 1.0,
+      "prepare_seconds": 12.12,
+      "prewarm_p50_ms": 94.21,
+      "episodes": [
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": true,
+          "steps": 224,
+          "p50_ms": 160.26,
+          "exception": null
+        },
+        {
+          "case": "6:8",
+          "task_id": 6,
+          "init_index": 8,
+          "success": true,
+          "steps": 649,
+          "p50_ms": 160.55,
+          "exception": null
+        }
+      ]
+    },
+    {
+      "name": "action_head_model",
+      "label": "compile action_head_model",
+      "client_source": "toy_quantvla/results/phase26_layer_claimC_2case_action_head_model_compiled_client_latency.json",
+      "prepare_source": "toy_quantvla/results/phase26_layer_claimC_2case_action_head_model_compiled_server_prepare.json",
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [],
+        "wrap_seconds": 1.5509965047240257
+      },
+      "total_successes": 2,
+      "total_episodes": 2,
+      "success_rate": 1.0,
+      "p50_ms": 72.8,
+      "speedup_vs_baseline_p50": 2.21,
+      "prepare_seconds": 20.47,
+      "prewarm_p50_ms": 1558.6,
+      "episodes": [
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": true,
+          "steps": 222,
+          "p50_ms": 76.31,
+          "exception": null
+        },
+        {
+          "case": "6:8",
+          "task_id": 6,
+          "init_index": 8,
+          "success": true,
+          "steps": 916,
+          "p50_ms": 72.09,
+          "exception": null
+        }
+      ]
+    },
+    {
+      "name": "blocks_0_0_eager",
+      "label": "compile action_head_model + block0 eager",
+      "client_source": "toy_quantvla/results/phase26_layer_claimC_2case_blocks_0_0_eager_compiled_client_latency.json",
+      "prepare_source": "toy_quantvla/results/phase26_layer_claimC_2case_blocks_0_0_eager_compiled_server_prepare.json",
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_0_0_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.0"
+        ],
+        "wrap_seconds": 1.2033816054463387
+      },
+      "total_successes": 1,
+      "total_episodes": 2,
+      "success_rate": 0.5,
+      "p50_ms": 72.62,
+      "speedup_vs_baseline_p50": 2.21,
+      "prepare_seconds": 22.26,
+      "prewarm_p50_ms": 2465.18,
+      "episodes": [
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.24,
+          "exception": null
+        },
+        {
+          "case": "6:8",
+          "task_id": 6,
+          "init_index": 8,
+          "success": true,
+          "steps": 404,
+          "p50_ms": 73.25,
+          "exception": null
+        }
+      ]
+    },
+    {
+      "name": "blocks_1_1_eager",
+      "label": "compile action_head_model + block1 eager",
+      "client_source": "toy_quantvla/results/phase26_layer_claimC_2case_blocks_1_1_eager_compiled_client_latency.json",
+      "prepare_source": "toy_quantvla/results/phase26_layer_claimC_2case_blocks_1_1_eager_compiled_server_prepare.json",
+      "torch_compile": {
+        "enabled": true,
+        "target": "action_head_model_blocks_1_1_eager",
+        "backend": "inductor",
+        "mode": "reduce-overhead",
+        "fullgraph": false,
+        "dynamic": null,
+        "cudagraph_mark_step": false,
+        "cudagraph_mark_step_modules": [],
+        "compiled_modules": [
+          "policy.model.action_head.model"
+        ],
+        "eager_island_modules": [
+          "policy.model.action_head.model.transformer_blocks.1"
+        ],
+        "wrap_seconds": 1.2318083196878433
+      },
+      "total_successes": 0,
+      "total_episodes": 2,
+      "success_rate": 0.0,
+      "p50_ms": 73.1,
+      "speedup_vs_baseline_p50": 2.2,
+      "prepare_seconds": 23.25,
+      "prewarm_p50_ms": 2653.71,
+      "episodes": [
+        {
+          "case": "4:9",
+          "task_id": 4,
+          "init_index": 9,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 72.01,
+          "exception": null
+        },
+        {
+          "case": "6:8",
+          "task_id": 6,
+          "init_index": 8,
+          "success": false,
+          "steps": 991,
+          "p50_ms": 73.83,
+          "exception": null
+        }
+      ]
+    }
+  ]
+}

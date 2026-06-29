@@ -1,0 +1,92 @@
+{
+  "boundary": "Official FP16 GR00T inference server with server-side get_action timing",
+  "model_path": "/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain",
+  "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+  "data_config": "examples.Libero.custom_data_config:LiberoDataConfig",
+  "embodiment_tag": "new_embodiment",
+  "denoising_steps": 8,
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "profile_linear_modules": false,
+  "profile_scope": "dit_mlp_only",
+  "profile_scope_description": "DiT feed-forward Linear modules only",
+  "profile_max_modules": 0,
+  "profile_name_contains": [],
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model_blocks_1_1_eager",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "cudagraph_mark_step": false,
+    "cudagraph_mark_step_modules": [],
+    "compiled_modules": [
+      "policy.model.action_head.model"
+    ],
+    "eager_island_modules": [
+      "policy.model.action_head.model.transformer_blocks.1"
+    ],
+    "wrap_seconds": 1.2318083196878433
+  },
+  "lossless_cache": {
+    "eagle_tokenizer_cache": {
+      "enabled": false
+    },
+    "prepare_input_pruning": {
+      "enabled": false
+    },
+    "action_head_static_cache": {
+      "enabled": false
+    }
+  },
+  "cuda_graph": {
+    "dit_forward": false,
+    "max_captures": 8
+  },
+  "prewarm_observations": 1,
+  "prewarm_observation_source": "real",
+  "prewarm_indices": "115",
+  "video_backend": "torchvision_av",
+  "model_load_seconds": 11.98270171135664,
+  "model_load_memory": {
+    "allocated_bytes": 5468261376,
+    "reserved_bytes": 5557452800,
+    "max_allocated_bytes": 5468261376,
+    "max_reserved_bytes": 5557452800
+  },
+  "prepare_seconds": 23.246295154094696,
+  "prewarm_observation_meta": {
+    "observation_source": "real",
+    "dataset_path": "/root/autodl-tmp/datasets/libero_10_subset",
+    "dataset_length": 101469,
+    "dataset_indices": [
+      115
+    ],
+    "video_backend": "torchvision_av",
+    "prewarm_task_descriptions": [
+      "put the white mug on the left plate and put the yellow and white mug on the right plate",
+      "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+      "put both moka pots on the stove"
+    ],
+    "prewarm_observations_with_task_descriptions": 4
+  },
+  "prewarm_get_action_seconds": {
+    "count": 4,
+    "mean": 2.478996431455016,
+    "min": 0.05864100903272629,
+    "max": 4.549914762377739,
+    "p50": 2.6537149772047997,
+    "p90": 4.021581903100014,
+    "p99": 4.497081476449966
+  },
+  "prewarm_memory": {
+    "allocated_bytes": 5476782080,
+    "reserved_bytes": 5611978752,
+    "max_allocated_bytes": 5682666496,
+    "max_reserved_bytes": 5804916736
+  },
+  "prewarm_total_seconds": 10.030228417366743
+}

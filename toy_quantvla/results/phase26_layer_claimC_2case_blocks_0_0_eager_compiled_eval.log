@@ -1,0 +1,79 @@
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Task suite: libero_10
+Init indices: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+Case list: [(4, 9), (6, 8)]
+Deterministic policy seeds: base=20260613, formula=base+task_id*100000+init_index*1000+policy_step
+  0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /root/.cache/libero/assets
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+100%|██████████| 1/1 [02:11<00:00, 131.80s/it][A100%|██████████| 1/1 [02:11<00:00, 131.80s/it]
+ 50%|█████     | 5/10 [02:15<02:15, 27.04s/it]
+Task: put the white mug on the left plate and put the yellow and white mug on the right plate
+Init index: 9
+Starting episode 1...
+Caught exception: executing action in terminated episode
+Saved rollout MP4 at path ./rollouts/2026_06_29/2026_06_29-16_24_13--episode=1--success=False--task=put_the_white_mug_on_the_left_plate_and_put_the_ye.mp4
+Success: False
+Policy latency seconds: {'count': 991, 'mean': 0.09502674867403736, 'min': 0.05667846277356148, 'max': 2.4335586316883564, 'p50': 0.07224459946155548, 'p90': 0.15881744027137756, 'p99': 0.2054394144564877}
+Policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 991, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 991, 'mean': 0.09502674867403736, 'min': 0.05667846277356148, 'max': 2.4335586316883564, 'p50': 0.07224459946155548, 'p90': 0.15881744027137756, 'p99': 0.2054394144564877}, 'postprocess_seconds': {'count': 991, 'mean': 9.517154001323534e-05, 'min': 3.8117170333862305e-05, 'max': 0.0004098750650882721, 'p50': 9.381398558616638e-05, 'p90': 0.0001136884093284607, 'p99': 0.00014513768255710604}, 'preprocess_seconds': {'count': 991, 'mean': 0.00010228502506805598, 'min': 4.063546657562256e-05, 'max': 0.0006716512143611908, 'p50': 0.00010187551379203796, 'p90': 0.00011479854583740234, 'p99': 0.00015023052692413332}, 'primary_remote_get_action_seconds': {'count': 991, 'mean': 0.0948251098672569, 'min': 0.056480925530195236, 'max': 2.4334222972393036, 'p50': 0.07205495610833168, 'p90': 0.15861394628882408, 'p99': 0.2052414670586596}, 'remote_get_action_seconds': {'count': 991, 'mean': 0.0948251098672569, 'min': 0.056480925530195236, 'max': 2.4334222972393036, 'p50': 0.07205495610833168, 'p90': 0.15861394628882408, 'p99': 0.2052414670586596}}
+# episodes completed so far: 1
+# successes: 0 (0.0%)
+Current task success rate: 0.0
+Current total success rate: 0.0
+
+  0%|          | 0/1 [00:00<?, ?it/s][A
+100%|██████████| 1/1 [00:54<00:00, 54.36s/it][A100%|██████████| 1/1 [00:54<00:00, 54.36s/it]
+ 70%|███████   | 7/10 [03:11<01:22, 27.37s/it]100%|██████████| 10/10 [03:11<00:00, 19.11s/it]
+
+Task: put the white mug on the plate and put the chocolate pudding to the right of the plate
+Init index: 8
+Starting episode 1...
+Saved rollout MP4 at path ./rollouts/2026_06_29/2026_06_29-16_24_13--episode=2--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocola.mp4
+Success: True
+Policy latency seconds: {'count': 404, 'mean': 0.0936672252390792, 'min': 0.056526873260736465, 'max': 0.2818825803697109, 'p50': 0.07324630953371525, 'p90': 0.1537965830415487, 'p99': 0.19919993814080925}
+Policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 404, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 404, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 404, 'mean': 0.0936672252390792, 'min': 0.056526873260736465, 'max': 0.2818825803697109, 'p50': 0.07324630953371525, 'p90': 0.1537965830415487, 'p99': 0.19919993814080925}, 'postprocess_seconds': {'count': 404, 'mean': 0.00010078104378858415, 'min': 3.711879253387451e-05, 'max': 0.0021163783967494965, 'p50': 9.31713730096817e-05, 'p90': 0.00011521875858306883, 'p99': 0.00014092504978179928}, 'preprocess_seconds': {'count': 404, 'mean': 9.770800202789873e-05, 'min': 3.849714994430542e-05, 'max': 0.0001916438341140747, 'p50': 9.997747838497162e-05, 'p90': 0.00011357590556144714, 'p99': 0.00013284444808959957}, 'primary_remote_get_action_seconds': {'count': 404, 'mean': 0.09346489585235272, 'min': 0.056341949850320816, 'max': 0.2817200981080532, 'p50': 0.0730519387871027, 'p90': 0.15359076298773286, 'p99': 0.1989723450317976}, 'remote_get_action_seconds': {'count': 404, 'mean': 0.09346489585235272, 'min': 0.056341949850320816, 'max': 0.2817200981080532, 'p50': 0.0730519387871027, 'p90': 0.15359076298773286, 'p99': 0.1989723450317976}}
+# episodes completed so far: 2
+# successes: 1 (50.0%)
+Current task success rate: 1.0
+Current total success rate: 0.5
+Final policy latency seconds: {'count': 1395, 'mean': 0.09463302289072331, 'min': 0.056526873260736465, 'max': 2.4335586316883564, 'p50': 0.0726243108510971, 'p90': 0.15724842697381974, 'p99': 0.2008675019443035}
+Final policy breakdown seconds: {'gripper_oracle_remote_get_action_seconds': {'count': 1395, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'oracle_remote_get_action_seconds': {'count': 1395, 'mean': 0.0, 'min': 0.0, 'max': 0.0, 'p50': 0.0, 'p90': 0.0, 'p99': 0.0}, 'policy_total_seconds': {'count': 1395, 'mean': 0.09463302289072331, 'min': 0.056526873260736465, 'max': 2.4335586316883564, 'p50': 0.0726243108510971, 'p90': 0.15724842697381974, 'p99': 0.2008675019443035}, 'postprocess_seconds': {'count': 1395, 'mean': 9.679608447577364e-05, 'min': 3.711879253387451e-05, 'max': 0.0021163783967494965, 'p50': 9.367987513542175e-05, 'p90': 0.00011387318372726441, 'p99': 0.00014430359005928036}, 'preprocess_seconds': {'count': 1395, 'mean': 0.00010095949294746564, 'min': 3.849714994430542e-05, 'max': 0.0006716512143611908, 'p50': 0.00010139867663383484, 'p90': 0.00011416301131248475, 'p99': 0.00014510132372379302}, 'primary_remote_get_action_seconds': {'count': 1395, 'mean': 0.09443118408803017, 'min': 0.056341949850320816, 'max': 2.4334222972393036, 'p50': 0.07238279655575752, 'p90': 0.1570279225707054, 'p99': 0.20067432813346384}, 'remote_get_action_seconds': {'count': 1395, 'mean': 0.09443118408803017, 'min': 0.056341949850320816, 'max': 2.4334222972393036, 'p50': 0.07238279655575752, 'p90': 0.1570279225707054, 'p99': 0.20067432813346384}}
+Exception ignored in: <function MjRenderContext.__del__ at 0x7fe240d25ea0>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/utils/binding_utils.py", line 199, in __del__
+    self.gl_ctx.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7fe22efd1140>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fe24248fbc0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fe24248fbc0>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7fe24248ff40>,
+	),
+	result = 0
+)
+Exception ignored in: <function EGLGLContext.__del__ at 0x7fe240d25cf0>
+Traceback (most recent call last):
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 155, in __del__
+    self.free()
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/robosuite/renderers/context/egl_context.py", line 149, in free
+    EGL.eglMakeCurrent(EGL_DISPLAY, EGL.EGL_NO_SURFACE, EGL.EGL_NO_SURFACE, EGL.EGL_NO_CONTEXT)
+  File "/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/OpenGL/error.py", line 230, in glCheckError
+    raise self._errorClass(
+OpenGL.raw.EGL._errors.EGLError: EGLError(
+	err = EGL_NOT_INITIALIZED,
+	baseOperation = eglMakeCurrent,
+	cArguments = (
+		<OpenGL._opaque.EGLDisplay_pointer object at 0x7fe22efd1140>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fe24248fbc0>,
+		<OpenGL._opaque.EGLSurface_pointer object at 0x7fe24248fbc0>,
+		<OpenGL._opaque.EGLContext_pointer object at 0x7fe24248ff40>,
+	),
+	result = 0
+)
