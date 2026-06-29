@@ -9,6 +9,7 @@ CASE_LIST="${CASE_LIST:-4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,8:6,8:7,8:8,8:9
 TAG_PREFIX="${TAG_PREFIX:-phase28A_proxy_guided_15case_v1}"
 POLICY_SEED_BASE="${POLICY_SEED_BASE:-20260613}"
 PORT_BASE="${PORT_BASE:-5620}"
+PHASE_LABEL="${PHASE_LABEL:-Phase28 proxy-guided mixed precision}"
 
 RUN_BASELINE_VARIANT="${RUN_BASELINE_VARIANT:-1}"
 RUN_SPEED_ONLY="${RUN_SPEED_ONLY:-1}"
@@ -18,7 +19,7 @@ RUN_RANDOM_BLOCK1="${RUN_RANDOM_BLOCK1:-1}"
 
 run_baseline() {
   local tag="${TAG_PREFIX}_baseline"
-  echo "=== Phase28A baseline: ${tag} ==="
+  echo "=== ${PHASE_LABEL} baseline: ${tag} ==="
   TAG="${tag}" \
   CASE_LIST="${CASE_LIST}" \
   POLICY_SEED_BASE="${POLICY_SEED_BASE}" \
@@ -32,7 +33,7 @@ run_compiled_variant() {
   local tag="$1"
   local target="$2"
   local port="$3"
-  echo "=== Phase28A compiled variant: ${tag} target=${target} ==="
+  echo "=== ${PHASE_LABEL} compiled variant: ${tag} target=${target} ==="
   TAG="${tag}" \
   CASE_LIST="${CASE_LIST}" \
   POLICY_SEED_BASE="${POLICY_SEED_BASE}" \
@@ -85,4 +86,4 @@ if [ "${RUN_RANDOM_BLOCK1}" = "1" ]; then
     "$((PORT_BASE + 4))"
 fi
 
-echo "Phase28A proxy-guided mixed-precision run complete."
+echo "${PHASE_LABEL} run complete."

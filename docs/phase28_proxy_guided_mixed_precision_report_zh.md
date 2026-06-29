@@ -13,13 +13,13 @@
 
 ## 汇总
 
-| run | policy | status | success | server p50 ms | speedup | prepare s |
-| --- | --- | --- | --- | --- | --- | --- |
-| FP16 baseline | no compile | complete | 7/15 | 84.76 | 1.0x | 10.5 |
-| Speed-only compile | compile action_head.model | complete | 5/15 | 50.35 | 1.68x | 17.5 |
-| Proxy-guided block0 eager | compile action_head.model; keep block0 eager | complete | 6/15 | 50.96 | 1.66x | 19.91 |
-| Proxy-guided blocks8-15 eager | compile action_head.model; keep blocks8-15 eager | complete | 7/15 | 67.36 | 1.26x | 17.26 |
-| Random/sanity block1 eager | compile action_head.model; keep block1 eager | complete | 5/15 | 51.54 | 1.64x | 19.15 |
+| run | policy | status | success | server p50 ms | speedup | reserved MiB | max reserved MiB | prepare s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| FP16 baseline | no compile | complete | 7/15 | 84.76 | 1.0x | 5512.0 | 5512.0 | 10.5 |
+| Speed-only compile | compile action_head.model | complete | 5/15 | 50.35 | 1.68x | 5554.0 | 5554.0 | 17.5 |
+| Proxy-guided block0 eager | compile action_head.model; keep block0 eager | complete | 6/15 | 50.96 | 1.66x | 5536.0 | 5536.0 | 19.91 |
+| Proxy-guided blocks8-15 eager | compile action_head.model; keep blocks8-15 eager | complete | 7/15 | 67.36 | 1.26x | 5538.0 | 5538.0 | 17.26 |
+| Random/sanity block1 eager | compile action_head.model; keep block1 eager | complete | 5/15 | 51.54 | 1.64x | 5536.0 | 5536.0 | 19.15 |
 
 ## Paired repair/regression
 

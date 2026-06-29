@@ -1,0 +1,47 @@
+{
+  "phase": "phase28A_proxy_guided_mixed_precision",
+  "tag_prefix": "phase28B_proxy_guided_33case_v1",
+  "purpose": "test whether sensitivity-proxy-guided protection improves closed-loop behavior under similar acceleration budget",
+  "case_list": "4:0,4:1,4:2,4:3,4:4,4:5,4:6,4:7,4:8,4:9,4:10,6:0,6:1,6:2,6:3,6:4,6:5,6:6,6:7,6:8,6:9,6:10,8:0,8:1,8:2,8:3,8:4,8:5,8:6,8:7,8:8,8:9,8:10",
+  "policy_seed_base": 20260613,
+  "baseline_server_p50_ms": null,
+  "runs": [
+    {
+      "name": "baseline",
+      "label": "FP16 baseline",
+      "policy": "no compile",
+      "status": "missing",
+      "client_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_baseline_baseline_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_baseline_baseline_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_baseline_baseline_server_prepare.json"
+    },
+    {
+      "name": "speed_only",
+      "label": "Speed-only compile",
+      "policy": "compile action_head.model",
+      "status": "missing",
+      "client_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_speed_only_action_head_model_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_speed_only_action_head_model_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_speed_only_action_head_model_compiled_server_prepare.json"
+    },
+    {
+      "name": "proxy_blocks8_15",
+      "label": "Proxy-guided blocks8-15 eager",
+      "policy": "compile action_head.model; keep blocks8-15 eager",
+      "status": "missing",
+      "client_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_proxy_blocks8_15_eager_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_proxy_blocks8_15_eager_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_proxy_blocks8_15_eager_compiled_server_prepare.json"
+    },
+    {
+      "name": "random_block1",
+      "label": "Random/sanity block1 eager",
+      "policy": "compile action_head.model; keep block1 eager",
+      "status": "missing",
+      "client_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_random_block1_eager_compiled_client_latency.json",
+      "server_latency_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_random_block1_eager_compiled_server_latency.json",
+      "prepare_source": "toy_quantvla/results/phase28B_proxy_guided_33case_v1_random_block1_eager_compiled_server_prepare.json"
+    }
+  ],
+  "paired_comparisons": []
+}
