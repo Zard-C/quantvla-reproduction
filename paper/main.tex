@@ -19,7 +19,7 @@
 \setlist[enumerate]{leftmargin=1.5em}
 
 \title{When Small Action Errors Matter:\\
-Closed-Loop Analysis of Post-Training Quantization for VLA Policies}
+Closed-Loop Analysis of Inference Acceleration for VLA Policies}
 \author{patrick.zhang\\\href{mailto:patrick.zhang5233@gmail.com}{\texttt{patrick.zhang5233@gmail.com}}}
 \date{}
 
@@ -32,23 +32,23 @@ Closed-Loop Analysis of Post-Training Quantization for VLA Policies}
 \maketitle
 
 \begin{abstract}
-Post-training quantization (PTQ) is usually presented as a compression procedure: a full-precision model is mapped into a low-precision representation, and the resulting model is evaluated by output drift, task accuracy, or deployment efficiency. For vision-language-action (VLA) policies, this framing is incomplete. A VLA model is not only a predictor; it is a closed-loop controller. We argue that PTQ for VLA policies should be evaluated as a closed-loop policy perturbation. Quantization changes the implemented policy function, which can change the state distribution induced by robot-environment interaction. Small action errors can therefore be amplified by contact dynamics, receding-horizon feedback, and thresholded success conditions.
+Inference acceleration for vision-language-action (VLA) policies is usually framed as a deployment problem: a full-precision policy is quantized, compiled, fused, or otherwise re-executed more cheaply, and the result is evaluated by output drift, task accuracy, latency, or memory. For VLA policies, this framing is incomplete. A VLA model is not only a predictor; it is a closed-loop controller. We argue that post-training inference acceleration should be evaluated as a closed-loop policy perturbation. Quantization, graph compilation, mixed precision, and kernel replacement can all change the implemented policy function slightly, which can change the state distribution induced by robot-environment interaction. Small action errors can therefore be amplified by contact dynamics, receding-horizon feedback, and thresholded success conditions.
 
-We study this effect in a reproduction-oriented analysis of selective W4A8 fake quantization for a GR00T N1.5 policy on LIBERO-10. Offline teacher-student action drift shows that attention balancing methods can improve mean action error, but also worsen a non-trivial subset of held-out observations. In closed-loop simulation over 150 matched task-initialization pairs, selective W4A8 variants remain in the FP16 behavioral range under our evaluation protocol, but their gains are not monotonic: compensation methods repair some failed rollouts while introducing new failures elsewhere. The highest point-estimate single compensation mode, output head balancing (OHB), reaches 116/150 successes compared with 113/150 for uncompensated W4A8 and 108/150 for FP16, yet it still regresses several task slices. We further show through controlled perturbation and acceleration-boundary experiments that closed-loop sensitivity is anisotropic across action dimensions, rollout phases, and model-layer boundaries. A small proxy-guided mixed-precision probe supports the resulting design rule: protecting closed-loop-sensitive action-head blocks can recover some speed-only regressions while preserving part of the latency gain, but it cannot eliminate trajectory redistribution. We do not claim statistically significant closed-loop superiority from these small aggregate gaps. Our study focuses on behavior under fake quantization and prototype acceleration boundaries rather than final packed-kernel deployment efficiency. The results suggest that VLA quantization should be evaluated as policy perturbation, not merely as numerical approximation.
+We study this effect through two acceleration tracks for a GR00T N1.5 policy on LIBERO-10. Track A is a reproduction-oriented analysis of selective W4A8 fake quantization. Offline teacher-student action drift shows that attention balancing methods can improve mean action error, but also worsen a non-trivial subset of held-out observations. In closed-loop simulation over 150 matched task-initialization pairs, selective W4A8 variants remain in the FP16 behavioral range under our evaluation protocol, but their gains are not monotonic: compensation methods repair some failed rollouts while introducing new failures elsewhere. The highest point-estimate single compensation mode, output head balancing (OHB), reaches 116/150 successes compared with 113/150 for uncompensated W4A8 and 108/150 for FP16, yet it still regresses several task slices. Track B studies prototype acceleration boundaries using \texttt{torch.compile} and eager islands in the action head. Controlled perturbation and acceleration-boundary experiments show that closed-loop sensitivity is anisotropic across action dimensions, rollout phases, and model-layer boundaries. A small proxy-guided mixed-precision probe supports the resulting design rule: protecting closed-loop-sensitive action-head blocks can recover some speed-only regressions while preserving part of the latency gain, but it cannot eliminate trajectory redistribution. We do not claim statistically significant closed-loop superiority from these small aggregate gaps. Our study focuses on behavior under fake quantization and prototype acceleration boundaries rather than final packed-kernel deployment efficiency. The results suggest that VLA inference acceleration should be evaluated as policy perturbation, not merely as numerical approximation or systems optimization.
 \end{abstract}
 
 \section{Introduction}
 
-Large vision-language-action models are increasingly used as generalist robot policies. They map visual observations and language instructions into action chunks, often through diffusion-style denoising or transformer action heads. As these models become larger, quantization is a natural route toward cheaper deployment. However, common quantization evaluations focus on local approximation quality: weight error, activation error, output MSE, or single-step action drift. These metrics are useful, but they do not fully capture what matters for embodied control.
+Large vision-language-action models are increasingly used as generalist robot policies. They map visual observations and language instructions into action chunks, often through diffusion-style denoising or transformer action heads. As these models become larger, inference acceleration is a natural route toward cheaper deployment. This includes quantization, graph compilation, kernel replacement, CUDA graph replay, caching, and mixed-precision execution. However, common acceleration evaluations focus on local approximation quality or systems throughput: weight error, activation error, output MSE, single-step action drift, latency, memory, or energy. These metrics are useful, but they do not fully capture what matters for embodied control.
 
 In a closed-loop policy, an action error at time $t$ changes the next observation. The next action is then produced on a state that may not have been visited by the original full-precision policy. This feedback loop creates a mismatch between local teacher-student error and final task success. The issue is especially sharp in manipulation, where small geometric deviations can change contact timing, grasp stability, object pose, or whether a state satisfies a binary success predicate.
 
 This paper studies the following question:
 \begin{quote}
-When a VLA policy is post-training quantized, how should we interpret small action errors in terms of closed-loop task success?
+When a VLA policy is accelerated after training, how should we interpret small action errors in terms of closed-loop task success?
 \end{quote}
 
-Our answer is that PTQ should be treated as a policy perturbation. It maps a full-precision policy into a constrained low-precision function class, thereby changing both the conditional action distribution and the induced state distribution. The relevant empirical object is not only local action drift on fixed observations, but also how the perturbed policy redistributes success and failure across matched closed-loop rollouts.
+Our answer is that post-training acceleration should be treated as a policy perturbation. It maps a reference policy into a constrained implementation, such as a low-precision model, a compiled graph, or a mixed eager/compiled execution plan, thereby changing both the conditional action distribution and the induced state distribution. The relevant empirical object is not only local action drift on fixed observations, but also how the perturbed implementation redistributes success and failure across matched closed-loop rollouts.
 
 We make five observations:
 \begin{enumerate}
@@ -61,30 +61,33 @@ We make five observations:
 
 Our contributions are:
 \begin{enumerate}
-    \item We formulate PTQ for VLA policies as a closed-loop policy perturbation problem, where the main object is the induced state distribution rather than only local action approximation.
-    \item We derive local perturbation claims showing that quantization error matters through sensitivity-weighted propagation and terminal success-margin crossing, and formulate a closed-loop quantization criterion for future correction methods.
+    \item We formulate post-training inference acceleration for VLA policies as a closed-loop policy perturbation problem, where the main object is the induced state distribution rather than only local action approximation or raw latency.
+    \item We derive local perturbation claims showing that deployment-induced action error matters through sensitivity-weighted propagation and terminal success-margin crossing, and formulate a closed-loop criterion for future correction and protection methods.
     \item We provide a reproduction-oriented GR00T/LIBERO case study showing that selective W4A8 fake quantization can remain in the FP16 behavioral range while changing which task-initialization pairs succeed.
-    \item We show that offline mean drift and aggregate success rate can both obscure important structure, and advocate paired repair/regression analysis as a compact diagnostic for VLA quantization.
+    \item We show that offline mean drift and aggregate success rate can both obscure important structure, and advocate paired repair/regression analysis as a compact diagnostic for VLA acceleration.
     \item We empirically map closed-loop sensitivity across action dimensions, trajectory phases, and action-head layer boundaries, showing that safety and speed cannot be predicted from perturbation norm or latency alone.
     \item We test a small sensitivity-proxy-guided mixed-precision execution policy, showing that closed-loop proxies can reduce speed-only regressions while still requiring paired trace analysis to expose remaining failures.
 \end{enumerate}
 
 \paragraph{From point solution to design-space map.}
-Our goal is not to present a single operating point in the VLA quantization design space. Instead, we use this operating point to expose structure in the problem: which perturbations are absorbed, which are amplified by closed-loop dynamics, which rollouts are repaired or regressed, and which modules or states should be protected by future methods. These properties are useful beyond our specific implementation. They suggest how later work might choose calibration states, design residual action corrections, select mixed-precision modules, or trigger high-precision fallback around fragile trajectory regions.
+Our goal is not to present a single operating point in the VLA acceleration design space. Instead, we use quantization and compilation probes to expose structure in the problem: which perturbations are absorbed, which are amplified by closed-loop dynamics, which rollouts are repaired or regressed, and which modules or states should be protected by future methods. These properties are useful beyond our specific implementation. They suggest how later work might choose calibration states, design residual action corrections, select mixed-precision modules, compile only insensitive boundaries, or trigger high-precision fallback around fragile trajectory regions.
 
 \paragraph{Model-class interpretation.}
-Our findings are not tied to a specific checkpoint-level failure pattern. They suggest a model-class behavior: for DiT-style VLA or world-action models, small implementation or quantization perturbations are filtered through closed-loop sensitivity, task margins, and trajectory basins. Therefore, larger or newer GR00T-style variants, as well as related action-diffusion policies, should be evaluated by re-estimating their sensitivity maps rather than assuming uniform quantization tolerance across dimensions, time, or layers.
+Our findings are not tied to a specific checkpoint-level failure pattern. They suggest a model-class behavior: for DiT-style VLA or world-action models, small acceleration-induced implementation perturbations are filtered through closed-loop sensitivity, task margins, and trajectory basins. Therefore, larger or newer GR00T-style variants, as well as related action-diffusion policies, should be evaluated by re-estimating their sensitivity maps rather than assuming uniform acceleration tolerance across dimensions, time, or layers.
 
 \paragraph{Scope of claims.}
-This paper should be read as a behavior-level reproduction study and diagnostic analysis, not as a new quantization algorithm or a deployment benchmark. We make no latency, memory, or energy claim because our implementation uses fake quantization rather than packed low-precision kernels. We also do not treat small aggregate success-rate differences as evidence of policy dominance. The main empirical claim is narrower: VLA quantization can preserve aggregate success while redistributing which closed-loop rollouts succeed, so paired rollout analysis is necessary to interpret the effect of small action perturbations. The resulting design principle is that VLA quantization should target sensitivity-weighted closed-loop perturbation rather than only average open-loop action error.
+This paper should be read as a behavior-level reproduction study and diagnostic analysis, not as a new quantization algorithm, compiler, or deployment benchmark. We do not claim final low-precision latency, memory, or energy improvements because the quantization track uses fake quantization rather than packed low-precision kernels, and the compilation track is a prototype action-head acceleration probe. We also do not treat small aggregate success-rate differences as evidence of policy dominance. The main empirical claim is narrower: VLA acceleration can preserve aggregate behavior while redistributing which closed-loop rollouts succeed, so paired rollout analysis is necessary to interpret the effect of small action perturbations. The resulting design principle is that VLA acceleration should target sensitivity-weighted closed-loop perturbation rather than only average open-loop action error or raw serving latency.
 
 \paragraph{Experimental roadmap.}
-The experiments are intentionally staged. The first track studies quantization-induced perturbations: selective W4A8 fake quantization, ATM/OHB compensation, offline action drift, and 150 matched closed-loop rollouts. This is the main reproduction-oriented quantization study. The bridge experiments then map which perturbations are sensitive across action dimensions, rollout windows, and layer/boundary locations. The second track uses those sensitivity maps in controlled action probes and prototype acceleration-boundary probes to test the same framework beyond fake quantization. In particular, the \texttt{torch.compile} and eager-island experiments should not be read as a quantization method. They are implementation-induced policy perturbations used to ask whether a speed-oriented execution boundary can also be amplified by closed-loop dynamics, and whether sensitivity proxies can guide which boundaries to protect.
+The experiments are intentionally staged. Track A studies quantization-induced perturbations: selective W4A8 fake quantization, ATM/OHB compensation, offline action drift, and 150 matched closed-loop rollouts. Track B studies execution-induced perturbations: \texttt{torch.compile}, eager islands, warm serving latency, and paired rollout flips. Between them, bridge experiments map which perturbations are sensitive across action dimensions, rollout windows, and layer/boundary locations. The \texttt{torch.compile} experiments should not be read as a quantization method. They are an acceleration track used to ask whether a speed-oriented execution boundary can also be amplified by closed-loop dynamics, and whether sensitivity proxies can guide which boundaries to protect.
 
 \section{Related Work}
 
 \paragraph{Vision-language-action policies.}
-Recent robot policies increasingly combine large-scale visual, language, and action modeling. RT-1 introduced a scalable transformer policy trained on diverse real-robot data~\citep{rt1}. RT-2 framed robotic actions as tokens inside a vision-language-action model and showed transfer from web-scale vision-language training to control~\citep{rt2}. OpenVLA made this direction more accessible by releasing a 7B-parameter open-source VLA trained on large robot demonstration mixtures, and also noted practical interest in efficient fine-tuning and quantized serving~\citep{openvla}. GR00T N1 uses a dual-system VLA architecture where a vision-language module conditions a diffusion transformer action module~\citep{grootn1}. Diffusion Policy and related action-diffusion methods model robot behavior as conditional denoising, often with receding-horizon control~\citep{diffusionpolicy}. Our work focuses on the evaluation problem that appears when such policies are compressed after training.
+Recent robot policies increasingly combine large-scale visual, language, and action modeling. RT-1 introduced a scalable transformer policy trained on diverse real-robot data~\citep{rt1}. RT-2 framed robotic actions as tokens inside a vision-language-action model and showed transfer from web-scale vision-language training to control~\citep{rt2}. OpenVLA made this direction more accessible by releasing a 7B-parameter open-source VLA trained on large robot demonstration mixtures, and also noted practical interest in efficient fine-tuning and quantized serving~\citep{openvla}. GR00T N1 uses a dual-system VLA architecture where a vision-language module conditions a diffusion transformer action module~\citep{grootn1}. Diffusion Policy and related action-diffusion methods model robot behavior as conditional denoising, often with receding-horizon control~\citep{diffusionpolicy}. Our work focuses on the evaluation problem that appears when such policies are compressed or accelerated after training.
+
+\paragraph{Inference acceleration for closed-loop policies.}
+Deployment acceleration can come from low-precision arithmetic, graph compilation, operator fusion, CUDA graph replay, caching, or custom kernels. In open-loop perception or language tasks, small numerical differences are usually judged by output agreement and throughput. In VLA policies, the accelerated implementation chooses actions that alter future observations. This makes acceleration a behavioral question as well as a systems question: a faster implementation is useful only if its closed-loop policy perturbation stays within acceptable task margins.
 
 \paragraph{Post-training quantization.}
 PTQ methods for large transformers often target memory and latency while preserving model quality. LLM.int8() handles transformer outliers through mixed-precision decomposition~\citep{llmint8}; GPTQ uses approximate second-order information for one-shot low-bit weight quantization~\citep{gptq}; SmoothQuant migrates quantization difficulty from activations to weights through an equivalent smoothing transform~\citep{smoothquant}; and AWQ uses activation statistics to protect salient weight channels~\citep{awq}. These methods demonstrate that transformer quantization can be accurate when calibration accounts for activation structure. However, most evaluations are open-loop language, vision-language, or recognition tasks. In VLA policies, the quantized model selects actions that alter future inputs, so the calibration and evaluation target must include closed-loop effects.
@@ -93,18 +96,18 @@ PTQ methods for large transformers often target memory and latency while preserv
 QuantVLA is, to our knowledge, the most direct prior work on PTQ for VLA systems. It proposes a scale-calibrated PTQ framework with selective quantization, attention temperature matching, and output head balancing, and reports memory and latency gains together with LIBERO success-rate improvements~\citep{quantvla}. Our study is not a deployment-efficiency reproduction of those claims. Instead, we use a behavior-level fake-quantization reproduction to analyze why VLA quantization can improve some rollouts while regressing others, and why paired closed-loop evaluation is necessary even when average offline drift improves.
 
 \paragraph{Sequential prediction and distribution shift.}
-The gap between offline error and closed-loop behavior is a classic issue in imitation learning and sequential prediction. DAgger formalizes the problem that future observations depend on previous actions, so policies trained or evaluated only under a fixed data distribution can suffer from compounding errors~\citep{dagger}. VLA quantization creates a related but distinct problem: the policy is already trained, but PTQ perturbs its action outputs and therefore perturbs the state distribution it induces. This makes paired rollout analysis a natural complement to offline teacher-student action drift.
+The gap between offline error and closed-loop behavior is a classic issue in imitation learning and sequential prediction. DAgger formalizes the problem that future observations depend on previous actions, so policies trained or evaluated only under a fixed data distribution can suffer from compounding errors~\citep{dagger}. VLA acceleration creates a related but distinct problem: the policy is already trained, but a post-training implementation change perturbs its action outputs and therefore perturbs the state distribution it induces. This makes paired rollout analysis a natural complement to offline teacher-student action drift.
 
 \paragraph{Feedback control perspective.}
-Classical feedback control emphasizes that closed-loop behavior is determined by the interaction between controller perturbations, plant dynamics, and feedback gain~\citep{astrom2008feedback}. We use this lens to interpret PTQ not as a static approximation problem, but as a bounded policy perturbation whose effect depends on local closed-loop sensitivity and task margins.
+Classical feedback control emphasizes that closed-loop behavior is determined by the interaction between controller perturbations, plant dynamics, and feedback gain~\citep{astrom2008feedback}. We use this lens to interpret inference acceleration not as a static approximation problem, but as a bounded policy perturbation whose effect depends on local closed-loop sensitivity and task margins.
 
-\section{Quantization as Policy Perturbation}
+\section{Inference Acceleration as Policy Perturbation}
 
-Let $\pi_\theta(a \mid s,l)$ denote a full-precision VLA policy conditioned on state observation $s$ and language instruction $l$. PTQ constructs a quantized policy
+Let $\pi_\theta(a \mid s,l)$ denote a reference FP16 VLA policy conditioned on state observation $s$ and language instruction $l$. A post-training acceleration transform constructs an implemented policy
 \begin{equation}
-    \theta_q = Q(\theta; C), \qquad \pi_q = \pi_{\theta_q},
+    \varphi = \mathcal{A}(\theta; C, S), \qquad \pi_q = \pi_{\varphi},
 \end{equation}
-where $Q$ is a calibration-dependent projection into a low-precision parameterization and $C$ is a calibration set. Even without gradient updates, this is not a neutral storage transform: it changes the implemented function.
+where $\mathcal{A}$ may represent quantization, graph compilation, mixed-precision partitioning, kernel replacement, or graph replay; $C$ denotes calibration data when applicable; and $S$ denotes systems choices such as compilation boundaries or shape buckets. We keep the shorthand $\pi_q$ for the perturbed implementation because the first experimental track is quantization, but the derivation applies to any acceleration path that induces a small action perturbation. Even without gradient updates, this is not a neutral storage transform: it changes the implemented function.
 
 Offline action drift measures a local difference such as
 \begin{equation}
@@ -122,9 +125,9 @@ a first-order error expansion gives
     \qquad
     \delta a_t = \pi_q(s_t)-\pi_\theta(s_t).
 \end{equation}
-Even if $\delta a_t$ is small on the teacher state distribution, the accumulated $\delta s_t$ can move the quantized policy into states where the original local error estimate no longer applies.
+Even if $\delta a_t$ is small on the teacher state distribution, the accumulated $\delta s_t$ can move the accelerated policy into states where the original local error estimate no longer applies.
 
-This is why manipulation success is not a smooth function of single-step action MSE. A rollout can flip because of a small action perturbation if that perturbation changes whether the gripper reaches the object before closing, whether a placed object crosses a success-region boundary, whether an object contact produces a different pose, or whether a receding-horizon action chunk enters a different trajectory basin. In this view, quantization is closer to post-training policy editing than to passive compression.
+This is why manipulation success is not a smooth function of single-step action MSE. A rollout can flip because of a small action perturbation if that perturbation changes whether the gripper reaches the object before closing, whether a placed object crosses a success-region boundary, whether an object contact produces a different pose, or whether a receding-horizon action chunk enters a different trajectory basin. In this view, acceleration is closer to post-training policy editing than to passive systems optimization.
 
 \begin{figure}[H]
     \centering
@@ -184,18 +187,18 @@ This is why manipulation success is not a smooth function of single-step action 
             (10.72, -0.62);
 
         \node[font=\scriptsize, text=blue!75!black] at (7.9, 1.18) {FP16 rollout};
-        \node[font=\scriptsize, text=purple!80!black] at (7.9, -1.05) {quantized rollout};
+        \node[font=\scriptsize, text=purple!80!black] at (7.9, -1.05) {accelerated rollout};
     \end{tikzpicture}}
-    \caption{Quantization as closed-loop policy perturbation. Offline action drift compares two actions on a fixed observation, while closed-loop execution lets each policy induce its own future observation distribution.}
+    \caption{Inference acceleration as closed-loop policy perturbation. Offline action drift compares two actions on a fixed observation, while closed-loop execution lets each policy induce its own future observation distribution.}
     \label{fig:policy-perturbation}
 \end{figure}
 
-\paragraph{Claim 1: quantization error is filtered by closed-loop sensitivity.}
-The first-order expression above can be expanded over a horizon. Let $\eta_t=\pi_q(s_t,l)-\pi_\theta(s_t,l)$ be the local quantization-induced action perturbation on the nominal FP16 trajectory, let $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ be evaluated along that trajectory, and define the local closed-loop Jacobian
+\paragraph{Claim 1: implementation error is filtered by closed-loop sensitivity.}
+The first-order expression above can be expanded over a horizon. Let $\eta_t=\pi_q(s_t,l)-\pi_\theta(s_t,l)$ be the local acceleration-induced action perturbation on the nominal FP16 trajectory, let $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ be evaluated along that trajectory, and define the local closed-loop Jacobian
 \begin{equation}
     F_t = A_t + B_tK_t .
 \end{equation}
-This claim is local and first-order: it assumes small perturbations around the FP16 trajectory, defines $\eta_t$ on that nominal trajectory, and approximates the quantized policy's local state Jacobian by the FP16 policy Jacobian, ignoring differences between $\partial\pi_q/\partial s$ and $\partial\pi_\theta/\partial s$ at this order. Under these assumptions, the terminal state perturbation satisfies
+This claim is local and first-order: it assumes small perturbations around the FP16 trajectory, defines $\eta_t$ on that nominal trajectory, and approximates the accelerated policy's local state Jacobian by the FP16 policy Jacobian, ignoring differences between $\partial\pi_q/\partial s$ and $\partial\pi_\theta/\partial s$ at this order. Under these assumptions, the terminal state perturbation satisfies
 \begin{equation}
     \delta s_T
     \approx
@@ -203,7 +206,7 @@ This claim is local and first-order: it assumes small perturbations around the F
     \left(F_{T-1}F_{T-2}\cdots F_{t+1}\right) B_t\eta_t ,
     \label{eq:sensitivity-propagation}
 \end{equation}
-with the empty product interpreted as the identity. Thus the effect of quantization is not determined by $\|\eta_t\|$ alone, but by how its direction aligns with transition dynamics, policy feedback, and future closed-loop gain.
+with the empty product interpreted as the identity. Thus the effect of acceleration is not determined by $\|\eta_t\|$ alone, but by how its direction aligns with transition dynamics, policy feedback, and future closed-loop gain.
 
 \paragraph{Claim 2: rollout flips are margin-crossing events.}
 Let $h(s_T)$ be an implicit terminal success margin, with success when $h(s_T)>0$. For a small terminal perturbation,
@@ -223,18 +226,18 @@ More precisely, the outcome flips when the perturbation changes the sign of the 
     \ne
     \operatorname{sign}\!\left(h(s_T)\right).
 \end{equation}
-If the FP16 rollout succeeds, $h(s_T)>0$, a quantized regression requires
+If the FP16 rollout succeeds, $h(s_T)>0$, an accelerated regression requires
 \begin{equation}
     \nabla h(s_T)^\top \delta s_T \lesssim -h(s_T).
 \end{equation}
-If the FP16 rollout fails, $h(s_T)<0$, a quantized repair requires
+If the FP16 rollout fails, $h(s_T)<0$, an accelerated repair requires
 \begin{equation}
     \nabla h(s_T)^\top \delta s_T \gtrsim |h(s_T)|.
 \end{equation}
 Thus Equation~\ref{eq:margin-crossing} should be read as a magnitude condition for either flip direction; the sign determines whether the perturbation causes a repair or a regression. This explains why two rollouts with similar single-step action drift can behave differently: high-margin trajectories absorb the perturbation, while low-margin trajectories near contact or placement boundaries can cross the success threshold.
 
 \paragraph{Design principle: optimize sensitivity-weighted closed-loop perturbation.}
-Equations~\ref{eq:sensitivity-propagation} and~\ref{eq:margin-crossing} suggest that the relevant PTQ objective for VLA policies is not the average open-loop action deviation
+Equations~\ref{eq:sensitivity-propagation} and~\ref{eq:margin-crossing} suggest that the relevant post-training acceleration objective for VLA policies is not the average open-loop action deviation
 \begin{equation}
     \min_Q \; \mathbb{E}\sum_t \|\eta_t(Q)\|^2 ,
     \label{eq:open-loop-quant-objective}
@@ -273,8 +276,8 @@ The first-order terminal margin perturbation is $\Delta h \approx \sum_t \alpha_
     +
     2\sum_{i<j}\alpha_i\alpha_j .
 \]
-The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-quant-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between quantization errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
-In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce quantization error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. Layer-statistic corrections such as ATM and OHB can be useful proxies, but they do not by themselves optimize this closed-loop criterion.
+The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-quant-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between implementation errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
+In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce implementation error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. Layer-statistic corrections such as ATM/OHB and execution-boundary protection can be useful proxies, but they do not by themselves optimize this closed-loop criterion.
 
 \paragraph{Claim 3: closed-loop sensitivity is anisotropic.}
 The metric $G_t$ also implies that not all perturbations of the same norm are equally important. For a unit action coordinate $e_j$, an equal-magnitude perturbation $\eta_t=\epsilon e_j$ has local squared terminal-margin risk
@@ -302,7 +305,7 @@ Finally, for a module- or layer-level perturbation $\zeta_{i,t}$ whose first-ord
 This shows why layer selection for quantization or compilation cannot be based only on parameter count, FLOPs, or latency. A module is attractive for acceleration only if it has high speed benefit and low sensitivity-weighted risk under $J_{i,t}^\top G_tJ_{i,t}$. The practical consequence is the design rule we test later: not all action dimensions, rollout durations, or layer boundaries are equal.
 
 \paragraph{Claim 4: offline drift is incomplete without state-distribution control.}
-Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop quantized execution instead samples from $d_{\pi_q}$:
+Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop accelerated execution instead samples from $d_{\pi_q}$:
 \begin{equation}
     \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
     =
@@ -315,7 +318,7 @@ Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitiv
     \right).
     \label{eq:distribution-shift-decomposition}
 \end{equation}
-Open-loop action drift controls only the fixed-distribution term. It does not by itself control the distribution-shift term induced by executing the perturbed policy. This term can matter because a small nominal action error can move the system away from the FP16 trajectory, after which the quantized policy may visit states with larger quantization error, higher closed-loop sensitivity, or smaller task margins.
+Open-loop action drift controls only the fixed-distribution term. It does not by itself control the distribution-shift term induced by executing the perturbed policy. This term can matter because a small nominal action error can move the system away from the FP16 trajectory, after which the accelerated policy may visit states with larger implementation error, higher closed-loop sensitivity, or smaller task margins.
 
 More formally, if $\ell$ is a nonnegative bounded loss with $0\le \ell(s)\le \|\ell\|_\infty$, then the distribution-shift contribution obeys
 \begin{equation}
@@ -338,7 +341,7 @@ under the standard definition $\mathrm{TV}(p,q)=\frac{1}{2}\|p-q\|_1$. If $\ell$
     \le
     L\,W_1(d_{\pi_q},d_{\pi_\theta}).
 \end{equation}
-The point is not that these distances are easy to estimate in high-dimensional robot rollouts, but that fixed-distribution drift is only one term. Predicting rollout robustness also requires controlling how far the quantized policy moves the visited state distribution.
+The point is not that these distances are easy to estimate in high-dimensional robot rollouts, but that fixed-distribution drift is only one term. Predicting rollout robustness also requires controlling how far the accelerated policy moves the visited state distribution.
 
 \paragraph{Claim 5: aggregate success differences decompose exactly into repairs and regressions.}
 For matched cases $c\in\mathcal{C}$ and binary success indicators $S_A(c), S_B(c)\in\{0,1\}$,
@@ -645,7 +648,7 @@ Table~\ref{tab:proxy-guided-trace-divergence} explains why the guide can help wi
 
 \subsection{Empirical Support For The Theoretical Claims}
 
-The theoretical claims in Section~3 are not used as proof that one quantized policy is superior. They organize what must be measured. The experiments support the claims in the following sense.
+The theoretical claims in Section~3 are not used as proof that one accelerated implementation is superior. They organize what must be measured. The experiments support the claims in the following sense.
 
 \begin{table}[H]
 \centering
@@ -689,18 +692,18 @@ The quantized policy is not guaranteed to be worse than FP16 in a finite simulat
 Offline drift is measured on a fixed observation set. Closed-loop rollouts produce observations adaptively. Once a quantized action changes the environment state, later observations may differ from the offline distribution. This creates two mismatches: the local action error estimate may not apply to the new states, and the success function may be discontinuous around contact and placement boundaries. This explains why ATM+OHB can have the best mean offline NMSE but not the best closed-loop aggregate success.
 
 \paragraph{A control-theoretic interpretation.}
-From a feedback-control perspective, quantization acts like a structured input disturbance injected into the learned controller. Write
+From a feedback-control perspective, post-training acceleration acts like a structured input disturbance injected into the learned controller. For the quantization track, write
 \begin{equation}
     a_t^q = \pi_\theta(s_t^q,l) + \eta(s_t^q,l),
 \end{equation}
-where $\eta$ is the action perturbation induced by quantization and compensation. Linearizing around an FP16 trajectory gives
+where $\eta$ is the action perturbation induced by quantization and compensation. For a compile or kernel-replacement track, the same form applies with $\eta$ denoting the action difference induced by the accelerated execution path. Linearizing around an FP16 trajectory gives
 \begin{equation}
     \delta s_{t+1}
     \approx (A_t + B_tK_t)\delta s_t + B_t\eta_t,
 \end{equation}
 where $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ along the trajectory. The closed-loop sensitivity is therefore governed not only by the magnitude of $\eta_t$, but also by the local closed-loop gain induced by the environment dynamics and the policy feedback. A small action perturbation can be attenuated in low-gain regions and amplified near contact, grasping, or placement transitions.
 
-This also makes success a margin problem. Let $h(s_T)$ denote an implicit terminal success margin, with success when $h(s_T)>0$. A rollout with large positive margin can tolerate sizeable action perturbations, while a low-margin rollout can flip if quantization moves $h(s_T)$ across zero. This explains why paired outcomes contain both repairs and regressions: quantization can move a trajectory away from one failure basin while pushing another trajectory across a success boundary. The useful diagnostic is therefore not just average action error, but the alignment between action perturbations, closed-loop sensitivity, and task success margins.
+This also makes success a margin problem. Let $h(s_T)$ denote an implicit terminal success margin, with success when $h(s_T)>0$. A rollout with large positive margin can tolerate sizeable action perturbations, while a low-margin rollout can flip if acceleration moves $h(s_T)$ across zero. This explains why paired outcomes contain both repairs and regressions: an accelerated implementation can move a trajectory away from one failure basin while pushing another trajectory across a success boundary. The useful diagnostic is therefore not just average action error, but the alignment between action perturbations, closed-loop sensitivity, and task success margins.
 
 \paragraph{Why is selective W4A8 robust?}
 The \texttt{llm\_dit\_mlp} scope leaves DiT attention projections in floating point. This avoids quantizing the most routing-sensitive part of the action head. A perturbation to $QK^\top$ before softmax can change attention entropy and token routing. By contrast, MLP quantization more often enters as an additive residual perturbation,
@@ -712,34 +715,34 @@ Layer normalization, residual connections, diffusion denoising, and receding-hor
 \paragraph{Why are ATM and OHB not additive?}
 ATM changes where attention looks by changing the attention-logit scale. OHB changes how strongly the attention output enters the residual stream. If ATM moves routing into a different pattern, OHB rescales a different output than the one calibrated under the uncompensated student. The combined correction can overcorrect, undercorrect, or move the policy into a different trajectory basin. This is consistent with ATM+OHB reaching 114/150, below standalone OHB at 116/150.
 
-\paragraph{What should be reported for VLA quantization?}
-The minimum evidence package should include offline action drift on held-out real observations, per-component action error, closed-loop success on matched task-initialization pairs, per-task and per-init success rates, paired repair/regression counts, and an explicit distinction between fake-quant behavior and packed-kernel deployment.
+\paragraph{What should be reported for VLA acceleration?}
+The minimum evidence package should include offline action drift on held-out real observations, per-component action error, closed-loop success on matched task-initialization pairs, per-task and per-init success rates, paired repair/regression counts, latency and memory under the same protocol, and an explicit distinction between fake quantization, prototype compile paths, and final packed-kernel deployment.
 
 \section{Implications}
 
 \paragraph{Evaluation.}
-VLA quantization should be evaluated as a closed-loop policy perturbation. Reporting only MSE or only aggregate success can be misleading. Paired rollout flips are a compact way to expose whether a method is a monotonic improvement or a redistribution of successes.
+VLA inference acceleration should be evaluated as a closed-loop policy perturbation. Reporting only MSE, aggregate success, or latency can be misleading. Paired rollout flips are a compact way to expose whether a faster implementation is a monotonic improvement or a redistribution of successes.
 
-\paragraph{Calibration.}
-Calibration should not only minimize average layerwise or action-level error. It should consider which errors matter for downstream control. A useful calibration set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware calibration objective would approximate Equation~\ref{eq:closed-loop-quant-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, or risk-gated precision fallback as natural next steps beyond ATM/OHB-style statistic matching.
+\paragraph{Calibration and protection.}
+Calibration or acceleration planning should not only minimize average layerwise error or maximize local speed. It should consider which errors matter for downstream control. A useful calibration or profiling set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware objective would approximate Equation~\ref{eq:closed-loop-quant-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, sensitivity-guided compile boundaries, or risk-gated precision fallback as natural next steps beyond ATM/OHB-style statistic matching.
 
 \paragraph{Closed-loop credit assignment.}
-This perspective borrows an idea from reinforcement learning without requiring full policy optimization: local action errors should be assigned credit according to their downstream effect on future rollout outcomes. In standard PTQ, an error $\eta_t$ is usually priced by its immediate norm. In the closed-loop view, its risk is closer to $\eta_t^\top G_t\eta_t$, which assigns larger cost to directions that propagate through dynamics and reduce terminal task margin. This suggests a lightweight alternative to direct RL: use paired rollouts, first-divergence states, or low-margin states to estimate sensitivity proxies, then guide calibration, mixed precision, residual correction, or fallback decisions. The proxy-guided mixed-precision probe in Table~\ref{tab:proxy-guided-mixed-precision} is an initial example: a closed-loop proxy improves the repair/regression balance relative to speed-only execution, while a random protection island does not.
+This perspective borrows an idea from reinforcement learning without requiring full policy optimization: local action errors should be assigned credit according to their downstream effect on future rollout outcomes. In standard PTQ or speed-only compilation, an error $\eta_t$ is usually priced by its immediate norm or ignored if latency improves. In the closed-loop view, its risk is closer to $\eta_t^\top G_t\eta_t$, which assigns larger cost to directions that propagate through dynamics and reduce terminal task margin. This suggests a lightweight alternative to direct RL: use paired rollouts, first-divergence states, or low-margin states to estimate sensitivity proxies, then guide calibration, mixed precision, residual correction, compile boundaries, kernel replacement, or fallback decisions. The proxy-guided mixed-precision probe in Table~\ref{tab:proxy-guided-mixed-precision} is an initial example: a closed-loop proxy improves the repair/regression balance relative to speed-only execution, while a random protection island does not.
 
-\paragraph{Quantized acceleration.}
-For VLA or world-model deployment, layer selection should not be based only on parameter count or FLOPs. A useful low-precision candidate should have both high compute benefit and low closed-loop sensitivity. Informally, for a module $i$ with expected speed benefit $g_i$ and quantization-induced perturbation $\eta_i$, the relevant risk is closer to a sensitivity-weighted quantity,
+\paragraph{Sensitivity-guided acceleration.}
+For VLA or world-model deployment, layer selection should not be based only on parameter count, FLOPs, compiler convenience, or latency. A useful acceleration candidate should have both high compute benefit and low closed-loop sensitivity. Informally, for a module $i$ with expected speed benefit $g_i$ and acceleration-induced perturbation $\eta_i$, the relevant risk is closer to a sensitivity-weighted quantity,
 \begin{equation}
     r_i \approx \mathbb{E}\left[\eta_i^\top G_i \eta_i\right],
 \end{equation}
-where $G_i$ summarizes downstream dynamics, feedback, and task-margin sensitivity. This suggests a mixed-precision selection rule: prioritize modules with large $g_i/r_i$, and leave routing-sensitive, contact-critical, or margin-critical components in higher precision unless closed-loop tests show otherwise.
+where $G_i$ summarizes downstream dynamics, feedback, and task-margin sensitivity. This suggests a mixed-precision and mixed-execution selection rule: prioritize modules with large $g_i/r_i$, and leave routing-sensitive, contact-critical, or margin-critical components in higher precision or eager execution unless closed-loop tests show otherwise.
 
 The small acceleration-boundary experiment illustrates both sides of this rule. Compiling the entire action head maximizes warm serving speed but increases closed-loop regressions. Protecting blocks 8--15 gives up part of that speed but restores the baseline aggregate success count on the matched 15-case slice. This is not a guarantee of safety: it still repairs one FP16 failure and regresses one FP16 success. The deployment lesson is therefore to treat mixed precision as a constrained optimization over speed benefit and closed-loop risk, not as a one-shot numerical equivalence transform.
 
 \paragraph{Fine-tuning.}
-Quantization-aware fine-tuning is policy adaptation under low-precision constraints. If the objective is only behavior cloning on static observations, it may still miss closed-loop state distribution shift. More policy-aware objectives may be needed, including rollout-informed calibration, DAgger-style data aggregation, or task-slice reweighting.
+Acceleration-aware fine-tuning is policy adaptation under deployment constraints, including low precision, compiled execution, or custom kernels. If the objective is only behavior cloning on static observations, it may still miss closed-loop state distribution shift. More policy-aware objectives may be needed, including rollout-informed calibration, DAgger-style data aggregation, or task-slice reweighting.
 
 \paragraph{Deployment claims.}
-Our results are primarily behavior-level evidence for fake W4A8 quantization, with an additional prototype action-head compilation probe. They do not establish final low-precision latency, memory, or energy improvements. A complete deployment claim requires packed low-precision kernels and end-to-end inference profiling under the same closed-loop protocol.
+Our results are behavior-level evidence for two prototype acceleration paths: fake W4A8 quantization and action-head compilation boundaries. They do not establish final low-precision latency, memory, or energy improvements. A complete deployment claim requires packed low-precision kernels or production compile/graph backends, plus end-to-end inference profiling under the same closed-loop protocol.
 
 \section{Limitations}
 
@@ -749,9 +752,9 @@ These limitations do not weaken the central methodological point: local action a
 
 \section{Conclusion}
 
-Post-training quantization of VLA policies should be viewed as policy perturbation. Even small action errors can matter because they enter a feedback loop, alter the closed-loop state distribution, and interact with task-dependent success margins. In our GR00T/LIBERO reproduction, selective W4A8 quantization remains behaviorally robust and can shift aggregate point estimates, but those shifts come from task-dependent repair/regression redistribution rather than uniform dominance. Attention compensation methods reduce mean offline drift, yet their closed-loop effects are non-monotonic. Sensitivity-guided protection improves the acceleration--robustness trade-off in our small probe, but it reduces rather than eliminates closed-loop trajectory redistribution.
+Post-training inference acceleration of VLA policies should be viewed as policy perturbation. Even small action errors can matter because they enter a feedback loop, alter the closed-loop state distribution, and interact with task-dependent success margins. In our GR00T/LIBERO reproduction, selective W4A8 quantization remains behaviorally robust and can shift aggregate point estimates, but those shifts come from task-dependent repair/regression redistribution rather than uniform dominance. Prototype action-head compilation gives substantial warm serving speedups, yet speed-only execution can introduce closed-loop regressions. Sensitivity-guided protection improves the acceleration--robustness trade-off in our small probe, but it reduces rather than eliminates closed-loop trajectory redistribution.
 
-The main lesson is practical: VLA quantization papers should report paired closed-loop rollouts, not only offline drift or aggregate success. Small action errors matter when they change the trajectory basin.
+The main lesson is practical: VLA acceleration papers should report paired closed-loop rollouts, not only offline drift, aggregate success, or latency. Small action errors matter when they change the trajectory basin.
 
 \appendix
 
