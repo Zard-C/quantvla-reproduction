@@ -24,6 +24,8 @@ COMPILE_BACKEND="${COMPILE_BACKEND:-inductor}"
 COMPILE_FULLGRAPH="${COMPILE_FULLGRAPH:-0}"
 COMPILE_DYNAMIC="${COMPILE_DYNAMIC:-}"
 COMPILE_CUDAGRAPH_MARK_STEP="${COMPILE_CUDAGRAPH_MARK_STEP:-0}"
+COMPILED_EXTRA_ARGS="${COMPILED_EXTRA_ARGS:-}"
+EVAL_EXTRA_ARGS="${EVAL_EXTRA_ARGS:-}"
 
 TASK4_DESC="put the white mug on the left plate and put the yellow and white mug on the right plate"
 TASK6_DESC="put the white mug on the plate and put the chocolate pudding to the right of the plate"
@@ -47,6 +49,14 @@ if [ -n "${COMPILE_DYNAMIC}" ]; then
 fi
 if [ "${COMPILE_CUDAGRAPH_MARK_STEP}" = "1" ]; then
   COMPILE_ARGS+=(--torch-compile-cudagraph-mark-step)
+fi
+COMPILED_EXTRA_ARGS_ARRAY=()
+if [ -n "${COMPILED_EXTRA_ARGS}" ]; then
+  read -r -a COMPILED_EXTRA_ARGS_ARRAY <<< "${COMPILED_EXTRA_ARGS}"
+fi
+EVAL_EXTRA_ARGS_ARRAY=()
+if [ -n "${EVAL_EXTRA_ARGS}" ]; then
+  read -r -a EVAL_EXTRA_ARGS_ARRAY <<< "${EVAL_EXTRA_ARGS}"
 fi
 
 kill_if_running() {
@@ -99,6 +109,7 @@ run_eval() {
       --log-file "toy_quantvla/results/${TAG}_${label}_client.log" \
       --latency-json "toy_quantvla/results/${TAG}_${label}_client_latency.json" \
       "${SEED_ARGS[@]}" \
+      "${EVAL_EXTRA_ARGS_ARRAY[@]}" \
     > "${eval_log}" 2>&1 &
   echo $! > "${eval_pid_file}"
   echo "${label}_EVAL_PID=$(cat "${eval_pid_file}")"
@@ -162,6 +173,8 @@ echo "COMPILE_BACKEND=${COMPILE_BACKEND}"
 echo "COMPILE_FULLGRAPH=${COMPILE_FULLGRAPH}"
 echo "COMPILE_DYNAMIC=${COMPILE_DYNAMIC}"
 echo "COMPILE_CUDAGRAPH_MARK_STEP=${COMPILE_CUDAGRAPH_MARK_STEP}"
+echo "COMPILED_EXTRA_ARGS=${COMPILED_EXTRA_ARGS}"
+echo "EVAL_EXTRA_ARGS=${EVAL_EXTRA_ARGS}"
 echo "DETERMINISTIC_POLICY_SEEDS=${DETERMINISTIC_POLICY_SEEDS}"
 echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
 
@@ -170,7 +183,7 @@ if [ "${RUN_BASELINE}" = "1" ]; then
 fi
 
 if [ "${RUN_COMPILED}" = "1" ]; then
-  run_server_case "${COMPILED_PORT}" "compiled" "${COMPILE_ARGS[@]}"
+  run_server_case "${COMPILED_PORT}" "compiled" "${COMPILE_ARGS[@]}" "${COMPILED_EXTRA_ARGS_ARRAY[@]}"
 fi
 
 echo "Phase 13 torch.compile matched set complete"

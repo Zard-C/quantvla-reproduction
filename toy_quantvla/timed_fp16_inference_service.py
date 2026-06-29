@@ -17,7 +17,11 @@ from fp16_linear_profiler import (
     reset_module_stats,
 )
 from lossless_cache_patches import install_lossless_cache_patches, lossless_cache_stats
-from phase13_compile_targets import TORCH_COMPILE_TARGETS, compile_policy_targets
+from phase13_compile_targets import (
+    TORCH_COMPILE_TARGETS,
+    CompileTargetSwitcher,
+    compile_policy_targets,
+)
 from phase14_cuda_graph_dit_probe import install_cuda_graph_dit_forward
 from phase3_fake_quant_forward import set_seed
 from phase3_gr00t_smoke import _insert_paths
@@ -29,6 +33,54 @@ from phase8_cutlass_blockscaled_fp4_real_activation_bench import (
     synchronize,
 )
 from timing_utils import TimedPolicyWrapper, summarize_float
+
+
+REQUEST_POLICY_STEP_KEY = "quantvla.policy_step"
+
+
+class StepWindowCompileFallbackPolicy:
+    """Use eager modules only for a policy-step window, compiled modules elsewhere."""
+
+    def __init__(self, policy: Any, switcher: CompileTargetSwitcher, *, step_start: int, step_end: int):
+        self._policy = policy
+        self._switcher = switcher
+        self._step_start = int(step_start)
+        self._step_end = int(step_end)
+        self._compiled_requests = 0
+        self._eager_requests = 0
+        self._last_mode = None
+        self._switcher.use_compiled()
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._policy, name)
+
+    def get_action(self, observation: dict[str, Any]) -> dict[str, Any]:
+        policy_observation = observation
+        raw_step = None
+        if REQUEST_POLICY_STEP_KEY in observation:
+            policy_observation = dict(observation)
+            raw_step = policy_observation.pop(REQUEST_POLICY_STEP_KEY)
+        policy_step = None if raw_step is None else int(raw_step)
+        use_eager = policy_step is not None and self._step_start <= policy_step < self._step_end
+        if use_eager:
+            self._switcher.use_eager()
+            self._eager_requests += 1
+            self._last_mode = "eager"
+        else:
+            self._switcher.use_compiled()
+            self._compiled_requests += 1
+            self._last_mode = "compiled"
+        return self._policy.get_action(policy_observation)
+
+    def summary(self) -> dict[str, Any]:
+        return {
+            "enabled": True,
+            "step_start": self._step_start,
+            "step_end": self._step_end,
+            "compiled_requests": int(self._compiled_requests),
+            "eager_requests": int(self._eager_requests),
+            "last_mode": self._last_mode,
+        }
 
 
 def load_object(spec: str) -> Any:
@@ -134,6 +186,8 @@ def main() -> None:
     parser.add_argument("--torch-compile-mode", default="reduce-overhead")
     parser.add_argument("--torch-compile-fullgraph", action="store_true")
     parser.add_argument("--torch-compile-dynamic", choices=["true", "false"])
+    parser.add_argument("--torch-compile-fallback-step-start", type=int)
+    parser.add_argument("--torch-compile-fallback-step-end", type=int)
     parser.add_argument(
         "--torch-compile-cudagraph-mark-step",
         action="store_true",
@@ -200,6 +254,10 @@ def main() -> None:
             "fullgraph": bool(args.torch_compile_fullgraph),
             "dynamic": args.torch_compile_dynamic,
             "cudagraph_mark_step": bool(args.torch_compile_cudagraph_mark_step),
+            "step_window_fallback": {
+                "start": args.torch_compile_fallback_step_start,
+                "end": args.torch_compile_fallback_step_end,
+            },
         },
         "lossless_cache": {
             "eagle_tokenizer_cache": bool(args.lossless_cache_eagle_tokenizer),
@@ -231,7 +289,25 @@ def main() -> None:
     result["model_load_seconds"] = time.perf_counter() - started
     result["model_load_memory"] = cuda_memory(args.device)
 
-    result["torch_compile"] = compile_policy_targets(policy, args, torch)
+    compile_fallback_policy = None
+    if (args.torch_compile_fallback_step_start is None) != (args.torch_compile_fallback_step_end is None):
+        raise ValueError("Both --torch-compile-fallback-step-start and --torch-compile-fallback-step-end are required")
+    if args.torch_compile_fallback_step_start is not None:
+        if args.torch_compile_target == "none":
+            raise ValueError("Step-window fallback requires a non-none --torch-compile-target")
+        if args.torch_compile_fallback_step_start >= args.torch_compile_fallback_step_end:
+            raise ValueError("Fallback step start must be smaller than end")
+        switcher = CompileTargetSwitcher(policy, args, torch)
+        compile_fallback_policy = StepWindowCompileFallbackPolicy(
+            policy,
+            switcher,
+            step_start=args.torch_compile_fallback_step_start,
+            step_end=args.torch_compile_fallback_step_end,
+        )
+        result["torch_compile"] = switcher.info(args)
+        result["torch_compile"]["step_window_fallback"] = compile_fallback_policy.summary()
+    else:
+        result["torch_compile"] = compile_policy_targets(policy, args, torch)
     result["lossless_cache"] = install_lossless_cache_patches(
         policy,
         eagle_tokenizer_cache=bool(args.lossless_cache_eagle_tokenizer),
@@ -312,14 +388,17 @@ def main() -> None:
             "server_memory": cuda_memory(args.device),
             "lossless_cache_stats": lossless_cache_stats(policy),
         }
+        if compile_fallback_policy is not None:
+            summary["compile_step_window_fallback"] = compile_fallback_policy.summary()
         if cuda_graph_state is not None:
             summary["cuda_graph"] = cuda_graph_state.summary()
         if args.profile_linear_modules:
             summary["profile_module_results"] = module_results(profiled_modules)
         return summary
 
+    served_policy = compile_fallback_policy if compile_fallback_policy is not None else policy
     timed_policy = TimedPolicyWrapper(
-        policy,
+        served_policy,
         output_json=args.server_latency_json,
         label="fp16_official",
         flush_every=args.server_latency_flush_every,

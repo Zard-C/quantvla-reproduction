@@ -1,17 +1,18 @@
 # QuantVLA Reproduction Study
 
-This repository contains a reproduction-oriented study of post-training quantization for vision-language-action (VLA) robot policies, centered on GR00T N1.5 and LIBERO-10 closed-loop rollouts.
+This repository contains a reproduction-oriented study of inference acceleration for vision-language-action (VLA) robot policies, centered on GR00T N1.5 and LIBERO-10 closed-loop rollouts. The project started from post-training quantization and expanded to graph compilation, eager islands, mixed precision, and other implementation-level acceleration boundaries.
 
 ## Paper
 
-**When Small Action Errors Matter: Closed-Loop Analysis of Post-Training Quantization for VLA Policies**  
+**When Inference Acceleration Changes Behavior: Closed-Loop Analysis for VLA Policies**
 patrick.zhang
 
-This paper argues that post-training quantization for VLA policies should be evaluated as a **closed-loop policy perturbation**, not only as static numerical approximation. Small action errors can be amplified by feedback, contact dynamics, receding-horizon control, and thresholded success margins.
+This paper argues that inference acceleration for VLA policies should be evaluated as a **closed-loop policy perturbation**, not only as static numerical approximation or systems throughput. Quantization, graph compilation, eager-island placement, and kernel replacement can all introduce small action-level perturbations that are filtered by feedback, contact dynamics, receding-horizon control, and thresholded success margins.
 
 Links:
 
 - [PDF](paper/main.pdf)
+- [Current Chinese status note](docs/current_status_zh.md)
 - [GitHub Release: paper-v1](https://github.com/Zard-C/quantvla-reproduction/releases/tag/paper-v1)
 - [arXiv-ready source bundle](paper/dist/when_small_action_errors_matter_arxiv_v1.tar.gz)
 - [Paper source](paper/main.tex)
@@ -21,11 +22,12 @@ Zenodo DOI will be added after the GitHub repository is enabled in Zenodo and th
 
 ## Main Findings
 
-- Selective W4A8 fake quantization over LLM and DiT MLP layers remains in the FP16 behavioral range on LIBERO-10 under the evaluated protocol.
+- Selective W4A8 fake quantization over LLM and DiT MLP layers remains in the FP16 behavioral range on LIBERO-10 under the evaluated protocol, but its gains are not monotonic.
 - Offline mean action drift can improve while individual held-out observations regress.
 - Aggregate closed-loop success rates hide paired repair/regression structure.
-- Attention temperature matching (ATM) and output head balancing (OHB) redistribute successes rather than providing monotonic improvements.
-- From a control perspective, quantization behaves like a structured input disturbance whose impact depends on closed-loop sensitivity and task success margins.
+- Attention temperature matching (ATM), output head balancing (OHB), and compile/eager-island boundaries redistribute successes rather than providing uniform dominance.
+- Closed-loop sensitivity is anisotropic across action dimensions, rollout durations, and model-layer boundaries.
+- From a control perspective, acceleration perturbations behave like structured input disturbances whose impact depends on closed-loop sensitivity and task success margins.
 
 ## Repository Map
 
@@ -45,4 +47,4 @@ The build expects `tectonic`, `rsvg-convert`, and Python 3. See [paper/README.md
 
 ## Scope
 
-This repository is a research reproduction and analysis workspace. The paper focuses on behavior under fake quantization and does not claim packed-kernel deployment speedups, memory savings, or statistically significant policy superiority.
+This repository is a research reproduction and analysis workspace. The paper focuses on closed-loop behavior under fake quantization and prototype acceleration boundaries. It does not claim final packed-kernel deployment speedups, memory savings, or statistically significant policy superiority.

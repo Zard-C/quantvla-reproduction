@@ -25,6 +25,8 @@ import tqdm
 from libero.libero import benchmark
 from timing_utils import REQUEST_SEED_KEY, summarize_breakdowns, summarize_float
 
+REQUEST_POLICY_STEP_KEY = "quantvla.policy_step"
+
 ACTION_KEYS = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
 ACTION_KEY_GROUPS = {
     "translation": ["x", "y", "z"],
@@ -158,9 +160,9 @@ class GR00TPolicy:
         action_array, _trace, _timing = self.get_action_with_trace(observation_dict, lang)
         return action_array
 
-    def get_action_with_trace(self, observation_dict, lang: str, request_seed: int | None = None):
+    def get_action_with_trace(self, observation_dict, lang: str, request_seed: int | None = None, policy_step: int | None = None):
         started = time.perf_counter()
-        obs_dict = self._process_observation(observation_dict, lang, request_seed=request_seed)
+        obs_dict = self._process_observation(observation_dict, lang, request_seed=request_seed, policy_step=policy_step)
         preprocess_seconds = time.perf_counter() - started
         remote_started = time.perf_counter()
         action_chunk = self.policy.get_action(obs_dict)
@@ -211,7 +213,7 @@ class GR00TPolicy:
         }
         return action_array, action_trace, timing
 
-    def _process_observation(self, obs, lang: str, request_seed: int | None = None):
+    def _process_observation(self, obs, lang: str, request_seed: int | None = None, policy_step: int | None = None):
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
 
         xyz = obs["robot0_eef_pos"]
@@ -232,6 +234,8 @@ class GR00TPolicy:
         }
         if request_seed is not None:
             new_obs[REQUEST_SEED_KEY] = int(request_seed)
+        if policy_step is not None:
+            new_obs[REQUEST_POLICY_STEP_KEY] = int(policy_step)
         if not self.headless:
             show_obs_images_cv2(new_obs)
         return new_obs
@@ -515,6 +519,7 @@ def eval_libero(args: argparse.Namespace) -> None:
                             obs,
                             task.language,
                             request_seed=request_seed,
+                            policy_step=policy_step if args.send_policy_step_key else None,
                         )
                         action_before_perturb = action.copy()
                         action, perturb_trace = apply_action_perturbation(
@@ -688,6 +693,7 @@ def main() -> None:
     parser.add_argument("--latency-json", type=Path, help="Optional JSON output for policy request latency statistics.")
     parser.add_argument("--deterministic-policy-seeds", action="store_true")
     parser.add_argument("--policy-seed-base", type=int, default=20260609)
+    parser.add_argument("--send-policy-step-key", action="store_true", help="Send private policy-step metadata to the inference server.")
     parser.add_argument(
         "--action-perturb-keys",
         help="Comma-separated action keys or groups to perturb after policy inference. Groups: translation, rotation, continuous, all.",
