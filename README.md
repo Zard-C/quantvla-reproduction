@@ -33,6 +33,7 @@ Zenodo DOI will be added after the GitHub repository is enabled in Zenodo and th
 ## Repository Map
 
 - `paper/`: paper source, generated PDF, figures, release notes, and arXiv source bundle.
+- `paper_icra/`: anonymous ICRA-style short draft and generated PDF.
 - `docs/`: staged experiment notes, rollout analyses, ablation summaries, and implementation reports.
 - `toy_quantvla/`: scripts and utilities used for toy studies, GR00T probing, quantized inference services, and LIBERO evaluations.
 - `analysis_keyframes/`: selected rollout keyframes used for qualitative analysis.
