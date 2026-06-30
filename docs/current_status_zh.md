@@ -47,7 +47,9 @@ Phase28B 的结论更重要：`blocks8-15 eager` 没有泛化。它相对 speed-
 
 这不是否定 proxy-guided acceleration，而是说明静态 coarse layer mask 不够。更好的策略应当基于 layer × duration × action channel 的闭环敏感性，而不是只保护某一段层。
 
-## Phase28C: 正在跑的候选搜索
+## Phase28C: 33-case candidate search
+
+报告: [`docs/phase28c_proxy_guided_33case_report_zh.md`](phase28c_proxy_guided_33case_report_zh.md)
 
 脚本:
 
@@ -61,9 +63,41 @@ Phase28C 固定 Phase28B 的 33-case matched set，继续搜索更好的 speed/b
 | A: `block0 eager` | same-observation spike proxy，保留 `transformer_blocks.0` eager |
 | B: `block0 + blocks8-15 eager` | 合并 spike proxy 和早期 repair/regression proxy |
 | C: `blocks0-3 eager` | 更宽的 early-block protection |
-| D: `step 120-320 eager window` | 第一版 duration-aware fallback，窗口内走 eager，其余走 compiled |
+| D: `step 120-320 eager window` | 第一版 duration-aware fallback，窗口内走 eager，其余走 compiled；早期因 eval step key 漏传，已经在 Phase28D 中重跑 |
 
-当前 Phase28C 仍在 5090 上运行，partial logs 和 partial result 暂不提交，避免 GitHub 上出现半截实验。等完整结果出来后，再更新本页和 Phase28C 报告。
+当前最好工程 tradeoff 是 `blocks0-3 eager`：`18/33`，server p50 约 `67.6 ms`，接近 speed-only 的速度，同时比 speed-only 多 2 个成功 case。
+
+## Phase28D: duration-window fallback
+
+报告: [`docs/phase28d_duration_window_analysis_zh.md`](phase28d_duration_window_analysis_zh.md)
+
+数据:
+
+- [`toy_quantvla/results/phase28D_duration_window_33case_v1_summary.json`](../toy_quantvla/results/phase28D_duration_window_33case_v1_summary.json)
+- [`toy_quantvla/results/phase28D_duration_window_33case_v1_analysis.json`](../toy_quantvla/results/phase28D_duration_window_33case_v1_analysis.json)
+
+| run | success | server p50 | 相对 FP16 |
+| --- | ---: | ---: | ---: |
+| speed-only compile | 16/33 | 70.20 ms | 2.23x |
+| window 80-220 | 14/33 | 75.11 ms | 2.08x |
+| window 120-320 | 16/33 | 78.09 ms | 2.00x |
+| window 180-420 | 16/33 | 78.82 ms | 1.98x |
+| window 0-250 | 18/33 | 88.75 ms | 1.76x |
+
+`window 0-250` 是 D 方案中最好的窗口：相对 speed-only 修复 `4:6, 6:0, 6:6, 8:7`，打坏 `6:7, 6:9`，净 `+2`。它很可能覆盖了接近、对齐、接触、夹爪闭合和初始搬起这些 grasp-critical steps；后续步骤更像规则搬运/放置，对误差没有同样敏感。
+
+不过 `0-250` 的代价也明显：server eager fraction 约 `0.38`，p50 升到 `88.75 ms`。所以 D 的主要价值是证明 duration sensitivity 存在，而不是替代 Phase28C 的最佳工程方案。
+
+## Phase29: finer duration proxy
+
+计划: [`docs/phase29_finer_duration_proxy_plan_zh.md`](phase29_finer_duration_proxy_plan_zh.md)
+
+脚本:
+
+- [`toy_quantvla/run_phase29_finer_duration_proxy.sh`](../toy_quantvla/run_phase29_finer_duration_proxy.sh)
+- [`toy_quantvla/phase29_finer_duration_proxy_summary.py`](../toy_quantvla/phase29_finer_duration_proxy_summary.py)
+
+Phase29 会把 `0-250` 拆成更细的 grasp-centered windows，例如 `0:120,0:180,0:220,80:240,120:280,160:240,240:320`。目标是找到比 broad `0-250` 更便宜的 duration proxy：尽量保留 repair，同时减少 eager fallback 和 latency。
 
 ## 阅读顺序
 
@@ -73,5 +107,6 @@ Phase28C 固定 Phase28B 的 33-case matched set，继续搜索更好的 speed/b
 2. [`docs/phase25_anisotropic_sensitivity_report_zh.md`](phase25_anisotropic_sensitivity_report_zh.md)
 3. [`docs/phase28_proxy_guided_mixed_precision_report_zh.md`](phase28_proxy_guided_mixed_precision_report_zh.md)
 4. [`docs/phase28b_proxy_guided_33case_report_zh.md`](phase28b_proxy_guided_33case_report_zh.md)
-5. Phase28C 完成后的新报告
-
+5. [`docs/phase28c_proxy_guided_33case_report_zh.md`](phase28c_proxy_guided_33case_report_zh.md)
+6. [`docs/phase28d_duration_window_analysis_zh.md`](phase28d_duration_window_analysis_zh.md)
+7. [`docs/phase29_finer_duration_proxy_plan_zh.md`](phase29_finer_duration_proxy_plan_zh.md)
