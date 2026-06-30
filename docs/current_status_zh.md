@@ -6,7 +6,7 @@
 
 - PDF: [`paper/main.pdf`](../paper/main.pdf)
 - LaTeX source: [`paper/main.tex`](../paper/main.tex)
-- 当前标题: **When Inference Acceleration Changes Behavior: Closed-Loop Analysis for VLA Policies**
+- 当前标题: **Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies**
 
 论文主线已经从单纯的量化复现，扩展为 VLA/world-action policy 的推理加速闭环分析。这里的推理加速包括 fake quantization、graph compile、eager island、mixed precision 和未来的 packed kernel / CUDA kernel 路线。
 
@@ -17,6 +17,7 @@
 3. aggregate success rate 不够，需要 paired repair/regression。相同 task/init/seed 下，候选后端可能同时修复一些 baseline 失败样本，又打坏一些 baseline 成功样本。
 4. not all dims / durations / layers are equal。闭环敏感性在 action channel、rollout 阶段和模型层级上都是各向异性的。
 5. coarse layer proxy 不够。`blocks8-15` 在 15-case 小样本上看起来有效，但扩大到 33-case 后没有泛化，说明 proxy-guided 策略需要 held-out matched rollouts 验证。
+6. finer duration proxy 给出了目前最好的 speed/behavior trade-off。`0-120 eager + rest compiled` 在 33-case held-out set 上达到 FP16 baseline 的 `19/33` 成功，同时 p50 latency `69.66 ms`，基本保留 speed-only compile 的 `70.20 ms` 速度。
 
 ## Phase28A: 15-case proxy-guided probe
 
@@ -90,14 +91,35 @@ Phase28C 固定 Phase28B 的 33-case matched set，继续搜索更好的 speed/b
 
 ## Phase29: finer duration proxy
 
-计划: [`docs/phase29_finer_duration_proxy_plan_zh.md`](phase29_finer_duration_proxy_plan_zh.md)
+报告: [`docs/phase29_finer_duration_proxy_report_zh.md`](phase29_finer_duration_proxy_report_zh.md)
+
+数据:
+
+- [`toy_quantvla/results/phase29_finer_duration_proxy_33case_v1_summary.json`](../toy_quantvla/results/phase29_finer_duration_proxy_33case_v1_summary.json)
 
 脚本:
 
 - [`toy_quantvla/run_phase29_finer_duration_proxy.sh`](../toy_quantvla/run_phase29_finer_duration_proxy.sh)
 - [`toy_quantvla/phase29_finer_duration_proxy_summary.py`](../toy_quantvla/phase29_finer_duration_proxy_summary.py)
 
-Phase29 会把 `0-250` 拆成更细的 grasp-centered windows，例如 `0:120,0:180,0:220,80:240,120:280,160:240,240:320`。目标是找到比 broad `0-250` 更便宜的 duration proxy：尽量保留 repair，同时减少 eager fallback 和 latency。
+Phase29 把 `0-250` 拆成更细的 duration windows，结果表明“保护越多越安全”并不成立，窗口位置比窗口长度更关键。
+
+| run | success | server p50 | eager frac | 相对 FP16 |
+| --- | ---: | ---: | ---: | ---: |
+| FP16 baseline | 19/33 | 156.22 ms | 1.000 | 1.00x |
+| speed-only compile | 16/33 | 70.20 ms | 0.000 | 2.23x |
+| window 0-120 | 19/33 | 69.66 ms | 0.190 | 2.24x |
+| window 0-180 | 18/33 | 77.55 ms | 0.281 | 2.01x |
+| window 0-220 | 16/33 | 90.49 ms | 0.328 | 1.73x |
+| window 80-240 | 14/33 | 75.98 ms | 0.214 | 2.06x |
+| window 120-280 | 16/33 | 73.48 ms | 0.216 | 2.13x |
+| window 160-240 | 15/33 | 69.29 ms | 0.111 | 2.25x |
+| window 240-320 | 17/33 | 66.71 ms | 0.084 | 2.34x |
+| window 0-250 | 18/33 | 88.75 ms | 0.376 | 1.76x |
+
+`0-120` 是当前最值得写进论文的 proxy-guided acceleration 结果：它相对 speed-only 修复 7 个 case，新增 4 个 regression，净 `+3`；相对 FP16 baseline 则是 2 个 repair / 2 个 regression，aggregate success 持平。它说明闭环敏感阶段更接近“早期 basin selection / approach / alignment”，而不是完整抓取和搬运全过程。
+
+不过 `0-120` 不是“找到了唯一正确窗口”，而是一个更强的论据：VLA 加速的解空间不是单点最优，需要通过 matched rollouts、repair/regression 和 trace divergence 去定位哪些阶段、维度、层边界值得保护。
 
 ## 阅读顺序
 
@@ -109,4 +131,4 @@ Phase29 会把 `0-250` 拆成更细的 grasp-centered windows，例如 `0:120,0:
 4. [`docs/phase28b_proxy_guided_33case_report_zh.md`](phase28b_proxy_guided_33case_report_zh.md)
 5. [`docs/phase28c_proxy_guided_33case_report_zh.md`](phase28c_proxy_guided_33case_report_zh.md)
 6. [`docs/phase28d_duration_window_analysis_zh.md`](phase28d_duration_window_analysis_zh.md)
-7. [`docs/phase29_finer_duration_proxy_plan_zh.md`](phase29_finer_duration_proxy_plan_zh.md)
+7. [`docs/phase29_finer_duration_proxy_report_zh.md`](phase29_finer_duration_proxy_report_zh.md)

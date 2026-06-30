@@ -1,8 +1,8 @@
-# When Small Action Errors Matter
+# Inference Acceleration as Closed-Loop Perturbation
 
 This directory contains the paper draft and arXiv-ready source material for:
 
-> When Small Action Errors Matter: Closed-Loop Analysis of Post-Training Quantization for VLA Policies
+> Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies
 
 ## Build
 
@@ -33,7 +33,7 @@ The PDF, logs, auxiliary files, Markdown draft, and figure-generation scripts ar
 
 Suggested arXiv metadata:
 
-- Title: `When Small Action Errors Matter: Closed-Loop Analysis of Post-Training Quantization for VLA Policies`
+- Title: `Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies`
 - Authors: `patrick.zhang`
 - Primary category: `cs.RO`
 - Cross-list candidates: `cs.LG`, `cs.CV`

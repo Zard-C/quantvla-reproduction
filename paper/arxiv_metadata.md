@@ -2,7 +2,7 @@
 
 ## Title
 
-When Small Action Errors Matter: Closed-Loop Analysis of Post-Training Quantization for VLA Policies
+Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies
 
 ## Authors
 
@@ -15,7 +15,7 @@ patrick.zhang
 
 ## Suggested Comments
 
-22 pages including appendix. Reproduction-oriented study of post-training quantization for VLA policies.
+Behavior-level study of inference acceleration for VLA policies, including fake quantization, graph compilation, sensitivity probes, and matched closed-loop rollouts.
 
 ## Suggested License
 
@@ -26,6 +26,6 @@ Choose one during upload:
 
 ## Abstract
 
-Post-training quantization (PTQ) is usually presented as a compression procedure: a full-precision model is mapped into a low-precision representation, and the resulting model is evaluated by output drift, task accuracy, or deployment efficiency. For vision-language-action (VLA) policies, this framing is incomplete. A VLA model is not only a predictor; it is a closed-loop controller. We argue that PTQ for VLA policies should be evaluated as a closed-loop policy perturbation. Quantization changes the implemented policy function, which can change the state distribution induced by robot-environment interaction. Small action errors can therefore be amplified by contact dynamics, receding-horizon feedback, and thresholded success conditions.
+Inference acceleration for vision-language-action (VLA) policies is often treated as a systems problem: quantize weights, compile graphs, fuse kernels, or replay static execution paths, then report drift, success, latency, and memory. This framing is incomplete for robot policies. A VLA model is a closed-loop controller, so an implementation perturbation changes not only the current action but also the future state distribution induced by interaction with the environment. Small numerical differences can therefore be filtered, amplified, repaired, or inverted by feedback dynamics, contact, receding-horizon replanning, and thresholded task margins.
 
-We study this effect in a reproduction-oriented analysis of selective W4A8 fake quantization for a GR00T N1.5 policy on LIBERO-10. Offline teacher-student action drift shows that attention balancing methods can improve mean action error, but also worsen a non-trivial subset of held-out observations. In closed-loop simulation over 150 matched task-initialization pairs, selective W4A8 variants remain in the FP16 behavioral range under our evaluation protocol, but their gains are not monotonic: compensation methods repair some failed rollouts while introducing new failures elsewhere. The highest point-estimate single compensation mode, output head balancing (OHB), reaches 116/150 successes compared with 113/150 for uncompensated W4A8 and 108/150 for FP16, yet it still regresses several task slices. We further show through controlled perturbation and acceleration-boundary experiments that closed-loop sensitivity is anisotropic across action dimensions, rollout phases, and model-layer boundaries. A small proxy-guided mixed-precision probe supports the resulting design rule: protecting closed-loop-sensitive action-head blocks can recover some speed-only regressions while preserving part of the latency gain, but it cannot eliminate trajectory redistribution. We do not claim statistically significant closed-loop superiority from these small aggregate gaps. Our study focuses on behavior under fake quantization and prototype acceleration boundaries rather than final packed-kernel deployment efficiency. The results suggest that VLA quantization should be evaluated as policy perturbation, not merely as numerical approximation.
+We formulate post-training VLA acceleration as a closed-loop policy perturbation problem and use this lens to derive five claims: acceleration error is filtered by closed-loop sensitivity; rollout flips are margin-crossing events; open-loop drift is insufficient without state-distribution control; sensitivity is anisotropic across action channels, rollout phases, and model boundaries; and acceleration should be viewed as exploration of a constrained policy-implementation design space rather than imitation of a single FP16 point. We test these claims on a GR00T N1.5 policy in LIBERO-10 through selective W4A8 fake quantization, torch.compile action-head acceleration, eager-island protection, controlled action perturbations, first-divergence trace analysis, and matched rollout repair/regression accounting. A finer duration search identifies a narrow early eager window, policy steps 0--120, that restores FP16-level success on a 33-case set while preserving speed-only latency. We do not claim final packed-kernel deployment efficiency or universal superiority of any single backend. The contribution is a modeling and experimental guide for VLA acceleration: identify closed-loop-sensitive dimensions, phases, and modules, then protect the smallest regions that improve paired repair/regression while preserving speed.
