@@ -22,6 +22,18 @@
 4. not all dims / durations / layers are equal。
 5. sensitivity-guided protection 可以在速度和闭环行为之间找到更好的点。
 
+可以把工程路径类比成 TensorRT tactic search，但闭环验证更贵：
+
+```text
+compiler tactic search:
+candidate kernels -> microbenchmark latency -> local numerical check -> fastest valid tactic
+
+closed-loop VLA implementation search:
+candidate acceleration policies -> cheap sensitivity proxy -> small matched rollouts -> held-out validation
+```
+
+所以我们的 guide 不是暴力枚举所有 quantization / compile / fallback 候选，而是 **sensitivity-guided implementation search**：先用便宜的静态/open-loop proxy 剪枝，再把昂贵的 closed-loop rollout 留给少数高收益、低风险候选。
+
 ## 当前主结果
 
 | mode | success | server p50 | speedup | 备注 |
