@@ -96,8 +96,24 @@ ICRA 审稿人最需要看到：小扰动如何变成轨迹分叉。
 
 ## 下一步执行
 
-1. 编译 `paper_icra/main.tex`，确认模板可用。
-2. 根据实际页数压缩到 8 页主文。
-3. 生成 video case list 和素材路径。
-4. 等 5090 可用时跑 held-out sanity set。
+1. 等 Phase30 held-out sanity set 跑完，判断 `0-120` 是否仍然不低于 speed-only。
+2. 生成 video case list 和素材路径。
+3. 补 memory/profiling table。
+4. 根据 Phase30 结果更新 `paper_icra/main.tex`。
 5. arXiv 长版补 artifact/reproducibility 段落。
+
+## 最后冲刺目标
+
+如果 Phase30 验证通过，最后一档冲刺不是继续手工找更多窗口，而是把经验 guide 升级为一个小算法：
+
+> Sensitivity-Guided Tactic Search 自动寻找类似 `0-120` 的 tactic。
+
+这个算法的目标不是证明存在固定 universal tactic，而是提出一个可迁移的 tactic-search procedure。输入新模型、新权重或新任务分布后，它用少量 cheap proxy 和少量 matched rollouts 自动选择候选 implementation tactic。
+
+最小可交付形态：
+
+1. 在已有 Phase28/29 数据上做 retrospective search，展示算法能从候选集合中选出 `0-120` 或同级别候选。
+2. 用 Phase30 held-out sanity set 检查该选择是否能保持 speed/behavior trade-off。
+3. 在 ICRA 版中把它作为 algorithmic guide，而不是重写成完整系统论文。
+
+详细计划见 [`docs/phase31_auto_tactic_search_plan_zh.md`](phase31_auto_tactic_search_plan_zh.md)。
