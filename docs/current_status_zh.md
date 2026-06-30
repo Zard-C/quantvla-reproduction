@@ -170,6 +170,18 @@ score = 100 * success_rate
 
 在 Phase29 probe set 上，scorer 选择 `window_0_120`；但在 Phase30 held-out set 上，最终选择变成 `speed_only`。这给论文一个更稳的结论：固定 duration window 不是答案，held-out closed-loop validation 是 tactic search 的必要环节。
 
+## Phase32: held-out tactic validation v2
+
+计划: [`docs/phase32_tactic_validation_plan_zh.md`](phase32_tactic_validation_plan_zh.md)
+
+Phase32 使用新的 held-out init set `18/19/20`，继续验证 Phase31 的结论。候选包括 FP16 baseline、`speed_only`、`window_0_120`，以及 `blocks0-3 + window_0_120` 组合策略。
+
+核心问题：
+
+- 如果 `speed_only` 继续胜出，它就是当前 checkpoint/task distribution 的工程 incumbent。
+- 如果组合候选胜出，则说明 sensitivity-guided refinement 可以超过 naive compile。
+- 如果结果再次随 held-out set 变化，则进一步支持论文的 tactic-search framing，而不是固定 tactic framing。
+
 ## 阅读顺序
 
 建议按这个顺序看：
@@ -183,3 +195,4 @@ score = 100 * success_rate
 7. [`docs/phase29_finer_duration_proxy_report_zh.md`](phase29_finer_duration_proxy_report_zh.md)
 8. [`docs/phase30_heldout_sanity_report_zh.md`](phase30_heldout_sanity_report_zh.md)
 9. [`docs/phase31_tactic_search_retrospective_zh.md`](phase31_tactic_search_retrospective_zh.md)
+10. [`docs/phase32_tactic_validation_plan_zh.md`](phase32_tactic_validation_plan_zh.md)
