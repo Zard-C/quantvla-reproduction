@@ -18,7 +18,16 @@ run_compiled_variant() {
   local extra_args="${4:-}"
   local eval_extra_args="${5:-}"
   echo "=== Phase28C candidate: ${tag} target=${target} extra=${extra_args} eval_extra=${eval_extra_args} ==="
-  TAG="${tag}"   CASE_LIST="${CASE_LIST}"   POLICY_SEED_BASE="${POLICY_SEED_BASE}"   COMPILED_PORT="${port}"   RUN_BASELINE=0   RUN_COMPILED=1   COMPILE_TARGET="${target}"   COMPILED_EXTRA_ARGS="${extra_args}"   bash toy_quantvla/run_phase13_torch_compile_matched_set.sh
+  TAG="${tag}" \
+  CASE_LIST="${CASE_LIST}" \
+  POLICY_SEED_BASE="${POLICY_SEED_BASE}" \
+  COMPILED_PORT="${port}" \
+  RUN_BASELINE=0 \
+  RUN_COMPILED=1 \
+  COMPILE_TARGET="${target}" \
+  COMPILED_EXTRA_ARGS="${extra_args}" \
+  EVAL_EXTRA_ARGS="${eval_extra_args}" \
+  bash toy_quantvla/run_phase13_torch_compile_matched_set.sh
 }
 
 echo "TAG_PREFIX=${TAG_PREFIX}"
