@@ -131,6 +131,54 @@ Return: best tactic or tactic selector.
    - ICRA 主文只放 algorithm sketch 和一张小表。
    - arXiv 长版放完整 scoring、candidate pool、retrospective search 表。
 
+## 第一轮离线结果
+
+已经完成 retrospective scorer：
+
+- script: [`toy_quantvla/phase31_tactic_search_retrospective.py`](../toy_quantvla/phase31_tactic_search_retrospective.py)
+- report: [`docs/phase31_tactic_search_retrospective_zh.md`](phase31_tactic_search_retrospective_zh.md)
+- json: [`toy_quantvla/results/phase31_tactic_search_retrospective.json`](../toy_quantvla/results/phase31_tactic_search_retrospective.json)
+
+当前 scorer 使用：
+
+```text
+score = 100 * success_rate
+      + 4 * speedup
+      + repair_vs_baseline
+      - 2.5 * regress_vs_baseline
+      - 10 * baseline_success_gap
+      - 4 * worst_task_gap
+```
+
+这个分数不是理论最优目标，而是一个启发式 rollout triage。它把闭环成功率放在第一优先级，用 speedup 做次级收益，并用 regression count 和 worst-task risk 避免平均值掩盖脆弱任务。
+
+结果：
+
+| stage | selected tactic | evidence |
+| --- | --- | --- |
+| Phase29 probe | `window_0_120` | `19/33`, p50 `69.66 ms`, score 最高 |
+| Phase30 held-out | `speed_only` | `25/30`, p50 `50.72 ms`, score 最高 |
+
+因此当前结论是：
+
+- `window_0_120` 是 probe set 上的好 diagnostic，但不是 universal tactic。
+- `speed_only` 是当前 held-out incumbent。
+- Phase31 的价值不是证明某个固定窗口永远正确，而是证明 tactic search 必须包含 held-out closed-loop validation。
+
+## 下一轮 GPU 工作建议
+
+下一轮不要继续单押 `0-120`，而应该让 candidate pool 更像一个 tactic-search benchmark：
+
+1. 固定一个新 held-out set，比如 init `18/19/20`。
+2. 只跑少数高价值候选：
+   - FP16 baseline
+   - `speed_only` incumbent
+   - Phase29 probe winner: `window_0_120`
+   - 一个 layer/duration 组合候选，例如 `blocks0-3 eager + 0-120 fallback`
+3. 用同一个 scorer 输出最终 incumbent。
+
+如果 `speed_only` 继续赢，它就是当前模型/任务上的最佳工程 tactic；如果组合候选赢，则说明 sensitivity-guided refinement 能超过 naive compile。
+
 ## 成功标准
 
 最小成功：

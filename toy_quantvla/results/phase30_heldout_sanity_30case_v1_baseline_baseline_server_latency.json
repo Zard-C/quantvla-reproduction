@@ -1,0 +1,22 @@
+{
+  "label": "fp16_official",
+  "writes": 278,
+  "get_action_seconds": {
+    "count": 13822,
+    "mean": 0.08988799947467456,
+    "min": 0.08471587300300598,
+    "max": 0.4372720792889595,
+    "p50": 0.08880857191979885,
+    "p90": 0.09418082609772682,
+    "p99": 0.10135413702577352
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_bytes": 5476781056,
+      "reserved_bytes": 5779750912,
+      "max_allocated_bytes": 5682665472,
+      "max_reserved_bytes": 5779750912
+    },
+    "lossless_cache_stats": {}
+  }
+}
