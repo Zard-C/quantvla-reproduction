@@ -67,11 +67,77 @@ libero_sim/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in
 - `toy_quantvla/run_phase36_n17_official_smoke.sh`
   - 使用 N1.7 官方 `run_gr00t_server.py` 和 `rollout_policy.py`。
   - 只验证 checkpoint、server、LIBERO env、ZMQ client 能闭环跑通。
+  - 默认 `RECORD_VIDEO=0`，避免 ffmpeg/video encoding 影响 smoke 和后续 latency。
 - `toy_quantvla/run_phase36_n17_timed_rollout.sh`
   - 使用 `toy_quantvla/n17_timed_gr00t_server.py` 作为 server。
   - 保留官方 rollout client，但在 server 侧记录 latency / memory / request trace。
   - 支持 `TORCH_COMPILE_TARGET=action_head_model` 和 request-index duration fallback。
   - 用于 Phase36b/36c 的 tactic probe，不用于取代 official smoke。
+
+### Phase36a 当前状态
+
+5090 实例上已经完成 N1.7 official smoke：
+
+```text
+tag: phase36_n17_official_smoke_1case_v8
+model: /root/autodl-tmp/models/GR00T-N1.7-LIBERO/libero_10
+env: libero_sim/LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket
+n_episodes: 1
+seed: 20260705
+record_video: false
+client_status: 0
+success_rate: 1.0
+episode_length: 269
+episode_reward: 1.0
+```
+
+结果文件：
+
+- `toy_quantvla/results/phase36_n17_official_smoke_1case_v8_summary.json`
+- `toy_quantvla/results/phase36_n17_official_smoke_1case_v8_client.log`
+- `toy_quantvla/results/phase36_n17_official_smoke_1case_v8_server.log`
+
+这说明当前远端环境已经能完成：
+
+1. N1.7 checkpoint 加载；
+2. official GR00T policy server 启动；
+3. LIBERO gymnasium env 创建；
+4. official rollout client 通过 ZMQ 完整调用 policy；
+5. 一个无视频录制干扰的闭环 episode 成功结算。
+
+### 远端 Isaac-GR00T 临时补丁
+
+由于 `nvidia/Cosmos-Reason2-2B` 是 gated model，当前账号能通过 HuggingFace
+认证，但没有该 gated repo 的文件下载权限。因此 5090 上的 Isaac-GR00T 源码做了
+三个最小实验补丁：
+
+1. `gr00t/model/modules/qwen3_backbone.py`
+   - 增加 `GR00T_QWEN3_INIT_FROM_CONFIG=1` 路径。
+   - 使用公开的 `Qwen/Qwen3-VL-2B-Instruct` config 构建 `Qwen3VLForConditionalGeneration`。
+   - 再由本地 N1.7 checkpoint shards 加载实际权重。
+2. `gr00t/model/gr00t_n1d7/processing_gr00t_n1d7.py`
+   - 增加 `GR00T_QWEN3_PROCESSOR_NAME` / `GR00T_QWEN3_CONFIG_NAME`。
+   - processor 从公开 Qwen snapshot 读取，避免访问 gated Cosmos processor。
+3. `gr00t/eval/rollout_policy.py`
+   - 增加 `GR00T_DISABLE_VIDEO_RECORDING=1`。
+   - 修复官方逻辑里 `video_dir=None` 仍自动生成 `/tmp/sim_eval_videos_*` 的行为。
+
+当前使用的公开 snapshot：
+
+```text
+/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
+```
+
+运行 smoke / timed rollout 时需要设置：
+
+```bash
+export GR00T_QWEN3_INIT_FROM_CONFIG=1
+export GR00T_QWEN3_CONFIG_NAME=/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
+export GR00T_QWEN3_PROCESSOR_NAME=/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
+```
+
+注意：这些是远端上游源码补丁，不是本文方法本身的一部分。它们只是为了绕开
+gated base model metadata 的下载限制，并关闭默认视频录制带来的非推理开销。
 
 ### Phase36b: small tactic discovery
 

@@ -18,6 +18,7 @@ N_ENVS="${N_ENVS:-1}"
 N_ACTION_STEPS="${N_ACTION_STEPS:-8}"
 MAX_EPISODE_STEPS="${MAX_EPISODE_STEPS:-720}"
 SEED="${SEED:-20260705}"
+RECORD_VIDEO="${RECORD_VIDEO:-0}"
 
 SERVER_LOG="/tmp/logs/${TAG}_server.log"
 CLIENT_LOG="/tmp/logs/${TAG}_client.log"
@@ -35,10 +36,25 @@ kill_server() {
   fi
 }
 
+server_ping_ready() {
+  PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}" "${PYTHON_BIN}" - "${PORT}" <<'PY' >/dev/null 2>&1
+import sys
+from gr00t.policy.server_client import PolicyClient
+
+client = PolicyClient(host="127.0.0.1", port=int(sys.argv[1]), timeout_ms=1000)
+if not client.ping():
+    raise SystemExit(1)
+PY
+}
+
 wait_for_server() {
   local limit="${1:-900}"
   for _ in $(seq 1 "${limit}"); do
     if grep -q "Server is ready and listening" "${SERVER_LOG}"; then
+      return 0
+    fi
+    if server_ping_ready; then
+      echo "Server is ready and listening on tcp://0.0.0.0:${PORT} (ping fallback)" >> "${SERVER_LOG}"
       return 0
     fi
     if ! kill -0 "$(cat "${SERVER_PID_FILE}")" 2>/dev/null; then
@@ -64,6 +80,7 @@ echo "N_ENVS=${N_ENVS}"
 echo "N_ACTION_STEPS=${N_ACTION_STEPS}"
 echo "MAX_EPISODE_STEPS=${MAX_EPISODE_STEPS}"
 echo "SEED=${SEED}"
+echo "RECORD_VIDEO=${RECORD_VIDEO}"
 
 if [ ! -d "${ISAAC_ROOT}" ]; then
   echo "Missing ISAAC_ROOT=${ISAAC_ROOT}" >&2
@@ -99,22 +116,29 @@ echo "SERVER_LOG=${SERVER_LOG}"
 wait_for_server 1200
 
 set +e
+CLIENT_ARGS=(
+  --n-episodes "${N_EPISODES}"
+  --policy-client-host 127.0.0.1
+  --policy-client-port "${PORT}"
+  --max-episode-steps "${MAX_EPISODE_STEPS}"
+  --env-name "${ENV_NAME}"
+  --n-action-steps "${N_ACTION_STEPS}"
+  --n-envs "${N_ENVS}"
+  --seed "${SEED}"
+)
+if [ "${RECORD_VIDEO}" = "1" ]; then
+  CLIENT_ARGS+=(--video-dir "${VIDEO_DIR}")
+fi
 (
   cd "${ISAAC_ROOT}"
   export PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}"
   export MUJOCO_GL=egl
   export PYOPENGL_PLATFORM=egl
   export NO_ALBUMENTATIONS_UPDATE=1
-  "${PYTHON_BIN}" gr00t/eval/rollout_policy.py \
-    --n-episodes "${N_EPISODES}" \
-    --policy-client-host 127.0.0.1 \
-    --policy-client-port "${PORT}" \
-    --max-episode-steps "${MAX_EPISODE_STEPS}" \
-    --env-name "${ENV_NAME}" \
-    --n-action-steps "${N_ACTION_STEPS}" \
-    --n-envs "${N_ENVS}" \
-    --seed "${SEED}" \
-    --video-dir "${VIDEO_DIR}"
+  if [ "${RECORD_VIDEO}" != "1" ]; then
+    export GR00T_DISABLE_VIDEO_RECORDING=1
+  fi
+  "${PYTHON_BIN}" gr00t/eval/rollout_policy.py "${CLIENT_ARGS[@]}"
 ) > "${CLIENT_LOG}" 2>&1
 CLIENT_STATUS=$?
 set -e
@@ -142,10 +166,11 @@ summary = {
     "n_action_steps": int(${N_ACTION_STEPS@Q}),
     "max_episode_steps": int(${MAX_EPISODE_STEPS@Q}),
     "seed": int(${SEED@Q}),
+    "record_video": ${RECORD_VIDEO@Q} == "1",
     "client_status": int(${CLIENT_STATUS}),
     "success_rate": float(match.group(1)) if match else None,
     "server_ready": "Server is ready and listening" in server,
-    "video_dir": ${VIDEO_DIR@Q},
+    "video_dir": ${VIDEO_DIR@Q} if ${RECORD_VIDEO@Q} == "1" else None,
     "client_log": f"toy_quantvla/results/{tag}_client.log",
     "server_log": f"toy_quantvla/results/{tag}_server.log",
 }
