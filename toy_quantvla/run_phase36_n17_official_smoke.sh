@@ -36,6 +36,7 @@ kill_server() {
       wait "${pid}" 2>/dev/null || true
     fi
   fi
+  pkill -f "[r]un_gr00t_server.py.*--port ${PORT}" 2>/dev/null || true
 }
 
 server_ping_ready() {
@@ -111,7 +112,7 @@ rm -rf "${VIDEO_DIR}"
   export NO_ALBUMENTATIONS_UPDATE=1
   export HF_HUB_OFFLINE=1
   export TRANSFORMERS_OFFLINE=1
-  "${PYTHON_BIN}" gr00t/eval/run_gr00t_server.py \
+  exec "${PYTHON_BIN}" gr00t/eval/run_gr00t_server.py \
     --model-path "${MODEL_PATH}" \
     --embodiment-tag "${EMBODIMENT_TAG}" \
     --use-sim-policy-wrapper \
