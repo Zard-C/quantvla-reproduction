@@ -4,6 +4,7 @@
 \usepackage{booktabs}
 \usepackage[letterpaper,margin=0.72in,columnsep=0.22in]{geometry}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage[hidelinks]{hyperref}
@@ -142,7 +143,7 @@ The quantization analysis evaluates 150 episodes: 10 LIBERO-10 tasks and 15 init
 
 Table~\ref{tab:icra-quant} summarizes the 150-episode quantization track. Selective W4A8 remains in the FP16 behavioral range, and some quantized variants have higher point estimates. These gaps should not be interpreted as evidence that quantization is inherently better than FP16. The paired outcomes show substantial trajectory redistribution.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Closed-loop LIBERO-10 success over 150 matched task-initialization pairs.}
 \label{tab:icra-quant}
@@ -173,7 +174,7 @@ Offline drift is also incomplete. ATM+OHB has the best mean held-out action drif
 
 Aggregate success hides behavioral churn. OHB is not simply ``3 episodes better'' than uncompensated W4A8: it repairs 16 failures and introduces 13 new failures. The net gain is small, but the underlying trajectory redistribution is substantial.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Paired outcomes over the same 150 task-initialization pairs.}
 \label{tab:icra-paired}
@@ -281,7 +282,7 @@ The key probe result is not that more eager execution is safer. Speed-only compi
 
 Paired repair/regression explains the aggregate. Relative to speed-only, the 0--120 window repairs seven cases and regresses four, for a net +3. Relative to FP16, it repairs two baseline failures and regresses two baseline successes. Thus the accelerated implementation is not simply restored to the FP16 point; it explores a nearby closed-loop solution space.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Paired decomposition versus speed-only compilation.}
 \label{tab:icra-phase29-paired}
@@ -303,22 +304,24 @@ Duration 240--320 & 2 & 1 & +1 \\
 \end{tabular}
 \end{table}
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
-\caption{Multi-fold tactic selection on two held-out 30-case folds. Fold A uses initial states 15--17 and Fold B uses 18--20. Regressions are counted against FP16 on matched task-initialization pairs.}
+\caption{Multi-fold tactic selection. Fold A uses init 15--17; Fold B uses init 18--20. Regressions are against FP16.}
 \label{tab:icra-phase34}
 \scriptsize
-\setlength{\tabcolsep}{5pt}
+\setlength{\tabcolsep}{2pt}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccccc}
 \toprule
-Tactic & Fold A & Fold B & Pooled & Worst success & Mean speedup & Worst speedup & Regressions \\
+Tactic & A & B & Pool & WSucc & MSpd & WSpd & Reg \\
 \midrule
-Speed-only compile & 25/30 & 20/30 & 45/60 & 0.667 & 2.01$\times$ & 1.75$\times$ & 7 \\
-Duration 0--120 & 22/30 & 25/30 & 47/60 & 0.733 & 1.84$\times$ & 1.71$\times$ & 3 \\
-Blocks 0--3 + duration 0--120 & 22/30 & 25/30 & 47/60 & 0.733 & 1.41$\times$ & 1.07$\times$ & 1 \\
+Speed & 25/30 & 20/30 & 45/60 & 0.667 & 2.01$\times$ & 1.75$\times$ & 7 \\
+0--120 & 22/30 & 25/30 & 47/60 & 0.733 & 1.84$\times$ & 1.71$\times$ & 3 \\
+Combo & 22/30 & 25/30 & 47/60 & 0.733 & 1.41$\times$ & 1.07$\times$ & 1 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+}
+\end{table}
 
 Held-out folds change the engineering conclusion. Speed-only is best on Fold A but unsafe on Fold B. The combined tactic has the fewest regressions, but its worst-fold speedup is only 1.07$\times$. The 0--120 tactic is therefore preferable under a speed-constrained objective, while the combined tactic is preferable under a behavior-first objective. Sensitivity-guided acceleration should thus output a Pareto choice under a validation protocol, not a claim that one protected region is universally optimal.
 
