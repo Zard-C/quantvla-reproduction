@@ -1,0 +1,306 @@
+{
+  "phase": "phase34_multifold_tactic_selection",
+  "folds": [
+    {
+      "name": "phase30_slice_backtest",
+      "source": "toy_quantvla/results/phase33_combo_backtest_phase30_30case_v1_summary.json",
+      "baseline": {
+        "successes": 23,
+        "episodes": 30,
+        "success_rate": 0.7666666666666667,
+        "server_p50_ms": 88.81
+      },
+      "candidates": {
+        "speed_only": {
+          "tactic": "speed_only",
+          "label": "Speed-only compile",
+          "successes": 25,
+          "episodes": 30,
+          "success_rate": 0.8333333333333334,
+          "server_p50_ms": 50.72,
+          "server_p90_ms": 61.07,
+          "speedup": 1.75,
+          "repairs": [
+            "0:15",
+            "1:16",
+            "6:15",
+            "8:16"
+          ],
+          "regressions": [
+            "6:17",
+            "8:15"
+          ],
+          "net": 2
+        },
+        "window_0_120": {
+          "tactic": "window_0_120",
+          "label": "Duration 0-120",
+          "successes": 22,
+          "episodes": 30,
+          "success_rate": 0.7333333333333333,
+          "server_p50_ms": 51.82,
+          "server_p90_ms": 87.97,
+          "speedup": 1.71,
+          "repairs": [
+            "0:15"
+          ],
+          "regressions": [
+            "4:15",
+            "8:15"
+          ],
+          "net": -1
+        },
+        "combo_blocks0_3_window_0_120": {
+          "tactic": "combo_blocks0_3_window_0_120",
+          "label": "Blocks0-3 + duration 0-120",
+          "successes": 22,
+          "episodes": 30,
+          "success_rate": 0.7333333333333333,
+          "server_p50_ms": 83.31,
+          "server_p90_ms": 158.08,
+          "speedup": 1.07,
+          "repairs": [],
+          "regressions": [
+            "8:15"
+          ],
+          "net": -1
+        }
+      }
+    },
+    {
+      "name": "phase32_slice",
+      "source": "toy_quantvla/results/phase32_tactic_validation_30case_v1_summary.json",
+      "baseline": {
+        "successes": 25,
+        "episodes": 30,
+        "success_rate": 0.8333333333333334,
+        "server_p50_ms": 154.72
+      },
+      "candidates": {
+        "speed_only": {
+          "tactic": "speed_only",
+          "label": "Speed-only compile",
+          "successes": 20,
+          "episodes": 30,
+          "success_rate": 0.6666666666666666,
+          "server_p50_ms": 68.01,
+          "server_p90_ms": 144.72,
+          "speedup": 2.27,
+          "repairs": [],
+          "regressions": [
+            "4:18",
+            "6:18",
+            "6:19",
+            "7:18",
+            "8:20"
+          ],
+          "net": -5
+        },
+        "window_0_120": {
+          "tactic": "window_0_120",
+          "label": "Duration 0-120",
+          "successes": 25,
+          "episodes": 30,
+          "success_rate": 0.8333333333333334,
+          "server_p50_ms": 78.26,
+          "server_p90_ms": 159.4,
+          "speedup": 1.98,
+          "repairs": [
+            "6:20"
+          ],
+          "regressions": [
+            "6:19"
+          ],
+          "net": 0
+        },
+        "combo_blocks0_3_window_0_120": {
+          "tactic": "combo_blocks0_3_window_0_120",
+          "label": "Blocks0-3 + duration 0-120",
+          "successes": 25,
+          "episodes": 30,
+          "success_rate": 0.8333333333333334,
+          "server_p50_ms": 88.47,
+          "server_p90_ms": 159.19,
+          "speedup": 1.75,
+          "repairs": [],
+          "regressions": [],
+          "net": 0
+        }
+      }
+    }
+  ],
+  "tactics": [
+    {
+      "tactic": "combo_blocks0_3_window_0_120",
+      "label": "Blocks0-3 + duration 0-120",
+      "folds": [
+        {
+          "fold": "phase30_slice_backtest",
+          "success": "22/30",
+          "success_rate": 0.7333333333333333,
+          "speedup": 1.07,
+          "server_p50_ms": 83.31,
+          "repairs": 0,
+          "regressions": 1,
+          "net": -1,
+          "repair_cases": [],
+          "regression_cases": [
+            "8:15"
+          ]
+        },
+        {
+          "fold": "phase32_slice",
+          "success": "25/30",
+          "success_rate": 0.8333333333333334,
+          "speedup": 1.75,
+          "server_p50_ms": 88.47,
+          "repairs": 0,
+          "regressions": 0,
+          "net": 0,
+          "repair_cases": [],
+          "regression_cases": []
+        }
+      ],
+      "fold_count": 2,
+      "total_successes": 47,
+      "total_episodes": 60,
+      "pooled_success_rate": 0.7833333333333333,
+      "mean_success_rate": 0.7833333333333333,
+      "worst_success_rate": 0.7333333333333333,
+      "mean_speedup": 1.4100000000000001,
+      "worst_speedup": 1.07,
+      "total_repairs": 0,
+      "total_regressions": 1,
+      "worst_fold_regressions": 1,
+      "worst_fold_repairs": 0,
+      "robust_score": 86.82,
+      "speed_constrained_score": null,
+      "passes_speed_constraint": false,
+      "robust_rank": 1,
+      "speed_constrained_rank": null
+    },
+    {
+      "tactic": "window_0_120",
+      "label": "Duration 0-120",
+      "folds": [
+        {
+          "fold": "phase30_slice_backtest",
+          "success": "22/30",
+          "success_rate": 0.7333333333333333,
+          "speedup": 1.71,
+          "server_p50_ms": 51.82,
+          "repairs": 1,
+          "regressions": 2,
+          "net": -1,
+          "repair_cases": [
+            "0:15"
+          ],
+          "regression_cases": [
+            "4:15",
+            "8:15"
+          ]
+        },
+        {
+          "fold": "phase32_slice",
+          "success": "25/30",
+          "success_rate": 0.8333333333333334,
+          "speedup": 1.98,
+          "server_p50_ms": 78.26,
+          "repairs": 1,
+          "regressions": 1,
+          "net": 0,
+          "repair_cases": [
+            "6:20"
+          ],
+          "regression_cases": [
+            "6:19"
+          ]
+        }
+      ],
+      "fold_count": 2,
+      "total_successes": 47,
+      "total_episodes": 60,
+      "pooled_success_rate": 0.7833333333333333,
+      "mean_success_rate": 0.7833333333333333,
+      "worst_success_rate": 0.7333333333333333,
+      "mean_speedup": 1.845,
+      "worst_speedup": 1.71,
+      "total_repairs": 2,
+      "total_regressions": 3,
+      "worst_fold_regressions": 2,
+      "worst_fold_repairs": 1,
+      "robust_score": 74.69,
+      "speed_constrained_score": 74.69,
+      "passes_speed_constraint": true,
+      "robust_rank": 2,
+      "speed_constrained_rank": 1
+    },
+    {
+      "tactic": "speed_only",
+      "label": "Speed-only compile",
+      "folds": [
+        {
+          "fold": "phase30_slice_backtest",
+          "success": "25/30",
+          "success_rate": 0.8333333333333334,
+          "speedup": 1.75,
+          "server_p50_ms": 50.72,
+          "repairs": 4,
+          "regressions": 2,
+          "net": 2,
+          "repair_cases": [
+            "0:15",
+            "1:16",
+            "6:15",
+            "8:16"
+          ],
+          "regression_cases": [
+            "6:17",
+            "8:15"
+          ]
+        },
+        {
+          "fold": "phase32_slice",
+          "success": "20/30",
+          "success_rate": 0.6666666666666666,
+          "speedup": 2.27,
+          "server_p50_ms": 68.01,
+          "repairs": 0,
+          "regressions": 5,
+          "net": -5,
+          "repair_cases": [],
+          "regression_cases": [
+            "4:18",
+            "6:18",
+            "6:19",
+            "7:18",
+            "8:20"
+          ]
+        }
+      ],
+      "fold_count": 2,
+      "total_successes": 45,
+      "total_episodes": 60,
+      "pooled_success_rate": 0.75,
+      "mean_success_rate": 0.75,
+      "worst_success_rate": 0.6666666666666666,
+      "mean_speedup": 2.01,
+      "worst_speedup": 1.75,
+      "total_repairs": 4,
+      "total_regressions": 7,
+      "worst_fold_regressions": 5,
+      "worst_fold_repairs": 4,
+      "robust_score": 39.353,
+      "speed_constrained_score": 39.353,
+      "passes_speed_constraint": true,
+      "robust_rank": 3,
+      "speed_constrained_rank": 2
+    }
+  ],
+  "min_worst_speedup": 1.5,
+  "decision": {
+    "behavior_first": "combo_blocks0_3_window_0_120",
+    "speed_constrained": "window_0_120",
+    "interpretation": "Use behavior-first ranking when matching FP16 outcomes is primary; use speed-constrained ranking when every fold must keep a minimum speedup."
+  }
+}

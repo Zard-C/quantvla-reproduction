@@ -190,11 +190,26 @@ Phase32 改变了 Phase31 第一轮的判断：
 
 ## 下一轮 GPU 工作建议
 
-下一轮最小动作是补齐 combo 的验证面：
+Phase33 已经补齐 combo 在 Phase30 slice 上的验证面：
 
-1. 在 Phase30 的 init `15/16/17` 上追加 `blocks0-3 + window 0-120`。
-2. 如果 combo 在 Phase30 和 Phase32 都不差于 FP16 paired outcome，则可作为当前 behavior-preserving tactic。
-3. 如果 combo 在 Phase30 退化，则进入更系统的 cross-validation search：把 init slices 拆成 probe / validation folds，用平均 paired regression 和 worst-fold risk 排序。
+| fold | combo success | paired vs FP16 |
+| --- | ---: | --- |
+| Phase30 init 15/16/17 | 22/30 | 0 repair / 1 regress |
+| Phase32 init 18/19/20 | 25/30 | 0 repair / 0 regress |
+
+Phase34 进一步把 Phase30 和 Phase32 作为两个 folds 统一排序：
+
+| tactic | pooled success | worst success | mean speedup | worst speedup | total regress |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| speed_only | 45/60 | 0.667 | 2.01x | 1.75x | 7 |
+| window_0_120 | 47/60 | 0.733 | 1.84x | 1.71x | 3 |
+| combo_blocks0_3_window_0_120 | 47/60 | 0.733 | 1.41x | 1.07x | 1 |
+
+因此后续实验建议改成：
+
+1. 若目标是 behavior-preserving acceleration，继续验证 combo，但必须接受 Phase30 上只有 `1.07x` speedup。
+2. 若目标是工程速度收益，`window_0_120` 是当前 speed-constrained candidate，因为 worst-fold speedup 保持在 `1.71x`，且 total regression 明显低于 `speed_only`。
+3. 下一轮不应继续追单一固定 tactic，而应跑第三个 fold 或者把现有 folds 写成 multi-fold tactic selection 的核心实验。
 
 ## 成功标准
 

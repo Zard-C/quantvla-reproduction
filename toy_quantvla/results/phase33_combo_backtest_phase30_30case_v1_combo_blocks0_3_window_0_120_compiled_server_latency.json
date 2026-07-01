@@ -1,0 +1,30 @@
+{
+  "label": "fp16_official",
+  "writes": 280,
+  "get_action_seconds": {
+    "count": 13932,
+    "mean": 0.1047406170127885,
+    "min": 0.06083809211850166,
+    "max": 2.932360704988241,
+    "p50": 0.08331030607223511,
+    "p90": 0.15808313488960266,
+    "p99": 0.1866604603827001
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_bytes": 5476782080,
+      "reserved_bytes": 5807013888,
+      "max_allocated_bytes": 5682666496,
+      "max_reserved_bytes": 5976883200
+    },
+    "lossless_cache_stats": {},
+    "compile_step_window_fallback": {
+      "enabled": true,
+      "step_start": 0,
+      "step_end": 120,
+      "compiled_requests": 10332,
+      "eager_requests": 3600,
+      "last_mode": "compiled"
+    }
+  }
+}
