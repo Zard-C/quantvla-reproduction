@@ -121,6 +121,8 @@ episode_reward: 1.0
 3. `gr00t/eval/rollout_policy.py`
    - 增加 `GR00T_DISABLE_VIDEO_RECORDING=1`。
    - 修复官方逻辑里 `video_dir=None` 仍自动生成 `/tmp/sim_eval_videos_*` 的行为。
+   - 增加 `GR00T_POLICY_CLIENT_TIMEOUT_MS`。
+   - 避免 `torch.compile` 首请求 cold compile 超过官方 `PolicyClient` 默认 15s timeout。
 
 当前使用的公开 snapshot：
 
@@ -134,10 +136,40 @@ episode_reward: 1.0
 export GR00T_QWEN3_INIT_FROM_CONFIG=1
 export GR00T_QWEN3_CONFIG_NAME=/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
 export GR00T_QWEN3_PROCESSOR_NAME=/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
+export GR00T_POLICY_CLIENT_TIMEOUT_MS=600000
 ```
 
 注意：这些是远端上游源码补丁，不是本文方法本身的一部分。它们只是为了绕开
 gated base model metadata 的下载限制，并关闭默认视频录制带来的非推理开销。
+
+### Phase36b bridge: timed 1-case smoke
+
+在进入 15-case tactic discovery 之前，先完成了 timed server 的 1-case 桥接验证。
+
+| Run | Tactic | Status | Success | Requests | Prepare | All p50 | All mean | All max | Hot p50 | Hot mean | Memory reserved |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `phase36_n17_timed_fp16_1case_v1` | FP16 eager baseline | complete | 1/1 | 33 | 14.80s | 105.3ms | 139.4ms | 890.6ms | 102.4ms | 116.0ms | 6188 MiB |
+| `phase36_n17_speedonly_1case_v2` | compile `action_head.model` | complete | 1/1 | 34 | 16.35s | 74.1ms | 682.9ms | 20493.4ms | 72.5ms | 82.6ms | 6312 MiB |
+| `phase36_n17_window_0_10_1case_v1` | request window `0--10` eager, then compiled | complete | 1/1 | 38 | 19.52s | 89.9ms | 278.7ms | 6428.0ms | 79.3ms | 91.1ms | 6216 MiB |
+
+这里 `Hot` 对 FP16 和 speed-only 指去掉第一个 policy request 后重算；对
+`window_0_10` 指去掉第一个 request 和第一次 compiled request 后重算。对
+speed-only 来说，第一个 request 包含 inductor cold compile，耗时约 `20.49s`。
+对 `window_0_10` 来说，request 11 是首次从 eager 切到 compiled，耗时约 `6.43s`。
+因此：
+
+1. speed-only 的热态 p50 约从 `102.4ms` 降到 `72.5ms`，单 case 上约 `1.41x`；
+2. request-window fallback 机制已验证：`window_0_10` 记录到 `10` 次 eager request 和
+   `28` 次 compiled request；
+3. cold compile 成本非常明显，必须与热态 latency 分开报告；
+4. 没有 `GR00T_POLICY_CLIENT_TIMEOUT_MS=600000` 时，speed-only v1 会在首请求触发
+   `zmq.error.Again`，因为官方 `PolicyClient` 默认 15s timeout 太短。
+
+结果文件：
+
+- `toy_quantvla/results/phase36_n17_timed_fp16_1case_v1_*`
+- `toy_quantvla/results/phase36_n17_speedonly_1case_v2_*`
+- `toy_quantvla/results/phase36_n17_window_0_10_1case_v1_*`
 
 ### Phase36b: small tactic discovery
 
@@ -151,12 +183,19 @@ tasks 0/1/4/6/8 × init 21/22/23
 
 - FP16 baseline
 - speed-only compile
-- duration 0--80
-- duration 0--120
-- duration 0--180
-- duration 80--240
+- request window 0--10
+- request window 0--20
+- request window 0--30
+- request window 10--30
+- request window 20--50
 
-目标是判断 N1.7 的敏感 duration 是否仍集中在早期。
+注意：N1.7 timed server 当前的 duration fallback index 是 policy request index，
+不是环境 step。由于 `n_action_steps=8`，一个 `720` env-step episode 最多约 `90`
+次 policy request。因此不能直接沿用 N1.5 里的 `0--120` / `0--180` 这类窗口，
+否则会覆盖几乎整个 episode，失去 duration 分辨率。
+
+目标是判断 N1.7 的敏感 request window 是否仍集中在早期，以及 speed-only 的
+hot latency 收益是否值得承担 cold compile 和闭环风险。
 
 ### Phase36c: 30-case held-out validation
 

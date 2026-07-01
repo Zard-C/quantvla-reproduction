@@ -19,6 +19,8 @@ N_ACTION_STEPS="${N_ACTION_STEPS:-8}"
 MAX_EPISODE_STEPS="${MAX_EPISODE_STEPS:-720}"
 SEED="${SEED:-20260705}"
 RECORD_VIDEO="${RECORD_VIDEO:-0}"
+SERVER_PING_TIMEOUT_SECONDS="${SERVER_PING_TIMEOUT_SECONDS:-8}"
+POLICY_CLIENT_TIMEOUT_MS="${POLICY_CLIENT_TIMEOUT_MS:-600000}"
 
 TORCH_COMPILE_TARGET="${TORCH_COMPILE_TARGET:-none}"
 TORCH_COMPILE_BACKEND="${TORCH_COMPILE_BACKEND:-inductor}"
@@ -28,6 +30,7 @@ TORCH_COMPILE_DYNAMIC="${TORCH_COMPILE_DYNAMIC:-}"
 TORCH_COMPILE_FALLBACK_STEP_START="${TORCH_COMPILE_FALLBACK_STEP_START:-}"
 TORCH_COMPILE_FALLBACK_STEP_END="${TORCH_COMPILE_FALLBACK_STEP_END:-}"
 SERVER_TRACE_CUDA_SYNC="${SERVER_TRACE_CUDA_SYNC:-0}"
+SERVER_LATENCY_FLUSH_EVERY="${SERVER_LATENCY_FLUSH_EVERY:-1}"
 
 SERVER_LOG="/tmp/logs/${TAG}_server.log"
 CLIENT_LOG="/tmp/logs/${TAG}_client.log"
@@ -46,7 +49,11 @@ kill_server() {
 }
 
 server_ping_ready() {
-  PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}" "${PYTHON_BIN}" - "${PORT}" <<'PY' >/dev/null 2>&1
+  local timeout_cmd=()
+  if command -v timeout >/dev/null 2>&1; then
+    timeout_cmd=(timeout "${SERVER_PING_TIMEOUT_SECONDS}s")
+  fi
+  PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}" "${timeout_cmd[@]}" "${PYTHON_BIN}" - "${PORT}" <<'PY' >/dev/null 2>&1
 import sys
 from gr00t.policy.server_client import PolicyClient
 
@@ -111,6 +118,8 @@ echo "N_ACTION_STEPS=${N_ACTION_STEPS}"
 echo "MAX_EPISODE_STEPS=${MAX_EPISODE_STEPS}"
 echo "SEED=${SEED}"
 echo "RECORD_VIDEO=${RECORD_VIDEO}"
+echo "SERVER_PING_TIMEOUT_SECONDS=${SERVER_PING_TIMEOUT_SECONDS}"
+echo "POLICY_CLIENT_TIMEOUT_MS=${POLICY_CLIENT_TIMEOUT_MS}"
 echo "TORCH_COMPILE_TARGET=${TORCH_COMPILE_TARGET}"
 echo "TORCH_COMPILE_BACKEND=${TORCH_COMPILE_BACKEND}"
 echo "TORCH_COMPILE_MODE=${TORCH_COMPILE_MODE}"
@@ -119,6 +128,7 @@ echo "TORCH_COMPILE_DYNAMIC=${TORCH_COMPILE_DYNAMIC}"
 echo "TORCH_COMPILE_FALLBACK_STEP_START=${TORCH_COMPILE_FALLBACK_STEP_START}"
 echo "TORCH_COMPILE_FALLBACK_STEP_END=${TORCH_COMPILE_FALLBACK_STEP_END}"
 echo "SERVER_TRACE_CUDA_SYNC=${SERVER_TRACE_CUDA_SYNC}"
+echo "SERVER_LATENCY_FLUSH_EVERY=${SERVER_LATENCY_FLUSH_EVERY}"
 
 kill_server
 pkill -f "n17_timed_gr00t_server.py.*--port ${PORT}" 2>/dev/null || true
@@ -138,7 +148,7 @@ rm -rf "${VIDEO_DIR}"
     --port "${PORT}" \
     --output-json "toy_quantvla/results/${TAG}_server_prepare.json" \
     --server-latency-json "toy_quantvla/results/${TAG}_server_latency.json" \
-    --server-latency-flush-every 20 \
+    --server-latency-flush-every "${SERVER_LATENCY_FLUSH_EVERY}" \
     --server-request-trace-jsonl "toy_quantvla/results/${TAG}_request_trace.jsonl" \
     "${COMPILE_ARGS[@]}"
 ) > "${SERVER_LOG}" 2>&1 &
@@ -168,6 +178,7 @@ fi
   export MUJOCO_GL=egl
   export PYOPENGL_PLATFORM=egl
   export NO_ALBUMENTATIONS_UPDATE=1
+  export GR00T_POLICY_CLIENT_TIMEOUT_MS="${POLICY_CLIENT_TIMEOUT_MS}"
   if [ "${RECORD_VIDEO}" != "1" ]; then
     export GR00T_DISABLE_VIDEO_RECORDING=1
   fi

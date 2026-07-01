@@ -19,6 +19,7 @@ N_ACTION_STEPS="${N_ACTION_STEPS:-8}"
 MAX_EPISODE_STEPS="${MAX_EPISODE_STEPS:-720}"
 SEED="${SEED:-20260705}"
 RECORD_VIDEO="${RECORD_VIDEO:-0}"
+SERVER_PING_TIMEOUT_SECONDS="${SERVER_PING_TIMEOUT_SECONDS:-8}"
 
 SERVER_LOG="/tmp/logs/${TAG}_server.log"
 CLIENT_LOG="/tmp/logs/${TAG}_client.log"
@@ -37,7 +38,11 @@ kill_server() {
 }
 
 server_ping_ready() {
-  PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}" "${PYTHON_BIN}" - "${PORT}" <<'PY' >/dev/null 2>&1
+  local timeout_cmd=()
+  if command -v timeout >/dev/null 2>&1; then
+    timeout_cmd=(timeout "${SERVER_PING_TIMEOUT_SECONDS}s")
+  fi
+  PYTHONPATH="${ISAAC_ROOT}:${PYTHONPATH:-}" "${timeout_cmd[@]}" "${PYTHON_BIN}" - "${PORT}" <<'PY' >/dev/null 2>&1
 import sys
 from gr00t.policy.server_client import PolicyClient
 
@@ -81,6 +86,7 @@ echo "N_ACTION_STEPS=${N_ACTION_STEPS}"
 echo "MAX_EPISODE_STEPS=${MAX_EPISODE_STEPS}"
 echo "SEED=${SEED}"
 echo "RECORD_VIDEO=${RECORD_VIDEO}"
+echo "SERVER_PING_TIMEOUT_SECONDS=${SERVER_PING_TIMEOUT_SECONDS}"
 
 if [ ! -d "${ISAAC_ROOT}" ]; then
   echo "Missing ISAAC_ROOT=${ISAAC_ROOT}" >&2
