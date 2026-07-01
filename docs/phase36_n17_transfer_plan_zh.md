@@ -109,7 +109,7 @@ episode_reward: 1.0
 
 由于 `nvidia/Cosmos-Reason2-2B` 是 gated model，当前账号能通过 HuggingFace
 认证，但没有该 gated repo 的文件下载权限。因此 5090 上的 Isaac-GR00T 源码做了
-三个最小实验补丁：
+四个最小实验补丁：
 
 1. `gr00t/model/modules/qwen3_backbone.py`
    - 增加 `GR00T_QWEN3_INIT_FROM_CONFIG=1` 路径。
@@ -123,6 +123,12 @@ episode_reward: 1.0
    - 修复官方逻辑里 `video_dir=None` 仍自动生成 `/tmp/sim_eval_videos_*` 的行为。
    - 增加 `GR00T_POLICY_CLIENT_TIMEOUT_MS`。
    - 避免 `torch.compile` 首请求 cold compile 超过官方 `PolicyClient` 默认 15s timeout。
+4. `gr00t/eval/sim/LIBERO/libero_env.py`
+   - 增加 `GR00T_LIBERO_USE_BENCHMARK_INIT_STATES=1` 路径。
+   - 默认行为不变：`seed` 只作为 robosuite seed。
+   - 打开该开关后，`seed` 被解释成 LIBERO benchmark init index，并调用
+     `task_suite.get_task_init_states(task_id)` + `env.set_init_state(...)`。
+   - 这使 Phase36b 的 `task × init` 口径与 N1.5 实验一致。
 
 当前使用的公开 snapshot：
 
@@ -140,7 +146,9 @@ export GR00T_POLICY_CLIENT_TIMEOUT_MS=600000
 ```
 
 注意：这些是远端上游源码补丁，不是本文方法本身的一部分。它们只是为了绕开
-gated base model metadata 的下载限制，并关闭默认视频录制带来的非推理开销。
+gated base model metadata 的下载限制，关闭默认视频录制带来的非推理开销，并让
+验证集严格复用 LIBERO 官方初始状态。其中 benchmark init-state 补丁只在
+`GR00T_LIBERO_USE_BENCHMARK_INIT_STATES=1` 时启用。
 
 ### Phase36b bridge: timed 1-case smoke
 
@@ -171,6 +179,36 @@ speed-only 来说，第一个 request 包含 inductor cold compile，耗时约 `
 - `toy_quantvla/results/phase36_n17_speedonly_1case_v2_*`
 - `toy_quantvla/results/phase36_n17_window_0_10_1case_v1_*`
 
+### Phase36b exact-init bridge
+
+在进入 `task × init` probe 前，先验证 N1.7 wrapper 能严格使用 LIBERO
+benchmark init states，而不是仅使用随机 seed。
+
+```text
+tag: phase36_n17_exactinit_task0_init21_fp16_1case_v2
+task: libero_10 task 0
+init index: 21
+tactic: FP16 eager baseline
+LIBERO_USE_BENCHMARK_INIT_STATES: 1
+success: 1/1
+episode_length: 259
+episode_reward: 1.0
+policy requests: 33
+prepare: 15.82s
+server latency p50 / mean / max: 100.97ms / 143.45ms / 818.34ms
+memory reserved: 6188 MiB
+```
+
+`v1` 暴露出一个 wrapper 细节：official vector env 在 episode 结束后会额外调用
+一次 `reset(seed=None)`。因此 benchmark init-state 补丁必须只在 `seed` 非空时
+调用 `set_init_state()`；无 seed 的收尾 reset 仍走官方默认 reset。修正后 `v2`
+正常完成，说明后续 Phase36b 可以用 `SEED=21/22/23` 表示真实 benchmark init
+index。
+
+结果文件：
+
+- `toy_quantvla/results/phase36_n17_exactinit_task0_init21_fp16_1case_v2_*`
+
 ### Phase36b: small tactic discovery
 
 如果 Phase36a 通过，扩展到 15 cases：
@@ -178,6 +216,11 @@ speed-only 来说，第一个 request 包含 inductor cold compile，耗时约 `
 ```text
 tasks 0/1/4/6/8 × init 21/22/23
 ```
+
+这里的 `init 21/22/23` 必须通过
+`LIBERO_USE_BENCHMARK_INIT_STATES=1` 启用。否则 N1.7 官方 wrapper 的
+`--seed` 只是随机种子，不会调用 `set_init_state()`，实验语义会退化成
+`task × seed` 而不是 `task × benchmark init`。
 
 候选：
 

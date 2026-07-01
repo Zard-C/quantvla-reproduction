@@ -20,6 +20,7 @@ MAX_EPISODE_STEPS="${MAX_EPISODE_STEPS:-720}"
 SEED="${SEED:-20260705}"
 RECORD_VIDEO="${RECORD_VIDEO:-0}"
 SERVER_PING_TIMEOUT_SECONDS="${SERVER_PING_TIMEOUT_SECONDS:-8}"
+LIBERO_USE_BENCHMARK_INIT_STATES="${LIBERO_USE_BENCHMARK_INIT_STATES:-0}"
 
 SERVER_LOG="/tmp/logs/${TAG}_server.log"
 CLIENT_LOG="/tmp/logs/${TAG}_client.log"
@@ -87,6 +88,7 @@ echo "MAX_EPISODE_STEPS=${MAX_EPISODE_STEPS}"
 echo "SEED=${SEED}"
 echo "RECORD_VIDEO=${RECORD_VIDEO}"
 echo "SERVER_PING_TIMEOUT_SECONDS=${SERVER_PING_TIMEOUT_SECONDS}"
+echo "LIBERO_USE_BENCHMARK_INIT_STATES=${LIBERO_USE_BENCHMARK_INIT_STATES}"
 
 if [ ! -d "${ISAAC_ROOT}" ]; then
   echo "Missing ISAAC_ROOT=${ISAAC_ROOT}" >&2
@@ -141,6 +143,7 @@ fi
   export MUJOCO_GL=egl
   export PYOPENGL_PLATFORM=egl
   export NO_ALBUMENTATIONS_UPDATE=1
+  export GR00T_LIBERO_USE_BENCHMARK_INIT_STATES="${LIBERO_USE_BENCHMARK_INIT_STATES}"
   if [ "${RECORD_VIDEO}" != "1" ]; then
     export GR00T_DISABLE_VIDEO_RECORDING=1
   fi
@@ -172,6 +175,7 @@ summary = {
     "n_action_steps": int(${N_ACTION_STEPS@Q}),
     "max_episode_steps": int(${MAX_EPISODE_STEPS@Q}),
     "seed": int(${SEED@Q}),
+    "libero_use_benchmark_init_states": ${LIBERO_USE_BENCHMARK_INIT_STATES@Q} == "1",
     "record_video": ${RECORD_VIDEO@Q} == "1",
     "client_status": int(${CLIENT_STATUS}),
     "success_rate": float(match.group(1)) if match else None,
