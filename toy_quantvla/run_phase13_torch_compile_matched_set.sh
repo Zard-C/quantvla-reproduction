@@ -7,9 +7,12 @@ cd "${REPO_ROOT}"
 mkdir -p /tmp/logs toy_quantvla/results
 
 PYTHON_BIN="${PYTHON_BIN:-/root/autodl-tmp/envs/gr00t-libero-py310/bin/python}"
+ISAAC_ROOT="${ISAAC_ROOT:-/root/autodl-tmp/Isaac-GR00T-n1.5}"
 MODEL_PATH="${MODEL_PATH:-/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain}"
 DATA_CONFIG="${DATA_CONFIG:-examples.Libero.custom_data_config:LiberoDataConfig}"
 EMBODIMENT_TAG="${EMBODIMENT_TAG:-new_embodiment}"
+DENOISING_STEPS="${DENOISING_STEPS:-8}"
+TASK_SUITE="${TASK_SUITE:-libero_10}"
 CASE_LIST="${CASE_LIST:-6:1}"
 RUN_BASELINE="${RUN_BASELINE:-1}"
 RUN_COMPILED="${RUN_COMPILED:-1}"
@@ -101,7 +104,7 @@ run_eval() {
     PYOPENGL_PLATFORM=egl \
     NO_ALBUMENTATIONS_UPDATE=1 \
     "${PYTHON_BIN}" toy_quantvla/libero_eval_init_range.py \
-      --task-suite-name libero_10 \
+      --task-suite-name "${TASK_SUITE}" \
       --case-list "${CASE_LIST}" \
       --headless \
       --port "${port}" \
@@ -136,10 +139,11 @@ run_server_case() {
     HF_HUB_OFFLINE=1 \
     TRANSFORMERS_OFFLINE=1 \
     "${PYTHON_BIN}" toy_quantvla/timed_fp16_inference_service.py \
+      --isaac-root "${ISAAC_ROOT}" \
       --model-path "${MODEL_PATH}" \
       --data-config "${DATA_CONFIG}" \
       --embodiment-tag "${EMBODIMENT_TAG}" \
-      --denoising-steps 8 \
+      --denoising-steps "${DENOISING_STEPS}" \
       --port "${port}" \
       --prewarm-observations 1 \
       --prewarm-indices 115 \
@@ -164,6 +168,12 @@ run_server_case() {
 }
 
 echo "TAG=${TAG}"
+echo "ISAAC_ROOT=${ISAAC_ROOT}"
+echo "MODEL_PATH=${MODEL_PATH}"
+echo "DATA_CONFIG=${DATA_CONFIG}"
+echo "EMBODIMENT_TAG=${EMBODIMENT_TAG}"
+echo "DENOISING_STEPS=${DENOISING_STEPS}"
+echo "TASK_SUITE=${TASK_SUITE}"
 echo "CASE_LIST=${CASE_LIST}"
 echo "RUN_BASELINE=${RUN_BASELINE}"
 echo "RUN_COMPILED=${RUN_COMPILED}"
