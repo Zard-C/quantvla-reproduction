@@ -808,13 +808,14 @@ This converts acceleration from a search for a single numerically closest implem
 \centering
 \fbox{
 \begin{minipage}{0.90\linewidth}
-\textbf{Algorithm 1: Closed-loop sensitivity-guided tactic search}
+\textbf{Algorithm 1: Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS)}
 \begin{enumerate}
-    \item Generate candidate tactics $\mathcal{T}$ from systems choices such as quantization scopes, compile boundaries, eager islands, fallback windows, or custom kernels.
+    \item \textbf{Input:} candidate tactics $\mathcal{T}$, matched probe rollouts $\mathcal{P}$, measured latency $L(T_i)$, and paired repairs/regressions $R^+(T_i),R^-(T_i)$ on each validation fold.
     \item Run cheap filters on each $T_i\in\mathcal{T}$: operator coverage, expected speedup, static shape compatibility, open-loop drift, layerwise drift, action-channel drift, and whether the tactic touches known contact- or basin-sensitive regions.
     \item Evaluate the surviving tactics on a small matched probe set containing fragile successes, fragile failures, and speed-only branch changes. Record success, latency, first divergence, EEF drift, repairs, and regressions.
     \item Estimate closed-loop risk using paired regressions, worst-case fragile failures, and sensitivity diagnostics; keep a small candidate frontier rather than a single probe winner.
     \item Re-score the frontier on held-out matched folds. Select a behavior-first tactic by maximizing worst-fold success and minimizing paired regressions, or select a speed-constrained tactic by maximizing speedup subject to explicit behavior constraints.
+    \item \textbf{Output:} a behavior-first tactic or a speed-constrained Pareto tactic, with its matched success, regression, and latency report.
 \end{enumerate}
 \end{minipage}}
 \caption{Heuristic search procedure used by our acceleration study. It is not an optimal-control solver; it is a practical way to spend limited rollout budget on tactics most likely to matter under closed-loop sensitivity.}

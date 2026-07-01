@@ -267,8 +267,8 @@ def fig5():
         key=lambda row: row["x"],
     )
 
-    s = SVG(720, 270)
-    x0, y0, w, h = 76, 38, 510, 170
+    s = SVG(560, 270)
+    x0, y0, w, h = 56, 38, 390, 170
     xmin, xmax = 1.0, 2.15
     ymin, ymax = 0.0, 8.0
 
@@ -309,11 +309,11 @@ def fig5():
 
     s.text(x0 + w / 2, 248, "mean server-p50 speedup across validation folds", "small", anchor="middle")
     s.text(x0, 24, "paired regressions vs FP16", "small")
-    s.text(262, 24, "slower / safer", "small", fill=C["muted"])
-    s.text(508, 22, "faster / riskier", "small", fill=C["muted"])
-    s.text(610, 118, "Selection depends", "small")
-    s.text(610, 134, "on deployment", "small")
-    s.text(610, 150, "constraints.", "small")
+    s.text(190, 24, "slower / safer", "small", fill=C["muted"])
+    s.text(360, 22, "faster / riskier", "small", fill=C["muted"])
+    s.text(462, 116, "selection", "small")
+    s.text(462, 132, "depends on", "small")
+    s.text(462, 148, "constraints", "small")
     save("fig5_tactic_pareto.svg", s)
 
 
