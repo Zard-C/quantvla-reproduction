@@ -203,7 +203,7 @@ Keyframe inspection confirms that these flips are visible trajectory-basin chang
 
 To isolate sensitivity from a specific quantizer, we ran controlled probes on two FP16-success cases. All full-horizon single-channel probes use the same continuous-action perturbation norm, $\|\delta a\|_2=0.03$. Table~\ref{tab:icra-anisotropy} shows that equal-norm perturbations have very different consequences. A $z$ perturbation is absorbed in both cases, while $y$ and rotation perturbations are catastrophic. Time also matters: the same $y$ perturbation is damaging early but can be absorbed later.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Controlled action perturbations on two FP16-success cases. S/F denotes success/failure and policy requests.}
 \label{tab:icra-anisotropy}
@@ -229,7 +229,7 @@ $y$ task 6 & 0:200 / 200:450 / 450:700 & F991; S697; S752 \\
 
 Layer and graph boundaries are also sensitive. Compiling the action-head model gives a 2.21$\times$ speedup on two probe cases and succeeds on both, but leaving block 0 or block 1 as an eager island changes closed-loop outcomes despite nearly identical p50 latency. The result cannot be explained by speed alone; it is a layer/boundary sensitivity effect.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Layer/boundary sensitivity under action-head compilation.}
 \label{tab:icra-boundary}
@@ -253,7 +253,7 @@ First-divergence traces show temporal separation: action differences appear firs
 
 We next test whether the sensitivity map can guide an engineering choice. The speed-oriented candidate compiles the action head. Protection candidates either keep selected layer blocks in eager mode or use a duration window in which the policy falls back to eager execution. Table~\ref{tab:icra-phase29} summarizes the 33-case discovery probe.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \caption{Layer and duration proxy search on the 33-case matched set. Server p50 is warm serving latency.}
 \label{tab:icra-phase29}
