@@ -21,9 +21,10 @@ DEFAULT_SUMMARIES = [
     RESULTS / "phase28D_duration_window_33case_v1_summary.json",
     RESULTS / "phase29_finer_duration_proxy_33case_v1_summary.json",
     RESULTS / "phase30_heldout_sanity_30case_v1_summary.json",
+    RESULTS / "phase32_tactic_validation_30case_v1_summary.json",
 ]
 DEFAULT_PROBE = "phase29_finer_duration_proxy"
-DEFAULT_HELDOUT = "phase30_heldout_sanity"
+DEFAULT_HELDOUT = "phase32_tactic_validation"
 
 
 def read_json(path: Path) -> Any:
@@ -243,13 +244,34 @@ def build_data(paths: list[Path], probe_key: str, heldout_key: str) -> dict[str,
 
     selected_probe = probe["candidates"][0] if probe and probe.get("candidates") else None
     selected_heldout = heldout["candidates"][0] if heldout and heldout.get("candidates") else None
+    validation_sources = [
+        src
+        for src in sources
+        if "heldout" in src.get("phase", "") or "validation" in src.get("phase", "")
+    ]
+    validation_selections = []
+    for src in validation_sources:
+        winner = src["candidates"][0] if src.get("candidates") else None
+        if not winner:
+            continue
+        validation_selections.append(
+            {
+                "phase": src["display_name"],
+                "selected": winner["name"],
+                "success": f"{winner['total_successes']}/{winner['total_episodes']}",
+                "speedup": winner["speedup"],
+                "net_vs_baseline": winner["net_vs_baseline"],
+                "regress_vs_baseline": winner["regress_vs_baseline"],
+                "score": winner["score"],
+            }
+        )
     decision = {
         "probe_selected": selected_probe["name"] if selected_probe else None,
         "heldout_selected": selected_heldout["name"] if selected_heldout else None,
         "current_incumbent": selected_heldout["name"] if selected_heldout else selected_probe["name"] if selected_probe else None,
         "interpretation": (
-            "Probe search selects window_0_120, but held-out validation selects speed_only. "
-            "Treat fixed duration windows as diagnostics unless they survive held-out validation."
+            "Probe search and held-out validation select different tactics. "
+            "Treat fixed tactics as candidates, not conclusions; ranking must be checked across multiple held-out slices."
         )
         if selected_probe and selected_heldout and selected_probe["name"] != selected_heldout["name"]
         else "Probe and held-out agree on the selected tactic.",
@@ -265,6 +287,7 @@ def build_data(paths: list[Path], probe_key: str, heldout_key: str) -> dict[str,
         "heldout_key": heldout_key,
         "sources": sources,
         "transfer": transfer,
+        "validation_selections": validation_selections,
         "decision": decision,
     }
 
@@ -361,6 +384,36 @@ def build_report(data: dict[str, Any]) -> str:
             "",
         ]
 
+    if data.get("validation_selections"):
+        lines += [
+            "## Held-Out Selection Sensitivity",
+            "",
+            md_table(
+                [
+                    "held-out slice",
+                    "selected",
+                    "success",
+                    "speedup",
+                    "net vs base",
+                    "regress",
+                    "score",
+                ],
+                [
+                    [
+                        row["phase"],
+                        row["selected"],
+                        row["success"],
+                        f"{row['speedup']:.2f}x",
+                        row["net_vs_baseline"],
+                        row["regress_vs_baseline"],
+                        fmt(row["score"]),
+                    ]
+                    for row in data["validation_selections"]
+                ],
+            ),
+            "",
+        ]
+
     decision = data["decision"]
     lines += [
         "## Decision",
@@ -372,10 +425,10 @@ def build_report(data: dict[str, Any]) -> str:
         "",
         "## 结论",
         "",
-        "- `window_0_120` 在 Phase29 probe set 上是合理候选，但 Phase30 held-out 没有通过验证，因此不能写成 universal tactic。",
-        "- `speed_only` 在 Phase30 上成为当前 incumbent：它同时给出最高成功率和最高/接近最高的速度收益。",
-        "- 这支持论文主线：VLA/world-action 模型的加速应该被表述为 closed-loop tactic search，而不是一次性选择固定窗口或固定层保护。",
-        "- 下一轮 GPU 工作应该优先扩大候选集合和 probe/held-out 划分，而不是继续为 `0-120` 做事后解释。",
+        "- Phase29 probe 会选择 `window_0_120`，Phase30 held-out 会选择 `speed_only`，Phase32 held-out 会选择 `combo_blocks0_3_window_0_120`。",
+        "- 这说明 held-out slice 本身是 tactic-search 设计的一部分；只用一组 held-out 很容易把某个 trajectory basin 上的偶然优势误认为通用优势。",
+        "- `speed_only` 速度最快，但 Phase32 出现 `5` 个 FP16 regression，不能再作为稳定 incumbent。",
+        "- `combo_blocks0_3_window_0_120` 在 Phase32 上做到 `0` repair / `0` regression，并有 `1.75x` p50 speedup；它是当前最强的 behavior-preserving candidate，但还需要回测 Phase30 或第三组 held-out 才能写成最终推荐 tactic。",
         "",
     ]
     return "\n".join(lines)

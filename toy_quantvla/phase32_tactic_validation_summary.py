@@ -359,11 +359,22 @@ def build_report(data: dict[str, Any]) -> str:
 
     lines += [
         "",
+        "## 实验结论",
+        "",
+        "- `speed_only` 是最快候选，但在这个 held-out slice 上出现明显闭环退化：相对 FP16 是 0 repair / 5 regress。",
+        "- `window_0_120` 恢复到 FP16 aggregate success，并保持接近 `2x` 的 p50 speedup，但仍有 1 个 repair / 1 个 regression。",
+        "- `blocks0-3 + window_0_120` 在这个 slice 上逐 case 复现 FP16 outcome，0 repair / 0 regression，同时保留约 `1.75x` p50 speedup。",
+        "- Phase30 和 Phase32 的 winner 不同，说明 held-out slice selection 会影响 tactic ranking；最终 tactic 不能只凭单个 held-out set 决定。",
+        "",
+    ]
+
+    lines += [
+        "",
         "## 判读方式",
         "",
-        "- 如果 `speed_only` 继续在 held-out set 上胜出，它就是当前 checkpoint/task distribution 的工程 incumbent。",
-        "- 如果组合候选胜出，则说明 layer x duration sensitivity-guided refinement 能超过 naive compile。",
-        "- 如果所有候选都出现大量 regression，下一步应扩大 candidate pool，而不是固定追某个 window。",
+        "- `speed_only` 不应再被称为稳定 incumbent；它在 Phase30 胜出，但在 Phase32 出现 5 个 FP16 regression。",
+        "- `combo_blocks0_3_window_0_120` 是 Phase32 上最强的 behavior-preserving candidate，因为它逐 case 保持 FP16 outcome。",
+        "- 下一步应回测 combo 在 Phase30 init `15/16/17` 上的表现，或者引入第三个 held-out slice 做 cross-validation 式 tactic selection。",
         "",
         "## 产物",
         "",

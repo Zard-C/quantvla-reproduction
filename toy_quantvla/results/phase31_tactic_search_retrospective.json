@@ -5,7 +5,7 @@
     "priority": "closed-loop success first, speed second, regressions and worst-slice risk as penalties"
   },
   "probe_key": "phase29_finer_duration_proxy",
-  "heldout_key": "phase30_heldout_sanity",
+  "heldout_key": "phase32_tactic_validation",
   "sources": [
     {
       "phase": "phase28A_proxy_guided_mixed_precision",
@@ -585,6 +585,84 @@
           "rank": 3
         }
       ]
+    },
+    {
+      "phase": "phase32_tactic_validation",
+      "display_name": "phase32_tactic_validation (phase32_tactic_validation_30case_v1)",
+      "source": "toy_quantvla/results/phase32_tactic_validation_30case_v1_summary.json",
+      "tag_prefix": "phase32_tactic_validation_30case_v1",
+      "case_list": "",
+      "total_cases": 30,
+      "baseline": {
+        "success": "25/30",
+        "success_rate": 0.8333333333333334,
+        "server_p50_ms": 154.72
+      },
+      "candidates": [
+        {
+          "name": "combo_blocks0_3_window_0_120",
+          "label": "Blocks0-3 + duration 0-120",
+          "family": "duration",
+          "policy": "compile action_head.model with blocks0-3 eager; eager fallback for policy steps [0, 120)",
+          "total_successes": 25,
+          "total_episodes": 30,
+          "success_rate": 0.8333333333333334,
+          "server_p50_ms": 88.47,
+          "server_p90_ms": 159.19,
+          "speedup": 1.75,
+          "worst_task_success_rate": 0.6666666666666666,
+          "repair_vs_baseline": 0,
+          "regress_vs_baseline": 0,
+          "net_vs_baseline": 0,
+          "repair_vs_speed_only": 5,
+          "regress_vs_speed_only": 0,
+          "net_vs_speed_only": 5,
+          "score": 91.5,
+          "rank": 1
+        },
+        {
+          "name": "window_0_120",
+          "label": "Duration 0-120",
+          "family": "duration",
+          "policy": "compile action_head.model; eager fallback for policy steps [0, 120)",
+          "total_successes": 25,
+          "total_episodes": 30,
+          "success_rate": 0.8333333333333334,
+          "server_p50_ms": 78.26,
+          "server_p90_ms": 159.4,
+          "speedup": 1.98,
+          "worst_task_success_rate": 0.6666666666666666,
+          "repair_vs_baseline": 1,
+          "regress_vs_baseline": 1,
+          "net_vs_baseline": 0,
+          "repair_vs_speed_only": 5,
+          "regress_vs_speed_only": 0,
+          "net_vs_speed_only": 5,
+          "score": 90.92,
+          "rank": 2
+        },
+        {
+          "name": "speed_only",
+          "label": "Speed-only compile",
+          "family": "compile",
+          "policy": "compile action_head.model",
+          "total_successes": 20,
+          "total_episodes": 30,
+          "success_rate": 0.6666666666666666,
+          "server_p50_ms": 68.01,
+          "server_p90_ms": 144.72,
+          "speedup": 2.27,
+          "worst_task_success_rate": 0.0,
+          "repair_vs_baseline": 0,
+          "regress_vs_baseline": 5,
+          "net_vs_baseline": -5,
+          "repair_vs_speed_only": null,
+          "regress_vs_speed_only": null,
+          "net_vs_speed_only": null,
+          "score": 57.58,
+          "rank": 3
+        }
+      ]
     }
   ],
   "transfer": [
@@ -595,10 +673,10 @@
       "probe_success": "19/33",
       "probe_speedup": 2.24,
       "heldout_rank": 2,
-      "heldout_score": 68.34,
-      "heldout_success": "22/30",
-      "heldout_speedup": 1.71,
-      "heldout_net_vs_baseline": -1
+      "heldout_score": 90.92,
+      "heldout_success": "25/30",
+      "heldout_speedup": 1.98,
+      "heldout_net_vs_baseline": 0
     },
     {
       "name": "speed_only",
@@ -606,17 +684,37 @@
       "probe_score": 41.587,
       "probe_success": "16/33",
       "probe_speedup": 2.23,
-      "heldout_rank": 1,
-      "heldout_score": 86.667,
-      "heldout_success": "25/30",
-      "heldout_speedup": 1.75,
-      "heldout_net_vs_baseline": 2
+      "heldout_rank": 3,
+      "heldout_score": 57.58,
+      "heldout_success": "20/30",
+      "heldout_speedup": 2.27,
+      "heldout_net_vs_baseline": -5
+    }
+  ],
+  "validation_selections": [
+    {
+      "phase": "phase30_heldout_sanity (phase30_heldout_sanity_30case_v1)",
+      "selected": "speed_only",
+      "success": "25/30",
+      "speedup": 1.75,
+      "net_vs_baseline": 2,
+      "regress_vs_baseline": 2,
+      "score": 86.667
+    },
+    {
+      "phase": "phase32_tactic_validation (phase32_tactic_validation_30case_v1)",
+      "selected": "combo_blocks0_3_window_0_120",
+      "success": "25/30",
+      "speedup": 1.75,
+      "net_vs_baseline": 0,
+      "regress_vs_baseline": 0,
+      "score": 91.5
     }
   ],
   "decision": {
     "probe_selected": "window_0_120",
-    "heldout_selected": "speed_only",
-    "current_incumbent": "speed_only",
-    "interpretation": "Probe search selects window_0_120, but held-out validation selects speed_only. Treat fixed duration windows as diagnostics unless they survive held-out validation."
+    "heldout_selected": "combo_blocks0_3_window_0_120",
+    "current_incumbent": "combo_blocks0_3_window_0_120",
+    "interpretation": "Probe search and held-out validation select different tactics. Treat fixed tactics as candidates, not conclusions; ranking must be checked across multiple held-out slices."
   }
 }

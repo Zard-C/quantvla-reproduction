@@ -72,23 +72,41 @@ Phase31 把前面阶段的经验整理成一个轻量的 tactic-search prototype
 | 2 | window_0_120 | duration | 22/30 | 51.82 | 1.71x | 0.00 | -1 | 2 | 68.34 |
 | 3 | blocks0_3 | layer | 21/30 | 61.96 | 1.43x | 0.00 | -2 | 5 | 57.55 |
 
+## phase32_tactic_validation (phase32_tactic_validation_30case_v1)
+
+- source: `toy_quantvla/results/phase32_tactic_validation_30case_v1_summary.json`
+- baseline: 25/30 at p50 154.72 ms
+
+| rank | candidate | family | success | p50 ms | speedup | worst task | net vs base | regress | score |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | combo_blocks0_3_window_0_120 | duration | 25/30 | 88.47 | 1.75x | 0.67 | 0 | 0 | 91.50 |
+| 2 | window_0_120 | duration | 25/30 | 78.26 | 1.98x | 0.67 | 0 | 1 | 90.92 |
+| 3 | speed_only | compile | 20/30 | 68.01 | 2.27x | 0.00 | -5 | 5 | 57.58 |
+
 ## Probe To Held-Out Transfer
 
 | candidate | probe rank | probe success | probe speedup | held-out rank | held-out success | held-out speedup | held-out net |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| window_0_120 | 1 | 19/33 | 2.24x | 2 | 22/30 | 1.71x | -1 |
-| speed_only | 7 | 16/33 | 2.23x | 1 | 25/30 | 1.75x | 2 |
+| window_0_120 | 1 | 19/33 | 2.24x | 2 | 25/30 | 1.98x | 0 |
+| speed_only | 7 | 16/33 | 2.23x | 3 | 20/30 | 2.27x | -5 |
+
+## Held-Out Selection Sensitivity
+
+| held-out slice | selected | success | speedup | net vs base | regress | score |
+| --- | --- | --- | --- | --- | --- | --- |
+| phase30_heldout_sanity (phase30_heldout_sanity_30case_v1) | speed_only | 25/30 | 1.75x | 2 | 2 | 86.67 |
+| phase32_tactic_validation (phase32_tactic_validation_30case_v1) | combo_blocks0_3_window_0_120 | 25/30 | 1.75x | 0 | 0 | 91.50 |
 
 ## Decision
 
 - probe selected: `window_0_120`
-- held-out selected: `speed_only`
-- current incumbent: `speed_only`
-- interpretation: Probe search selects window_0_120, but held-out validation selects speed_only. Treat fixed duration windows as diagnostics unless they survive held-out validation.
+- held-out selected: `combo_blocks0_3_window_0_120`
+- current incumbent: `combo_blocks0_3_window_0_120`
+- interpretation: Probe search and held-out validation select different tactics. Treat fixed tactics as candidates, not conclusions; ranking must be checked across multiple held-out slices.
 
 ## 结论
 
-- `window_0_120` 在 Phase29 probe set 上是合理候选，但 Phase30 held-out 没有通过验证，因此不能写成 universal tactic。
-- `speed_only` 在 Phase30 上成为当前 incumbent：它同时给出最高成功率和最高/接近最高的速度收益。
-- 这支持论文主线：VLA/world-action 模型的加速应该被表述为 closed-loop tactic search，而不是一次性选择固定窗口或固定层保护。
-- 下一轮 GPU 工作应该优先扩大候选集合和 probe/held-out 划分，而不是继续为 `0-120` 做事后解释。
+- Phase29 probe 会选择 `window_0_120`，Phase30 held-out 会选择 `speed_only`，Phase32 held-out 会选择 `combo_blocks0_3_window_0_120`。
+- 这说明 held-out slice 本身是 tactic-search 设计的一部分；只用一组 held-out 很容易把某个 trajectory basin 上的偶然优势误认为通用优势。
+- `speed_only` 速度最快，但 Phase32 出现 `5` 个 FP16 regression，不能再作为稳定 incumbent。
+- `combo_blocks0_3_window_0_120` 在 Phase32 上做到 `0` repair / `0` regression，并有 `1.75x` p50 speedup；它是当前最强的 behavior-preserving candidate，但还需要回测 Phase30 或第三组 held-out 才能写成最终推荐 tactic。

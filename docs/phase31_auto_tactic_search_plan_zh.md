@@ -152,7 +152,7 @@ score = 100 * success_rate
 
 这个分数不是理论最优目标，而是一个启发式 rollout triage。它把闭环成功率放在第一优先级，用 speedup 做次级收益，并用 regression count 和 worst-task risk 避免平均值掩盖脆弱任务。
 
-结果：
+第一轮结果：
 
 | stage | selected tactic | evidence |
 | --- | --- | --- |
@@ -162,29 +162,46 @@ score = 100 * success_rate
 因此当前结论是：
 
 - `window_0_120` 是 probe set 上的好 diagnostic，但不是 universal tactic。
-- `speed_only` 是当前 held-out incumbent。
+- `speed_only` 是 Phase30 这个 held-out slice 上的 winner，但还不能称为稳定 incumbent。
 - Phase31 的价值不是证明某个固定窗口永远正确，而是证明 tactic search 必须包含 held-out closed-loop validation。
+
+## 第二轮 held-out 结果
+
+Phase32 已完成，使用新的 held-out init set `18/19/20`：
+
+| run | success | p50 | paired vs FP16 |
+| --- | ---: | ---: | --- |
+| FP16 baseline | 25/30 | 154.72 ms | - |
+| speed-only compile | 20/30 | 68.01 ms | 0 repair / 5 regress |
+| window 0-120 | 25/30 | 78.26 ms | 1 repair / 1 regress |
+| blocks0-3 + window 0-120 | 25/30 | 88.47 ms | 0 repair / 0 regress |
+
+Phase32 改变了 Phase31 第一轮的判断：
+
+- `speed_only` 不是稳定 incumbent。它在 Phase30 上赢，但在 Phase32 上出现 5 个 FP16 regression。
+- `window_0_120` 在 Phase32 上恢复 FP16 aggregate success，但仍有 1 个 repair / 1 个 regression。
+- `blocks0-3 + window_0_120` 在 Phase32 上逐 case 保持 FP16 outcome，且仍有 `1.75x` p50 speedup。
+
+因此当前更准确的结论是：
+
+> held-out slice selection is part of the tactic-search problem.
+
+单个 held-out set 不足以确定最终 tactic。我们应该使用多个 held-out slices 或者交叉验证式的 task/init split 来选择 tactic，尤其要关注 paired regression，而不是只看 aggregate success 或单一 slice winner。
 
 ## 下一轮 GPU 工作建议
 
-下一轮不要继续单押 `0-120`，而应该让 candidate pool 更像一个 tactic-search benchmark：
+下一轮最小动作是补齐 combo 的验证面：
 
-1. 固定一个新 held-out set，比如 init `18/19/20`。
-2. 只跑少数高价值候选：
-   - FP16 baseline
-   - `speed_only` incumbent
-   - Phase29 probe winner: `window_0_120`
-   - 一个 layer/duration 组合候选，例如 `blocks0-3 eager + 0-120 fallback`
-3. 用同一个 scorer 输出最终 incumbent。
-
-如果 `speed_only` 继续赢，它就是当前模型/任务上的最佳工程 tactic；如果组合候选赢，则说明 sensitivity-guided refinement 能超过 naive compile。
+1. 在 Phase30 的 init `15/16/17` 上追加 `blocks0-3 + window 0-120`。
+2. 如果 combo 在 Phase30 和 Phase32 都不差于 FP16 paired outcome，则可作为当前 behavior-preserving tactic。
+3. 如果 combo 在 Phase30 退化，则进入更系统的 cross-validation search：把 init slices 拆成 probe / validation folds，用平均 paired regression 和 worst-fold risk 排序。
 
 ## 成功标准
 
 最小成功：
 
 - 算法在 Phase28/29 candidate pool 中选出的 tactic 不弱于 speed-only；
-- 在 Phase30 held-out set 上不明显退化；
+- 在多个 held-out slices 上不明显退化；
 - 论文叙事从“我们手工发现 0-120”升级为“我们用 sensitivity-guided search 找到了 0-120 这类 tactic”。
 
 强成功：
