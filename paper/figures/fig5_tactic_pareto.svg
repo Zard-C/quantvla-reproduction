@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="270" viewBox="0 0 720 270">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Helvetica,Arial,sans-serif;fill:#222222}.label{font-size:11px}.small{font-size:9.5px;fill:#666666}.axis{font-size:9px;fill:#666666}.panel{font-size:12px;font-weight:700}</style>
+<line x1="76" y1="208" x2="586" y2="208" stroke="#222222" stroke-width="0.9" fill="none"/>
+<line x1="76" y1="38" x2="76" y2="208" stroke="#222222" stroke-width="0.9" fill="none"/>
+<line x1="76.0" y1="38" x2="76.0" y2="208" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="76.0" y="224" class="axis" text-anchor="middle">1.00x</text>
+<line x1="186.8695652173913" y1="38" x2="186.8695652173913" y2="208" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="186.8695652173913" y="224" class="axis" text-anchor="middle">1.25x</text>
+<line x1="297.7391304347826" y1="38" x2="297.7391304347826" y2="208" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="297.7391304347826" y="224" class="axis" text-anchor="middle">1.50x</text>
+<line x1="408.60869565217394" y1="38" x2="408.60869565217394" y2="208" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="408.60869565217394" y="224" class="axis" text-anchor="middle">1.75x</text>
+<line x1="519.4782608695652" y1="38" x2="519.4782608695652" y2="208" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="519.4782608695652" y="224" class="axis" text-anchor="middle">2.00x</text>
+<line x1="76" y1="208.0" x2="586" y2="208.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="68" y="211.0" class="axis" text-anchor="end">0</text>
+<line x1="76" y1="165.5" x2="586" y2="165.5" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="68" y="168.5" class="axis" text-anchor="end">2</text>
+<line x1="76" y1="123.0" x2="586" y2="123.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="68" y="126.0" class="axis" text-anchor="end">4</text>
+<line x1="76" y1="80.5" x2="586" y2="80.5" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="68" y="83.5" class="axis" text-anchor="end">6</text>
+<line x1="76" y1="38.0" x2="586" y2="38.0" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="68" y="41.0" class="axis" text-anchor="end">8</text>
+<path d="M257.8,186.8 L450.7,144.2 L523.9,59.2" stroke="#666666" stroke-width="1.1" fill="none" stroke-dasharray="4 3"/>
+<circle cx="257.82608695652186" cy="186.75" r="8" fill="#4c78a8" stroke="white" stroke-width="1.5"/>
+<text x="268.82608695652186" y="180.75" class="label" text-anchor="start" style="fill:#4c78a8" font-weight="700">blocks0-3 + 0-120</text>
+<text x="268.82608695652186" y="194.75" class="small" text-anchor="start">worst 1.07x, 0.733</text>
+<circle cx="450.7391304347826" cy="144.25" r="8" fill="#54a24b" stroke="white" stroke-width="1.5"/>
+<text x="461.7391304347826" y="138.25" class="label" text-anchor="start" style="fill:#54a24b" font-weight="700">0-120</text>
+<text x="461.7391304347826" y="152.25" class="small" text-anchor="start">worst 1.71x, 0.733</text>
+<circle cx="523.9130434782608" cy="59.25" r="8" fill="#e45756" stroke="white" stroke-width="1.5"/>
+<text x="534.9130434782608" y="53.25" class="label" text-anchor="start" style="fill:#e45756" font-weight="700">speed-only</text>
+<text x="534.9130434782608" y="67.25" class="small" text-anchor="start">worst 1.75x, 0.667</text>
+<text x="331.0" y="248" class="small" text-anchor="middle">mean server-p50 speedup across validation folds</text>
+<text x="76" y="24" class="small" text-anchor="start">paired regressions vs FP16</text>
+<text x="262" y="24" class="small" text-anchor="start" style="fill:#666666">slower / safer</text>
+<text x="508" y="22" class="small" text-anchor="start" style="fill:#666666">faster / riskier</text>
+<text x="610" y="118" class="small" text-anchor="start">Selection depends</text>
+<text x="610" y="134" class="small" text-anchor="start">on deployment</text>
+<text x="610" y="150" class="small" text-anchor="start">constraints.</text>
+</svg>

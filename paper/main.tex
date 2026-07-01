@@ -708,6 +708,13 @@ Blocks 0--3 + duration 0--120 & 22/30 & 25/30 & 47/60 & 0.733 & 1.41$\times$ & 1
 
 The held-out folds change the interpretation. On Fold A, speed-only compilation has the highest aggregate success, showing that an implementation perturbation can also discover beneficial branches. On Fold B, the same speed-only tactic drops to 20/30 and creates five regressions relative to FP16, while the 0--120 and combined tactics match the FP16 aggregate. The combined tactic is the most behavior-conservative candidate, with only one total paired regression across 60 cases, but it gives up speed. The 0--120 tactic is therefore preferable under a speed-constrained objective, whereas the combined tactic is preferable under a behavior-first objective. This is the practical meaning of sensitivity-guided acceleration search: the output is a Pareto choice under a validation protocol, not a proof that one protected region is universally optimal.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.86\linewidth]{fig5_tactic_pareto.pdf}
+    \caption{Speed--risk Pareto view of the multi-fold tactic search. Speed-only execution is fastest but has the largest paired regression count. The combined tactic is behavior-conservative but gives up speed. The 0--120 duration tactic is the speed-constrained compromise.}
+    \label{fig:tactic-pareto}
+\end{figure}
+
 \subsection{Empirical Support For The Theoretical Claims}
 
 The theoretical claims in Section~3 are not used as proof that one accelerated implementation is superior. They organize what must be measured. The experiments support the claims in the following sense.
@@ -796,6 +803,23 @@ The experiments suggest a simple workflow for future VLA acceleration studies:
     \item Select a deployment tactic from the Pareto frontier using explicit constraints such as worst-fold success, maximum paired regressions, and minimum speedup.
 \end{enumerate}
 This converts acceleration from a search for a single numerically closest implementation into an iterative exploration of the closed-loop solution space.
+
+\begin{figure}[H]
+\centering
+\fbox{
+\begin{minipage}{0.90\linewidth}
+\textbf{Algorithm 1: Closed-loop sensitivity-guided tactic search}
+\begin{enumerate}
+    \item Generate candidate tactics $\mathcal{T}$ from systems choices such as quantization scopes, compile boundaries, eager islands, fallback windows, or custom kernels.
+    \item Run cheap filters on each $T_i\in\mathcal{T}$: operator coverage, expected speedup, static shape compatibility, open-loop drift, layerwise drift, action-channel drift, and whether the tactic touches known contact- or basin-sensitive regions.
+    \item Evaluate the surviving tactics on a small matched probe set containing fragile successes, fragile failures, and speed-only branch changes. Record success, latency, first divergence, EEF drift, repairs, and regressions.
+    \item Estimate closed-loop risk using paired regressions, worst-case fragile failures, and sensitivity diagnostics; keep a small candidate frontier rather than a single probe winner.
+    \item Re-score the frontier on held-out matched folds. Select a behavior-first tactic by maximizing worst-fold success and minimizing paired regressions, or select a speed-constrained tactic by maximizing speedup subject to explicit behavior constraints.
+\end{enumerate}
+\end{minipage}}
+\caption{Heuristic search procedure used by our acceleration study. It is not an optimal-control solver; it is a practical way to spend limited rollout budget on tactics most likely to matter under closed-loop sensitivity.}
+\label{alg:closed-loop-tactic-search}
+\end{figure}
 
 \paragraph{Sensitivity-guided implementation search.}
 This view is analogous to compiler tactic search, but with a different validation cost. A system such as TensorRT can enumerate many operator implementations for a fixed shape, benchmark their latency, check local numerical agreement, and choose the fastest valid tactic. For VLA acceleration, the candidate space is similar in spirit---quantization scopes, graph boundaries, eager islands, fallback windows, kernel replacements, and calibration choices are all implementation tactics---but the validation target is closed-loop behavior. Exhaustively evaluating every candidate with robot rollouts is therefore infeasible.

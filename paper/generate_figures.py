@@ -4,10 +4,12 @@ The figures use only aggregate values already documented in the phase reports.
 They are designed to be converted to vector PDF with `rsvg-convert`.
 """
 
+import json
 from pathlib import Path
 
 
 OUT = Path(__file__).resolve().parent / "figures"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 C = {
@@ -72,6 +74,12 @@ class SVG:
         if stroke:
             attrs += [f'stroke="{stroke}"', f'stroke-width="{width}"']
         self.parts.append(f'<rect {" ".join(attrs)}/>')
+
+    def circle(self, cx, cy, r, fill, stroke=None, width=1):
+        attrs = [f'cx="{cx}"', f'cy="{cy}"', f'r="{r}"', f'fill="{fill}"']
+        if stroke:
+            attrs += [f'stroke="{stroke}"', f'stroke-width="{width}"']
+        self.parts.append(f'<circle {" ".join(attrs)}/>')
 
     def path(self, d, stroke=None, width=1.2, fill="none", dash=None, marker=None):
         attrs = [f'd="{d}"', f'stroke="{stroke or C["ink"]}"', f'stroke-width="{width}"', f'fill="{fill}"']
@@ -204,12 +212,118 @@ def fig4():
     save("fig4_task_redistribution.svg", s)
 
 
+def fig5():
+    data_path = ROOT / "toy_quantvla" / "results" / "phase34_multifold_tactic_selection.json"
+    if data_path.exists():
+        data = json.loads(data_path.read_text(encoding="utf-8"))
+        tactics = data.get("tactics", [])
+    else:
+        tactics = [
+            {
+                "tactic": "speed_only",
+                "mean_speedup": 2.01,
+                "worst_speedup": 1.75,
+                "total_regressions": 7,
+                "worst_success_rate": 0.667,
+            },
+            {
+                "tactic": "window_0_120",
+                "mean_speedup": 1.84,
+                "worst_speedup": 1.71,
+                "total_regressions": 3,
+                "worst_success_rate": 0.733,
+            },
+            {
+                "tactic": "combo_blocks0_3_window_0_120",
+                "mean_speedup": 1.41,
+                "worst_speedup": 1.07,
+                "total_regressions": 1,
+                "worst_success_rate": 0.733,
+            },
+        ]
+
+    label = {
+        "speed_only": "speed-only",
+        "window_0_120": "0-120",
+        "combo_blocks0_3_window_0_120": "blocks0-3 + 0-120",
+    }
+    color = {
+        "speed_only": C["red"],
+        "window_0_120": C["green"],
+        "combo_blocks0_3_window_0_120": C["blue"],
+    }
+    points = sorted(
+        [
+            {
+                "name": item["tactic"],
+                "x": float(item["mean_speedup"]),
+                "y": float(item["total_regressions"]),
+                "worst_speedup": float(item["worst_speedup"]),
+                "worst_success": float(item["worst_success_rate"]),
+            }
+            for item in tactics
+            if item.get("tactic") in label
+        ],
+        key=lambda row: row["x"],
+    )
+
+    s = SVG(720, 270)
+    x0, y0, w, h = 76, 38, 510, 170
+    xmin, xmax = 1.0, 2.15
+    ymin, ymax = 0.0, 8.0
+
+    def sx(v):
+        return x0 + w * (v - xmin) / (xmax - xmin)
+
+    def sy(v):
+        return y0 + h - h * (v - ymin) / (ymax - ymin)
+
+    s.line(x0, y0 + h, x0 + w, y0 + h, C["ink"], 0.9)
+    s.line(x0, y0, x0, y0 + h, C["ink"], 0.9)
+    for tick in [1.0, 1.25, 1.5, 1.75, 2.0]:
+        xx = sx(tick)
+        s.line(xx, y0, xx, y0 + h, C["grid"], 0.5)
+        s.text(xx, y0 + h + 16, f"{tick:.2f}x", "axis", anchor="middle")
+    for tick in [0, 2, 4, 6, 8]:
+        yy = sy(tick)
+        s.line(x0, yy, x0 + w, yy, C["grid"], 0.5)
+        s.text(x0 - 8, yy + 3, tick, "axis", anchor="end")
+
+    if len(points) >= 2:
+        d = " ".join(
+            ("M" if idx == 0 else "L") + f"{sx(p['x']):.1f},{sy(p['y']):.1f}"
+            for idx, p in enumerate(points)
+        )
+        s.path(d, C["muted"], 1.1, "none", "4 3")
+
+    for p in points:
+        xx, yy = sx(p["x"]), sy(p["y"])
+        s.circle(xx, yy, 8, color[p["name"]], "white", 1.5)
+        s.text(xx + 11, yy - 6, label[p["name"]], "label", fill=color[p["name"]], weight="700")
+        s.text(
+            xx + 11,
+            yy + 8,
+            f"worst {p['worst_speedup']:.2f}x, {p['worst_success']:.3f}",
+            "small",
+        )
+
+    s.text(x0 + w / 2, 248, "mean server-p50 speedup across validation folds", "small", anchor="middle")
+    s.text(x0, 24, "paired regressions vs FP16", "small")
+    s.text(262, 24, "slower / safer", "small", fill=C["muted"])
+    s.text(508, 22, "faster / riskier", "small", fill=C["muted"])
+    s.text(610, 118, "Selection depends", "small")
+    s.text(610, 134, "on deployment", "small")
+    s.text(610, 150, "constraints.", "small")
+    save("fig5_tactic_pareto.svg", s)
+
+
 def main():
     # Figure 1 is rendered natively in LaTeX/TikZ so mathematical notation is
     # typeset by LaTeX. This script generates the data figures only.
     fig2()
     fig3()
     fig4()
+    fig5()
     print(f"Wrote SVG figures to {OUT}")
 
 
