@@ -4,6 +4,7 @@ The figures use only aggregate values already documented in the phase reports.
 They are designed to be converted to vector PDF with `rsvg-convert`.
 """
 
+import csv
 import json
 from pathlib import Path
 
@@ -252,7 +253,7 @@ def fig5():
         "window_0_120": C["green"],
         "combo_blocks0_3_window_0_120": C["blue"],
     }
-    points = sorted(
+    points_left = sorted(
         [
             {
                 "name": item["tactic"],
@@ -267,53 +268,129 @@ def fig5():
         key=lambda row: row["x"],
     )
 
-    s = SVG(560, 270)
-    x0, y0, w, h = 56, 38, 390, 170
-    xmin, xmax = 1.0, 2.15
-    ymin, ymax = 0.0, 8.0
+    n17_path = ROOT / "toy_quantvla" / "results" / "phase37b_n17_heldout_routing_15case_v1_pareto_summary.csv"
+    if n17_path.exists():
+        with n17_path.open(newline="", encoding="utf-8") as fh:
+            n17_rows = list(csv.DictReader(fh))
+    else:
+        n17_rows = [
+            {"deployment_point": "speed_only", "speedup_vs_fp16_p50": "1.48", "regressions_vs_fp16": "3", "success_rate": "0.733"},
+            {"deployment_point": "window_5_15", "speedup_vs_fp16_p50": "1.22", "regressions_vs_fp16": "1", "success_rate": "0.867"},
+            {"deployment_point": "window_0_20", "speedup_vs_fp16_p50": "1.09", "regressions_vs_fp16": "1", "success_rate": "0.933"},
+            {"deployment_point": "routed_tactic", "speedup_vs_fp16_p50": "1.40", "regressions_vs_fp16": "2", "success_rate": "0.867"},
+        ]
+    n17_label = {
+        "speed_only": "speed-only",
+        "window_5_15": "5-15",
+        "window_0_20": "0-20",
+        "routed_tactic": "routed",
+    }
+    n17_color = {
+        "speed_only": C["red"],
+        "window_5_15": C["green"],
+        "window_0_20": C["blue"],
+        "routed_tactic": C["purple"],
+    }
+    points_right = sorted(
+        [
+            {
+                "name": row["deployment_point"],
+                "x": float(row["speedup_vs_fp16_p50"]),
+                "y": float(row["regressions_vs_fp16"]),
+                "success": float(row["success_rate"]),
+            }
+            for row in n17_rows
+            if row.get("deployment_point") in n17_label
+        ],
+        key=lambda row: row["x"],
+    )
 
-    def sx(v):
-        return x0 + w * (v - xmin) / (xmax - xmin)
+    s = SVG(760, 300)
 
-    def sy(v):
-        return y0 + h - h * (v - ymin) / (ymax - ymin)
+    def draw_panel(points, x0, y0, w, h, xmin, xmax, ymax, xticks, yticks, title, labels, colors, subtitle=None, offsets=None):
+        def sx(v):
+            return x0 + w * (v - xmin) / (xmax - xmin)
 
-    s.line(x0, y0 + h, x0 + w, y0 + h, C["ink"], 0.9)
-    s.line(x0, y0, x0, y0 + h, C["ink"], 0.9)
-    for tick in [1.0, 1.25, 1.5, 1.75, 2.0]:
-        xx = sx(tick)
-        s.line(xx, y0, xx, y0 + h, C["grid"], 0.5)
-        s.text(xx, y0 + h + 16, f"{tick:.2f}x", "axis", anchor="middle")
-    for tick in [0, 2, 4, 6, 8]:
-        yy = sy(tick)
-        s.line(x0, yy, x0 + w, yy, C["grid"], 0.5)
-        s.text(x0 - 8, yy + 3, tick, "axis", anchor="end")
+        def sy(v):
+            return y0 + h - h * v / ymax
 
-    if len(points) >= 2:
-        d = " ".join(
-            ("M" if idx == 0 else "L") + f"{sx(p['x']):.1f},{sy(p['y']):.1f}"
-            for idx, p in enumerate(points)
-        )
-        s.path(d, C["muted"], 1.1, "none", "4 3")
+        s.text(x0, y0 - 18, title, "panel")
+        if subtitle:
+            s.text(x0, y0 - 5, subtitle, "small")
+        s.line(x0, y0 + h, x0 + w, y0 + h, C["ink"], 0.9)
+        s.line(x0, y0, x0, y0 + h, C["ink"], 0.9)
+        for tick in xticks:
+            xx = sx(tick)
+            s.line(xx, y0, xx, y0 + h, C["grid"], 0.5)
+            s.text(xx, y0 + h + 16, f"{tick:.2f}x", "axis", anchor="middle")
+        for tick in yticks:
+            yy = sy(tick)
+            s.line(x0, yy, x0 + w, yy, C["grid"], 0.5)
+            s.text(x0 - 8, yy + 3, tick, "axis", anchor="end")
 
-    for p in points:
-        xx, yy = sx(p["x"]), sy(p["y"])
-        s.circle(xx, yy, 8, color[p["name"]], "white", 1.5)
-        s.text(xx + 11, yy - 6, label[p["name"]], "label", fill=color[p["name"]], weight="700")
-        s.text(
-            xx + 11,
-            yy + 8,
-            f"worst {p['worst_speedup']:.2f}x, {p['worst_success']:.3f}",
-            "small",
-        )
+        if len(points) >= 2:
+            d = " ".join(
+                ("M" if idx == 0 else "L") + f"{sx(p['x']):.1f},{sy(p['y']):.1f}"
+                for idx, p in enumerate(points)
+            )
+            s.path(d, C["muted"], 1.1, "none", "4 3")
 
-    s.text(x0 + w / 2, 248, "mean server-p50 speedup across validation folds", "small", anchor="middle")
-    s.text(x0, 24, "paired regressions vs FP16", "small")
-    s.text(190, 24, "slower / safer", "small", fill=C["muted"])
-    s.text(360, 22, "faster / riskier", "small", fill=C["muted"])
-    s.text(462, 116, "selection", "small")
-    s.text(462, 132, "depends on", "small")
-    s.text(462, 148, "constraints", "small")
+        for idx, p in enumerate(points):
+            xx, yy = sx(p["x"]), sy(p["y"])
+            s.circle(xx, yy, 7.5, colors[p["name"]], "white", 1.5)
+            dx, dy = (offsets or {}).get(p["name"], (9, -8 if idx % 2 == 0 else 16))
+            s.text(xx + dx, yy + dy, labels[p["name"]], "label", fill=colors[p["name"]], weight="700")
+            if "worst_speedup" in p:
+                s.text(xx + dx, yy + dy + 13, f"worst {p['worst_speedup']:.2f}x", "small")
+            else:
+                s.text(xx + dx, yy + dy + 13, f"succ {p['success']:.3f}", "small")
+
+    draw_panel(
+        points_left,
+        58,
+        54,
+        280,
+        170,
+        1.0,
+        2.15,
+        8,
+        [1.0, 1.25, 1.5, 1.75, 2.0],
+        [0, 2, 4, 6, 8],
+        "(a) N1.5 multi-fold validation",
+        label,
+        color,
+        "mean speedup vs total regressions",
+        offsets={
+            "combo_blocks0_3_window_0_120": (10, -16),
+            "window_0_120": (10, 26),
+            "speed_only": (10, -18),
+        },
+    )
+    draw_panel(
+        points_right,
+        430,
+        54,
+        250,
+        170,
+        1.0,
+        1.55,
+        4,
+        [1.0, 1.2, 1.4],
+        [0, 1, 2, 3, 4],
+        "(b) N1.7 held-out routing",
+        n17_label,
+        n17_color,
+        "p50 speedup vs paired regressions",
+        offsets={
+            "window_0_20": (10, -28),
+            "window_5_15": (22, 24),
+            "routed_tactic": (10, -28),
+            "speed_only": (-82, -18),
+        },
+    )
+
+    s.text(210, 270, "server-p50 speedup", "small", anchor="middle")
+    s.text(550, 270, "server-p50 speedup", "small", anchor="middle")
     save("fig5_tactic_pareto.svg", s)
 
 
