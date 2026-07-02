@@ -1,0 +1,7 @@
+deployment_point,successes,total,success_rate,avg_p50_ms,speedup_vs_fp16_p50,repairs_vs_fp16,regressions_vs_fp16,role
+fp16,13,15,0.867,110.40,1.00,0,0,reference
+speed_only,11,15,0.733,74.79,1.48,1,3,speed_first
+window_5_15,13,15,0.867,90.81,1.22,1,1,moderate_window
+window_0_20,14,15,0.933,100.98,1.09,2,1,behavior_first
+window_10_30,12,15,0.800,97.58,1.13,1,2,later_window
+routed_tactic,13,15,0.867,79.07,1.40,2,2,high_speed_tradeoff

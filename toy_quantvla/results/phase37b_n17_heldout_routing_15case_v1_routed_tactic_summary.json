@@ -1,0 +1,48 @@
+{
+  "tag": "phase37b_n17_heldout_routing_15case_v1_routed_tactic",
+  "source_experiment": "phase37b_n17_heldout_routing_15case_v1",
+  "routing_rule": {
+    "task0": "window_5_15",
+    "task1": "speed_only",
+    "task4": "speed_only",
+    "task6": "speed_only",
+    "task8": "window_5_15"
+  },
+  "cases": [
+    "0:24",
+    "0:25",
+    "0:26",
+    "1:24",
+    "1:25",
+    "1:26",
+    "4:24",
+    "4:25",
+    "4:26",
+    "6:24",
+    "6:25",
+    "6:26",
+    "8:24",
+    "8:25",
+    "8:26"
+  ],
+  "complete": 15,
+  "expected": 15,
+  "successes": 13,
+  "success_rate": 0.867,
+  "avg_server_p50_ms": 79.07,
+  "avg_server_mean_ms": 287.75,
+  "speedup_vs_fp16_avg_p50": 1.40,
+  "repairs_vs_fp16": [
+    "6:26",
+    "8:24"
+  ],
+  "regressions_vs_fp16": [
+    "1:25",
+    "8:25"
+  ],
+  "failures": [
+    "1:25",
+    "8:25"
+  ],
+  "interpretation": "High-speed trade-off point: preserves most of speed-only latency gain but still needs held-out validation because probe-selected routing is not regression-free."
+}

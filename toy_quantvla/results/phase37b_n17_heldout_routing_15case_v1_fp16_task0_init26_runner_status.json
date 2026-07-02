@@ -1,0 +1,7 @@
+{
+  "tag": "phase37b_n17_heldout_routing_15case_v1_fp16_task0_init26",
+  "tactic": "fp16",
+  "task_id": 0,
+  "init_index": 26,
+  "exit_status": 0
+}

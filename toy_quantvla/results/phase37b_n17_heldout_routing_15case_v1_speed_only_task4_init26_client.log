@@ -1,0 +1,27 @@
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:158: UserWarning: [33mWARN: The obs returned by the `reset()` method is not within the observation space.[0m
+  logger.warn(f"{pre} is not within the observation space.")
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:134: UserWarning: [33mWARN: The obs returned by the `reset()` method was expecting numpy array dtype to be float32, actual type: float64[0m
+  logger.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:130: UserWarning: [33mWARN: The obs returned by the `reset()` method was expecting a numpy array, actual type: <class 'list'>[0m
+  logger.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/spaces/box.py:418: UserWarning: [33mWARN: Casting input x to numpy array.[0m
+  gym.logger.warn("Casting input x to numpy array.")
+Running collecting 1 episodes for libero_sim/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate with 1 vec envs
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /root/.cache/libero/assets
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Episodes:   0%|          | 0/1 [00:00<?, ?it/s]/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:158: UserWarning: [33mWARN: The obs returned by the `step()` method is not within the observation space.[0m
+  logger.warn(f"{pre} is not within the observation space.")
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:134: UserWarning: [33mWARN: The obs returned by the `step()` method was expecting numpy array dtype to be float32, actual type: float64[0m
+  logger.warn(
+/root/autodl-tmp/envs/gr00t-libero-py310/lib/python3.10/site-packages/gymnasium/utils/passive_env_checker.py:130: UserWarning: [33mWARN: The obs returned by the `step()` method was expecting a numpy array, actual type: <class 'list'>[0m
+  logger.warn(
+Episodes: 100%|██████████| 1/1 [00:13<00:00, 13.88s/it]Episodes: 100%|██████████| 1/1 [00:13<00:00, 13.89s/it]
+Collecting 1 episodes took 20.182143211364746 seconds
+Video saved to:  None
+results:  ('libero_sim/LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_right_plate', [True], {'episode_lengths': [238], 'episode_rewards': [1.0]})
+success rate:  1.0

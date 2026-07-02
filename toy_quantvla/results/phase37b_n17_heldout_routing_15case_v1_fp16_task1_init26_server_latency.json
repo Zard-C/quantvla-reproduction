@@ -1,0 +1,21 @@
+{
+  "label": "n17_fp16",
+  "writes": 32,
+  "get_action_seconds": {
+    "count": 30,
+    "mean": 0.15578808163603147,
+    "min": 0.09354466944932938,
+    "max": 0.8139530345797539,
+    "p50": 0.1340092569589615,
+    "p90": 0.18060149624943733,
+    "p99": 0.6370250206068163
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_mib": 6023,
+      "reserved_mib": 6188,
+      "max_allocated_mib": 6090,
+      "max_reserved_mib": 6188
+    }
+  }
+}
