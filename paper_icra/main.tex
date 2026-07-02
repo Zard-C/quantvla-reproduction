@@ -283,6 +283,13 @@ The key probe result is not that more eager execution is safer. Speed-only compi
 
 Paired repair/regression explains the aggregate. Relative to speed-only, the 0--120 window repairs seven cases and regresses four, for a net +3. Relative to FP16, it repairs two baseline failures and regresses two baseline successes. Thus the accelerated implementation is not simply restored to the FP16 point; it explores a nearby closed-loop solution space.
 
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.86\textwidth]{fig5_tactic_pareto.pdf}
+    \caption{Speed--risk Pareto view of held-out tactic selection. Left: N1.5 multi-fold validation. Right: N1.7 held-out validation, including a task-conditioned tactic router.}
+    \label{fig:icra-tactic-pareto}
+\end{figure*}
+
 \begin{table}[H]
 \centering
 \caption{Paired decomposition versus speed-only compilation.}
@@ -346,14 +353,7 @@ Routed tactic & 13/15 & 79.07 ms & 1.40$\times$ & 2 / 2 \\
 }
 \end{table}
 
-The N1.7 transfer check keeps the focus on the procedure rather than the 0--120 window. The fastest tactic has the most regressions, the conservative window has the best held-out success but little speedup, and task-conditioned routing preserves most of the speed-only gain while still requiring held-out validation.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.98\linewidth]{fig5_tactic_pareto.pdf}
-    \caption{Speed--risk Pareto view of held-out tactic selection. Left: N1.5 multi-fold validation. Right: N1.7 held-out validation, including a task-conditioned tactic router.}
-    \label{fig:icra-tactic-pareto}
-\end{figure}
+The N1.7 transfer check keeps the focus on the procedure rather than the 0--120 window. The fastest tactic has the most regressions, the conservative window has the best held-out success but little speedup, and task-conditioned routing preserves most of the speed-only gain while still requiring held-out validation. Figure~\ref{fig:icra-tactic-pareto} visualizes this speed--risk frontier.
 
 \begin{figure}[H]
 \centering
@@ -366,7 +366,10 @@ The N1.7 transfer check keeps the focus on the procedure rather than the 0--120 
     \item \textbf{Input:} candidate tactics $\mathcal{T}$, matched probe rollouts $\mathcal{P}$, measured latency $L(T_i)$, and paired repairs/regressions $R^+(T_i),R^-(T_i)$ on each validation fold.
     \item Filter $\mathcal{T}$ by cheap systems and open-loop proxies: operator coverage, static shape compatibility, expected speedup, action drift, layer drift, and whether the tactic touches known sensitive phases or modules.
     \item Evaluate the surviving frontier on fragile matched rollouts. Record success, latency, first divergence, EEF drift, repairs, and regressions.
-    \item Re-score the frontier on held-out folds. For behavior-first selection, maximize worst-fold success and break ties by minimizing regressions. For speed-constrained selection, maximize speedup subject to explicit behavior constraints. If no single tactic dominates, evaluate conditional tactic selectors over task or trajectory regimes.
+    \item Re-score the frontier on held-out folds. Let $S_f$, $U_f$, and $R^-_f$ denote success, speedup, and paired regressions on fold $f$. Behavior-first selection uses the lexicographic rule
+    $(\max \min_f S_f,\; \min \sum_f R^-_f,\; \max \min_f U_f)$.
+    Speed-constrained selection maximizes $\min_f U_f$ subject to $\min_f S_f\ge S_{\min}$ and $\sum_f R^-_f\le \rho$.
+    \item If no single tactic dominates, evaluate conditional selectors $g(z)\!\to\!T_i$ over task or trajectory regimes and validate the selector as another tactic.
 \end{enumerate}
 \emph{Output:} a behavior-first tactic, a speed-constrained Pareto tactic, or a validated tactic selector, with its matched success, regression, and latency report.
 \end{minipage}}
