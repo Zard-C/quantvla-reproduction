@@ -27,6 +27,8 @@ Sensitivity-Guided Speedups for VLA Policies}
 \newcommand{\qpol}{\mathrm{q}}
 \newcommand{\dpi}{d_{\pi_\theta}}
 \newcommand{\dq}{d_{\pi_q}}
+\newcounter{clsgalgorithm}
+\renewcommand{\theclsgalgorithm}{\arabic{clsgalgorithm}}
 
 \begin{document}
 \maketitle
@@ -739,7 +741,7 @@ This transfer check reinforces the same lesson. If the objective is pure speed, 
     \label{fig:tactic-pareto}
 \end{figure}
 
-\subsection{Empirical Support For The Theoretical Claims}
+\subsection{Empirical Support for the Theoretical Claims}
 
 The theoretical claims in Section~3 are not used as proof that one accelerated implementation is superior. They organize what must be measured. The experiments support the claims in the following sense.
 
@@ -826,13 +828,14 @@ The experiments suggest a simple workflow for future VLA acceleration studies:
     \item Re-evaluate candidate tactics on multiple held-out matched folds, because a proxy that works on one slice can overfit and destroy beneficial branches elsewhere.
     \item Select a deployment tactic from the Pareto frontier using explicit constraints such as worst-fold success, maximum paired regressions, and minimum speedup.
 \end{enumerate}
-This converts acceleration from a search for a single numerically closest implementation into an iterative exploration of the closed-loop solution space.
+This converts acceleration from a search for a single numerically closest implementation into an iterative exploration of the closed-loop solution space. Algorithm~\ref{alg:closed-loop-tactic-search} summarizes the resulting heuristic.
 
 \begin{figure}[H]
 \centering
 \fbox{
 \begin{minipage}{0.90\linewidth}
-\textbf{Algorithm 1: Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS)}
+\refstepcounter{clsgalgorithm}\label{alg:closed-loop-tactic-search}
+\textbf{Algorithm~\theclsgalgorithm: Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS)}
 \begin{enumerate}
     \item \textbf{Input:} candidate tactics $\mathcal{T}$, matched probe rollouts $\mathcal{P}$, measured latency $L(T_i)$, and paired repairs/regressions $R^+(T_i),R^-(T_i)$ on each validation fold.
     \item Run cheap filters on each $T_i\in\mathcal{T}$: operator coverage, expected speedup, static shape compatibility, open-loop drift, layerwise drift, action-channel drift, and whether the tactic touches known contact- or basin-sensitive regions.
@@ -843,7 +846,6 @@ This converts acceleration from a search for a single numerically closest implem
 \end{enumerate}
 \end{minipage}}
 \caption{Heuristic search procedure used by our acceleration study. It is not an optimal-control solver; it is a practical way to spend limited rollout budget on tactics most likely to matter under closed-loop sensitivity.}
-\label{alg:closed-loop-tactic-search}
 \end{figure}
 
 \paragraph{Sensitivity-guided implementation search.}
