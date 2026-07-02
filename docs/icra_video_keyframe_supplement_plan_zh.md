@@ -6,14 +6,18 @@
 small inference perturbations -> trajectory branching -> repair/regression -> tactic selection
 ```
 
-当前本地仓库没有发现 `mp4/mov/webm/gif` 成片文件；已有材料主要是 contact sheets、关键帧图、trace JSON 和 divergence 报告。因此 supplement 分两档：
+当前仓库内不直接保存大体积 `mp4/mov/webm/gif` 成片文件；已有材料主要是 contact sheets、关键帧图、trace JSON 和 divergence 报告。2026-07-02/03 已在 5090 上补跑 Q1-Q4 的 controlled quantization video matrix，并把 raw mp4 拉回本机临时目录。因此 supplement 分两档：
 
 1. **最小可交付版**：直接使用现有 contact sheets / trace plots，做 PDF supplement 或主文 appendix 图。
-2. **视频增强版**：如果后续能从 5090 找回原始 rollout videos，或重新渲染少量病例，再导出 4-6 组短视频。
+2. **视频增强版**：使用已找回的 C1/C2 compile/tactic videos，以及 Q1-Q4 controlled rerun videos 中 outcome 与叙事一致的片段。
 
-5090 搜索后的素材清单见 [`docs/icra_video_asset_manifest_zh.md`](icra_video_asset_manifest_zh.md)。当前已找回 C1/C2 的 compile/tactic 原始 mp4，并生成了轻量 contact sheet：
+5090 搜索与补跑后的素材清单见 [`docs/icra_video_asset_manifest_zh.md`](icra_video_asset_manifest_zh.md)。当前已找回 C1/C2 的 compile/tactic 原始 mp4，并补跑 Q1-Q4 quantization controlled rerun，生成了轻量 contact sheets：
 
 ![C1/C2 compile tactic contact sheet](icra_video_assets/c1c2_compile_tactic_contact_sheet.jpg)
+
+![Q1-Q4 quantization matrix contact sheet](icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg)
+
+注意：Q1-Q4 controlled rerun 不是原 Phase5 contact sheet 的逐位复刻。Q3/Q4 outcome 与既有 regression story 对齐；Q1/Q2 outcome 有变化，使用时必须按 rerun 结果重新 caption。
 
 ## 选择原则
 
@@ -147,9 +151,9 @@ generate candidate tactics -> probe paired rollouts -> measure speed and regress
 | 任务 | 状态 | 备注 |
 | --- | --- | --- |
 | 确认可用 contact sheets | done | Q1-Q4 和 C1-C2 都有本地图片或 trace 图。 |
-| 确认本地视频文件 | blocked | 当前仓库未发现 `mp4/mov/webm/gif`。 |
+| 确认本地视频文件 | done | C1/C2 raw videos 已拉回；Q1-Q4 controlled rerun videos 位于 `/private/tmp/quantvla_video_candidates/icra_quant_video_matrix_20260702_233443_bundle/videos/`。 |
 | 生成 PDF supplement 页面 | ready | 可直接引用本文件列出的图片。 |
-| 找回或重渲染 raw videos | optional | 只需要 4-6 个病例，不需要重新跑大规模 eval。 |
+| 找回或重渲染 raw videos | done for selected cases | 已补齐 12 个 Q1-Q4 rerun videos；原 Phase5 Q1/Q2 mp4 仍未找回。 |
 | 添加统一 overlay | pending | 有视频后再做；关键帧版可用 caption 替代。 |
 | 匿名化检查 | pending | 投稿前统一检查图片/视频是否暴露路径和账号信息。 |
 
@@ -166,6 +170,6 @@ generate candidate tactics -> probe paired rollouts -> measure speed and regress
 ## 推荐下一步
 
 1. ICRA 主稿保持 Figure 3 + Algorithm 1 + 核心表格，不再塞更多关键帧。
-2. Supplement 先做关键帧 PDF 版，使用 Q1-Q4 + C1-C2。
-3. 如果 5090 上能找回原始视频，只重导出这 6 组，不重跑完整 benchmark。
-4. 若必须重新推理，优先重跑 C1/C2，因为它们最直接支持“推理加速不只是量化，也包括 compile/tactic”的新主线。
+2. Supplement 先做关键帧 PDF 版，使用原 Q1-Q4 contact sheets + C1-C2。
+3. 视频版优先使用 Q3/Q4 controlled rerun + C1/C2；Q1 作为 rerun ATM+OHB repair 备选；Q2 暂不作为主 flip 视频。
+4. 做 overlay 时统一标注 `controlled rerun` 或 `original phase5 contact sheet`，不要混用。
