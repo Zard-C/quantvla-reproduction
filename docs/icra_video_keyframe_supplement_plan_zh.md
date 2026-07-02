@@ -11,6 +11,10 @@ small inference perturbations -> trajectory branching -> repair/regression -> ta
 1. **最小可交付版**：直接使用现有 contact sheets / trace plots，做 PDF supplement 或主文 appendix 图。
 2. **视频增强版**：如果后续能从 5090 找回原始 rollout videos，或重新渲染少量病例，再导出 4-6 组短视频。
 
+5090 搜索后的素材清单见 [`docs/icra_video_asset_manifest_zh.md`](icra_video_asset_manifest_zh.md)。当前已找回 C1/C2 的 compile/tactic 原始 mp4，并生成了轻量 contact sheet：
+
+![C1/C2 compile tactic contact sheet](icra_video_assets/c1c2_compile_tactic_contact_sheet.jpg)
+
 ## 选择原则
 
 每个病例都要满足至少两个条件：
