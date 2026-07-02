@@ -1,0 +1,28 @@
+{
+  "boundary": "GR00T N1.7 official policy server with timing and tactic switches",
+  "isaac_root": "/root/autodl-tmp/Isaac-GR00T",
+  "model_path": "/root/autodl-tmp/models/GR00T-N1.7-LIBERO/libero_10",
+  "embodiment_tag": "LIBERO_PANDA",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "strict": true,
+  "use_sim_policy_wrapper": true,
+  "model_load_seconds": 16.154874425381422,
+  "model_load_memory": {
+    "allocated_mib": 6014,
+    "reserved_mib": 6096,
+    "max_allocated_mib": 6014,
+    "max_reserved_mib": 6096
+  },
+  "action_head_num_blocks": 32,
+  "action_head_num_inference_timesteps": 4,
+  "action_horizon": 40,
+  "torch_compile": {
+    "enabled": false,
+    "target": "none",
+    "compiled_modules": []
+  },
+  "prepare_seconds": 16.15544791519642
+}
