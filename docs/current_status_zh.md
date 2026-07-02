@@ -9,7 +9,7 @@
 - ICRA video/keyframe supplement plan: [`docs/icra_video_keyframe_supplement_plan_zh.md`](icra_video_keyframe_supplement_plan_zh.md)
 - ICRA video asset manifest: [`docs/icra_video_asset_manifest_zh.md`](icra_video_asset_manifest_zh.md)
 - 当前标题: **Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies**
-- Video assets: C1/C2 compile/tactic raw videos 已找回；Q1-Q4 quantization controlled rerun 已补齐 12 个 mp4、trace 和 manifest，轻量预览见 [`docs/icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg`](icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg)。注意 Q1/Q2 rerun outcome 与原 Phase5 contact sheets 不完全一致。
+- Video assets: C1/C2 compile/tactic raw videos 已找回；Q1-Q4 quantization controlled rerun 已补齐 12 个 mp4、trace 和 manifest。仓库内 raw videos 位于 [`docs/icra_video_assets/raw_videos/`](icra_video_assets/raw_videos/)，轻量预览见 [`docs/icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg`](icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg)。注意 Q1/Q2 rerun outcome 与原 Phase5 contact sheets 不完全一致。
 
 论文主线已经从单纯的量化复现，扩展为 VLA/world-action policy 的推理加速闭环分析。这里的推理加速包括 fake quantization、graph compile、eager island、mixed precision 和未来的 packed kernel / CUDA kernel 路线。
 

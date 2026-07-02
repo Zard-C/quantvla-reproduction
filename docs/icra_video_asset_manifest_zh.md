@@ -12,13 +12,13 @@
 
 ## 已拉回本机的 compile/tactic 视频
 
-这些文件已经从 5090 下载到本机临时目录：
+这些文件已经从 5090 下载并复制到当前仓库：
 
 ```text
-/private/tmp/quantvla_video_candidates/raw/
+docs/icra_video_assets/raw_videos/compile_tactic/
 ```
 
-它们没有加入 git，避免仓库膨胀。轻量 contact sheet 已加入仓库：
+轻量 contact sheet 也已加入仓库：
 
 ![C1/C2 compile tactic contact sheet](icra_video_assets/c1c2_compile_tactic_contact_sheet.jpg)
 
@@ -54,12 +54,14 @@ cases: 8:7, 4:10, 0:3, 8:0
 modes: fp16, none, atm_ohb
 remote bundle: /tmp/icra_quant_video_matrix_20260702_233443_bundle
 local bundle: /private/tmp/quantvla_video_candidates/icra_quant_video_matrix_20260702_233443_bundle
+repo videos: docs/icra_video_assets/raw_videos/quant_matrix/
 ```
 
-原始 mp4 和 trace 已拉回本机临时目录，没有加入 git。仓库中保存轻量 contact sheet 和 manifest：
+原始 mp4 已复制到当前仓库；trace 仍保留在本机临时 bundle 中。仓库中保存 raw videos、轻量 contact sheet 和 manifest：
 
 ![Q1-Q4 quantization matrix contact sheet](icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg)
 
+- Raw videos: [`docs/icra_video_assets/raw_videos/quant_matrix/`](icra_video_assets/raw_videos/quant_matrix/)
 - Contact sheet: [`docs/icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg`](icra_video_assets/q1q4_quant_matrix_contact_sheet.jpg)
 - Manifest: [`docs/icra_video_assets/q1q4_quant_matrix_manifest.tsv`](icra_video_assets/q1q4_quant_matrix_manifest.tsv)
 

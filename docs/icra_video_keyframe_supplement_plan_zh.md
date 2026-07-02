@@ -6,7 +6,7 @@
 small inference perturbations -> trajectory branching -> repair/regression -> tactic selection
 ```
 
-当前仓库内不直接保存大体积 `mp4/mov/webm/gif` 成片文件；已有材料主要是 contact sheets、关键帧图、trace JSON 和 divergence 报告。2026-07-02/03 已在 5090 上补跑 Q1-Q4 的 controlled quantization video matrix，并把 raw mp4 拉回本机临时目录。因此 supplement 分两档：
+当前仓库保存了筛选后的小体积 rollout `mp4`，同时保留 contact sheets、关键帧图、trace JSON 和 divergence 报告。2026-07-02/03 已在 5090 上补跑 Q1-Q4 的 controlled quantization video matrix，并把 raw mp4 复制到 `docs/icra_video_assets/raw_videos/`。因此 supplement 分两档：
 
 1. **最小可交付版**：直接使用现有 contact sheets / trace plots，做 PDF supplement 或主文 appendix 图。
 2. **视频增强版**：使用已找回的 C1/C2 compile/tactic videos，以及 Q1-Q4 controlled rerun videos 中 outcome 与叙事一致的片段。
@@ -151,7 +151,7 @@ generate candidate tactics -> probe paired rollouts -> measure speed and regress
 | 任务 | 状态 | 备注 |
 | --- | --- | --- |
 | 确认可用 contact sheets | done | Q1-Q4 和 C1-C2 都有本地图片或 trace 图。 |
-| 确认本地视频文件 | done | C1/C2 raw videos 已拉回；Q1-Q4 controlled rerun videos 位于 `/private/tmp/quantvla_video_candidates/icra_quant_video_matrix_20260702_233443_bundle/videos/`。 |
+| 确认本地视频文件 | done | C1/C2 和 Q1-Q4 controlled rerun videos 位于 [`docs/icra_video_assets/raw_videos/`](icra_video_assets/raw_videos/)。 |
 | 生成 PDF supplement 页面 | ready | 可直接引用本文件列出的图片。 |
 | 找回或重渲染 raw videos | done for selected cases | 已补齐 12 个 Q1-Q4 rerun videos；原 Phase5 Q1/Q2 mp4 仍未找回。 |
 | 添加统一 overlay | pending | 有视频后再做；关键帧版可用 caption 替代。 |
