@@ -6,6 +6,7 @@
 
 - PDF: [`paper/main.pdf`](../paper/main.pdf)
 - LaTeX source: [`paper/main.tex`](../paper/main.tex)
+- ICRA video/keyframe supplement plan: [`docs/icra_video_keyframe_supplement_plan_zh.md`](icra_video_keyframe_supplement_plan_zh.md)
 - 当前标题: **Inference Acceleration as Closed-Loop Perturbation: Sensitivity-Guided Speedups for VLA Policies**
 
 论文主线已经从单纯的量化复现，扩展为 VLA/world-action policy 的推理加速闭环分析。这里的推理加速包括 fake quantization、graph compile、eager island、mixed precision 和未来的 packed kernel / CUDA kernel 路线。

@@ -77,7 +77,11 @@ Phase37B 在 N1.7 checkpoint 上跑了 15 个 held-out cases：
 
 ICRA 审稿人最需要看到：小扰动如何变成轨迹分叉。
 
-建议 4 组 case，每组做三列对比：FP16 / speed-only compile / duration 0-120。
+详细病例选择、素材路径、overlay 字段和制作清单见 [`docs/icra_video_keyframe_supplement_plan_zh.md`](icra_video_keyframe_supplement_plan_zh.md)。当前本地仓库没有现成 `mp4/mov/webm/gif`，所以优先做 keyframe/contact-sheet supplement；如果后续能找回或重渲染少量 rollout videos，再升级成视频版。
+
+建议主视频控制在 4-6 组 case：量化线选 repair/regression 各两例，compile/tactic 线选 speed-only regression 被 protected tactic 修复的两例。每组做三列对比：FP16 / perturbed backend / protected or compensated backend。
+
+当前最小 compile/tactic 组如下：
 
 | case | 目的 | 期望展示 |
 | --- | --- | --- |
@@ -103,7 +107,7 @@ ICRA 审稿人最需要看到：小扰动如何变成轨迹分叉。
    从 `paper/main.tex` 裁剪出匿名 8 页主文，保留理论框架、五个 claim、核心表格、Pareto 图和 Algorithm 1；长表、keyframes 和 artifact 细节放 supplement/arXiv。
 
 2. **video/keyframe supplement**
-   把代表性 repair/regression case 做成短视频或 contact sheet，突出 first divergence、EEF drift、gripper/contact 变化和最终 outcome flip。
+   按 [`docs/icra_video_keyframe_supplement_plan_zh.md`](icra_video_keyframe_supplement_plan_zh.md) 先做关键帧版：Q1-Q4 支撑 quantization-induced trajectory redistribution，C1-C2 支撑 compile/tactic-induced branching；如果找回原始视频，再只重导出这 6 组。
 
 3. **latency/profiling wording**
    主文只报告 warm server p50 speedup；冷启动 compile spike、max latency 和 prototype fallback 开销放到 limitations 或 supplement，避免被误读成最终部署吞吐。
