@@ -384,8 +384,8 @@ def fig5():
         offsets={
             "window_0_20": (10, -28),
             "window_5_15": (22, 24),
-            "routed_tactic": (10, -28),
-            "speed_only": (-82, -18),
+            "routed_tactic": (12, 4),
+            "speed_only": (12, -10),
         },
     )
 
