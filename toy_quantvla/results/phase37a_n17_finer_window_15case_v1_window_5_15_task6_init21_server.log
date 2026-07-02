@@ -1,0 +1,57 @@
+/root/autodl-tmp/Isaac-GR00T/gr00t/model/modules/dit.py:255: FutureWarning: Accessing config attribute `compute_dtype` directly via 'AlternateVLDiT' object attribute is deprecated. Please access 'compute_dtype' over 'AlternateVLDiT's config object instead, e.g. 'unet.config.compute_dtype'.
+  embedding_dim=self.inner_dim, compute_dtype=self.compute_dtype
+/root/autodl-tmp/Isaac-GR00T/gr00t/model/modules/dit.py:286: FutureWarning: Accessing config attribute `output_dim` directly via 'AlternateVLDiT' object attribute is deprecated. Please access 'output_dim' over 'AlternateVLDiT's config object instead, e.g. 'unet.config.output_dim'.
+  self.proj_out_2 = nn.Linear(self.inner_dim, self.output_dim)
+Total number of DiT parameters:  1091722240
+Total number of SelfAttentionTransformer parameters:  201433088
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.39s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.87s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:03<00:00,  1.95s/it]
+{
+  "boundary": "GR00T N1.7 official policy server with timing and tactic switches",
+  "isaac_root": "/root/autodl-tmp/Isaac-GR00T",
+  "model_path": "/root/autodl-tmp/models/GR00T-N1.7-LIBERO/libero_10",
+  "embodiment_tag": "LIBERO_PANDA",
+  "torch_version": "2.8.0+cu128",
+  "torch_cuda": "12.8",
+  "cuda_available": true,
+  "device": "cuda",
+  "strict": true,
+  "use_sim_policy_wrapper": true,
+  "model_load_seconds": 15.128497123718262,
+  "model_load_memory": {
+    "allocated_mib": 6014,
+    "reserved_mib": 6096,
+    "max_allocated_mib": 6014,
+    "max_reserved_mib": 6096
+  },
+  "action_head_num_blocks": 32,
+  "action_head_num_inference_timesteps": 4,
+  "action_horizon": 40,
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "compiled_modules": [
+      "model.action_head.model"
+    ],
+    "eager_island_modules": [],
+    "step_window_fallback": {
+      "enabled": true,
+      "step_start": 5,
+      "step_end": 15,
+      "request_index": 0,
+      "compiled_requests": 0,
+      "eager_requests": 0,
+      "eager_fraction": 0.0,
+      "last_mode": null
+    }
+  },
+  "prepare_seconds": 16.447227716445923
+}
+Starting timed N1.7 server on port 6644
+
+✓ Server ready — listening on 0.0.0.0:6644
+
+Server is ready and listening on tcp://0.0.0.0:6644

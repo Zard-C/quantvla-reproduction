@@ -1,0 +1,31 @@
+{
+  "label": "n17_fp16",
+  "writes": 28,
+  "get_action_seconds": {
+    "count": 26,
+    "mean": 0.3595539861573623,
+    "min": 0.053988147526979446,
+    "max": 7.20960221812129,
+    "p50": 0.08119381964206696,
+    "p90": 0.12876011990010738,
+    "p99": 5.448706686496735
+  },
+  "extra": {
+    "server_memory": {
+      "allocated_mib": 6023,
+      "reserved_mib": 6218,
+      "max_allocated_mib": 6093,
+      "max_reserved_mib": 6218
+    },
+    "compile_step_window_fallback": {
+      "enabled": true,
+      "step_start": 5,
+      "step_end": 15,
+      "request_index": 26,
+      "compiled_requests": 16,
+      "eager_requests": 10,
+      "eager_fraction": 0.38461538461538464,
+      "last_mode": "compiled"
+    }
+  }
+}

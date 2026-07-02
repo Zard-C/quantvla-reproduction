@@ -26,6 +26,7 @@ OUT_JSON = RESULTS / f"{TAG_PREFIX}_summary.json"
 _out_md = Path(os.environ.get("OUT_MD", "docs/phase36b_n17_tactic_probe_report_zh.md"))
 OUT_MD = _out_md if _out_md.is_absolute() else ROOT / _out_md
 REPORT_TITLE = os.environ.get("REPORT_TITLE", "Phase 36B: N1.7 Tactic Probe")
+BASELINE_P50_MS = os.environ.get("BASELINE_P50_MS")
 
 
 TACTIC_LABELS = {
@@ -211,9 +212,12 @@ def build_summary() -> dict[str, Any]:
     baseline_tactic = "fp16" if "fp16" in rows_by_tactic else TACTICS[0]
     baseline_rows = rows_by_tactic.get(baseline_tactic, [])
     baseline_summary = summarize_tactic(baseline_rows, None)
-    baseline_p50 = baseline_summary.get("avg_server_p50_ms")
+    baseline_p50 = float(BASELINE_P50_MS) if BASELINE_P50_MS else baseline_summary.get("avg_server_p50_ms")
     tactic_summaries = [
-        summarize_tactic(rows_by_tactic[tactic], baseline_p50 if tactic != baseline_tactic else None)
+        summarize_tactic(
+            rows_by_tactic[tactic],
+            baseline_p50 if BASELINE_P50_MS or tactic != baseline_tactic else None,
+        )
         for tactic in TACTICS
     ]
 
