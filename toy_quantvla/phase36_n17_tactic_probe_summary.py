@@ -39,6 +39,15 @@ TACTIC_LABELS = {
 }
 
 
+def tactic_label(tactic: str) -> str:
+    if tactic in TACTIC_LABELS:
+        return TACTIC_LABELS[tactic]
+    match = re.fullmatch(r"window_(\d+)_(\d+)", tactic)
+    if match:
+        return f"Request window {match.group(1)}-{match.group(2)}"
+    return tactic
+
+
 def parse_cases(value: str) -> list[tuple[int, int]]:
     cases: list[tuple[int, int]] = []
     for item in value.split(","):
@@ -156,7 +165,7 @@ def summarize_tactic(rows: list[dict[str, Any]], baseline_p50: float | None) -> 
     speedup = round(baseline_p50 / avg_p50, 2) if baseline_p50 and avg_p50 else None
     return {
         "tactic": rows[0]["tactic"] if rows else "",
-        "label": TACTIC_LABELS.get(rows[0]["tactic"], rows[0]["tactic"]) if rows else "",
+        "label": tactic_label(rows[0]["tactic"]) if rows else "",
         "complete": len(complete),
         "expected": len(rows),
         "successes": successes,
@@ -267,7 +276,7 @@ def write_markdown(summary: dict[str, Any]) -> None:
     lines.append("## Case 明细")
     lines.append("")
     for tactic in summary["tactics"]:
-        lines.append(f"### {TACTIC_LABELS.get(tactic, tactic)}")
+        lines.append(f"### {tactic_label(tactic)}")
         lines.append("")
         lines.append("| Case | Success | Episode steps | Requests | p50 ms | mean ms | max ms |")
         lines.append("| --- | ---: | ---: | ---: | ---: | ---: | ---: |")

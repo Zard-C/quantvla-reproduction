@@ -36,37 +36,18 @@ configure_tactic() {
   TORCH_COMPILE_TARGET="none"
   TORCH_COMPILE_FALLBACK_STEP_START=""
   TORCH_COMPILE_FALLBACK_STEP_END=""
+  if [[ "$1" =~ ^window_([0-9]+)_([0-9]+)$ ]]; then
+    TORCH_COMPILE_TARGET="action_head_model"
+    TORCH_COMPILE_FALLBACK_STEP_START="${BASH_REMATCH[1]}"
+    TORCH_COMPILE_FALLBACK_STEP_END="${BASH_REMATCH[2]}"
+    return 0
+  fi
   case "$1" in
     fp16)
       TORCH_COMPILE_TARGET="none"
       ;;
     speed_only)
       TORCH_COMPILE_TARGET="action_head_model"
-      ;;
-    window_0_10)
-      TORCH_COMPILE_TARGET="action_head_model"
-      TORCH_COMPILE_FALLBACK_STEP_START="0"
-      TORCH_COMPILE_FALLBACK_STEP_END="10"
-      ;;
-    window_0_20)
-      TORCH_COMPILE_TARGET="action_head_model"
-      TORCH_COMPILE_FALLBACK_STEP_START="0"
-      TORCH_COMPILE_FALLBACK_STEP_END="20"
-      ;;
-    window_0_30)
-      TORCH_COMPILE_TARGET="action_head_model"
-      TORCH_COMPILE_FALLBACK_STEP_START="0"
-      TORCH_COMPILE_FALLBACK_STEP_END="30"
-      ;;
-    window_10_30)
-      TORCH_COMPILE_TARGET="action_head_model"
-      TORCH_COMPILE_FALLBACK_STEP_START="10"
-      TORCH_COMPILE_FALLBACK_STEP_END="30"
-      ;;
-    window_20_50)
-      TORCH_COMPILE_TARGET="action_head_model"
-      TORCH_COMPILE_FALLBACK_STEP_START="20"
-      TORCH_COMPILE_FALLBACK_STEP_END="50"
       ;;
     *)
       echo "Unknown tactic: $1" >&2
