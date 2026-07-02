@@ -25,5 +25,6 @@ zsh -ic 'proxy_on; make'
 
 - Anonymous conference draft, no author identity or artifact links in the main text.
 - Main line: VLA inference acceleration is a closed-loop policy perturbation problem.
-- Core evidence: W4A8 redistribution, action/time/layer sensitivity probes, and the 33-case `0--120` duration-proxy result.
+- Core evidence: W4A8 redistribution, action/time/layer sensitivity probes, the 33-case `0--120` duration-proxy discovery, N1.5 multi-fold tactic validation, and the small N1.7 held-out routing check.
+- Current method object: Closed-Loop Sensitivity-Guided Tactic Search, including behavior-first, speed-constrained, and routed-tactic deployment choices.
 - Long tables, keyframe contact sheets, code links, and artifact notes should stay in the arXiv report or supplementary material unless space allows.

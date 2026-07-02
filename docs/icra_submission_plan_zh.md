@@ -36,15 +36,42 @@ candidate acceleration policies -> cheap sensitivity proxy -> small matched roll
 
 ## 当前主结果
 
+### N1.5 discovery probe
+
 | mode | success | server p50 | speedup | 备注 |
 | --- | ---: | ---: | ---: | --- |
-| FP16 baseline | 19/33 | 156.22 ms | 1.00x | 33-case matched set |
+| FP16 baseline | 19/33 | 156.22 ms | 1.00x | 33-case matched probe |
 | speed-only compile | 16/33 | 70.20 ms | 2.23x | 快，但闭环 regress |
 | blocks0-3 eager | 18/33 | 67.58 ms | 2.31x | layer proxy 有效但不满血 |
-| duration 0-120 | 19/33 | 69.66 ms | 2.24x | 当前最佳 speed/behavior trade-off |
+| duration 0-120 | 19/33 | 69.66 ms | 2.24x | probe 上最佳 speed/behavior trade-off |
 | duration 0-250 | 18/33 | 88.75 ms | 1.76x | 保护太宽，损失速度 |
 
-`0-120` 相对 speed-only 修复 7 个 case，regress 4 个 case，净 `+3`；相对 FP16 是 2 repair / 2 regress，aggregate 持平。这正好支持“加速是在附近解空间里探索，而不是单点模仿 FP16”。
+`0-120` 相对 speed-only 修复 7 个 case，regress 4 个 case，净 `+3`；相对 FP16 是 2 repair / 2 regress，aggregate 持平。这支持“加速是在附近解空间里探索，而不是单点模仿 FP16”。
+
+### N1.5 multi-fold validation
+
+Phase34 把两个 30-case held-out folds 合并比较：
+
+| tactic | pooled success | worst success | mean speedup | worst speedup | total regress |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| speed_only | 45/60 | 0.667 | 2.01x | 1.75x | 7 |
+| window_0_120 | 47/60 | 0.733 | 1.84x | 1.71x | 3 |
+| combo_blocks0_3_window_0_120 | 47/60 | 0.733 | 1.41x | 1.07x | 1 |
+
+结论不是 `0-120` universal，而是：不同 objective 会选不同 Pareto 点。Behavior-first 偏向更少 regression 的 combo；speed-constrained 偏向 `window_0_120`。
+
+### N1.7 held-out transfer check
+
+Phase37B 在 N1.7 checkpoint 上跑了 15 个 held-out cases：
+
+| tactic | success | p50 | speedup | paired vs FP16 |
+| --- | ---: | ---: | ---: | --- |
+| FP16 baseline | 13/15 | 110.40 ms | 1.00x | - |
+| speed_only | 11/15 | 74.79 ms | 1.48x | 1 repair / 3 regress |
+| window_0_20 | 14/15 | 100.98 ms | 1.09x | 2 repair / 1 regress |
+| routed tactic | 13/15 | 79.07 ms | 1.40x | 2 repair / 2 regress |
+
+这说明 tactic-search 流程可以迁移到新 checkpoint，但具体 tactic 仍然要重新估计。Task-conditioned routing 可以作为 high-speed Pareto 点，但不是 safe default。
 
 ## 视频附件脚本
 
@@ -68,18 +95,18 @@ ICRA 审稿人最需要看到：小扰动如何变成轨迹分叉。
 - first EEF > 1 cm / > 5 cm step
 - gripper mismatch step，如果有
 
-## 还值得补的最小实验
+## 投稿前最小工作包
 
 优先级从高到低：
 
-1. **held-out sanity set**
-   再选 20-30 个未用于 Phase29 选择的 task/init，只跑 FP16、speed-only、0-120、blocks0-3。目标不是刷大分，而是回答“0-120 是否只是 33-case 过拟合”。
+1. **ICRA short version**
+   从 `paper/main.tex` 裁剪出匿名 8 页主文，保留理论框架、五个 claim、核心表格、Pareto 图和 Algorithm 1；长表、keyframes 和 artifact 细节放 supplement/arXiv。
 
-2. **memory/profiling table**
-   对 FP16、speed-only、0-120 统计 warm latency、prepare/compile cost、峰值显存、server request 数。ICRA 论文里要说清 cold compile 不是部署 steady-state。
+2. **video/keyframe supplement**
+   把代表性 repair/regression case 做成短视频或 contact sheet，突出 first divergence、EEF drift、gripper/contact 变化和最终 outcome flip。
 
-3. **video/keyframe supplement**
-   把上述 4 个 case 做成短视频或 contact sheet，补到 supplementary。
+3. **latency/profiling wording**
+   主文只报告 warm server p50 speedup；冷启动 compile spike、max latency 和 prototype fallback 开销放到 limitations 或 supplement，避免被误读成最终部署吞吐。
 
 4. **anonymous artifact plan**
    ICRA 主稿不要放 GitHub/arXiv 链接；supplement 可以匿名化脚本结构。arXiv 长版保留完整 artifact 链接。
@@ -90,30 +117,32 @@ ICRA 审稿人最需要看到：小扰动如何变成轨迹分叉。
 | --- | --- |
 | 单模型单仿真 | 明确本文贡献是 evaluation/design guide；GR00T/LIBERO 是 case study。 |
 | fake quantization 不是真实 kernel | 主线扩展为 inference acceleration；量化是行为扰动证据，compile 是速度证据。 |
-| 0-120 是人工 proxy | 承认它是 sensitivity-guided proxy，不是自动最优；补 held-out sanity。 |
+| 0-120 是人工 proxy | 承认它是 sensitivity-guided candidate，不是 universal tactic；用 multi-fold 和 N1.7 结果证明最终对象是 tactic search。 |
 | aggregate gap 小 | 强调 paired repair/regression 和 trace divergence，而不是宣称 policy dominance。 |
 | compile/eager fallback 不是真实部署 | 把它定位成 prototype acceleration boundary；后续 packed kernel 是工程扩展。 |
+| routed tactic 像过拟合 | 明确 routing 是 high-speed Pareto point，本身需要 held-out validation，不作为 safe default。 |
 
 ## 下一步执行
 
-1. 等 Phase30 held-out sanity set 跑完，判断 `0-120` 是否仍然不低于 speed-only。
-2. 生成 video case list 和素材路径。
-3. 补 memory/profiling table。
-4. 根据 Phase30 结果更新 `paper_icra/main.tex`。
-5. arXiv 长版补 artifact/reproducibility 段落。
+1. 从 `paper/main.tex` 建立 `paper_icra/` 匿名短版骨架。
+2. 选择 4-6 个最能说明 repair/regression、duration sensitivity 和 routing trade-off 的视频/关键帧 case。
+3. 把 arXiv 长版继续作为完整技术报告维护，ICRA 主稿只保留最强证据链。
+4. 准备 rebuttal 风险清单：单模型、fake quant、prototype compile、小规模 N1.7、task-level routing。
+5. 最后做格式审查：表格不压 references、公式引用正常、图中文字对齐、匿名信息清理。
 
 ## 最后冲刺目标
 
-如果 Phase30 验证通过，最后一档冲刺不是继续手工找更多窗口，而是把经验 guide 升级为一个小算法：
+最后一档冲刺不是继续手工找更多窗口，而是把经验 guide 固化成一个可复用算法：
 
-> Sensitivity-Guided Tactic Search 自动寻找类似 `0-120` 的 tactic。
+> Closed-Loop Sensitivity-Guided Tactic Search 自动寻找并验证 acceleration tactic。
 
 这个算法的目标不是证明存在固定 universal tactic，而是提出一个可迁移的 tactic-search procedure。输入新模型、新权重或新任务分布后，它用少量 cheap proxy 和少量 matched rollouts 自动选择候选 implementation tactic。
 
-最小可交付形态：
+当前可交付形态已经具备：
 
-1. 在已有 Phase28/29 数据上做 retrospective search，展示算法能从候选集合中选出 `0-120` 或同级别候选。
-2. 用 Phase30 held-out sanity set 检查该选择是否能保持 speed/behavior trade-off。
-3. 在 ICRA 版中把它作为 algorithmic guide，而不是重写成完整系统论文。
+1. Phase29 展示 probe discovery。
+2. Phase34 展示 multi-fold objective 会改变 tactic ranking。
+3. Phase37B 展示新 checkpoint 上同一流程可比较 fixed tactic 与 task-conditioned routing。
+4. `paper/main.pdf` 已把它写成 Algorithm 1。
 
 详细计划见 [`docs/phase31_auto_tactic_search_plan_zh.md`](phase31_auto_tactic_search_plan_zh.md)。
