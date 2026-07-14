@@ -1,8 +1,10 @@
 __pycache__/
 *.py[cod]
+tmp/
 trace_cases/
 paper/*.aux
 paper/*.log
 paper/*.out
+paper/*.blg
 paper/dist/arxiv_v1/
 /when_small_action_errors_matter_arxiv_v1.tar.gz

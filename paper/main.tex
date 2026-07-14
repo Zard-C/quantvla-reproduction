@@ -4,7 +4,6 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{pdflscape}
 \usepackage{float}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
@@ -14,19 +13,18 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
-\graphicspath{{figures_pdf/}{figures/}{figures_keyframes/}}
+\graphicspath{{figures_pdf/}{figures/}}
 \setlist[itemize]{leftmargin=1.5em}
 \setlist[enumerate]{leftmargin=1.5em}
 
 \title{Inference Acceleration as Closed-Loop Perturbation:\\
-Sensitivity-Guided Speedups for VLA Policies}
+Closed-Loop Sensitivity-Guided Tactic Search for VLA Policies}
 \author{patrick.zhang\\\href{mailto:patrick.zhang5233@gmail.com}{\texttt{patrick.zhang5233@gmail.com}}}
 \date{}
 
 \newcommand{\fp}{\mathrm{fp16}}
-\newcommand{\qpol}{\mathrm{q}}
 \newcommand{\dpi}{d_{\pi_\theta}}
-\newcommand{\dq}{d_{\pi_q}}
+\newcommand{\da}{d_{\pi_\varphi}}
 \newcounter{clsgalgorithm}
 \renewcommand{\theclsgalgorithm}{\arabic{clsgalgorithm}}
 
@@ -34,11 +32,15 @@ Sensitivity-Guided Speedups for VLA Policies}
 \maketitle
 
 \begin{abstract}
-Inference acceleration for vision-language-action (VLA) policies is often treated as a systems problem: quantize weights, compile graphs, fuse kernels, or replay static execution paths, then report drift, success, latency, and memory. This framing is incomplete for robot policies. A VLA model is a closed-loop controller, so an implementation perturbation changes not only the current action but also the future state distribution induced by interaction with the environment. Small numerical differences can therefore be filtered, amplified, repaired, or inverted by feedback dynamics, contact, receding-horizon replanning, and thresholded task margins.
+Inference acceleration for vision-language-action (VLA) policies is usually framed as a local systems problem: quantize weights, compile graphs, fuse kernels, or replay static execution paths, then check numerical drift and serving latency. This framing misses the central difficulty for robot policies. The accelerated model is not only an approximator of a fixed function; it is a controller inside a feedback loop. A small implementation perturbation can change contact timing, future observations, receding-horizon replanning, and ultimately whether a rollout crosses a thresholded success margin.
 
-We formulate post-training VLA acceleration as a closed-loop policy perturbation problem and use this lens to derive five claims: acceleration error is filtered by closed-loop sensitivity; rollout flips are margin-crossing events; open-loop drift is insufficient without state-distribution control; sensitivity is anisotropic across action channels, rollout phases, and model boundaries; and acceleration should be viewed as exploration of a constrained policy-implementation design space rather than imitation of a single FP16 point. We test these claims primarily on a GR00T N1.5 policy in LIBERO-10 through selective W4A8 fake quantization, \texttt{torch.compile} action-head acceleration, eager-island protection, controlled action perturbations, first-divergence trace analysis, and matched rollout repair/regression accounting, then run an additional GR00T N1.7 held-out transfer check for tactic selection.
+We formulate post-training VLA acceleration as a closed-loop policy perturbation problem and propose Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS), a practical procedure for selecting acceleration tactics under rollout budget. The method first uses cheap static and open-loop filters to prune candidate tactics, then evaluates the surviving candidates on matched fragile rollouts, estimates closed-loop risk from paired repairs/regressions and first-divergence diagnostics, and finally selects a behavior-first, speed-constrained, or routed deployment point on a held-out speed--risk frontier.
 
-The resulting picture is not monotonic. Selective W4A8 fake quantization remains in the FP16 behavioral range over 150 matched episodes, but compensation methods repair some rollouts while regressing others. Speed-only compilation of the action head gives a 2.23$\times$ median server-latency speedup on a 33-case probe, but reduces success from 19/33 to 16/33. Sensitivity-guided protection recovers part of this loss: an early-block eager island reaches 18/33 at 2.31$\times$ speedup, and a fine duration probe finds that policy steps 0--120 restore 19/33 at 69.66 ms versus 156.22 ms for FP16. However, held-out validation shows that no single local winner is universal. Across two N1.5 30-case folds, speed-only execution is fastest but has 7 paired regressions; the 0--120 duration tactic and a combined early-block plus 0--120 tactic both reach 47/60 pooled success and 0.733 worst-fold success, with different speed--risk trade-offs. On a small N1.7 held-out check, speed-only reaches 1.48$\times$ speedup but regresses three FP16 successes, a conservative early window reaches 14/15 successes at 1.09$\times$, and task-conditioned tactic routing reaches 1.40$\times$ while still requiring held-out validation. We do not claim final packed-kernel deployment efficiency or universal superiority of any single backend. The contribution is a modeling and experimental guide for VLA acceleration: identify closed-loop-sensitive dimensions, phases, modules, and tasks, then select tactics by paired repair/regression and latency rather than by a single probe.
+This framework yields five claims that organize the study: implementation error is filtered by closed-loop sensitivity; rollout flips are margin-crossing events; fixed-distribution validation is insufficient without state-distribution control; sensitivity is anisotropic across action channels, rollout phases, and model boundaries; and acceleration is best understood as constrained exploration of nearby policy implementations rather than imitation of one FP16 point. We test these claims on GR00T policies in LIBERO-10 using \texttt{torch.compile} action-head acceleration, eager-island and duration fallback tactics, controlled action perturbations, first-divergence traces, matched repair/regression accounting, and held-out tactic routing.
+
+The empirical picture is non-monotonic. Speed-only action-head compilation gives a 2.23$\times$ median server-latency speedup on a 33-case GR00T N1.5 probe, yet reduces success from 19/33 to 16/33. CLSG-TS recovers behavior without simply reverting to FP16: an early-block eager island reaches 18/33 at 2.31$\times$ speedup, and a fine duration probe finds that protecting policy steps 0--120 restores 19/33 at 69.66 ms versus 156.22 ms for FP16. Held-out validation then changes the conclusion from ``choose the local winner'' to ``choose a point on a speed--risk frontier.'' Across two N1.5 30-case folds, speed-only execution is fastest but has 7 paired regressions; the 0--120 duration tactic and a combined early-block plus 0--120 tactic both reach 47/60 pooled success with different speed--risk trade-offs. A GR00T N1.7 held-out check shows the same structure and motivates task-conditioned tactic routing as a high-speed but still validation-dependent option.
+
+We do not claim universal superiority of any single backend or tactic. The contribution is a method for VLA acceleration under closed-loop risk: estimate which perturbations are sensitive, then select compilation, fallback, kernel, quantization, or routing tactics by matched rollout repair/regression and latency rather than by one-step drift or a single probe winner.
 \end{abstract}
 
 \section{Introduction}
@@ -52,7 +54,7 @@ This paper studies the following question:
 How should VLA inference acceleration be designed and evaluated when the accelerated implementation is part of a closed-loop control system?
 \end{quote}
 
-Our answer is that post-training acceleration should be treated as a structured policy perturbation. Quantization, graph compilation, eager islands, and kernel replacement are different implementation maps from a reference policy to a constrained, faster policy. The relevant object is not only the one-step action drift on fixed observations, but also how the implementation redistributes success and failure over matched closed-loop rollouts. This changes the goal from finding a single numerically closest implementation to exploring a speed--behavior design space.
+Our answer is that post-training acceleration should be treated as a structured policy perturbation. Quantization, graph compilation, eager islands, and kernel replacement are different implementation maps from a reference policy to a constrained, faster policy. The relevant object is not only the one-step action drift on fixed observations, but also how the implementation redistributes success and failure over matched closed-loop rollouts. This changes the goal from finding a single numerically closest implementation to mapping a speed--behavior design space.
 
 We organize the paper around five claims:
 \begin{enumerate}
@@ -63,26 +65,26 @@ We organize the paper around five claims:
     \item \textbf{Solution-space exploration:} acceleration can create repairs and regressions, so the useful target is not blind FP16 imitation but sensitivity-guided search for faster implementations with better paired repair/regression trade-offs.
 \end{enumerate}
 
-Our contributions are:
+The paper follows a single arc. We first derive why local implementation error must be weighted by closed-loop dynamics and task margins. We then identify where perturbations matter most across action dimensions, rollout phases, and execution boundaries. Finally, we turn those sensitivity maps into CLSG-TS and validate the resulting speed--risk frontier on held-out folds and a newer checkpoint. Our contributions are:
 \begin{enumerate}
     \item We formulate VLA inference acceleration as a closed-loop policy perturbation problem and derive local propagation, margin-crossing, and distribution-shift expressions that explain why local drift is not sufficient.
-    \item We turn these expressions into five experimentally testable claims and a practical guide: estimate closed-loop-sensitive dimensions, durations, and modules, then protect the smallest regions that improve paired rollout behavior while preserving speed.
-    \item We provide a GR00T/LIBERO behavior study showing that selective W4A8 fake quantization remains in the FP16 behavioral range while substantially redistributing which task-initialization pairs succeed.
-    \item We show that speed-only action-head compilation can be fast but behaviorally unsafe, and that sensitivity-guided eager islands can recover part of the loss.
-    \item We show that the narrow duration proxy, policy steps 0--120, is a strong but not universal local tactic: multi-fold validation and an N1.7 held-out transfer check change the conclusion from selecting one fixed winner to selecting tactics or tactic routers by worst-fold success, paired regressions, and latency.
+    \item We propose CLSG-TS, a rollout-budget-aware tactic-search workflow that combines cheap filters, fragile matched probes, first-divergence diagnostics, paired repair/regression accounting, and held-out speed--risk selection.
+    \item We show that action channels, rollout phases, and action-head execution boundaries have strongly anisotropic closed-loop sensitivity, so equal-size implementation perturbations can have different behavioral effects.
+    \item We show that speed-only action-head compilation can be fast but behaviorally unsafe, and that sensitivity-guided eager islands and duration fallbacks can recover behavior while preserving much of the latency gain.
+    \item We show that a strong local tactic, policy steps 0--120, is not universal: multi-fold validation and an N1.7 held-out check change the conclusion from selecting one fixed winner to selecting behavior-first, speed-constrained, or routed tactics by worst-fold success, paired regressions, and latency.
 \end{enumerate}
 
 \paragraph{From point solution to design-space map.}
-The contribution is not a single deployment backend. We use quantization and compilation probes to expose the geometry of the problem: which perturbations are absorbed, which are amplified, which rollouts are repaired or regressed, and which dimensions, phases, or modules should be protected. Even readers uninterested in our exact GR00T checkpoint can use the discovered structure as a guide for designing VLA acceleration pipelines.
+The contribution is not a single deployment backend. We use compilation, fallback, and routing probes to expose the geometry of the problem: which perturbations are absorbed, which are amplified, which rollouts are repaired or regressed, and which dimensions, phases, or modules should be protected. The intended output is therefore a map of the acceleration design space and a tactic-selection procedure, not only a point estimate for one checkpoint.
 
 \paragraph{Model-class interpretation.}
-Our findings are not tied to a specific checkpoint-level failure pattern. They suggest a model-class behavior: for DiT-style VLA or world-action models, small acceleration-induced implementation perturbations are filtered through closed-loop sensitivity, task margins, and trajectory basins. Therefore, larger or newer GR00T-style variants, as well as related action-diffusion policies, should be evaluated by re-estimating their sensitivity maps rather than assuming uniform acceleration tolerance across dimensions, time, or layers.
+Our findings are not tied to a specific checkpoint-level failure pattern. They suggest a model-class behavior: for DiT-style VLA or world-action models, small acceleration-induced implementation perturbations are filtered through closed-loop sensitivity, task margins, and trajectory basins. Larger or newer GR00T-style variants, as well as related action-diffusion policies, should therefore be evaluated by re-estimating their sensitivity maps rather than assuming uniform acceleration tolerance across dimensions, time, or layers.
 
 \paragraph{Scope of claims.}
-This paper should be read as a behavior-level modeling and diagnostic study, not as a new quantization algorithm, compiler, or production deployment benchmark. The quantization track uses fake quantization, and the compilation track uses prototype action-head execution boundaries. We do not claim final low-precision memory, energy, or packed-kernel latency. We also do not treat small aggregate success-rate gaps as policy dominance. The main claim is methodological: VLA acceleration should be evaluated and designed as sensitivity-weighted closed-loop perturbation, using matched rollouts and paired repair/regression analysis rather than only average open-loop action error or raw serving latency.
+This paper should be read as a behavior-level modeling and tactic-selection study, not as a new compiler or production deployment benchmark. The acceleration track uses prototype action-head execution boundaries and fallback windows. We do not claim final memory, energy, or production backend performance. We also do not treat small aggregate success-rate gaps as policy dominance. The main claim is methodological: VLA acceleration should be evaluated and designed as sensitivity-weighted closed-loop perturbation, using matched rollouts and paired repair/regression analysis rather than only average open-loop action error or raw serving latency.
 
 \paragraph{Experimental roadmap.}
-The experiments are intentionally staged. First, we revisit QuantVLA-style selective W4A8 fake quantization to show that compensation can reduce mean drift while still redistributing closed-loop outcomes. Second, we map sensitivity with controlled action perturbations and layer/boundary probes. Third, we use those maps to search mixed eager/compiled acceleration policies. A narrow early eager window, steps 0--120, emerges as a strong local proxy on the 33-case probe, but later held-out folds and the N1.7 transfer check show why the final object should be a robust tactic-selection protocol rather than a single fixed window.
+The experiments are intentionally staged so that each stage answers the question raised by the previous one. First, controlled action perturbations and layer/boundary probes identify sensitive directions, rollout windows, and execution boundaries. Second, mixed eager/compiled acceleration policies test whether those maps can guide a faster implementation. Third, held-out folds and the N1.7 check show why the final object should be a robust tactic-selection protocol rather than a single fixed window.
 
 \section{Related Work}
 
@@ -92,14 +94,11 @@ Recent robot policies increasingly combine large-scale visual, language, and act
 \paragraph{Inference acceleration for closed-loop policies.}
 Deployment acceleration can come from low-precision arithmetic, graph compilation, operator fusion, CUDA graph replay, caching, or custom kernels. In open-loop perception or language tasks, small numerical differences are usually judged by output agreement and throughput. In VLA policies, the accelerated implementation chooses actions that alter future observations. This makes acceleration a behavioral question as well as a systems question: a faster implementation is useful only if its closed-loop policy perturbation stays within acceptable task margins.
 
-\paragraph{Post-training quantization.}
-PTQ methods for large transformers often target memory and latency while preserving model quality. LLM.int8() handles transformer outliers through mixed-precision decomposition~\citep{llmint8}; GPTQ uses approximate second-order information for one-shot low-bit weight quantization~\citep{gptq}; SmoothQuant migrates quantization difficulty from activations to weights through an equivalent smoothing transform~\citep{smoothquant}; and AWQ uses activation statistics to protect salient weight channels~\citep{awq}. These methods demonstrate that transformer quantization can be accurate when calibration accounts for activation structure. However, most evaluations are open-loop language, vision-language, or recognition tasks. In VLA policies, the quantized model selects actions that alter future inputs, so the calibration and evaluation target must include closed-loop effects.
-
-\paragraph{Quantization for VLA models.}
-QuantVLA is, to our knowledge, the most direct prior work on PTQ for VLA systems. It proposes a scale-calibrated PTQ framework with selective quantization, attention temperature matching, and output head balancing, and reports memory and latency gains together with LIBERO success-rate improvements~\citep{quantvla}. Our study is not a deployment-efficiency reproduction of those claims. Instead, we use a behavior-level fake-quantization reproduction to analyze why VLA quantization can improve some rollouts while regressing others, and why paired closed-loop evaluation is necessary even when average offline drift improves.
+\paragraph{Post-training acceleration and quantization.}
+Post-training acceleration includes graph compilation, operator fusion, kernel replacement, mixed precision, and low-bit quantization. PTQ methods for large transformers often target memory and latency while preserving model quality. LLM.int8() handles transformer outliers through mixed-precision decomposition~\citep{llmint8}; GPTQ uses approximate second-order information for one-shot low-bit weight quantization~\citep{gptq}; SmoothQuant migrates quantization difficulty from activations to weights through an equivalent smoothing transform~\citep{smoothquant}; and AWQ uses activation statistics to protect salient weight channels~\citep{awq}. QuantVLA is the most direct prior work on PTQ for VLA systems, proposing scale-calibrated selective quantization, attention temperature matching, and output head balancing~\citep{quantvla}. These systems motivate our setting, but our contribution is not another quantizer. We study the closed-loop tactic-selection problem that arises for any post-training implementation change, including compilation, fallback routing, custom kernels, and future low-precision backends.
 
 \paragraph{Sequential prediction and distribution shift.}
-The gap between offline error and closed-loop behavior is a classic issue in imitation learning and sequential prediction. DAgger formalizes the problem that future observations depend on previous actions, so policies trained or evaluated only under a fixed data distribution can suffer from compounding errors~\citep{dagger}. VLA acceleration creates a related but distinct problem: the policy is already trained, but a post-training implementation change perturbs its action outputs and therefore perturbs the state distribution it induces. This makes paired rollout analysis a natural complement to offline teacher-student action drift.
+The gap between offline error and closed-loop behavior is a classic issue in imitation learning and sequential prediction. DAgger formalizes the problem that future observations depend on previous actions, so policies trained or evaluated only under a fixed data distribution can suffer from compounding errors~\citep{dagger}. VLA acceleration creates a related but distinct problem: the policy is already trained, but a post-training implementation change perturbs its action outputs and therefore perturbs the state distribution it induces. This makes paired rollout analysis a natural complement to fixed-distribution action-drift checks.
 
 \paragraph{Feedback control perspective.}
 Classical feedback control emphasizes that closed-loop behavior is determined by the interaction between controller perturbations, plant dynamics, and feedback gain~\citep{astrom2008feedback}. We use this lens to interpret inference acceleration not as a static approximation problem, but as a bounded policy perturbation whose effect depends on local closed-loop sensitivity and task margins.
@@ -108,15 +107,15 @@ Classical feedback control emphasizes that closed-loop behavior is determined by
 
 Let $\pi_\theta(a \mid s,l)$ denote a reference FP16 VLA policy conditioned on state observation $s$ and language instruction $l$. A post-training acceleration transform constructs an implemented policy
 \begin{equation}
-    \varphi = \mathcal{A}(\theta; C, S), \qquad \pi_q = \pi_{\varphi},
+    \varphi = \mathcal{A}(\theta; C, S), \qquad \pi_\varphi = \pi_{\varphi},
 \end{equation}
-where $\mathcal{A}$ may represent quantization, graph compilation, mixed-precision partitioning, kernel replacement, or graph replay; $C$ denotes calibration data when applicable; and $S$ denotes systems choices such as compilation boundaries or shape buckets. We keep the shorthand $\pi_q$ for the perturbed implementation because the first experimental track is quantization, but the derivation applies to any acceleration path that induces a small action perturbation. Even without gradient updates, this is not a neutral storage transform: it changes the implemented function.
+where $\mathcal{A}$ may represent graph compilation, mixed-precision partitioning, kernel replacement, graph replay, fallback routing, or quantization; $C$ denotes calibration or profiling data when applicable; and $S$ denotes systems choices such as compilation boundaries, fallback windows, tactic selectors, or shape buckets. Even without gradient updates, this is not a neutral storage transform: it changes the implemented function.
 
 Offline action drift measures a local difference such as
 \begin{equation}
-    e(s) = \left\| \pi_q(s,l) - \pi_\theta(s,l) \right\|
+    e(s) = \left\| \pi_\varphi(s,l) - \pi_\theta(s,l) \right\|
 \end{equation}
-on observations sampled from some dataset or teacher rollout distribution. Closed-loop performance depends on the state distributions induced by the two policies, $\dpi$ and $\dq$.
+on observations sampled from some dataset or reference rollout distribution. Closed-loop performance depends on the state distributions induced by the two policies, $\dpi$ and $\da$.
 
 For a local transition model,
 \begin{equation}
@@ -126,9 +125,9 @@ a first-order error expansion gives
 \begin{equation}
     \delta s_{t+1} \approx J_s \delta s_t + J_a \delta a_t,
     \qquad
-    \delta a_t = \pi_q(s_t)-\pi_\theta(s_t).
+    \delta a_t = \pi_\varphi(s_t)-\pi_\theta(s_t).
 \end{equation}
-Even if $\delta a_t$ is small on the teacher state distribution, the accumulated $\delta s_t$ can move the accelerated policy into states where the original local error estimate no longer applies.
+Even if $\delta a_t$ is small on the reference rollout distribution, the accumulated $\delta s_t$ can move the accelerated policy into states where the original local error estimate no longer applies.
 
 This is why manipulation success is not a smooth function of single-step action MSE. A rollout can flip because of a small action perturbation if that perturbation changes whether the gripper reaches the object before closing, whether a placed object crosses a success-region boundary, whether an object contact produces a different pose, or whether a receding-horizon action chunk enters a different trajectory basin. In this view, acceleration is closer to post-training policy editing than to passive systems optimization.
 
@@ -139,7 +138,7 @@ This is why manipulation success is not a smooth function of single-step action 
         font=\small,
         box/.style={draw=black!65, rounded corners=1.2pt, align=center, inner sep=3.5pt, minimum height=0.62cm},
         policy/.style={box, fill=blue!7},
-        qpolicy/.style={box, fill=purple!8},
+        implpolicy/.style={box, fill=purple!8},
         state/.style={circle, draw=black!65, fill=white, inner sep=1.6pt},
         arr/.style={-{Latex[length=2mm]}, line width=0.7pt},
         darr/.style={{Latex[length=1.8mm]}-{Latex[length=1.8mm]}, line width=0.65pt},
@@ -149,16 +148,16 @@ This is why manipulation success is not a smooth function of single-step action 
         \node[anchor=west, font=\bfseries] at (-0.15, 2.05) {(a) Open-loop action drift};
         \node[box, minimum width=1.35cm] (obs) at (0, 0) {$s_t$\\[-1pt]\scriptsize fixed obs.};
         \node[policy, minimum width=1.05cm] (pifp) at (2.05, 0.72) {$\pi_\theta$};
-        \node[qpolicy, minimum width=1.05cm] (piq) at (2.05, -0.72) {$\pi_q$};
+        \node[implpolicy, minimum width=1.05cm] (piq) at (2.05, -0.72) {$\pi_\varphi$};
         \node[box, minimum width=1.45cm] (afp) at (4.15, 0.72) {$a_t^{\mathrm{FP16}}$};
-        \node[box, minimum width=1.45cm] (aq) at (4.15, -0.72) {$a_t^q$};
+        \node[box, minimum width=1.45cm] (aq) at (4.15, -0.72) {$a_t^\varphi$};
         \draw[arr] (obs) -- (pifp);
         \draw[arr] (obs) -- (piq);
         \draw[arr] (pifp) -- (afp);
         \draw[arr] (piq) -- (aq);
         \draw[darr, draw=red!70!black] (4.98, 0.48) -- node[right, font=\scriptsize] {$\delta a_t$} (4.98, -0.48);
         \node[align=center, font=\scriptsize] at (2.45, -1.55)
-            {$e(s_t)=\|\pi_q(s_t,l)-\pi_\theta(s_t,l)\|$};
+            {$e(s_t)=\|\pi_\varphi(s_t,l)-\pi_\theta(s_t,l)\|$};
 
         \draw[black!18, line width=0.5pt] (5.65, -1.85) -- (5.65, 2.15);
 
@@ -184,7 +183,7 @@ This is why manipulation success is not a smooth function of single-step action 
         \node[draw=blue!75!black, dashed, ellipse, minimum width=1.25cm, minimum height=0.48cm,
               label=right:{\scriptsize $d_{\pi_\theta}$}] at (9.8, 0.92) {};
         \node[draw=purple!80!black, dashed, ellipse, minimum width=1.25cm, minimum height=0.48cm,
-              label=right:{\scriptsize $d_{\pi_q}$}] at (9.8, -0.9) {};
+              label=right:{\scriptsize $d_{\pi_\varphi}$}] at (9.8, -0.9) {};
         \draw[darr, draw=red!70!black] (10.72, 0.64) --
             node[right, font=\scriptsize, align=left] {$\Delta d$\\[-1pt]\scriptsize distribution shift}
             (10.72, -0.62);
@@ -197,11 +196,13 @@ This is why manipulation success is not a smooth function of single-step action 
 \end{figure}
 
 \paragraph{Claim 1: implementation error is filtered by closed-loop sensitivity.}
-The first-order expression above can be expanded over a horizon. Let $\eta_t=\pi_q(s_t,l)-\pi_\theta(s_t,l)$ be the local acceleration-induced action perturbation on the nominal FP16 trajectory, let $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ be evaluated along that trajectory, and define the local closed-loop Jacobian
+The first-order expression above can be expanded over a horizon. Let $\eta_t=\pi_\varphi(s_t,l)-\pi_\theta(s_t,l)$ be the local acceleration-induced action perturbation on the nominal FP16 trajectory, let $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ be evaluated along that trajectory, and define the local closed-loop Jacobian
 \begin{equation}
     F_t = A_t + B_tK_t .
 \end{equation}
-This claim is local and first-order: it assumes small perturbations around the FP16 trajectory, defines $\eta_t$ on that nominal trajectory, and approximates the accelerated policy's local state Jacobian by the FP16 policy Jacobian, ignoring differences between $\partial\pi_q/\partial s$ and $\partial\pi_\theta/\partial s$ at this order. Under these assumptions, the terminal state perturbation satisfies
+This claim is local and first-order: it assumes small perturbations around the FP16 trajectory, defines $\eta_t$ on that nominal trajectory, and uses the FP16 policy Jacobian as a nominal proxy. A more complete local recursion would include the accelerated policy's feedback gain: with $K_t^\varphi=\partial\pi_\varphi/\partial s$ and $\Delta K_t=K_t^\varphi-K_t$,
+$\delta s_{t+1}\approx(F_t+B_t\Delta K_t)\delta s_t+B_t\eta_t$.
+The main surrogate omits this hard-to-estimate term; closed-loop validation captures the combined rollout effect of action offsets and feedback-gain changes empirically. Under the nominal-proxy assumptions, the terminal state perturbation satisfies
 \begin{equation}
     \delta s_T
     \approx
@@ -243,12 +244,12 @@ Thus Equation~\ref{eq:margin-crossing} should be read as a magnitude condition f
 Equations~\ref{eq:sensitivity-propagation} and~\ref{eq:margin-crossing} suggest that the relevant post-training acceleration objective for VLA policies is not the average open-loop action deviation
 \begin{equation}
     \min_Q \; \mathbb{E}\sum_t \|\eta_t(Q)\|^2 ,
-    \label{eq:open-loop-quant-objective}
+    \label{eq:open-loop-accel-objective}
 \end{equation}
 but a sensitivity-weighted perturbation objective of the form
 \begin{equation}
     \min_Q \; \mathbb{E}\sum_t \eta_t(Q)^\top G_t \eta_t(Q),
-    \label{eq:closed-loop-quant-objective}
+    \label{eq:closed-loop-accel-objective}
 \end{equation}
 where one local terminal-margin approximation is
 \begin{equation}
@@ -260,7 +261,7 @@ where one local terminal-margin approximation is
     \Phi_{t\to T}=F_{T-1}\cdots F_{t+1}.
     \label{eq:sensitivity-metric}
 \end{equation}
-Equation~\ref{eq:closed-loop-quant-objective} is a separable local surrogate, not the exact squared full-horizon terminal-margin objective. To see this, define the scalar contribution
+Equation~\ref{eq:closed-loop-accel-objective} is a separable local surrogate, not the exact squared full-horizon terminal-margin objective. To see this, define the scalar contribution
 \[
     \alpha_t =
     \nabla h(s_T)^\top \Phi_{t\to T}B_t\eta_t
@@ -279,18 +280,18 @@ The first-order terminal margin perturbation is $\Delta h \approx \sum_t \alpha_
     +
     2\sum_{i<j}\alpha_i\alpha_j .
 \]
-The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-quant-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between implementation errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
-In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce implementation error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. Layer-statistic corrections such as ATM/OHB and execution-boundary protection can be useful proxies, but they do not by themselves optimize this closed-loop criterion.
+The per-step term is $\sum_t \alpha_t^2=\sum_t \eta_t^\top c_tc_t^\top\eta_t$, which gives Equation~\ref{eq:closed-loop-accel-objective} with $G_t=c_tc_t^\top$. The omitted cross-time terms represent interactions between implementation errors at different rollout steps: they can amplify risk when their margin effects have the same sign, or partially cancel when their effects have opposite signs. We use the separable form as a tractable proxy, appropriate when cross-time error correlations are weak or when the objective is meant to rank locally sensitive perturbation directions rather than exactly optimize rollout-level margin loss.
+In practice $G_t$ is difficult to estimate exactly, but the expression identifies the target: reduce implementation error in state-action directions that are amplified by feedback dynamics and projected onto small task margins. CLSG-TS uses rollout diagnostics, paired repairs/regressions, and sensitivity probes as practical proxies for this closed-loop criterion.
 
 \paragraph{Claim 3: open-loop drift is incomplete without state-distribution control.}
-Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop accelerated execution instead samples from $d_{\pi_q}$:
+Let $\ell(s)$ denote a closed-loop-relevant loss, such as action drift, sensitivity-weighted action error, or risk of approaching a failure boundary. Offline validation estimates behavior under a fixed distribution, typically $d_{\pi_\theta}$ or a dataset distribution. Closed-loop accelerated execution instead samples from $d_{\pi_\varphi}$:
 \begin{equation}
-    \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
+    \mathbb{E}_{s\sim d_{\pi_\varphi}}[\ell(s)]
     =
     \mathbb{E}_{s\sim d_{\pi_\theta}}[\ell(s)]
     +
     \left(
-    \mathbb{E}_{s\sim d_{\pi_q}}[\ell(s)]
+    \mathbb{E}_{s\sim d_{\pi_\varphi}}[\ell(s)]
     -
     \mathbb{E}_{s\sim d_{\pi_\theta}}[\ell(s)]
     \right).
@@ -301,23 +302,23 @@ Open-loop action drift controls only the fixed-distribution term. It does not by
 More formally, if $\ell$ is a nonnegative bounded loss with $0\le \ell(s)\le \|\ell\|_\infty$, then the distribution-shift contribution obeys
 \begin{equation}
     \left|
-    \mathbb{E}_{d_{\pi_q}}[\ell]
+    \mathbb{E}_{d_{\pi_\varphi}}[\ell]
     -
     \mathbb{E}_{d_{\pi_\theta}}[\ell]
     \right|
     \le
     \|\ell\|_\infty\,
-    \mathrm{TV}(d_{\pi_q},d_{\pi_\theta}),
+    \mathrm{TV}(d_{\pi_\varphi},d_{\pi_\theta}),
 \end{equation}
 under the standard definition $\mathrm{TV}(p,q)=\frac{1}{2}\|p-q\|_1$. If $\ell$ is $L$-Lipschitz under a state metric, an analogous Wasserstein bound gives
 \begin{equation}
     \left|
-    \mathbb{E}_{d_{\pi_q}}[\ell]
+    \mathbb{E}_{d_{\pi_\varphi}}[\ell]
     -
     \mathbb{E}_{d_{\pi_\theta}}[\ell]
     \right|
     \le
-    L\,W_1(d_{\pi_q},d_{\pi_\theta}).
+    L\,W_1(d_{\pi_\varphi},d_{\pi_\theta}).
 \end{equation}
 The point is not that these distances are easy to estimate in high-dimensional robot rollouts, but that fixed-distribution drift is only one term. Predicting rollout robustness also requires controlling how far the accelerated policy moves the visited state distribution.
 
@@ -374,170 +375,21 @@ subject to available quantization, compilation, precision, and kernel choices. T
 We use the GR00T N1.5 LIBERO long-horizon checkpoint and evaluate on LIBERO-10~\citep{grootn1,libero}. The accepted FP16 baseline matches the official reference result of 38/50 on the standard 5-trial LIBERO-10 run. The evaluated policy predicts action chunks with seven action components: $x$, $y$, $z$, roll, pitch, yaw, and gripper. Unless noted otherwise, experiments use 8 denoising steps. For the final tactic-transfer check, we also evaluate a GR00T N1.7 LIBERO-10 checkpoint on a small held-out set; this is used to test whether the tactic-search workflow, not a specific fixed tactic, carries to a newer checkpoint.
 
 \paragraph{Three evidence tracks.}
-Track A is the quantization reproduction track. It applies selective W4A8 fake quantization and optional ATM/OHB compensation to the same FP16 policy, then evaluates both open-loop action drift and closed-loop rollout redistribution. Track B is the sensitivity-identification track. It uses controlled action perturbations, first-divergence traces, and \texttt{torch.compile} action-head boundaries to locate which action channels, rollout phases, and model boundaries are closed-loop sensitive. Track C is the sensitivity-guided acceleration track. It keeps weights in FP16, compiles the action head for speed, and inserts small eager islands or duration windows as protected regions. Track C is included because deployment-oriented acceleration can introduce small numerical or graph-boundary differences even when model semantics are unchanged. We use it to test whether closed-loop sensitivity maps can guide faster implementations, not as evidence of final packed-kernel quantization speed.
+The experiments follow the paper's argument rather than a single backend implementation. Track A is the sensitivity-identification track. It uses controlled action perturbations, first-divergence traces, and \texttt{torch.compile} action-head boundaries to locate which action channels, rollout phases, and model boundaries are closed-loop sensitive. Its purpose is to turn the theory into an actionable sensitivity map. Track B is the tactic-search track. It keeps weights in FP16, compiles the action head for speed, and inserts small eager islands or duration windows as protected regions. Its purpose is to test whether the sensitivity map can guide faster implementations with lower paired regression risk. Track C is the held-out selection track. It evaluates the discovered tactic frontier on additional N1.5 folds and on a small N1.7 transfer check, including task-conditioned tactic routing. Its purpose is to test the reusable CLSG-TS workflow rather than one fixed fallback window.
 
-\paragraph{Quantization scope.}
-We study the selective \texttt{llm\_dit\_mlp} W4A8 fake-quantization scope: 84 selected LLM linear layers and 32 selected DiT MLP linear layers, for 116 quantized modules. DiT attention projections are intentionally left in floating point. This design matters because attention projections feed a softmax routing mechanism, while MLP errors are more often residual perturbations.
-
-\paragraph{Compensation modes.}
-Following QuantVLA terminology, we evaluate two scale-calibrated compensation mechanisms: attention temperature matching (ATM) and output head balancing (OHB)~\citep{quantvla}. Our implementation should be read as a reproduction-oriented approximation of these mechanisms rather than a claim of exact code-level equivalence to the original implementation. ATM rescales the DiT attention query to match teacher/student attention-logit standard deviation:
-\begin{equation}
-    \alpha =
-    \frac{\mathrm{std}_{\mathrm{teacher}}(\mathrm{attention\ logits})}
-         {\mathrm{std}_{\mathrm{student}}(\mathrm{attention\ logits})},
-    \qquad
-    \mathrm{query} \leftarrow \alpha \cdot \mathrm{query}.
-\end{equation}
-OHB rescales the attention output before residual addition to match teacher/student attention-output RMS:
-\begin{equation}
-    \beta =
-    \frac{\mathrm{rms}_{\mathrm{teacher}}(\mathrm{attention\ output})}
-         {\mathrm{rms}_{\mathrm{student}}(\mathrm{attention\ output})},
-    \qquad
-    \mathrm{attention\ output} \leftarrow \beta \cdot \mathrm{attention\ output}.
-\end{equation}
-The combined mode applies both corrections. In all cases the compensation acts on DiT attention processors; it does not mean DiT attention weights are quantized.
-
-\paragraph{Offline drift protocol.}
-The offline validation uses 16 real LIBERO calibration observations and 128 held-out real evaluation observations. Teacher and student calls use matched random seeds because action denoising begins from random Gaussian actions. We report NMSE, relative RMSE, cosine similarity, and max absolute difference.
+\paragraph{Evaluation platform and timing.}
+All closed-loop rollouts and serving measurements run on a remote single-GPU NVIDIA RTX 5090 machine with LIBERO in headless EGL mode. The policy runs as an inference server and the LIBERO evaluator as a client process on the same machine. Reported latency is server-side warm \texttt{get\_action} timing; model loading, prewarm, cold \texttt{torch.compile}/Inductor compilation, simulator stepping, client/RPC overhead, and video I/O are excluded from the p50 values. A representative FP16 hygiene run used PyTorch 2.8.0+cu128 with CUDA 12.8; over 10,000 server requests on a 15-case mixed workload, FP16 \texttt{get\_action} latency was 154.82/162.22/182.60 ms at p50/p90/p99, with about 5.48 GB allocated and 5.78 GB reserved CUDA memory after prewarm.
 
 \paragraph{Closed-loop protocol.}
-The quantization analysis evaluates LIBERO-10 initial states 0--14: 10 tasks, 15 initial states per task, and 150 episodes per policy/mode. The sensitivity-guided acceleration search starts from a 33-case matched probe spanning tasks 4, 6, and 8 with selected initial states that include easy successes, speed-only regressions, and beneficial speed-only branches. We then validate tactic selection on two additional N1.5 30-case folds over tasks 0--9, using held-out initial states 15--17 and 18--20. Finally, we run a 15-case N1.7 held-out check over tasks 0, 1, 4, 6, and 8 with initial states 24--26. For paired comparisons, every mode is evaluated on the same task-initialization pairs with deterministic policy seeds. We report Wilson 95\% confidence intervals for the 150-episode aggregate table as a descriptive uncertainty estimate, but use paired repair/regression counts, first-divergence traces, EEF drift, server p50 latency, eager-request fraction, worst-fold success, and worst-fold speedup as the primary diagnostics. We use p50 serving latency as the primary speed metric because the prototype compile experiments launch isolated server processes; mean and maximum latency include cold \texttt{torch.compile}/Inductor compilation spikes and are not treated as steady-state deployment metrics.
+The sensitivity-guided acceleration search starts from a 33-case matched probe spanning tasks 4, 6, and 8 with selected initial states that include easy successes, speed-only regressions, and beneficial speed-only branches. We then validate tactic selection on two additional N1.5 30-case folds over tasks 0--9, using held-out initial states 15--17 and 18--20. Finally, we run a 15-case N1.7 held-out check over tasks 0, 1, 4, 6, and 8 with initial states 24--26. For paired comparisons, every mode is evaluated on the same task-initialization pairs with deterministic policy seeds. We use paired repair/regression counts, first-divergence traces, EEF drift, server p50 latency, eager-request fraction, worst-fold success, and worst-fold speedup as the primary diagnostics. We use p50 serving latency as the primary speed metric because the prototype compile experiments launch isolated server processes; mean and maximum latency include cold \texttt{torch.compile}/Inductor compilation spikes and are not treated as steady-state deployment metrics.
 
 \section{Results}
 
-\subsection{Offline Mean Drift Improves, But Individual Regressions Remain}
-
-On the 128 held-out real observations, ATM and OHB reduce mean action drift relative to uncompensated W4A8 (Table~\ref{tab:offline-drift}). The identity control exactly matches \texttt{none}, showing that the custom attention processor path itself does not introduce measurable drift.
-
-\begin{table}[H]
-\centering
-\caption{Offline teacher-student action drift on 128 held-out real LIBERO observations.}
-\label{tab:offline-drift}
-\begin{tabular}{llrrrr}
-\toprule
-Config & Mode & Modules & NMSE mean & Rel. RMSE mean & Cosine mean \\
-\midrule
-\texttt{llm\_dit\_mlp} & none & 116 & 0.0178962 & 0.0981458 & 0.992492 \\
-\texttt{llm\_dit\_mlp} & identity & 116 & 0.0178962 & 0.0981458 & 0.992492 \\
-\texttt{llm\_dit\_mlp} & ATM & 116 & 0.0159471 & 0.0904183 & 0.993101 \\
-\texttt{llm\_dit\_mlp} & OHB & 116 & 0.0160919 & 0.0853958 & 0.992769 \\
-\texttt{llm\_dit\_mlp} & ATM+OHB & 116 & 0.0153168 & 0.0838784 & 0.993048 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The mean improvement hides observation-level regressions. ATM+OHB has the best mean drift, while still worsening 34 of 128 held-out observations by NMSE. This is the first sign that mean offline drift is insufficient: compensation moves the action distribution closer on average, but not uniformly.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.92\linewidth]{fig2_offline_drift_regressions.pdf}
-    \caption{Offline mean drift versus observation-level regressions. Left: reduction in mean relative RMSE from uncompensated W4A8. Right: number of held-out observations whose NMSE worsens relative to uncompensated W4A8.}
-    \label{fig:offline-regressions}
-\end{figure}
-
-\subsection{Selective W4A8 Remains in the FP16 Range}
-
-Over 150 LIBERO-10 task-initialization pairs, selective W4A8 remains in the same performance band as FP16 (Table~\ref{tab:aggregate}). Some quantized variants have higher aggregate point estimates, but these gaps should not be read as evidence that quantization is inherently better than FP16. Rather, the quantized policies perturb the trajectory distribution. In finite closed-loop evaluation, that perturbation can push some failed FP16 trajectories into successful basins while pushing other successful trajectories into failure.
-
-\begin{table}[H]
-\centering
-\caption{Closed-loop LIBERO-10 success over task-initialization pairs 0--14.}
-\label{tab:aggregate}
-\begin{tabular}{lrl}
-\toprule
-Policy & Successes & Success rate (Wilson 95\% CI) \\
-\midrule
-FP16 & 108/150 & 72.0\% [64.3, 78.6] \\
-W4A8 \texttt{llm\_dit\_mlp} + none & 113/150 & 75.3\% [67.9, 81.5] \\
-W4A8 \texttt{llm\_dit\_mlp} + ATM & 114/150 & 76.0\% [68.6, 82.1] \\
-W4A8 \texttt{llm\_dit\_mlp} + OHB & 116/150 & 77.3\% [70.0, 83.3] \\
-W4A8 \texttt{llm\_dit\_mlp} + ATM+OHB & 114/150 & 76.0\% [68.6, 82.1] \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The confidence intervals are wide and overlapping, so the table should not be read as a statistical ranking of policies. The more stable conclusion is that selective W4A8 remains in the same behavioral range as FP16 under this protocol, while changing the identity of successful and failed rollouts.
-
-\subsection{Aggregate Rates Hide Task-Level Redistribution}
-
-The effects are task-dependent. ATM improves task 4 by 5 successes over \texttt{none}, but regresses task 8 by 5 successes. OHB is more balanced and gives the highest aggregate point estimate, but it still regresses tasks 3, 8, and 9 relative to \texttt{none}. The detailed task-level table appears in Appendix~\ref{app:tables}.
-
-\subsection{Paired Rollout Flips Reveal The Mechanism}
-
-Paired comparisons over identical task-initialization pairs show that the compensation modes are not monotonic improvements (Table~\ref{tab:paired}). OHB is not simply ``3 episodes better'' than \texttt{none}; it repairs 16 failures and introduces 13 new failures. Its net gain is small, but the underlying trajectory redistribution is substantial.
-
-\begin{table}[H]
-\centering
-\caption{Paired outcomes over the same 150 task-initialization pairs.}
-\label{tab:paired}
-\begin{tabular}{lrrrrr}
-\toprule
-Comparison & Repaired & Regressed & Same success & Same failure & Net \\
-\midrule
-ATM vs none & 14 & 13 & 100 & 23 & +1 \\
-OHB vs none & 16 & 13 & 100 & 21 & +3 \\
-OHB vs ATM & 15 & 13 & 101 & 21 & +2 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.92\linewidth]{fig3_paired_rollout_flips.pdf}
-    \caption{Paired closed-loop rollout flips. Net success-rate changes decompose into repaired failures, new regressions, unchanged successes, and unchanged failures.}
-    \label{fig:paired-flips}
-\end{figure}
-
-For the disjoint init 5--14 comparison between FP16 and ATM+OHB W4A8, we observe the same pattern: 14 FP16 failures are repaired, while 8 FP16 successes become quantized failures. The aggregate gain of 6/100 comes from this difference.
-
-\subsection{Keyframe-Based Trajectory Diagnostics}
-
-To make the paired flips more concrete, we inspected contact sheets for representative repaired and regressed rollouts. Each contact sheet contains three matched policy rows---FP16, W4A8 \texttt{none}, and W4A8 ATM+OHB---sampled uniformly over the rollout. The sheets are included in the repository keyframe directory; they are diagnostic artifacts rather than a new quantitative benchmark.
-
-\begin{table}[H]
-\centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\caption{Representative keyframe diagnostics for paired rollout flips. Frame counts refer to the number of rendered rollout frames before success or horizon failure.}
-\label{tab:keyframe-diagnostics}
-\begin{tabular}{p{0.16\linewidth}p{0.23\linewidth}p{0.31\linewidth}p{0.22\linewidth}}
-\toprule
-Case & Outcome pattern & Keyframe-level observation & Interpretation \\
-\midrule
-Task 8 init 7 &
-FP16 fail 991; ATM+OHB fail 991; \texttt{none} success 388 &
-\texttt{none} enters a short successful approach branch early, while FP16 and ATM+OHB spend the late rollout in repeated correction. &
-Raw quantization can push a weak FP16 task slice out of a failure basin. \\
-\addlinespace
-Task 4 init 10 &
-FP16 fail 991; \texttt{none} fail 991; ATM+OHB success 242 &
-ATM+OHB completes the mug/plate interaction quickly; the other rows remain in horizon-length correction. &
-Compensation can repair a task by changing contact timing or object-interaction order. \\
-\addlinespace
-Task 0 init 3 &
-FP16 success 250; ATM+OHB success 267; \texttt{none} fail 991 &
-\texttt{none} disturbs an otherwise fast object-container relation and never recovers. &
-The same raw perturbation that repairs some cases can regress high-margin FP16 successes. \\
-\addlinespace
-Task 6 init 1 &
-FP16 success 222; \texttt{none} success 477; ATM+OHB fail 991 &
-ATM+OHB remains visually stable but under-progresses around the decisive placement phase. &
-Balancing can be too conservative or shift progress timing, even when it reduces mean offline drift. \\
-\addlinespace
-Task 8 init 0 &
-FP16 success 657; ATM+OHB fail 991; \texttt{none} fail 991 &
-Both quantized rows take the wrong side of a task-8 decision boundary that FP16 crosses successfully. &
-Task-level gains are not monotonic; the same task can contain repairs and regressions. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-These examples support the trajectory-redistribution interpretation. The repaired cases do not look like small final-frame placement corrections; they usually branch earlier and terminate much sooner than the corresponding failures. The regressed cases show the complementary failure: a small policy perturbation can disrupt an early object relation or produce a stable but insufficiently progressive path. Thus the paired counts in Table~\ref{tab:paired} correspond to visible differences in trajectory basins, not only bookkeeping changes in aggregate success.
+The results are organized around CLSG-TS. Section~5.1 estimates where the closed-loop system is sensitive, using action-channel, rollout-duration, layer-boundary, and first-divergence probes. Section~5.2 uses those probes to search acceleration tactics and evaluate the resulting speed--risk frontier. Section~5.3 maps the evidence back to the five theoretical claims.
 
 \subsection{Sensitivity Maps: Not All Perturbations Are Equal}
 
-The preceding results show that quantization changes which rollouts succeed. This section is the bridge from that behavioral observation to an actionable design rule. We next ask a more diagnostic question: which perturbations are closed-loop sensitive? To isolate this from implementation details of a particular quantizer, we ran small controlled perturbation probes on two FP16-success cases: task 4 init 9 and task 6 init 8. These probes should not be read as a quantization method. They are local interventions that reveal which directions, rollout windows, and module boundaries are fragile enough that a future quantization or acceleration error could matter.
+CLSG-TS begins by asking which perturbations are closed-loop sensitive. To isolate sensitivity from the implementation details of a particular backend, we ran small controlled perturbation probes on two FP16-success cases: task 4 init 9 and task 6 init 8. These probes should not be read as an acceleration method. They are local interventions that reveal which directions, rollout windows, and module boundaries are fragile enough that a future compilation, fallback, kernel, or precision tactic could matter.
 
 \begin{table}[H]
 \centering
@@ -564,9 +416,9 @@ $y$ only, task 6 & Early / middle / late & 2/3 & 0:200 F991; 200:450 S697; 450:7
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:action-phase-anisotropy} supports two practical claims. First, action dimensions are not equally sensitive. A $z$ perturbation of the same norm is absorbed in both cases, while $y$ and rotation perturbations are catastrophic in this small probe. Second, rollout time is not equally sensitive. The same $y$ perturbation is damaging early, but late-window perturbations can be absorbed after the task has entered a more stable phase. This maps the first two axes of the sensitivity space: channel and time. It also matches the linearized view in Section~3: the relevant quantity is not only $\lVert\eta_t\rVert$, but also the direction of $\eta_t$ and the future closed-loop gain multiplying it.
+Table~\ref{tab:action-phase-anisotropy} supports two practical claims. First, action dimensions are not equally sensitive. A $z$ perturbation of the same norm is absorbed in both cases, while $y$ and rotation perturbations cause failures in this small probe. Second, rollout time is not equally sensitive. The same $y$ perturbation is damaging early, but late-window perturbations can be absorbed after the task has entered a more stable phase. This maps the first two axes of the sensitivity space: channel and time. It also matches the linearized view in Section~3: the relevant quantity is not only $\lVert\eta_t\rVert$, but also the direction of $\eta_t$ and the future closed-loop gain multiplying it.
 
-We also tested whether acceleration-oriented graph boundaries are behaviorally transparent. The following experiment compiles the action-head model while leaving either no block, block 0, or block 1 as an eager island. The variants have almost identical median server latency, but their closed-loop behavior differs sharply.
+We also tested whether acceleration-oriented graph boundaries are behaviorally transparent. In this probe, we compile the action-head model while leaving either no block, block 0, or block 1 as an eager island. The variants have almost identical median server latency, but their closed-loop behavior differs sharply.
 
 \begin{table}[H]
 \centering
@@ -586,9 +438,9 @@ Compile + block 1 eager & 0/2 & F991 & F991 & 73.10 ms & 2.20$\times$ \\
 \end{tabular}
 \end{table}
 
-The full compiled action head is fast and succeeds on both cases, but it is not exactly behavior-transparent: task 6 takes 916 requests instead of 649. More importantly, making a small eager island does not monotonically improve safety. Block 0 eager fails task 4 but succeeds task 6 faster than the full compiled variant, while block 1 eager fails both. Because all three accelerated variants have nearly the same p50 latency, the result cannot be explained by speed alone. It is a layer/boundary sensitivity effect: changing where numerical or graph-boundary differences enter the policy can move a rollout into a different basin.
+The full compiled action head is fast and succeeds on both cases, but it is not behaviorally identical to FP16: task 6 takes 916 requests instead of 649. More importantly, making a small eager island does not monotonically improve safety. Block 0 eager fails task 4 but succeeds task 6 faster than the full compiled variant, while block 1 eager fails both. Because all three accelerated variants have nearly the same p50 latency, the result cannot be explained by speed alone. It is a layer/boundary sensitivity effect: changing where numerical or graph-boundary differences enter the policy can move a rollout into a different basin.
 
-Together, the channel, time, and layer-boundary probes turn the earlier repair/regression phenomenon into a sensitivity map. These two FP16-success cases do not define a global ranking. Rather, they show that closed-loop risk is structured enough to guide what should be quantized, compiled, protected, or left in higher precision.
+Together, the channel, time, and layer-boundary probes form the sensitivity map used by CLSG-TS. These two FP16-success cases do not define a global ranking. Rather, they show that closed-loop risk is structured enough to guide what should be compiled, protected, routed, or left in a more conservative execution path.
 
 Finally, we compared closed-loop traces to locate the first divergence. Table~\ref{tab:first-divergence} summarizes direct comparisons from the accelerated runs. The main pattern is temporal separation: action differences appear first, millimeter-scale state differences appear later, and outcome flips occur much later through accumulated contact and progress changes.
 
@@ -610,7 +462,7 @@ Task 6 init 8 & Full $\to$ blk1-eager & S916 $\to$ F990 & Step 53 & Step 58, 1.1
 \end{tabular}
 \end{table}
 
-These first-divergence traces explain why latency-equivalent implementations can have different closed-loop outcomes. The decisive failure is rarely a single large action jump. Instead, small early action differences create a delayed state separation; depending on the task margin and contact phase, that separation is either absorbed, repaired into a shorter trajectory, or amplified into horizon failure. This supports a stronger diagnostic principle: for VLA quantization and acceleration, one should map sensitivity across action channels, rollout phases, and module boundaries before choosing what to quantize, compile, or protect.
+These first-divergence traces explain why latency-equivalent implementations can have different closed-loop outcomes. The decisive failure is rarely a single large action jump. Instead, small early action differences create a delayed state separation; depending on the task margin and contact phase, that separation is either absorbed, repaired into a shorter trajectory, or amplified into horizon failure. This supports a stronger diagnostic principle: for VLA acceleration, one should map sensitivity across action channels, rollout phases, and module boundaries before choosing what to compile, protect, route, or replace.
 
 \subsection{Sensitivity-Guided Acceleration Search}
 
@@ -641,7 +493,7 @@ Duration 240--320 & post-grasp window & 17/33 & 66.71 ms & 2.34$\times$ & 0.084 
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:phase29-speed-behavior} is the central probe result. Speed-only compilation gives the expected latency gain but loses three successes relative to FP16. A layer-based proxy, blocks 0--3 eager, recovers two of those successes while preserving speed. A coarse duration proxy, steps 0--250, also reaches 18/33 but costs substantially more latency. The finer duration sweep reveals the useful structure: protecting only steps 0--120 restores FP16-level success, 19/33, while preserving speed-only latency. Longer eager windows are worse. This rules out the simple explanation that more high-precision execution is safer. The sensitive window is narrow and early, but this table should be read as tactic discovery rather than as a final universal selection result.
+Table~\ref{tab:phase29-speed-behavior} is the main discovery probe. Speed-only compilation gives the expected latency gain but loses three successes relative to FP16. A layer-based proxy, blocks 0--3 eager, recovers two of those successes while preserving speed. A coarse duration proxy, steps 0--250, also reaches 18/33 but costs substantially more latency. The finer duration sweep reveals the useful structure: protecting only steps 0--120 restores FP16-level success, 19/33, while preserving speed-only latency. Longer eager windows are not safer. This rules out the simple explanation that more high-precision execution is always better. The sensitive window is narrow and early, but this table should be read as tactic discovery rather than as a final universal selection result.
 
 \begin{table}[H]
 \centering
@@ -756,16 +608,16 @@ The theoretical claims in Section~3 are not used as proof that one accelerated i
 Claim & Experimental evidence & Interpretation \\
 \midrule
 Claim 1: sensitivity propagation &
-Small action changes produce both repairs and regressions under the same model family. Keyframe repairs branch early rather than only correcting final placement. &
+First-divergence traces show small action differences appearing before millimeter-scale state separation; outcome changes occur much later through accumulated contact and progress changes. &
 The effect depends on where the perturbation enters the trajectory, not only on its norm. \\
 \addlinespace
 Claim 2: margin crossing &
-Task 8 contains both directions: W4A8 \texttt{none} improves task 8 from 3/15 FP16 successes to 9/15, yet task 8 init 0 is a case where both quantized modes regress a successful FP16 rollout. &
-The same task can contain low-margin failures that are repaired and low-margin successes that are broken. \\
+Duration 0--120 repairs 7 speed-only failures but also regresses 4 speed-only successes on the same 33-case set. Trace diagnostics show both short-basin repairs and lost beneficial branches. &
+The same tactic can push low-margin failures into success basins while pushing other trajectories across success boundaries. \\
 \addlinespace
 Claim 3: open-loop insufficiency &
-ATM+OHB has the best mean offline drift, but OHB has the highest aggregate closed-loop point estimate; ATM improves task 4 by 5 successes over \texttt{none} while regressing task 8 by 5. &
-Reducing average fixed-observation error does not imply monotonic closed-loop improvement because the accelerated policy induces its own state distribution. \\
+Latency-equivalent eager-island variants differ from 2/2 success to 0/2 on the same matched cases, and speed-only compilation is best on Fold A but unsafe on Fold B. &
+Local numerical or speed checks do not determine closed-loop robustness because the implemented policy induces its own state distribution. \\
 \addlinespace
 Claim 4: anisotropic sensitivity &
 Equal-norm action probes differ by channel and phase; acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. In the 33-case search, duration 0--120 reaches 19/33 at 69.66 ms, while 0--220 drops to 16/33 at 90.49 ms. Across held-out folds and the N1.7 check, speed-only, duration windows, combined protection, and task-conditioned routing have different repair/regression profiles. &
@@ -780,43 +632,35 @@ The goal is not to recover the FP16 point exactly or to trust one local winner. 
 
 \section{Analysis}
 
-\paragraph{Why can acceleration improve a rollout?}
-The accelerated policy is not guaranteed to be worse than FP16 in a finite simulator benchmark. FP16 is not an oracle; it is a learned policy with its own fragile regions. A small implementation perturbation can move a trajectory away from a failure mode. This is especially plausible when the FP16 policy is already weak on a task slice, such as LIBERO task 8 in our baseline. Therefore, an aggregate improvement should not be read as ``low precision is better'' or ``compilation is better.'' It means the perturbed implementation enters different trajectory basins, some of which are more favorable under the benchmark's finite initial states and success predicates.
+The experiments test one closed-loop object: a post-training implementation map that perturbs the action function. Compiled action-head execution, eager islands, duration fallbacks, and task-conditioned routing all change where and when implementation differences enter the controller. These differences can be small under local numerical or latency checks, yet still create delayed trajectory branching under closed-loop execution. The backend changes, but the evaluation target remains the same: which perturbations are absorbed, which cross task margins, and which tactics give acceptable speed--risk trade-offs.
 
-\paragraph{Why does offline drift fail to predict closed-loop behavior?}
-Offline drift is measured on a fixed observation set. Closed-loop rollouts produce observations adaptively. Once a quantized action changes the environment state, later observations may differ from the offline distribution. This creates two mismatches: the local action error estimate may not apply to the new states, and the success function may be discontinuous around contact and placement boundaries. This explains why ATM+OHB can have the best mean offline NMSE but not the best closed-loop aggregate success.
+\paragraph{Why can acceleration improve a rollout?}
+An accelerated policy is not guaranteed to be worse than FP16 in a finite simulator benchmark. FP16 is not an oracle; it is a learned policy with its own fragile regions. A small implementation perturbation can move a trajectory away from a failure mode, especially when the FP16 policy is already weak on a task slice such as LIBERO task 8 in our baseline. Therefore, an aggregate improvement should not be read as ``the accelerated implementation is inherently better.'' It means the perturbed implementation enters different trajectory basins, some of which are more favorable under the benchmark's finite initial states and success predicates.
+
+\paragraph{Why can local validation fail to predict closed-loop behavior?}
+Local validation is measured on fixed observations, fixed shapes, or fixed operator boundaries. Closed-loop rollouts produce observations adaptively. Once an accelerated action changes the environment state, later observations may differ from the reference distribution. This creates two mismatches: the local action error estimate may not apply to the new states, and the success function may be effectively discontinuous around contact and placement boundaries. This is why latency-equivalent or locally similar implementations can have different rollout outcomes.
 
 \paragraph{A control-theoretic interpretation.}
-From a feedback-control perspective, post-training acceleration acts like a structured input disturbance injected into the learned controller. For the quantization track, write
+From a feedback-control perspective, post-training acceleration acts like a structured input disturbance injected into the learned controller. We can write an accelerated action as
 \begin{equation}
-    a_t^q = \pi_\theta(s_t^q,l) + \eta(s_t^q,l),
+    a_t^\varphi = \pi_\theta(s_t^\varphi,l) + \eta(s_t^\varphi,l),
 \end{equation}
-where $\eta$ is the action perturbation induced by quantization and compensation. For a compile or kernel-replacement track, the same form applies with $\eta$ denoting the action difference induced by the accelerated execution path. Linearizing around an FP16 trajectory gives
+where $\eta$ denotes the action difference induced by the accelerated execution path. Linearizing around an FP16 trajectory gives
 \begin{equation}
     \delta s_{t+1}
-    \approx (A_t + B_tK_t)\delta s_t + B_t\eta_t,
+    \approx (A_t + B_tK_t + B_t\Delta K_t)\delta s_t + B_t\eta_t,
 \end{equation}
-where $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, and $K_t=\partial \pi_\theta/\partial s$ along the trajectory. The closed-loop sensitivity is therefore governed not only by the magnitude of $\eta_t$, but also by the local closed-loop gain induced by the environment dynamics and the policy feedback. A small action perturbation can be attenuated in low-gain regions and amplified near contact, grasping, or placement transitions.
+where $A_t=\partial f/\partial s$, $B_t=\partial f/\partial a$, $K_t=\partial \pi_\theta/\partial s$, and $\Delta K_t=\partial\pi_\varphi/\partial s-\partial\pi_\theta/\partial s$ along the trajectory. The closed-loop sensitivity is therefore governed not only by the magnitude of $\eta_t$, but also by the local closed-loop gain induced by the environment dynamics and the policy feedback. A small action perturbation can be attenuated in low-gain regions and amplified near contact, grasping, or placement transitions.
 
-This also makes success a margin problem. Let $h(s_T)$ denote an implicit terminal success margin, with success when $h(s_T)>0$. A rollout with large positive margin can tolerate sizeable action perturbations, while a low-margin rollout can flip if acceleration moves $h(s_T)$ across zero. This explains why paired outcomes contain both repairs and regressions: an accelerated implementation can move a trajectory away from one failure basin while pushing another trajectory across a success boundary. The useful diagnostic is therefore not just average action error, but the alignment between action perturbations, closed-loop sensitivity, and task success margins.
-
-\paragraph{Why is selective W4A8 robust?}
-The \texttt{llm\_dit\_mlp} scope leaves DiT attention projections in floating point. This avoids quantizing the most routing-sensitive part of the action head. A perturbation to $QK^\top$ before softmax can change attention entropy and token routing. By contrast, MLP quantization more often enters as an additive residual perturbation,
-\begin{equation}
-    y_{\mathrm{student}} = y_{\mathrm{teacher}} + \epsilon.
-\end{equation}
-Layer normalization, residual connections, diffusion denoising, and receding-horizon replanning can absorb some of this error. This helps explain why uncompensated W4A8 already reaches 113/150 successes.
-
-\paragraph{Why are ATM and OHB not additive?}
-ATM changes where attention looks by changing the attention-logit scale. OHB changes how strongly the attention output enters the residual stream. If ATM moves routing into a different pattern, OHB rescales a different output than the one calibrated under the uncompensated student. The combined correction can overcorrect, undercorrect, or move the policy into a different trajectory basin. This is consistent with ATM+OHB reaching 114/150, below standalone OHB at 116/150.
+This also makes success a margin problem. Let $h(s_T)$ denote an implicit terminal success margin, with success when $h(s_T)>0$. A rollout with large positive margin can tolerate sizeable action perturbations, while a low-margin rollout can flip if acceleration moves $h(s_T)$ across zero. This explains why paired outcomes contain both repairs and regressions: an accelerated implementation can move one trajectory away from a failure basin while pushing another trajectory across a success boundary. The useful diagnostic is therefore not just average action error, but the alignment between action perturbations, closed-loop sensitivity, and task success margins.
 
 \paragraph{What should be reported for VLA acceleration?}
-The minimum evidence package should include offline action drift on held-out real observations, per-component action error, closed-loop success on matched task-initialization pairs, per-task and per-init success rates, paired repair/regression counts, latency and memory under the same protocol, first-divergence or EEF drift diagnostics for representative flips, and an explicit distinction between fake quantization, prototype compile paths, and final packed-kernel deployment.
+The minimum evidence package should include local action drift or numerical agreement, closed-loop success on matched task-initialization pairs, per-task and per-init success rates, paired repair/regression counts, latency and memory under the same protocol, first-divergence or EEF drift diagnostics for representative flips, and an explicit distinction between prototype tactic search and final production deployment. Without these pieces, a result can look like a speedup or a success-rate gain while hiding substantial closed-loop redistribution.
 
 \section{Implications}
 
 \paragraph{Evaluation.}
-VLA inference acceleration should be evaluated as a closed-loop policy perturbation. Reporting only MSE, aggregate success, or latency can be misleading. Paired rollout flips are a compact way to expose whether a faster implementation is a monotonic improvement or a redistribution of successes.
+VLA inference acceleration should be evaluated as a closed-loop policy perturbation. Reporting only MSE, aggregate success, or latency can be misleading because each metric can hide a different failure mode. Paired rollout flips are a compact way to expose whether a faster implementation is a monotonic improvement or a redistribution of successes.
 
 \paragraph{A practical guide.}
 The experiments suggest a simple workflow for future VLA acceleration studies:
@@ -828,7 +672,7 @@ The experiments suggest a simple workflow for future VLA acceleration studies:
     \item Re-evaluate candidate tactics on multiple held-out matched folds, because a proxy that works on one slice can overfit and destroy beneficial branches elsewhere.
     \item Select a deployment tactic from the Pareto frontier using explicit constraints such as worst-fold success, maximum paired regressions, and minimum speedup.
 \end{enumerate}
-This converts acceleration from a search for a single numerically closest implementation into an iterative exploration of the closed-loop solution space. Algorithm~\ref{alg:closed-loop-tactic-search} summarizes the resulting heuristic.
+This converts acceleration from a search for a single numerically closest implementation into an iterative exploration of the closed-loop solution space. We call the resulting workflow Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS), summarized in Algorithm~\ref{alg:closed-loop-tactic-search}.
 
 \begin{figure}[H]
 \centering
@@ -845,19 +689,19 @@ This converts acceleration from a search for a single numerically closest implem
     \item \textbf{Output:} a behavior-first tactic, a speed-constrained Pareto tactic, or a validated tactic selector, with its matched success, regression, and latency report.
 \end{enumerate}
 \end{minipage}}
-\caption{Heuristic search procedure used by our acceleration study. It is not an optimal-control solver; it is a practical way to spend limited rollout budget on tactics most likely to matter under closed-loop sensitivity.}
+\caption{Closed-Loop Sensitivity-Guided Tactic Search. The procedure is not an optimal-control solver; it is a practical way to spend limited rollout budget on tactics most likely to matter under closed-loop sensitivity.}
 \end{figure}
 
 \paragraph{Sensitivity-guided implementation search.}
-This view is analogous to compiler tactic search, but with a different validation cost. A system such as TensorRT can enumerate many operator implementations for a fixed shape, benchmark their latency, check local numerical agreement, and choose the fastest valid tactic. For VLA acceleration, the candidate space is similar in spirit---quantization scopes, graph boundaries, eager islands, fallback windows, kernel replacements, and calibration choices are all implementation tactics---but the validation target is closed-loop behavior. Exhaustively evaluating every candidate with robot rollouts is therefore infeasible.
+This view is analogous to compiler tactic search, but with a different validation cost. A system such as TensorRT can enumerate many operator implementations for a fixed shape, benchmark their latency, check local numerical agreement, and choose the fastest valid tactic. For VLA acceleration, the candidate space is similar in spirit: quantization scopes, graph boundaries, eager islands, fallback windows, kernel replacements, calibration choices, and tactic routers are all implementation tactics. The difference is that the validity test is not only local numerical agreement. It is paired closed-loop behavior under a rollout budget. Exhaustively evaluating every candidate with robot rollouts is therefore infeasible.
 
-The practical replacement is sensitivity-guided search rather than brute-force search. Cheap static and open-loop filters should first prune candidates by latency benefit, operator coverage, layerwise drift, action-channel drift, attention-routing sensitivity, and whether the candidate touches contact-critical or basin-critical regions. A smaller set can then be evaluated on proxy rollouts containing fragile matched cases, using first-divergence, EEF drift, and paired repair/regression. Only the most promising candidates should receive larger held-out closed-loop validation. In this sense, the 0--120 duration proxy is not a universal tactic; it is a candidate discovered by sensitivity-pruned search. Table~\ref{tab:phase34-multifold} shows the next step: after discovery, the tactic must be re-scored across validation folds, where behavior-first and speed-constrained objectives may choose different points on the Pareto frontier. Table~\ref{tab:n17-routing} further shows that the same protocol can compare fixed tactics with task-conditioned tactic routing on a newer checkpoint.
+The practical replacement is sensitivity-guided search rather than brute-force search. Cheap static and open-loop filters should first prune candidates by latency benefit, operator coverage, layerwise drift, action-channel drift, attention-routing sensitivity, and whether the candidate touches contact-critical or basin-critical regions. A smaller set can then be evaluated on proxy rollouts containing fragile matched cases, using first-divergence, EEF drift, and paired repair/regression. Only the most promising candidates should receive larger held-out closed-loop validation. In this sense, the 0--120 duration proxy is not a universal tactic; it is a candidate discovered by sensitivity-pruned search. Table~\ref{tab:phase34-multifold} shows the next step: after discovery, the tactic must be re-scored across validation folds, where behavior-first and speed-constrained objectives may choose different points on the Pareto frontier. Table~\ref{tab:n17-routing} further shows that the same protocol can compare fixed tactics with task-conditioned tactic routing on a newer checkpoint. The reusable object is therefore the search protocol, not the literal 0--120 window.
 
 \paragraph{Task-conditioned tactic routing.}
 The N1.7 experiment suggests a design implication: a deployment need not use one global acceleration tactic for every task. Instead, it can select among validated tactics according to task identity or a trajectory regime. This is reminiscent of mixture-of-experts routing, but the routed objects are not model experts or learned parameters. The router selects inference tactics such as eager execution, speed-only compiled execution, or sensitivity-preserving fallback windows. In this view, acceleration becomes closed-loop-aware inference scheduling. The held-out result also shows the risk: a probe-selected router can overfit to initial states, so routing itself must be evaluated by paired held-out rollouts rather than assumed safe.
 
 \paragraph{Calibration and protection.}
-Calibration or acceleration planning should not only minimize average layerwise error or maximize local speed. It should consider which errors matter for downstream control. A useful calibration or profiling set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware objective would approximate Equation~\ref{eq:closed-loop-quant-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, sensitivity-guided compile boundaries, or risk-gated precision fallback as natural next steps beyond ATM/OHB-style statistic matching.
+Calibration or acceleration planning should not only minimize average layerwise error or maximize local speed. It should consider which errors matter for downstream control. A useful calibration or profiling set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware objective would approximate Equation~\ref{eq:closed-loop-accel-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, sensitivity-guided compile boundaries, or risk-gated precision fallback as natural next steps.
 
 \paragraph{Closed-loop credit assignment.}
 This perspective borrows an idea from reinforcement learning without requiring full policy optimization: local action errors should be assigned credit according to their downstream effect on future rollout outcomes. In standard PTQ or speed-only compilation, an error $\eta_t$ is usually priced by its immediate norm or ignored if latency improves. In the closed-loop view, its risk is closer to $\eta_t^\top G_t\eta_t$, which assigns larger cost to directions that propagate through dynamics and reduce terminal task margin. This suggests a lightweight alternative to direct RL: use paired rollouts, first-divergence states, low-margin states, or repair/regression cases to estimate sensitivity proxies, then guide calibration, mixed precision, residual correction, compile boundaries, kernel replacement, or fallback decisions. The 0--120 duration proxy in Table~\ref{tab:phase29-speed-behavior} is an example of a useful proxy discovered by this process; the multi-fold comparison in Table~\ref{tab:phase34-multifold} shows why it should still be selected under explicit speed--risk constraints rather than treated as universally optimal.
@@ -875,152 +719,25 @@ The acceleration search illustrates both sides of this rule. Compiling the entir
 Acceleration-aware fine-tuning is policy adaptation under deployment constraints, including low precision, compiled execution, or custom kernels. If the objective is only behavior cloning on static observations, it may still miss closed-loop state distribution shift. More policy-aware objectives may be needed, including rollout-informed calibration, DAgger-style data aggregation, or task-slice reweighting.
 
 \paragraph{Deployment claims.}
-Our results are behavior-level evidence for two prototype acceleration paths: fake W4A8 quantization and action-head compilation boundaries. They do not establish final low-precision latency, memory, or energy improvements. A complete deployment claim requires packed low-precision kernels or production compile/graph backends, plus end-to-end inference profiling under the same closed-loop protocol.
+Our results are behavior-level evidence for prototype action-head compilation, fallback, and routing tactics. They do not establish final production latency, memory, or energy improvements. A complete deployment claim requires production compile/graph backends or custom kernels, plus end-to-end inference profiling under the same closed-loop protocol. High-performance runtimes such as TensorRT, CUDA Graph replay, or custom C++/CUDA operators impose constraints that eager PyTorch does not: graph breaks, dynamic routing, or duration-dependent fallback may add scheduling overhead, memory pressure, graph-cache churn, or lost fusion. CLSG-TS is therefore a backend-selection and validation guide; the final backend must still realize the selected tactic with stable graphs and measured end-to-end cost.
 
 \section{Limitations}
 
-This study has several limitations. The quantized implementation uses fake quantization, not a final packed int4/int8 deployment backend. The mixed-execution acceleration probes use prototype action-head compilation boundaries and duration fallbacks; they should be read as diagnostic evidence for the guide rather than a production deployment benchmark. Results are centered on one GR00T N1.5 checkpoint and LIBERO-10, with a small N1.7 held-out transfer check rather than a broad multi-family benchmark. The quantization closed-loop benchmark has 150 task-initialization pairs; the N1.5 acceleration track uses a 33-case discovery probe and two 30-case held-out folds, and the N1.7 tactic-routing check uses 15 held-out cases. These are enough to expose tactic instability but not enough for a definitive deployment benchmark. The task-conditioned router is offline-selected at task level; online sensitivity-triggered routing remains future work. We do not run real-robot experiments. ATM/OHB are implemented as reproduction-oriented calibration mechanisms; exact implementation details may differ from the original paper. The keyframe and EEF diagnostics cover representative flips, but they are not an exhaustive geometric measurement for every paired outcome.
+This study has several limitations. The mixed-execution acceleration probes use prototype action-head compilation boundaries and duration fallbacks; they should be read as diagnostic evidence for CLSG-TS rather than a production deployment benchmark. The backend gap is especially important for edge deployment on platforms such as NVIDIA Thor: a tactic that is cheap to express in PyTorch may be expensive to realize in TensorRT, CUDA Graph replay, or a custom operator stack if it requires dynamic routing, frequent graph cuts, or multiple warmed execution paths. We therefore claim that closed-loop sensitivity should decide which regions deserve protection, not that the exact PyTorch tactics are the final deployable form.
+
+The empirical scale is also limited. Results are centered on one GR00T N1.5 checkpoint and LIBERO-10, plus a small N1.7 held-out transfer check. The N1.5 acceleration track uses a 33-case discovery probe and two 30-case held-out folds, and the N1.7 tactic-routing check uses 15 held-out cases. These experiments expose tactic instability and speed--risk structure, but they are not a definitive deployment benchmark or open-world robustness claim. The task-conditioned router is selected offline at task level; online sensitivity-triggered routing, broader model families, real-robot experiments, and more exhaustive geometric diagnostics remain future work.
 
 These limitations do not weaken the central methodological point: local action approximation and closed-loop policy behavior are distinct evaluation targets.
 
 \section{Conclusion}
 
-Post-training inference acceleration of VLA policies should be viewed as closed-loop policy perturbation. Even small action errors can matter because they enter a feedback loop, alter the induced state distribution, and interact with task-dependent success margins. In our GR00T/LIBERO study, selective W4A8 fake quantization remains behaviorally robust but redistributes which rollouts succeed. Prototype action-head compilation gives substantial warm serving speedups, yet speed-only execution introduces closed-loop regressions. Sensitivity-guided search finds useful protected regions, such as the early 0--120 policy-step window, but held-out validation shows that the final choice must be made as a constrained tactic-selection problem. Behavior-first, speed-constrained, and task-routed objectives can choose different points on the same speed--risk frontier.
+Post-training inference acceleration of VLA policies should be viewed as closed-loop policy perturbation. Even small action errors can matter because they enter a feedback loop, alter the induced state distribution, and interact with task-dependent success margins. Prototype action-head compilation gives substantial warm serving speedups, yet speed-only execution introduces closed-loop regressions. CLSG-TS finds useful protected regions, such as the early 0--120 policy-step window, but held-out validation shows that the final choice must be made as a constrained tactic-selection problem. Behavior-first, speed-constrained, and task-routed objectives can choose different points on the same speed--risk frontier.
 
-The main lesson is practical: VLA acceleration papers should report paired closed-loop rollouts, repair/regression decompositions, sensitivity probes, held-out tactic validation, and latency under the same protocol, not only offline drift, aggregate success, or raw serving speed. Small action errors matter when they change the trajectory basin; useful acceleration comes from finding which perturbations are closed-loop sensitive and selecting the smallest protective tactics that satisfy explicit speed--risk constraints.
+The main lesson is practical: VLA acceleration papers should report paired closed-loop rollouts, repair/regression decompositions, sensitivity probes, held-out tactic validation, and latency under the same protocol, not only offline drift, aggregate success, or raw serving speed. Small action errors matter when they change the trajectory basin. Useful acceleration therefore comes from finding which perturbations are closed-loop sensitive and selecting the smallest protective tactics that satisfy explicit speed--risk constraints. The same sensitivity maps also suggest a future training route: noise-aware distillation or reinforcement-learning-based robust fine-tuning can focus perturbation training on the states, durations, action channels, and graph boundaries that matter most in closed loop, rather than injecting noise uniformly.
 
-\appendix
-
-\section{Keyframe Contact Sheets}
-\label{app:keyframe-sheets}
-
-The following contact sheets support the qualitative diagnostics in Table~\ref{tab:keyframe-diagnostics}. They are enlarged here for visual inspection. Each sheet shows matched FP16, W4A8 \texttt{none}, and W4A8 ATM+OHB rows sampled uniformly over the rollout.
-
-\begin{landscape}
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.98\linewidth]{none_repair_task8_init7.jpg}
-    \caption{Task 8 init 7: W4A8 \texttt{none} repairs FP16 and ATM+OHB horizon failures by entering a shorter successful branch.}
-    \label{fig:keyframe-none-repair-task8-init7}
-\end{figure}
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.98\linewidth]{atmohb_repair_task4_init10.jpg}
-    \caption{Task 4 init 10: ATM+OHB repairs both FP16 and W4A8 \texttt{none} failures with an early mug/plate completion.}
-    \label{fig:keyframe-atmohb-repair-task4-init10}
-\end{figure}
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.98\linewidth]{none_regress_task0_init3.jpg}
-    \caption{Task 0 init 3: W4A8 \texttt{none} regresses a fast FP16/ATM+OHB success by disturbing the early object-container relation.}
-    \label{fig:keyframe-none-regress-task0-init3}
-\end{figure}
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.98\linewidth]{atmohb_regress_task6_init1.jpg}
-    \caption{Task 6 init 1: ATM+OHB remains visually stable but under-progresses around the decisive placement phase, while FP16 and W4A8 \texttt{none} succeed.}
-    \label{fig:keyframe-atmohb-regress-task6-init1}
-\end{figure}
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.98\linewidth]{both_quant_regress_task8_init0.jpg}
-    \caption{Task 8 init 0: both quantized modes regress a successful FP16 rollout, showing that task 8 contains both quantization repairs and quantization regressions.}
-    \label{fig:keyframe-both-quant-regress-task8-init0}
-\end{figure}
-\end{landscape}
-
-\clearpage
-
-\section{Detailed Experimental Tables}
-\label{app:tables}
-
-\subsection{Standard 5-Trial FP16 and ATM+OHB W4A8}
-
-\begin{table}[H]
-\centering
-\caption{Standard 5-trial LIBERO-10 comparison.}
-\begin{tabular}{rrrr}
-\toprule
-Task id & FP16 & W4A8 ATM+OHB & Delta \\
-\midrule
-0 & 5/5 & 5/5 & 0 \\
-1 & 3/5 & 4/5 & +1 \\
-2 & 3/5 & 5/5 & +2 \\
-3 & 5/5 & 5/5 & 0 \\
-4 & 4/5 & 4/5 & 0 \\
-5 & 5/5 & 5/5 & 0 \\
-6 & 3/5 & 2/5 & -1 \\
-7 & 4/5 & 3/5 & -1 \\
-8 & 1/5 & 0/5 & -1 \\
-9 & 5/5 & 5/5 & 0 \\
-\midrule
-Total & 38/50 & 38/50 & 0 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Disjoint Init 5--14 FP16 and ATM+OHB W4A8}
-
-\begin{table}[H]
-\centering
-\caption{Disjoint init 5--14 comparison.}
-\begin{tabular}{rrrr}
-\toprule
-Task id & FP16 & W4A8 ATM+OHB & Delta \\
-\midrule
-0 & 8/10 & 8/10 & 0 \\
-1 & 8/10 & 10/10 & +2 \\
-2 & 9/10 & 8/10 & -1 \\
-3 & 10/10 & 10/10 & 0 \\
-4 & 4/10 & 8/10 & +4 \\
-5 & 10/10 & 10/10 & 0 \\
-6 & 3/10 & 5/10 & +2 \\
-7 & 7/10 & 7/10 & 0 \\
-8 & 2/10 & 3/10 & +1 \\
-9 & 9/10 & 7/10 & -2 \\
-\midrule
-Total & 70/100 & 76/100 & +6 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Ablation: W4A8 None, ATM, OHB}
-
-\begin{table}[H]
-\centering
-\caption{Ablation over init 0--14.}
-\begin{tabular}{rrrrrr}
-\toprule
-Task id & None & ATM & OHB & ATM-None & OHB-None \\
-\midrule
-0 & 10/15 & 11/15 & 13/15 & +1 & +3 \\
-1 & 13/15 & 13/15 & 14/15 & 0 & +1 \\
-2 & 13/15 & 14/15 & 15/15 & +1 & +2 \\
-3 & 15/15 & 13/15 & 13/15 & -2 & -2 \\
-4 & 8/15 & 13/15 & 12/15 & +5 & +4 \\
-5 & 14/15 & 14/15 & 15/15 & 0 & +1 \\
-6 & 9/15 & 10/15 & 8/15 & +1 & -1 \\
-7 & 8/15 & 8/15 & 8/15 & 0 & 0 \\
-8 & 9/15 & 4/15 & 6/15 & -5 & -3 \\
-9 & 14/15 & 14/15 & 12/15 & 0 & -2 \\
-\midrule
-Total & 113/150 & 114/150 & 116/150 & +1 & +3 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.92\linewidth]{fig4_task_redistribution.pdf}
-    \caption{Task-wise success redistribution across policy variants. Aggregate changes arise from heterogeneous task-level gains and regressions rather than uniform improvement.}
-    \label{fig:task-redistribution}
-\end{figure}
-
+{\small
 \bibliographystyle{plainnat}
 \bibliography{references}
+}
 
 \end{document}
