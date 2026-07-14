@@ -7,6 +7,7 @@ checkpoint, but keeps the input synthetic and tiny. It is not an evaluation.
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import os
 import sys
@@ -20,6 +21,7 @@ import numpy as np
 def _insert_paths(isaac_root: Path, compat_stubs: Path | None) -> None:
     if compat_stubs is not None:
         sys.path.insert(0, str(compat_stubs))
+        importlib.import_module("sitecustomize")
     sys.path.insert(0, str(isaac_root))
 
 
