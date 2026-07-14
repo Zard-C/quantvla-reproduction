@@ -8,6 +8,7 @@ mkdir -p /tmp/logs toy_quantvla/results
 
 PYTHON_BIN="${PYTHON_BIN:-/root/autodl-tmp/envs/gr00t-libero-py310/bin/python}"
 ISAAC_ROOT="${ISAAC_ROOT:-/root/autodl-tmp/Isaac-GR00T-n1.5}"
+COMPAT_STUBS="${COMPAT_STUBS:-toy_quantvla/compat_stubs}"
 MODEL_PATH="${MODEL_PATH:-/root/autodl-tmp/models/gr00t-n1.5-libero-long-posttrain}"
 DATA_CONFIG="${DATA_CONFIG:-examples.Libero.custom_data_config:LiberoDataConfig}"
 EMBODIMENT_TAG="${EMBODIMENT_TAG:-new_embodiment}"
@@ -180,6 +181,7 @@ start_server() {
     TRANSFORMERS_OFFLINE=1 \
     "${PYTHON_BIN}" toy_quantvla/timed_fp16_inference_service.py \
       --isaac-root "${ISAAC_ROOT}" \
+      --compat-stubs "${COMPAT_STUBS}" \
       --model-path "${MODEL_PATH}" \
       --data-config "${DATA_CONFIG}" \
       --embodiment-tag "${EMBODIMENT_TAG}" \
@@ -211,6 +213,7 @@ echo "RUN_REAL_DRIFT=${RUN_REAL_DRIFT}"
 echo "REAL_VECTOR_JSON=${REAL_VECTOR_JSON}"
 echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
 echo "PORT=${PORT}"
+echo "COMPAT_STUBS=${COMPAT_STUBS}"
 echo "TRACE_ROOT=${TRACE_ROOT}"
 echo "MANIFEST_JSONL=${MANIFEST_JSONL}"
 
