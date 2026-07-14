@@ -31,7 +31,7 @@ docs/phase38_experiment_freeze_summary_zh.md
 toy_quantvla/run_phase39_perturb_threshold_pilot.sh
 ```
 
-4. pilot 只跑：
+4. 先跑 axis-aligned pilot：
 
 ```text
 cases:
@@ -80,6 +80,29 @@ epsilons:
   0.05
 ```
 
+5. 同时准备 real-backend-drift-aligned pilot，不要把手工方向当作真实部署误差：
+
+```text
+toy_quantvla/phase39_real_drift_directions.py
+```
+
+先从已有 paired traces 中估计：
+
+```text
+real_speed_only_mean = mean_t(action_speed_only_t - action_baseline_t)
+```
+
+再用：
+
+```text
+RUN_REAL_DRIFT=1
+REAL_VECTOR_JSON=toy_quantvla/results/phase39_real_drift_directions.json
+```
+
+接入 `run_phase39_perturb_threshold_pilot.sh`。
+
+注意：paired closed-loop traces 在 first divergence 之后会混入状态分布偏移，所以这一步是 real tactic footprint，不是严格 same-observation functional drift。若结果重要，后续需要补 same-observation drift capture。
+
 ## 输出要求
 
 生成：
@@ -124,6 +147,7 @@ pilot 目标不是跑很多 case，而是验证是否能看到：
 ```text
 y/yaw threshold < z threshold
 early threshold < late threshold
+real_speed_only_mean threshold 能否解释真实 tactic regression / repair
 ```
 
 如果这个成立，再进入 Stage B discovery。
@@ -135,4 +159,3 @@ early threshold < late threshold
 - trace 优先保存失败边界附近的 epsilon，例如刚从 success 变 fail 的点。
 - 如果某个方向全成功或全失败，不要硬插值；报告 threshold 为 `> max_epsilon` 或 `<= min_epsilon`。
 - 先保证 pilot 可解释，再扩大。
-

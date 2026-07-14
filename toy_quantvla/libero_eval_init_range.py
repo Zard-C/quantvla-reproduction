@@ -111,6 +111,20 @@ def parse_action_keys(spec: str | None) -> list[str]:
     return out
 
 
+def parse_action_vector(spec: str | None) -> list[float] | None:
+    if not spec:
+        return None
+    values = [float(item.strip()) for item in str(spec).split(",") if item.strip()]
+    if len(values) == 6:
+        values.append(0.0)
+    if len(values) != len(ACTION_KEYS):
+        raise ValueError(
+            f"Expected --action-perturb-vector to contain 6 continuous values "
+            f"or 7 LIBERO action values, got {len(values)}"
+        )
+    return values
+
+
 def action_scalar(value) -> float:
     return float(np.asarray(value).reshape(-1)[0])
 
@@ -297,11 +311,14 @@ def deterministic_policy_seed(base_seed: int, task_id: int, init_index: int, pol
 
 def action_perturbation_config(args: argparse.Namespace) -> dict:
     keys = parse_action_keys(args.action_perturb_keys)
+    vector = parse_action_vector(args.action_perturb_vector)
     return {
         "keys": keys,
+        "vector": vector,
         "amplitude": float(args.action_perturb_amplitude),
         "sign": float(args.action_perturb_sign),
         "normalize_by_num_keys": bool(args.action_perturb_normalize_by_num_keys),
+        "normalize_vector": bool(args.action_perturb_normalize_vector),
         "step_start": None if args.action_perturb_step_start is None else int(args.action_perturb_step_start),
         "step_end": None if args.action_perturb_step_end is None else int(args.action_perturb_step_end),
         "clip": bool(args.action_perturb_clip),
@@ -315,8 +332,9 @@ def apply_action_perturbation(
     config: dict,
 ) -> tuple[np.ndarray, dict]:
     keys = config["keys"]
+    vector = config.get("vector")
     amplitude = float(config["amplitude"])
-    if not keys or amplitude == 0.0:
+    if (not keys and vector is None) or amplitude == 0.0:
         return action, {"enabled": False}
 
     step_start = config["step_start"]
@@ -335,28 +353,39 @@ def apply_action_perturbation(
             "step_end": step_end,
         }
 
-    delta_per_key = amplitude * float(config["sign"])
-    if config["normalize_by_num_keys"]:
-        delta_per_key /= float(np.sqrt(len(keys)))
-
     perturbed = action.copy()
     delta = np.zeros_like(perturbed, dtype=np.float32)
-    for key in keys:
-        idx = ACTION_KEY_TO_INDEX[key]
-        delta[idx] = np.float32(delta_per_key)
-        perturbed[idx] = np.float32(perturbed[idx] + delta[idx])
+    if vector is not None:
+        base = np.asarray(vector, dtype=np.float64)
+        if config["normalize_vector"]:
+            norm = float(np.linalg.norm(base))
+            if norm == 0.0:
+                raise ValueError("--action-perturb-vector has zero norm")
+            base = base / norm
+        delta = (amplitude * float(config["sign"]) * base).astype(np.float32)
+        perturbed = (perturbed + delta).astype(np.float32)
+    else:
+        delta_per_key = amplitude * float(config["sign"])
+        if config["normalize_by_num_keys"]:
+            delta_per_key /= float(np.sqrt(len(keys)))
+        for key in keys:
+            idx = ACTION_KEY_TO_INDEX[key]
+            delta[idx] = np.float32(delta_per_key)
+            perturbed[idx] = np.float32(perturbed[idx] + delta[idx])
     if config["clip"]:
         perturbed = np.clip(perturbed, -1.0, 1.0).astype(np.float32)
     return perturbed, {
         "enabled": True,
         "applied": True,
         "keys": keys,
+        "vector": None if vector is None else [float(x) for x in vector],
         "policy_step": int(policy_step),
         "step_start": step_start,
         "step_end": step_end,
         "amplitude": amplitude,
         "sign": float(config["sign"]),
         "normalize_by_num_keys": bool(config["normalize_by_num_keys"]),
+        "normalize_vector": bool(config["normalize_vector"]),
         "delta": as_float_list(delta),
         "l2_norm": float(np.linalg.norm(delta.astype(np.float64))),
         "clip": bool(config["clip"]),
@@ -698,6 +727,13 @@ def main() -> None:
         "--action-perturb-keys",
         help="Comma-separated action keys or groups to perturb after policy inference. Groups: translation, rotation, continuous, all.",
     )
+    parser.add_argument(
+        "--action-perturb-vector",
+        help=(
+            "Comma-separated 6D continuous or 7D LIBERO direction vector. "
+            "When provided, --action-perturb-amplitude is the injected L2 norm by default."
+        ),
+    )
     parser.add_argument("--action-perturb-amplitude", type=float, default=0.0)
     parser.add_argument("--action-perturb-sign", type=float, default=1.0)
     parser.add_argument(
@@ -705,6 +741,12 @@ def main() -> None:
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Divide per-key delta by sqrt(number of perturbed keys) to keep matched L2 norm.",
+    )
+    parser.add_argument(
+        "--action-perturb-normalize-vector",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Normalize --action-perturb-vector before scaling by --action-perturb-amplitude.",
     )
     parser.add_argument("--action-perturb-step-start", type=int)
     parser.add_argument("--action-perturb-step-end", type=int)

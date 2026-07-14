@@ -50,9 +50,26 @@ not only local numerical tolerances.
 
 Phase 39 不重复这些结论，而是估计“多大扰动会出事”。
 
+## 重要修正：手工方向不等于真实 backend drift
+
+`y/z/yaw/continuous_6d` 这类手工 action perturbation 是必要的校准实验，但它们不是最终部署误差本身。
+
+真实 backend drift 更接近一个状态相关、时间相关的向量场：
+
+```text
+eta_real_t(s_t) = pi_backend(s_t) - pi_ref(s_t)
+```
+
+它通常不会和某个单独 action 维度对齐，而且不同 tactic 的 drift 方向也可能不同。因此 Phase 39 分成两条线：
+
+1. **Axis-aligned threshold calibration**：用 `y/z/yaw/continuous_6d` 建立闭环敏感性的坐标系，回答“哪些方向/阶段天然低阈值”。
+2. **Real-drift-aligned threshold validation**：从真实 tactic trace 中估计 `eta_real` 的方向或时间序列，再沿真实 backend drift 方向扫 epsilon，回答“当前后端误差是否落在低阈值方向上”。
+
+这也改变论文表述：axis sweep 只能证明 closed-loop sensitivity 的各向异性；部署指导必须进一步比较真实 tactic drift 与 threshold map 的对齐关系。
+
 ## 实验设计总览
 
-### Stage A: 2-case pilot，验证 threshold sweep
+### Stage A1: 2-case pilot，验证 axis-aligned threshold sweep
 
 目的：先验证脚本、指标和阈值曲线，不追求统计结论。
 
@@ -112,6 +129,61 @@ pilot 成功条件：
 至少看到 y/yaw 的 flip threshold 低于 z。
 至少看到 early threshold 低于 late。
 ```
+
+### Stage A2: real-backend-drift-aligned pilot
+
+目的：避免只研究手工方向，直接测试真实后端 drift 方向上的闭环阈值。
+
+输入可以来自两类 trace：
+
+```text
+1. 已有 paired closed-loop traces:
+   baseline action vs speed_only/proxy action
+
+2. 更严格的 same-observation diagnostic:
+   在 FP16 nominal observation 上同时查询 reference 和 tactic
+```
+
+第一类成本低，但 first divergence 之后会混入状态分布偏移；第二类更干净，但需要额外 online diagnostic。
+
+本阶段先做低成本版本：
+
+```text
+direction = normalized mean_t(action_speed_only_t - action_baseline_t)
+```
+
+并按窗口计算：
+
+```text
+real_speed_only_mean(full)
+real_speed_only_mean(early)
+real_speed_only_mean(mid/late)
+```
+
+然后使用和 Stage A1 相同的 epsilon grid 做闭环注入：
+
+```text
+action_t = action_ref_t + epsilon * normalize(real_speed_only_mean_window)
+```
+
+判断标准：
+
+```text
+如果 real_speed_only_mean 的 threshold 明显低于 z 但接近 y/yaw，
+说明真实后端 drift 确实落在闭环敏感方向上。
+
+如果 real_speed_only_mean 的 threshold 很高，
+说明真实 tactic 的失败可能更多来自时变 drift、局部 spike、分布偏移，
+而不是单一平均方向。
+```
+
+更进一步的版本是 replay-style drift scaling：
+
+```text
+action_t = action_ref_t + lambda * eta_real_t
+```
+
+它比 mean direction 更接近真实 backend，但需要保存或重放逐步 drift 序列。
 
 ### Stage B: 33-case discovery threshold map
 
@@ -289,6 +361,7 @@ speedup
 
 ```text
 toy_quantvla/run_phase39_perturb_threshold_pilot.sh
+toy_quantvla/phase39_real_drift_directions.py
 toy_quantvla/run_phase39_perturb_threshold_discovery.sh
 toy_quantvla/phase39_perturb_threshold_summary.py
 toy_quantvla/phase39_backend_drift_risk_score.py
@@ -352,4 +425,3 @@ Given a perturbation budget map, choose a backend tactic that stays under the bu
 说明现有 tactic 候选空间太窄。
 需要新增更多 protection/window/backend 候选，而不是否定 threshold map。
 ```
-
