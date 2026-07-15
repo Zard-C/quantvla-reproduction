@@ -46,6 +46,15 @@ def tactic_label(tactic: str) -> str:
     match = re.fullmatch(r"window_(\d+)_(\d+)", tactic)
     if match:
         return f"Request window {match.group(1)}-{match.group(2)}"
+    match = re.fullmatch(r"blocks(\d+)_(\d+)", tactic)
+    if match:
+        return f"Blocks {match.group(1)}-{match.group(2)} eager island"
+    match = re.fullmatch(r"blocks(\d+)_(\d+)_window_(\d+)_(\d+)", tactic)
+    if match:
+        return (
+            f"Blocks {match.group(1)}-{match.group(2)} eager island "
+            f"+ request window {match.group(3)}-{match.group(4)}"
+        )
     return tactic
 
 

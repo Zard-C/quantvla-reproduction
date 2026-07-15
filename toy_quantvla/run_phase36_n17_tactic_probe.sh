@@ -42,6 +42,27 @@ configure_tactic() {
     TORCH_COMPILE_FALLBACK_STEP_END="${BASH_REMATCH[2]}"
     return 0
   fi
+  if [[ "$1" =~ ^blocks([0-9]+)_([0-9]+)(_window_([0-9]+)_([0-9]+))?$ ]]; then
+    TORCH_COMPILE_TARGET="action_head_model_blocks_${BASH_REMATCH[1]}_${BASH_REMATCH[2]}_eager"
+    case "${TORCH_COMPILE_TARGET}" in
+      action_head_model_blocks_0_3_eager|\
+      action_head_model_blocks_0_7_eager|\
+      action_head_model_blocks_0_15_eager|\
+      action_head_model_blocks_8_15_eager|\
+      action_head_model_blocks_16_31_eager|\
+      action_head_model_blocks_0_31_eager)
+        ;;
+      *)
+        echo "Unsupported N1.7 block-island tactic: $1 -> ${TORCH_COMPILE_TARGET}" >&2
+        return 1
+        ;;
+    esac
+    if [ -n "${BASH_REMATCH[3]}" ]; then
+      TORCH_COMPILE_FALLBACK_STEP_START="${BASH_REMATCH[4]}"
+      TORCH_COMPILE_FALLBACK_STEP_END="${BASH_REMATCH[5]}"
+    fi
+    return 0
+  fi
   case "$1" in
     fp16)
       TORCH_COMPILE_TARGET="none"

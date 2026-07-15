@@ -50,6 +50,44 @@ warm-start window probes
 3. `window_4_9` / `window_6_11` 说明 BO proposal 不能跳过 held-out validation。surrogate 可以提出候选，但最终选择仍要靠 paired rollout validation。
 4. 论文主线可以从“我们做了一堆窗口实验”升级为：closed-loop sensitivity-guided BO/active search 能更高效地探索 VLA inference tactic 的 speed-risk frontier。
 
+## 下一步：Phase43 hybrid CLSG-BO probe
+
+计划: [`docs/phase43_n17_hybrid_bo_probe_plan_zh.md`](phase43_n17_hybrid_bo_probe_plan_zh.md)
+
+Phase43 将 BO 从二维 duration-window search 扩展到 hybrid tactic search：
+
+```text
+duration window x layer eager island
+```
+
+默认脚本：
+
+```bash
+bash toy_quantvla/run_phase43_n17_hybrid_bo_probe.sh
+```
+
+默认 cases:
+
+```text
+tasks 0/1/4/6/8 x init 33/34 = 10 cases
+```
+
+默认 tactics:
+
+```text
+fp16
+speed_only
+window_0_20
+window_2_12
+blocks0_3
+blocks0_3_window_0_20
+blocks0_3_window_2_12
+blocks8_15_window_2_12
+blocks16_31_window_2_12
+```
+
+核心问题：`blocks0_3_window_2_12` 这类 layer × duration 组合能否在保持 `window_2_12` 速度优势的同时进一步减少 paired regression；如果不能，说明当前 N1.7 的有效搜索维度主要还是 duration，而不是 layer island。
+
 ## Phase39 closed-loop perturbation budget
 
 报告:
