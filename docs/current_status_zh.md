@@ -53,6 +53,7 @@ warm-start window probes
 ## 下一步：Phase43 hybrid CLSG-BO probe
 
 计划: [`docs/phase43_n17_hybrid_bo_probe_plan_zh.md`](phase43_n17_hybrid_bo_probe_plan_zh.md)
+后续队列计划: [`docs/phase44_45_n17_hybrid_followup_queue_plan_zh.md`](phase44_45_n17_hybrid_followup_queue_plan_zh.md)
 
 Phase43 将 BO 从二维 duration-window search 扩展到 hybrid tactic search：
 
@@ -87,6 +88,16 @@ blocks16_31_window_2_12
 ```
 
 核心问题：`blocks0_3_window_2_12` 这类 layer × duration 组合能否在保持 `window_2_12` 速度优势的同时进一步减少 paired regression；如果不能，说明当前 N1.7 的有效搜索维度主要还是 duration，而不是 layer island。
+
+已准备自动 follow-up queue：
+
+```text
+Phase43 10-case hybrid probe
+-> Phase44 15-case new-init held-out，自动选择最多 7 个 tactic
+-> Phase45 20-case all-task stress check，自动选择最多 6 个 tactic
+```
+
+自动选择规则：保留 `fp16/speed_only/window_0_20/window_2_12` anchor，再按 paired regression、success、speedup 从 `blocks*` hybrid tactic 中选 follow-up 候选。这样 GPU 不会空跑，同时避免完全手工猜下一批。
 
 ## Phase39 closed-loop perturbation budget
 
