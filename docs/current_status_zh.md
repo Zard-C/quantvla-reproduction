@@ -13,7 +13,44 @@
 
 论文主线已经从单纯的量化复现，扩展为 VLA/world-action policy 的推理加速闭环分析。这里的推理加速包括 fake quantization、graph compile、eager island、mixed precision 和未来的 packed kernel / CUDA kernel 路线。
 
-## 最新阶段：Phase39 closed-loop perturbation budget
+## 最新阶段：Phase40-42 CLSG-BO tactic search
+
+报告:
+
+- Phase40 warm-start report: [`docs/phase40_n17_active_tactic_search_batch1_report_zh.md`](phase40_n17_active_tactic_search_batch1_report_zh.md)
+- Phase41 BO batch report: [`docs/phase41_clsg_bo_batch1_from_phase40_report_zh.md`](phase41_clsg_bo_batch1_from_phase40_report_zh.md)
+- Phase42 held-out report: [`docs/phase42_n17_bo_heldout_validation_report_zh.md`](phase42_n17_bo_heldout_validation_report_zh.md)
+- Phase42 summary: [`docs/phase42_clsg_bo_heldout_summary_zh.md`](phase42_clsg_bo_heldout_summary_zh.md)
+- BO selector report: [`docs/phase42_clsg_bo_selector_from_phase40_phase41_zh.md`](phase42_clsg_bo_selector_from_phase40_phase41_zh.md)
+
+Phase40-42 把前面的 closed-loop sensitivity 结论变成了一个可执行的 active/BO tactic search 流程：
+
+```text
+warm-start window probes
+-> CLSG-BO selector
+-> BO-selected candidate rollouts
+-> new-init held-out validation
+```
+
+核心结果：
+
+| tactic | Phase42 held-out success | p50 ms | speedup vs FP16 | paired vs FP16 | 定位 |
+| --- | ---: | ---: | ---: | --- | --- |
+| `fp16` | `13/15` | `85.42` | `-` | baseline | reference |
+| `speed_only` | `13/15` | `64.25` | `1.33x` | `1` repair / `1` regression | aggressive speed anchor |
+| `window_0_20` | `15/15` | `80.99` | `1.05x` | `2` repairs / `0` regressions | behavior-first candidate |
+| `window_2_12` | `14/15` | `65.76` | `1.30x` | `1` repair / `0` regressions | speed-constrained candidate |
+| `window_4_9` | `12/15` | `62.36` | `1.37x` | `1` repair / `2` regressions | BO proposal, not robust |
+| `window_6_11` | `13/15` | `63.26` | `1.35x` | `2` repairs / `2` regressions | BO proposal, mixed |
+
+当前判断：
+
+1. `window_0_20` 是目前 N1.7 上最稳的 behavior-first tactic。它在 Phase40 和 Phase42 两个不同 init slice 上都保持 `0` paired regression，并在 Phase42 达到 `15/15`。
+2. `window_2_12` 是 BO 找到的更好的 speed-risk 折中点。Phase42 上它保持 `0` paired regression，同时有 `1.30x` p50 speedup。
+3. `window_4_9` / `window_6_11` 说明 BO proposal 不能跳过 held-out validation。surrogate 可以提出候选，但最终选择仍要靠 paired rollout validation。
+4. 论文主线可以从“我们做了一堆窗口实验”升级为：closed-loop sensitivity-guided BO/active search 能更高效地探索 VLA inference tactic 的 speed-risk frontier。
+
+## Phase39 closed-loop perturbation budget
 
 报告:
 
@@ -42,29 +79,6 @@ Stage A2 real-backend-drift replay 也已完成。我们在 FP16 nominal observa
 | `blocks0-3 + window0-120` | 两个 case、full/early | `0.25/0.5/1.0` 全成功 | protected tactic 明显降低 outcome-level regression risk |
 
 A2 的关键意义是把 controlled perturbation 和真实后端误差接上了：风险不是手工构造方向才有，真实 `torch.compile` drift sequence 本身也能落在闭环敏感方向上；同时 sensitivity-guided protection 能改变 drift 的闭环风险。
-
-## Running: Phase40 N1.7 active tactic search batch-1
-
-计划: [`docs/phase40_n17_active_tactic_search_batch1_plan_zh.md`](phase40_n17_active_tactic_search_batch1_plan_zh.md)
-
-Phase40 已在 5090 上启动，tmux session:
-
-```text
-phase40_n17_active_batch1
-```
-
-这轮是 active tactic search 的第一批 warm-start probe，在 N1.7 新 held-out init `27/28/29` 上比较：
-
-```text
-fp16
-speed_only
-window_0_20
-window_5_15
-window_8_18
-window_10_20
-```
-
-目标是检查 Phase37 中的行为优先点、高速折中点和边界附近窗口是否能跨 init 泛化，并为下一轮 task-conditioned / active selection 提供数据。
 
 ## 核心判断
 

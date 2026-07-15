@@ -4,7 +4,6 @@ The figures use only aggregate values already documented in the phase reports.
 They are designed to be converted to vector PDF with `rsvg-convert`.
 """
 
-import csv
 import json
 from pathlib import Path
 
@@ -268,28 +267,49 @@ def fig5():
         key=lambda row: row["x"],
     )
 
-    n17_path = ROOT / "toy_quantvla" / "results" / "phase37b_n17_heldout_routing_15case_v1_pareto_summary.csv"
-    if n17_path.exists():
-        with n17_path.open(newline="", encoding="utf-8") as fh:
-            n17_rows = list(csv.DictReader(fh))
+    n17_json = ROOT / "toy_quantvla" / "results" / "phase42_n17_bo_heldout_validation_15case_v1_summary.json"
+    if n17_json.exists():
+        data = json.loads(n17_json.read_text(encoding="utf-8"))
+        pair_by_tactic = {
+            row["right"]: row
+            for row in data.get("pairs", [])
+            if row.get("left") == "fp16"
+        }
+        n17_rows = []
+        for run in data.get("runs", []):
+            tactic = run.get("tactic")
+            if tactic == "fp16":
+                continue
+            pair = pair_by_tactic.get(tactic, {})
+            n17_rows.append(
+                {
+                    "deployment_point": tactic,
+                    "speedup_vs_fp16_p50": str(run.get("speedup_vs_fp16_avg_p50") or 1.0),
+                    "regressions_vs_fp16": str(len(pair.get("regressed") or [])),
+                    "success_rate": str(run.get("success_rate") or 0.0),
+                }
+            )
     else:
         n17_rows = [
-            {"deployment_point": "speed_only", "speedup_vs_fp16_p50": "1.48", "regressions_vs_fp16": "3", "success_rate": "0.733"},
-            {"deployment_point": "window_5_15", "speedup_vs_fp16_p50": "1.22", "regressions_vs_fp16": "1", "success_rate": "0.867"},
-            {"deployment_point": "window_0_20", "speedup_vs_fp16_p50": "1.09", "regressions_vs_fp16": "1", "success_rate": "0.933"},
-            {"deployment_point": "routed_tactic", "speedup_vs_fp16_p50": "1.40", "regressions_vs_fp16": "2", "success_rate": "0.867"},
+            {"deployment_point": "speed_only", "speedup_vs_fp16_p50": "1.33", "regressions_vs_fp16": "1", "success_rate": "0.867"},
+            {"deployment_point": "window_0_20", "speedup_vs_fp16_p50": "1.05", "regressions_vs_fp16": "0", "success_rate": "1.000"},
+            {"deployment_point": "window_2_12", "speedup_vs_fp16_p50": "1.30", "regressions_vs_fp16": "0", "success_rate": "0.933"},
+            {"deployment_point": "window_4_9", "speedup_vs_fp16_p50": "1.37", "regressions_vs_fp16": "2", "success_rate": "0.800"},
+            {"deployment_point": "window_6_11", "speedup_vs_fp16_p50": "1.35", "regressions_vs_fp16": "2", "success_rate": "0.867"},
         ]
     n17_label = {
         "speed_only": "speed-only",
-        "window_5_15": "5-15",
         "window_0_20": "0-20",
-        "routed_tactic": "routed",
+        "window_2_12": "2-12",
+        "window_4_9": "4-9",
+        "window_6_11": "6-11",
     }
     n17_color = {
         "speed_only": C["red"],
-        "window_5_15": C["green"],
         "window_0_20": C["blue"],
-        "routed_tactic": C["purple"],
+        "window_2_12": C["green"],
+        "window_4_9": C["orange"],
+        "window_6_11": C["purple"],
     }
     points_right = sorted(
         [
@@ -373,18 +393,19 @@ def fig5():
         250,
         170,
         1.0,
-        1.55,
-        4,
+        1.45,
+        3,
         [1.0, 1.2, 1.4],
-        [0, 1, 2, 3, 4],
-        "(b) N1.7 held-out routing",
+        [0, 1, 2, 3],
+        "(b) N1.7 CLSG-BO held-out",
         n17_label,
         n17_color,
         "p50 speedup vs paired regressions",
         offsets={
-            "window_0_20": (10, -28),
-            "window_5_15": (22, 24),
-            "routed_tactic": (12, 4),
+            "window_0_20": (10, -24),
+            "window_2_12": (12, -28),
+            "window_4_9": (10, -12),
+            "window_6_11": (16, 18),
             "speed_only": (12, -10),
         },
     )
