@@ -394,6 +394,93 @@ def fig5():
     save("fig5_tactic_pareto.svg", s)
 
 
+def fig6():
+    data_path = ROOT / "toy_quantvla" / "results" / "phase39_threshold_pilot_summary.json"
+    if data_path.exists():
+        data = json.loads(data_path.read_text(encoding="utf-8"))
+        rows = {
+            item["window"]: item
+            for item in data.get("threshold_rows", [])
+            if item.get("case") == "4:9" and item.get("direction") == "y"
+        }
+    else:
+        rows = {
+            "full": {
+                "outcomes": [
+                    {"epsilon": 1e-6, "success": True},
+                    {"epsilon": 3e-6, "success": True},
+                    {"epsilon": 1e-5, "success": True},
+                    {"epsilon": 3e-5, "success": False},
+                    {"epsilon": 1e-4, "success": False},
+                    {"epsilon": 3e-4, "success": False},
+                    {"epsilon": 5e-4, "success": False},
+                ],
+            },
+            "early": {
+                "outcomes": [
+                    {"epsilon": 1e-6, "success": True},
+                    {"epsilon": 3e-6, "success": True},
+                    {"epsilon": 1e-5, "success": True},
+                    {"epsilon": 3e-5, "success": False},
+                    {"epsilon": 1e-4, "success": False},
+                    {"epsilon": 3e-4, "success": False},
+                    {"epsilon": 5e-4, "success": False},
+                ],
+            },
+        }
+
+    s = SVG(720, 250)
+    x0, y0, w, h = 72, 36, 560, 150
+    xmin, xmax = -6.0, -3.3
+
+    def sx(eps):
+        import math
+
+        return x0 + w * (math.log10(float(eps)) - xmin) / (xmax - xmin)
+
+    def sy(success, offset=0):
+        return y0 + (35 if success else 118) + offset
+
+    s.text(48, 24, "Closed-loop perturbation budget on task 4 init 9", "panel")
+    s.line(x0, y0 + h, x0 + w, y0 + h, C["ink"], 0.9)
+    s.line(x0, y0, x0, y0 + h, C["ink"], 0.9)
+    for tick, label in [(1e-6, "1e-6"), (1e-5, "1e-5"), (1e-4, "1e-4"), (1e-3, "1e-3")]:
+        xx = sx(tick)
+        s.line(xx, y0, xx, y0 + h, C["grid"], 0.5)
+        s.text(xx, y0 + h + 16, label, "axis", anchor="middle")
+    for yy, label in [(sy(True), "success"), (sy(False), "failure")]:
+        s.line(x0, yy, x0 + w, yy, C["grid"], 0.6)
+        s.text(x0 - 8, yy + 3, label, "axis", anchor="end")
+
+    left, right = sx(1e-5), sx(3e-5)
+    s.rect(left, y0 + 4, right - left, h - 8, "#fff2cc", "#d6a800", 0.7)
+    s.text((left + right) / 2, y0 + 18, "(1e-5, 3e-5]", "small", anchor="middle", fill="#8a6200", weight="700")
+
+    specs = [
+        ("full", C["red"], -5, "full horizon"),
+        ("early", C["blue"], 5, "early 0-75"),
+    ]
+    for window, color, offset, label in specs:
+        outcomes = sorted(rows.get(window, {}).get("outcomes", []), key=lambda row: float(row["epsilon"]))
+        if not outcomes:
+            continue
+        points = [(sx(row["epsilon"]), sy(bool(row["success"]), offset)) for row in outcomes]
+        d = " ".join(("M" if i == 0 else "L") + f"{x:.1f},{y:.1f}" for i, (x, y) in enumerate(points))
+        s.path(d, color, 1.6)
+        for row, (x, y) in zip(outcomes, points):
+            s.circle(x, y, 5.5, color, "white", 1.2)
+            if float(row["epsilon"]) in {1e-5, 3e-5}:
+                s.text(x, y - 11 if row["success"] else y + 18, "S" if row["success"] else "F", "axis", anchor="middle", fill=color, weight="700")
+        lx = 500 if window == "full" else 500
+        ly = 54 if window == "full" else 73
+        s.rect(lx, ly - 9, 12, 12, color)
+        s.text(lx + 18, ly, label, "small")
+
+    s.text(x0 + w / 2, 232, "injected y-action perturbation magnitude (log scale)", "small", anchor="middle")
+    s.text(360, 210, "Both full and early perturbations flip between 1e-5 and 3e-5.", "small", anchor="middle")
+    save("fig6_perturbation_budget.svg", s)
+
+
 def main():
     # Figure 1 is rendered natively in LaTeX/TikZ so mathematical notation is
     # typeset by LaTeX. This script generates the data figures only.
@@ -401,6 +488,7 @@ def main():
     fig3()
     fig4()
     fig5()
+    fig6()
     print(f"Wrote SVG figures to {OUT}")
 
 

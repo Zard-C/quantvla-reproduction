@@ -1,0 +1,143 @@
+{
+  "phase": "phase39_same_observation_real_backend_drift_direction_estimate",
+  "source": "phase13_torch_compile_online_drift",
+  "case_list": [
+    "4:9",
+    "6:8"
+  ],
+  "windows": [
+    "full",
+    "early"
+  ],
+  "variant_name": "speed_only",
+  "online_drift_json": "toy_quantvla/results/phase39_stageA2_sameobs_realdrift_speedonly_seed20260613_v1_sameobs_online_drift.json",
+  "torch_compile": {
+    "enabled": true,
+    "target": "action_head_model",
+    "backend": "inductor",
+    "mode": "reduce-overhead",
+    "fullgraph": false,
+    "dynamic": null,
+    "cudagraph_mark_step": false,
+    "cudagraph_mark_step_modules": [],
+    "compiled_modules": [
+      "policy.model.action_head.model"
+    ],
+    "eager_island_modules": [],
+    "wrap_seconds": 1.2648987080901861
+  },
+  "rows": [
+    {
+      "case": "4:9",
+      "task_id": 4,
+      "init_index": 9,
+      "variant": "speed_only",
+      "direction": "real_speed_only_sameobs_mean",
+      "window": "full",
+      "step_start": null,
+      "step_end": null,
+      "status": "complete",
+      "window_steps": 224,
+      "reference_success": true,
+      "reference_num_steps": 224,
+      "mean_delta_vector6": [
+        -1.8895470670291354e-05,
+        -5.677342414855957e-05,
+        0.00013513224465506419,
+        -1.4152577412979944e-05,
+        3.761199436017445e-05,
+        2.8128602675029208e-05
+      ],
+      "mean_delta_l2": 0.0001557149957536205,
+      "delta_l2_p50": 0.0017351487015843082,
+      "delta_l2_p95": 0.003651399723836202,
+      "delta_l2_max": 0.005350625905189981,
+      "trace": "toy_quantvla/results/phase39_stageA2_sameobs_realdrift_speedonly_seed20260613_v1_sameobs_trace/task=04--init=09--success=True--task=put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_righ.json",
+      "caveat": "Estimated from same-observation eager-controlled online drift: the reference/eager action controls LIBERO while the tactic action is measured on the same observation and denoising seed."
+    },
+    {
+      "case": "4:9",
+      "task_id": 4,
+      "init_index": 9,
+      "variant": "speed_only",
+      "direction": "real_speed_only_sameobs_mean",
+      "window": "early",
+      "step_start": 0,
+      "step_end": 75,
+      "status": "complete",
+      "window_steps": 75,
+      "reference_success": true,
+      "reference_num_steps": 224,
+      "mean_delta_vector6": [
+        9.508132934570313e-05,
+        -0.0002338409423828125,
+        8.869171142578125e-05,
+        9.679992993672689e-06,
+        5.050857861836751e-05,
+        2.2962093353271485e-05
+      ],
+      "mean_delta_l2": 0.00027342337447597943,
+      "delta_l2_p50": 0.0016234428044230647,
+      "delta_l2_p95": 0.0033430304723553674,
+      "delta_l2_max": 0.004684285064999073,
+      "trace": "toy_quantvla/results/phase39_stageA2_sameobs_realdrift_speedonly_seed20260613_v1_sameobs_trace/task=04--init=09--success=True--task=put_the_white_mug_on_the_left_plate_and_put_the_yellow_and_white_mug_on_the_righ.json",
+      "caveat": "Estimated from same-observation eager-controlled online drift: the reference/eager action controls LIBERO while the tactic action is measured on the same observation and denoising seed."
+    },
+    {
+      "case": "6:8",
+      "task_id": 6,
+      "init_index": 8,
+      "variant": "speed_only",
+      "direction": "real_speed_only_sameobs_mean",
+      "window": "full",
+      "step_start": null,
+      "step_end": null,
+      "status": "complete",
+      "window_steps": 649,
+      "reference_success": true,
+      "reference_num_steps": 649,
+      "mean_delta_vector6": [
+        0.00010541898811175754,
+        -9.892332168132389e-05,
+        8.618794898222702e-06,
+        -3.158288486933304e-06,
+        6.416541034892454e-05,
+        5.397067415328533e-06
+      ],
+      "mean_delta_l2": 0.0001585231000850329,
+      "delta_l2_p50": 0.001409331551922462,
+      "delta_l2_p95": 0.0030676533474784844,
+      "delta_l2_max": 0.0773857710423978,
+      "trace": "toy_quantvla/results/phase39_stageA2_sameobs_realdrift_speedonly_seed20260613_v1_sameobs_trace/task=06--init=08--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the.json",
+      "caveat": "Estimated from same-observation eager-controlled online drift: the reference/eager action controls LIBERO while the tactic action is measured on the same observation and denoising seed."
+    },
+    {
+      "case": "6:8",
+      "task_id": 6,
+      "init_index": 8,
+      "variant": "speed_only",
+      "direction": "real_speed_only_sameobs_mean",
+      "window": "early",
+      "step_start": 0,
+      "step_end": 200,
+      "status": "complete",
+      "window_steps": 200,
+      "reference_success": true,
+      "reference_num_steps": 649,
+      "mean_delta_vector6": [
+        -0.0001330643892288208,
+        -6.0725212097167966e-05,
+        -2.247542142868042e-05,
+        -9.499415755271912e-06,
+        3.842085599899292e-05,
+        -2.4967938661575316e-05
+      ],
+      "mean_delta_l2": 0.00015520511161001428,
+      "delta_l2_p50": 0.0014579410480873314,
+      "delta_l2_p95": 0.0031225549629306645,
+      "delta_l2_max": 0.006681805145062438,
+      "trace": "toy_quantvla/results/phase39_stageA2_sameobs_realdrift_speedonly_seed20260613_v1_sameobs_trace/task=06--init=08--success=True--task=put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the.json",
+      "caveat": "Estimated from same-observation eager-controlled online drift: the reference/eager action controls LIBERO while the tactic action is measured on the same observation and denoising seed."
+    }
+  ]
+}

@@ -13,6 +13,59 @@
 
 论文主线已经从单纯的量化复现，扩展为 VLA/world-action policy 的推理加速闭环分析。这里的推理加速包括 fake quantization、graph compile、eager island、mixed precision 和未来的 packed kernel / CUDA kernel 路线。
 
+## 最新阶段：Phase39 closed-loop perturbation budget
+
+报告:
+
+- Final package: [`docs/phase39_final_experiment_package_zh.md`](phase39_final_experiment_package_zh.md)
+- A1 ultra-low perturbation: [`docs/phase39_closed_loop_perturbation_budget_pilot_zh.md`](phase39_closed_loop_perturbation_budget_pilot_zh.md)
+- A2 real-backend replay: [`docs/phase39_stageA2_real_backend_replay_summary_zh.md`](phase39_stageA2_real_backend_replay_summary_zh.md)
+
+Phase39 把后端实现误差抽象成显式 action perturbation，直接问一个工程问题：多小的局部动作扰动会改变闭环 rollout 结果？
+
+Stage A1 ultra-low sweep 已完整完成：
+
+| case | direction | window | first-flip interval | outcomes |
+| --- | --- | --- | --- | --- |
+| task4:init9 | `y` | full | `(1e-5, 3e-5]` | `1e-6/3e-6/1e-5` success, `3e-5` 及以上 failure |
+| task4:init9 | `y` | early `[0,75)` | `(1e-5, 3e-5]` | `1e-6/3e-6/1e-5` success, `3e-5` 及以上 failure |
+
+这个结果强化了论文主线：局部 numerical tolerance 不能直接当作闭环 safety budget。即使扰动只有 `3e-5` 量级，只要方向和阶段落在敏感 basin boundary 上，也能把 FP16 成功轨迹推成 horizon failure。
+
+Stage A2 real-backend-drift replay 也已完成。我们在 FP16 nominal observation 上同时查询 reference 和 tactic，记录真实 backend drift sequence，再在闭环中 replay `a_t = a_t^fp16 + lambda * eta_t`。
+
+| tactic drift sequence | case/window | lambda outcomes | 结论 |
+| --- | --- | --- | --- |
+| `speed_only` | task4 full/early | `0.25:F, 0.5:S, 1.0:F` | 真实 drift 方向可触发非单调 basin flip |
+| `speed_only` | task6 full | `0.25:S, 0.5:S, 1.0:F` | full-horizon 1.0x drift 触发失败 |
+| `speed_only` | task6 early | `0.25:F, 0.5:F, 1.0:F` | 早期真实 drift 极敏感 |
+| `blocks0-3 + window0-120` | 两个 case、full/early | `0.25/0.5/1.0` 全成功 | protected tactic 明显降低 outcome-level regression risk |
+
+A2 的关键意义是把 controlled perturbation 和真实后端误差接上了：风险不是手工构造方向才有，真实 `torch.compile` drift sequence 本身也能落在闭环敏感方向上；同时 sensitivity-guided protection 能改变 drift 的闭环风险。
+
+## Running: Phase40 N1.7 active tactic search batch-1
+
+计划: [`docs/phase40_n17_active_tactic_search_batch1_plan_zh.md`](phase40_n17_active_tactic_search_batch1_plan_zh.md)
+
+Phase40 已在 5090 上启动，tmux session:
+
+```text
+phase40_n17_active_batch1
+```
+
+这轮是 active tactic search 的第一批 warm-start probe，在 N1.7 新 held-out init `27/28/29` 上比较：
+
+```text
+fp16
+speed_only
+window_0_20
+window_5_15
+window_8_18
+window_10_20
+```
+
+目标是检查 Phase37 中的行为优先点、高速折中点和边界附近窗口是否能跨 init 泛化，并为下一轮 task-conditioned / active selection 提供数据。
+
 ## 核心判断
 
 1. 推理加速不只是系统优化问题。对闭环 VLA policy 来说，加速后端可能产生很小的 action-level perturbation，但这些扰动会被环境动力学、policy feedback 和任务成功边界共同过滤。

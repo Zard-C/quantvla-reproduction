@@ -156,11 +156,15 @@ class CompileDriftPolicy:
         headless: bool,
         device: str,
         target_switcher: CompileTargetSwitcher,
+        fallback_step_start: int | None = None,
+        fallback_step_end: int | None = None,
     ):
         self.policy = policy
         self.headless = headless
         self.device = device
         self.target_switcher = target_switcher
+        self.fallback_step_start = fallback_step_start
+        self.fallback_step_end = fallback_step_end
 
     def process_observation(self, obs: dict[str, Any], lang: str) -> dict[str, Any]:
         from examples.Libero.eval.utils import get_libero_image, quat2axisangle
@@ -185,7 +189,18 @@ class CompileDriftPolicy:
             show_obs_images_cv2(new_obs)
         return new_obs
 
-    def get_eager_compiled(self, processed_obs: dict[str, Any], seed: int) -> tuple[dict[str, Any], dict[str, Any], dict[str, float]]:
+    def in_fallback_window(self, policy_step: int) -> bool:
+        if self.fallback_step_start is None or self.fallback_step_end is None:
+            return False
+        return self.fallback_step_start <= int(policy_step) < self.fallback_step_end
+
+    def get_eager_compiled(
+        self,
+        processed_obs: dict[str, Any],
+        seed: int,
+        *,
+        policy_step: int,
+    ) -> tuple[dict[str, Any], dict[str, Any], dict[str, float]]:
         self.target_switcher.use_eager()
         set_seed(seed)
         synchronize_if_cuda(self.device)
@@ -194,6 +209,14 @@ class CompileDriftPolicy:
             eager = self.policy.get_action(processed_obs)
         synchronize_if_cuda(self.device)
         eager_seconds = time.perf_counter() - eager_started
+
+        if self.in_fallback_window(policy_step):
+            return eager, eager, {
+                "eager_get_action_seconds": float(eager_seconds),
+                "compiled_get_action_seconds": float(eager_seconds),
+                "compiled_over_eager_time": 1.0,
+                "tactic_fallback_to_eager": True,
+            }
 
         self.target_switcher.use_compiled()
         set_seed(seed)
@@ -209,6 +232,7 @@ class CompileDriftPolicy:
             "eager_get_action_seconds": float(eager_seconds),
             "compiled_get_action_seconds": float(compiled_seconds),
             "compiled_over_eager_time": float(compiled_seconds / max(eager_seconds, EPS)),
+            "tactic_fallback_to_eager": False,
         }
 
     def convert_to_libero_action(self, action_chunk: dict[str, Any], idx: int = 0) -> np.ndarray:
@@ -307,6 +331,8 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
         headless=args.headless,
         device=args.device,
         target_switcher=target_switcher,
+        fallback_step_start=args.torch_compile_fallback_step_start,
+        fallback_step_end=args.torch_compile_fallback_step_end,
     )
 
     cases = parse_case_list(args.case_list)
@@ -332,6 +358,10 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
         "device": args.device,
         "model_load_seconds": float(model_load_seconds),
         "torch_compile": target_switcher.info(args) | {"wrap_seconds": float(compile_wrap_seconds)},
+        "torch_compile_fallback_step_window": {
+            "start": args.torch_compile_fallback_step_start,
+            "end": args.torch_compile_fallback_step_end,
+        },
         "episode_summaries": [],
         "episode_trace_files": [],
     }
@@ -383,7 +413,11 @@ def run_online_drift(args: argparse.Namespace) -> dict[str, Any]:
                         pre_eef_quat = as_float_list(obs.get("robot0_eef_quat", []))
                         pre_gripper_qpos = as_float_list(obs.get("robot0_gripper_qpos", []))
 
-                        eager_chunk, compiled_chunk, timing = local_policy.get_eager_compiled(processed_obs, seed)
+                        eager_chunk, compiled_chunk, timing = local_policy.get_eager_compiled(
+                            processed_obs,
+                            seed,
+                            policy_step=policy_step,
+                        )
                         eager_action = local_policy.convert_to_libero_action(eager_chunk)
                         compiled_action = local_policy.convert_to_libero_action(compiled_chunk)
                         raw_metrics = compare_actions(eager_chunk, compiled_chunk)
@@ -486,6 +520,8 @@ def main() -> None:
     parser.add_argument("--torch-compile-mode", default="reduce-overhead")
     parser.add_argument("--torch-compile-fullgraph", action="store_true")
     parser.add_argument("--torch-compile-dynamic", choices=["true", "false"])
+    parser.add_argument("--torch-compile-fallback-step-start", type=int)
+    parser.add_argument("--torch-compile-fallback-step-end", type=int)
     parser.add_argument("--summary-windows", type=int, nargs="+", default=[1, 5, 10, 20, 50, 100, 150, 200, 250])
     parser.add_argument("--headless", action="store_true")
     parser.add_argument("--no-video", action="store_true")
@@ -496,6 +532,13 @@ def main() -> None:
     args = parser.parse_args()
     if args.torch_compile_dynamic is not None:
         args.torch_compile_dynamic = args.torch_compile_dynamic == "true"
+    if (args.torch_compile_fallback_step_start is None) != (args.torch_compile_fallback_step_end is None):
+        raise ValueError("Both fallback step start and end are required")
+    if (
+        args.torch_compile_fallback_step_start is not None
+        and args.torch_compile_fallback_step_start >= args.torch_compile_fallback_step_end
+    ):
+        raise ValueError("Fallback step start must be smaller than end")
 
     os.environ.setdefault("NO_ALBUMENTATIONS_UPDATE", "1")
     os.environ.setdefault("HF_HUB_OFFLINE", "1")

@@ -9,3 +9,13 @@ paper/*.out
 paper/*.blg
 paper/dist/arxiv_v1/
 /when_small_action_errors_matter_arxiv_v1.tar.gz
+
+# Phase39 raw rollout artifacts. Keep reports and compact summary/drift JSONs.
+toy_quantvla/results/phase39_*_client.log
+toy_quantvla/results/phase39_*_server.log
+toy_quantvla/results/phase39_*_eval.log
+toy_quantvla/results/phase39_*_client_latency.json
+toy_quantvla/results/phase39_*_server_latency.json
+toy_quantvla/results/phase39_*_server_prepare.json
+toy_quantvla/results/phase39_*_request_trace.jsonl
+toy_quantvla/results/phase39_*_manifest.jsonl

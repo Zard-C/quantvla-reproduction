@@ -36,7 +36,7 @@ Inference acceleration for vision-language-action (VLA) policies is usually fram
 
 We formulate post-training VLA acceleration as a closed-loop policy perturbation problem and propose Closed-Loop Sensitivity-Guided Tactic Search (CLSG-TS), a practical procedure for selecting acceleration tactics under rollout budget. The method first uses cheap static and open-loop filters to prune candidate tactics, then evaluates the surviving candidates on matched fragile rollouts, estimates closed-loop risk from paired repairs/regressions and first-divergence diagnostics, and finally selects a behavior-first, speed-constrained, or routed deployment point on a held-out speed--risk frontier.
 
-This framework yields five claims that organize the study: implementation error is filtered by closed-loop sensitivity; rollout flips are margin-crossing events; fixed-distribution validation is insufficient without state-distribution control; sensitivity is anisotropic across action channels, rollout phases, and model boundaries; and acceleration is best understood as constrained exploration of nearby policy implementations rather than imitation of one FP16 point. We test these claims on GR00T policies in LIBERO-10 using \texttt{torch.compile} action-head acceleration, eager-island and duration fallback tactics, controlled action perturbations, first-divergence traces, matched repair/regression accounting, and held-out tactic routing.
+This framework yields five claims that organize the study: implementation error is filtered by closed-loop sensitivity; rollout flips are margin-crossing events; fixed-distribution validation is insufficient without state-distribution control; sensitivity is anisotropic across action channels, rollout phases, and model boundaries; and acceleration is best understood as constrained exploration of nearby policy implementations rather than imitation of one FP16 point. We test these claims on GR00T policies in LIBERO-10 using \texttt{torch.compile} action-head acceleration, eager-island and duration fallback tactics, controlled action perturbations down to $10^{-6}$ action magnitude, same-observation backend-drift replay, first-divergence traces, matched repair/regression accounting, and held-out tactic routing.
 
 The empirical picture is non-monotonic. Speed-only action-head compilation gives a 2.23$\times$ median server-latency speedup on a 33-case GR00T N1.5 probe, yet reduces success from 19/33 to 16/33. CLSG-TS recovers behavior without simply reverting to FP16: an early-block eager island reaches 18/33 at 2.31$\times$ speedup, and a fine duration probe finds that protecting policy steps 0--120 restores 19/33 at 69.66 ms versus 156.22 ms for FP16. Held-out validation then changes the conclusion from ``choose the local winner'' to ``choose a point on a speed--risk frontier.'' Across two N1.5 30-case folds, speed-only execution is fastest but has 7 paired regressions; the 0--120 duration tactic and a combined early-block plus 0--120 tactic both reach 47/60 pooled success with different speed--risk trade-offs. A GR00T N1.7 held-out check shows the same structure and motivates task-conditioned tactic routing as a high-speed but still validation-dependent option.
 
@@ -84,7 +84,7 @@ Our findings are not tied to a specific checkpoint-level failure pattern. They s
 This paper should be read as a behavior-level modeling and tactic-selection study, not as a new compiler or production deployment benchmark. The acceleration track uses prototype action-head execution boundaries and fallback windows. We do not claim final memory, energy, or production backend performance. We also do not treat small aggregate success-rate gaps as policy dominance. The main claim is methodological: VLA acceleration should be evaluated and designed as sensitivity-weighted closed-loop perturbation, using matched rollouts and paired repair/regression analysis rather than only average open-loop action error or raw serving latency.
 
 \paragraph{Experimental roadmap.}
-The experiments are intentionally staged so that each stage answers the question raised by the previous one. First, controlled action perturbations and layer/boundary probes identify sensitive directions, rollout windows, and execution boundaries. Second, mixed eager/compiled acceleration policies test whether those maps can guide a faster implementation. Third, held-out folds and the N1.7 check show why the final object should be a robust tactic-selection protocol rather than a single fixed window.
+The experiments are intentionally staged so that each stage answers the question raised by the previous one. First, controlled action perturbations, same-observation backend-drift replay, and layer/boundary probes identify sensitive directions, rollout windows, and execution boundaries. Second, mixed eager/compiled acceleration policies test whether those maps can guide a faster implementation. Third, held-out folds and the N1.7 check show why the final object should be a robust tactic-selection protocol rather than a single fixed window.
 
 \section{Related Work}
 
@@ -385,7 +385,7 @@ The sensitivity-guided acceleration search starts from a 33-case matched probe s
 
 \section{Results}
 
-The results are organized around CLSG-TS. Section~5.1 estimates where the closed-loop system is sensitive, using action-channel, rollout-duration, layer-boundary, and first-divergence probes. Section~5.2 uses those probes to search acceleration tactics and evaluate the resulting speed--risk frontier. Section~5.3 maps the evidence back to the five theoretical claims.
+The results are organized around CLSG-TS. Section~5.1 estimates where the closed-loop system is sensitive, using action-channel, rollout-duration, real backend-drift replay, layer-boundary, and first-divergence probes. Section~5.2 uses those probes to search acceleration tactics and evaluate the resulting speed--risk frontier. Section~5.3 maps the evidence back to the five theoretical claims.
 
 \subsection{Sensitivity Maps: Not All Perturbations Are Equal}
 
@@ -417,6 +417,46 @@ $y$ only, task 6 & Early / middle / late & 2/3 & 0:200 F991; 200:450 S697; 450:7
 \end{table}
 
 Table~\ref{tab:action-phase-anisotropy} supports two practical claims. First, action dimensions are not equally sensitive. A $z$ perturbation of the same norm is absorbed in both cases, while $y$ and rotation perturbations cause failures in this small probe. Second, rollout time is not equally sensitive. The same $y$ perturbation is damaging early, but late-window perturbations can be absorbed after the task has entered a more stable phase. This maps the first two axes of the sensitivity space: channel and time. It also matches the linearized view in Section~3: the relevant quantity is not only $\lVert\eta_t\rVert$, but also the direction of $\eta_t$ and the future closed-loop gain multiplying it.
+
+We then zoomed in on the fragile task 4 init 9 case to ask how small a perturbation can still matter. Figure~\ref{fig:perturbation-budget} sweeps the $y$-action perturbation magnitude from $10^{-6}$ to $5\times 10^{-4}$ with deterministic policy seeds. The FP16 baseline succeeds in 224 policy requests. Both full-horizon and early-window perturbations remain successful through $10^{-5}$, but fail at $3\times 10^{-5}$ and above, reaching the LIBERO horizon. Thus the observed first-flip interval is $(10^{-5},3\times 10^{-5}]$ for both windows. This should not be read as a universal numerical tolerance; it is a local basin-boundary measurement for one fragile rollout. Its deployment implication is nevertheless important: an implementation error that looks far below common local operator tolerances can be behaviorally unsafe if it is aligned with a sensitive action channel and injected before a contact-critical phase.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\linewidth]{fig6_perturbation_budget.pdf}
+\caption{Ultra-low controlled perturbation budget on a fragile FP16-success rollout. The same task 4 init 9 trajectory is perturbed in the $y$ action channel over the full horizon or only during policy steps 0--75. Both curves flip from success to horizon failure between $10^{-5}$ and $3\times 10^{-5}$ action magnitude.}
+\label{fig:perturbation-budget}
+\end{figure}
+
+Controlled probes are useful only if they connect to real implementation residuals. We therefore ran a same-observation diagnostic on the two FP16-success cases. Along the nominal FP16 rollout, we queried both the reference policy and an accelerated tactic on the same observation, recorded the per-step backend residual $\eta_t=\pi_\varphi(s_t)-\pi_\theta(s_t)$, and then replayed scaled residual sequences in closed loop:
+\begin{equation}
+    a_t = a_t^{\fp} + \lambda \eta_t .
+\end{equation}
+This is not a production deployment path; it is a directional vulnerability probe that asks whether the actual residuals produced by a tactic are aligned with closed-loop-sensitive directions.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Closed-loop replay of real backend drift sequences. Residuals are measured by querying FP16 and the tactic on the same FP16-nominal observations, then replayed as $a_t=a_t^{\fp}+\lambda\eta_t$. S/F denotes success/failure and policy requests.}
+\label{tab:real-backend-drift-replay}
+\begin{tabular}{p{0.24\linewidth}p{0.10\linewidth}p{0.12\linewidth}p{0.14\linewidth}p{0.14\linewidth}p{0.14\linewidth}}
+\toprule
+Residual source & Case & Window & $\lambda=0.25$ & $\lambda=0.5$ & $\lambda=1.0$ \\
+\midrule
+Speed-only compile & 4:9 & Full & F991 & S221 & F991 \\
+Speed-only compile & 4:9 & Early & F991 & S224 & F991 \\
+Speed-only compile & 6:8 & Full & S496 & S833 & F991 \\
+Speed-only compile & 6:8 & Early & F991 & F991 & F991 \\
+\midrule
+Blocks 0--3 + 0--120 & 4:9 & Full & S222 & S223 & S224 \\
+Blocks 0--3 + 0--120 & 4:9 & Early & S224 & S224 & S224 \\
+Blocks 0--3 + 0--120 & 6:8 & Full & S229 & S632 & S464 \\
+Blocks 0--3 + 0--120 & 6:8 & Early & S229 & S840 & S627 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:real-backend-drift-replay} connects the controlled perturbation budget to actual backend residuals. Speed-only residual sequences can flip FP16-success rollouts, including at $0.25\times$ the measured residual sequence in several windows. The flips are not monotonic in $\lambda$; task 4 init 9 shows failure, success, then failure as the residual scale increases. This is consistent with a high-dimensional, curved trajectory-basin boundary rather than a simple one-sided tolerance. In contrast, the sensitivity-guided protected tactic remains successful for all tested windows and scales up to the unscaled residual sequence. It does not reproduce the FP16 trajectory exactly--task 6 still changes request count substantially--but it lowers outcome-level regression risk. This is the central object that CLSG-TS tries to optimize: not zero residual, but residuals whose direction, timing, and module origin are less dangerous under closed-loop sensitivity.
 
 We also tested whether acceleration-oriented graph boundaries are behaviorally transparent. In this probe, we compile the action-head model while leaving either no block, block 0, or block 1 as an eager island. The variants have almost identical median server latency, but their closed-loop behavior differs sharply.
 
@@ -620,7 +660,7 @@ Latency-equivalent eager-island variants differ from 2/2 success to 0/2 on the s
 Local numerical or speed checks do not determine closed-loop robustness because the implemented policy induces its own state distribution. \\
 \addlinespace
 Claim 4: anisotropic sensitivity &
-Equal-norm action probes differ by channel and phase; acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. In the 33-case search, duration 0--120 reaches 19/33 at 69.66 ms, while 0--220 drops to 16/33 at 90.49 ms. Across held-out folds and the N1.7 check, speed-only, duration windows, combined protection, and task-conditioned routing have different repair/regression profiles. &
+Equal-norm action probes differ by channel and phase; an ultra-low $y$-perturbation sweep flips task 4 init 9 between $10^{-5}$ and $3\times 10^{-5}$ action magnitude in the full and early windows. Real speed-only backend residual replay causes multiple S$\to$F flips, while the protected residual sequence remains successful up to $1.0\times$ on the same cases. Acceleration variants with similar p50 latency differ from 2/2 success to 0/2 depending on layer boundary. In the 33-case search, duration 0--120 reaches 19/33 at 69.66 ms, while 0--220 drops to 16/33 at 90.49 ms. Across held-out folds and the N1.7 check, speed-only, duration windows, combined protection, and task-conditioned routing have different repair/regression profiles. &
 Perturbation risk is structured by action direction, future closed-loop gain, task margin, module location, and rollout phase. More protection is not necessarily safer. \\
 \addlinespace
 Claim 5: solution-space exploration &
@@ -700,6 +740,8 @@ The practical replacement is sensitivity-guided search rather than brute-force s
 \paragraph{Task-conditioned tactic routing.}
 The N1.7 experiment suggests a design implication: a deployment need not use one global acceleration tactic for every task. Instead, it can select among validated tactics according to task identity or a trajectory regime. This is reminiscent of mixture-of-experts routing, but the routed objects are not model experts or learned parameters. The router selects inference tactics such as eager execution, speed-only compiled execution, or sensitivity-preserving fallback windows. In this view, acceleration becomes closed-loop-aware inference scheduling. The held-out result also shows the risk: a probe-selected router can overfit to initial states, so routing itself must be evaluated by paired held-out rollouts rather than assumed safe.
 
+This routing should be coarse-grained in a production runtime. Task-level routing, episode-level profiles, or a small number of fixed phase windows can be implemented by pre-building and pre-warming a few execution profiles. In contrast, per-step, per-layer, or per-operator tactic switching can destroy the assumptions that make TensorRT engines, CUDA Graph replay, and fused kernels fast: stable shapes, stable graph structure, persistent execution contexts, and predictable memory allocation. Thus a sensitivity map should usually decide which profile to use or which broad phase to protect, not trigger arbitrary fine-grained graph changes at runtime.
+
 \paragraph{Calibration and protection.}
 Calibration or acceleration planning should not only minimize average layerwise error or maximize local speed. It should consider which errors matter for downstream control. A useful calibration or profiling set should cover fragile contact states, low-margin success boundaries, and task slices where the FP16 policy is already weak. A control-aware objective would approximate Equation~\ref{eq:closed-loop-accel-objective}: weight errors by estimated closed-loop sensitivity, not only by their open-loop magnitude. This points toward rollout-informed calibration sets, residual action correction, sensitivity-guided compile boundaries, or risk-gated precision fallback as natural next steps.
 
@@ -719,7 +761,7 @@ The acceleration search illustrates both sides of this rule. Compiling the entir
 Acceleration-aware fine-tuning is policy adaptation under deployment constraints, including low precision, compiled execution, or custom kernels. If the objective is only behavior cloning on static observations, it may still miss closed-loop state distribution shift. More policy-aware objectives may be needed, including rollout-informed calibration, DAgger-style data aggregation, or task-slice reweighting.
 
 \paragraph{Deployment claims.}
-Our results are behavior-level evidence for prototype action-head compilation, fallback, and routing tactics. They do not establish final production latency, memory, or energy improvements. A complete deployment claim requires production compile/graph backends or custom kernels, plus end-to-end inference profiling under the same closed-loop protocol. High-performance runtimes such as TensorRT, CUDA Graph replay, or custom C++/CUDA operators impose constraints that eager PyTorch does not: graph breaks, dynamic routing, or duration-dependent fallback may add scheduling overhead, memory pressure, graph-cache churn, or lost fusion. CLSG-TS is therefore a backend-selection and validation guide; the final backend must still realize the selected tactic with stable graphs and measured end-to-end cost.
+Our results are behavior-level evidence for prototype action-head compilation, fallback, and routing tactics. They do not establish final production latency, memory, or energy improvements. A complete deployment claim requires production compile/graph backends or custom kernels, plus end-to-end inference profiling under the same closed-loop protocol. High-performance runtimes such as TensorRT, CUDA Graph replay, or custom C++/CUDA operators impose constraints that eager PyTorch does not: graph breaks, dynamic routing, or duration-dependent fallback may add scheduling overhead, memory pressure, graph-cache churn, or lost fusion. A practical implementation should therefore realize CLSG-TS decisions as a small set of stable, pre-warmed deployment profiles, for example a conservative profile for sensitive phases and an aggressive profile for high-margin phases, and measure whether the profile-switching overhead is smaller than the recovered speedup. CLSG-TS is therefore a backend-selection and validation guide; the final backend must still realize the selected tactic with stable graphs and measured end-to-end cost.
 
 \section{Limitations}
 

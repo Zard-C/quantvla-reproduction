@@ -125,6 +125,25 @@ def parse_action_vector(spec: str | None) -> list[float] | None:
     return values
 
 
+def parse_action_sequence(path: Path | None) -> dict[int, list[float]] | None:
+    if path is None:
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    raw_steps = payload.get("step_deltas", payload)
+    sequence: dict[int, list[float]] = {}
+    for raw_step, raw_values in raw_steps.items():
+        values = [float(item) for item in raw_values]
+        if len(values) == 6:
+            values.append(0.0)
+        if len(values) != len(ACTION_KEYS):
+            raise ValueError(
+                f"Expected action sequence step {raw_step!r} to contain 6 continuous "
+                f"values or 7 LIBERO action values, got {len(values)}"
+            )
+        sequence[int(raw_step)] = values
+    return sequence
+
+
 def action_scalar(value) -> float:
     return float(np.asarray(value).reshape(-1)[0])
 
@@ -312,9 +331,12 @@ def deterministic_policy_seed(base_seed: int, task_id: int, init_index: int, pol
 def action_perturbation_config(args: argparse.Namespace) -> dict:
     keys = parse_action_keys(args.action_perturb_keys)
     vector = parse_action_vector(args.action_perturb_vector)
+    sequence = parse_action_sequence(args.action_perturb_sequence_json)
     return {
         "keys": keys,
         "vector": vector,
+        "sequence": sequence,
+        "sequence_json": None if args.action_perturb_sequence_json is None else str(args.action_perturb_sequence_json),
         "amplitude": float(args.action_perturb_amplitude),
         "sign": float(args.action_perturb_sign),
         "normalize_by_num_keys": bool(args.action_perturb_normalize_by_num_keys),
@@ -333,8 +355,9 @@ def apply_action_perturbation(
 ) -> tuple[np.ndarray, dict]:
     keys = config["keys"]
     vector = config.get("vector")
+    sequence = config.get("sequence")
     amplitude = float(config["amplitude"])
-    if (not keys and vector is None) or amplitude == 0.0:
+    if (not keys and vector is None and sequence is None) or amplitude == 0.0:
         return action, {"enabled": False}
 
     step_start = config["step_start"]
@@ -348,6 +371,7 @@ def apply_action_perturbation(
             "enabled": True,
             "applied": False,
             "keys": keys,
+            "sequence_json": config.get("sequence_json"),
             "policy_step": int(policy_step),
             "step_start": step_start,
             "step_end": step_end,
@@ -355,7 +379,22 @@ def apply_action_perturbation(
 
     perturbed = action.copy()
     delta = np.zeros_like(perturbed, dtype=np.float32)
-    if vector is not None:
+    if sequence is not None:
+        if int(policy_step) not in sequence:
+            return action, {
+                "enabled": True,
+                "applied": False,
+                "keys": keys,
+                "sequence_json": config.get("sequence_json"),
+                "policy_step": int(policy_step),
+                "step_start": step_start,
+                "step_end": step_end,
+                "reason": "missing_sequence_step",
+            }
+        base = np.asarray(sequence[int(policy_step)], dtype=np.float64)
+        delta = (amplitude * float(config["sign"]) * base).astype(np.float32)
+        perturbed = (perturbed + delta).astype(np.float32)
+    elif vector is not None:
         base = np.asarray(vector, dtype=np.float64)
         if config["normalize_vector"]:
             norm = float(np.linalg.norm(base))
@@ -379,6 +418,7 @@ def apply_action_perturbation(
         "applied": True,
         "keys": keys,
         "vector": None if vector is None else [float(x) for x in vector],
+        "sequence_json": config.get("sequence_json"),
         "policy_step": int(policy_step),
         "step_start": step_start,
         "step_end": step_end,
@@ -732,6 +772,14 @@ def main() -> None:
         help=(
             "Comma-separated 6D continuous or 7D LIBERO direction vector. "
             "When provided, --action-perturb-amplitude is the injected L2 norm by default."
+        ),
+    )
+    parser.add_argument(
+        "--action-perturb-sequence-json",
+        type=Path,
+        help=(
+            "Optional JSON mapping policy_step to 6D/7D deltas. "
+            "When provided, --action-perturb-amplitude scales the per-step deltas."
         ),
     )
     parser.add_argument("--action-perturb-amplitude", type=float, default=0.0)

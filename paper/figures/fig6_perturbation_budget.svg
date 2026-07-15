@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="250" viewBox="0 0 720 250">
+<rect width="100%" height="100%" fill="white"/>
+<style>text{font-family:Helvetica,Arial,sans-serif;fill:#222222}.label{font-size:11px}.small{font-size:9.5px;fill:#666666}.axis{font-size:9px;fill:#666666}.panel{font-size:12px;font-weight:700}</style>
+<text x="48" y="24" class="panel" text-anchor="start">Closed-loop perturbation budget on task 4 init 9</text>
+<line x1="72" y1="186" x2="632" y2="186" stroke="#222222" stroke-width="0.9" fill="none"/>
+<line x1="72" y1="36" x2="72" y2="186" stroke="#222222" stroke-width="0.9" fill="none"/>
+<line x1="72.0" y1="36" x2="72.0" y2="186" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="72.0" y="202" class="axis" text-anchor="middle">1e-6</text>
+<line x1="279.4074074074074" y1="36" x2="279.4074074074074" y2="186" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="279.4074074074074" y="202" class="axis" text-anchor="middle">1e-5</text>
+<line x1="486.8148148148148" y1="36" x2="486.8148148148148" y2="186" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="486.8148148148148" y="202" class="axis" text-anchor="middle">1e-4</text>
+<line x1="694.2222222222222" y1="36" x2="694.2222222222222" y2="186" stroke="#d6d6d6" stroke-width="0.5" fill="none"/>
+<text x="694.2222222222222" y="202" class="axis" text-anchor="middle">1e-3</text>
+<line x1="72" y1="71" x2="632" y2="71" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="64" y="74" class="axis" text-anchor="end">success</text>
+<line x1="72" y1="154" x2="632" y2="154" stroke="#d6d6d6" stroke-width="0.6" fill="none"/>
+<text x="64" y="157" class="axis" text-anchor="end">failure</text>
+<rect x="279.4074074074074" y="40" width="98.95848246037446" height="142" fill="#fff2cc" rx="0" stroke="#d6a800" stroke-width="0.7"/>
+<text x="328.8866486375946" y="54" class="small" text-anchor="middle" style="fill:#8a6200" font-weight="700">(1e-5, 3e-5]</text>
+<path d="M72.0,66.0 L171.0,66.0 L279.4,66.0 L378.4,149.0 L486.8,149.0 L585.8,149.0 L631.8,149.0" stroke="#e45756" stroke-width="1.6" fill="none"/>
+<circle cx="72.0" cy="66" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<circle cx="170.95848246037446" cy="66" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<circle cx="279.4074074074074" cy="66" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<text x="279.4074074074074" y="55" class="axis" text-anchor="middle" style="fill:#e45756" font-weight="700">S</text>
+<circle cx="378.36588986778185" cy="149" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<text x="378.36588986778185" y="167" class="axis" text-anchor="middle" style="fill:#e45756" font-weight="700">F</text>
+<circle cx="486.8148148148148" cy="149" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<circle cx="585.7732972751893" cy="149" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<circle cx="631.7863712696927" cy="149" r="5.5" fill="#e45756" stroke="white" stroke-width="1.2"/>
+<rect x="500" y="45" width="12" height="12" fill="#e45756" rx="0"/>
+<text x="518" y="54" class="small" text-anchor="start">full horizon</text>
+<path d="M72.0,76.0 L171.0,76.0 L279.4,76.0 L378.4,159.0 L486.8,159.0 L585.8,159.0 L631.8,159.0" stroke="#4c78a8" stroke-width="1.6" fill="none"/>
+<circle cx="72.0" cy="76" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<circle cx="170.95848246037446" cy="76" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<circle cx="279.4074074074074" cy="76" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<text x="279.4074074074074" y="65" class="axis" text-anchor="middle" style="fill:#4c78a8" font-weight="700">S</text>
+<circle cx="378.36588986778185" cy="159" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<text x="378.36588986778185" y="177" class="axis" text-anchor="middle" style="fill:#4c78a8" font-weight="700">F</text>
+<circle cx="486.8148148148148" cy="159" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<circle cx="585.7732972751893" cy="159" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<circle cx="631.7863712696927" cy="159" r="5.5" fill="#4c78a8" stroke="white" stroke-width="1.2"/>
+<rect x="500" y="64" width="12" height="12" fill="#4c78a8" rx="0"/>
+<text x="518" y="73" class="small" text-anchor="start">early 0-75</text>
+<text x="352.0" y="232" class="small" text-anchor="middle">injected y-action perturbation magnitude (log scale)</text>
+<text x="360" y="210" class="small" text-anchor="middle">Both full and early perturbations flip between 1e-5 and 3e-5.</text>
+</svg>

@@ -22,7 +22,10 @@ CASE_LIST="${CASE_LIST:-4:9,6:8}"
 RUN_BASELINE="${RUN_BASELINE:-1}"
 RUN_PERTURB="${RUN_PERTURB:-1}"
 RUN_REAL_DRIFT="${RUN_REAL_DRIFT:-0}"
+RUN_REAL_SEQUENCE="${RUN_REAL_SEQUENCE:-0}"
 REAL_VECTOR_JSON="${REAL_VECTOR_JSON:-toy_quantvla/results/phase39_real_drift_directions.json}"
+REAL_SEQUENCE_JSON="${REAL_SEQUENCE_JSON:-toy_quantvla/results/phase39_sameobs_real_drift_sequences.json}"
+ACTION_PERTURB_SIGN="${ACTION_PERTURB_SIGN:-1}"
 RUN_SUMMARY="${RUN_SUMMARY:-1}"
 RESUME="${RESUME:-1}"
 
@@ -210,7 +213,10 @@ echo "DIRECTIONS=${DIRECTIONS}"
 echo "WINDOWS=${WINDOWS}"
 echo "EPSILONS=${EPSILONS}"
 echo "RUN_REAL_DRIFT=${RUN_REAL_DRIFT}"
+echo "RUN_REAL_SEQUENCE=${RUN_REAL_SEQUENCE}"
 echo "REAL_VECTOR_JSON=${REAL_VECTOR_JSON}"
+echo "REAL_SEQUENCE_JSON=${REAL_SEQUENCE_JSON}"
+echo "ACTION_PERTURB_SIGN=${ACTION_PERTURB_SIGN}"
 echo "POLICY_SEED_BASE=${POLICY_SEED_BASE}"
 echo "PORT=${PORT}"
 echo "COMPAT_STUBS=${COMPAT_STUBS}"
@@ -256,6 +262,7 @@ if [ "${RUN_PERTURB}" = "1" ]; then
             "${case_item}" \
             --action-perturb-keys "${action_keys}" \
             --action-perturb-amplitude "${epsilon}" \
+            --action-perturb-sign "${ACTION_PERTURB_SIGN}" \
             "${window_args[@]}"
         done
       done
@@ -283,12 +290,45 @@ if [ "${RUN_REAL_DRIFT}" = "1" ]; then
       run_eval \
         "${tag}" \
         "${case_item}" \
-        --action-perturb-vector "${vector}" \
+        "--action-perturb-vector=${vector}" \
         --action-perturb-amplitude "${epsilon}" \
+        --action-perturb-sign "${ACTION_PERTURB_SIGN}" \
         "${window_args[@]}"
     done
   done < <("${PYTHON_BIN}" toy_quantvla/phase39_real_drift_directions.py \
     --input-json "${REAL_VECTOR_JSON}" \
+    --emit-runner-tsv \
+    --case-list "${CASE_LIST}" \
+    --windows "${WINDOWS}")
+fi
+
+if [ "${RUN_REAL_SEQUENCE}" = "1" ]; then
+  if [ ! -f "${REAL_SEQUENCE_JSON}" ]; then
+    echo "RUN_REAL_SEQUENCE=1 but REAL_SEQUENCE_JSON does not exist: ${REAL_SEQUENCE_JSON}" >&2
+    exit 2
+  fi
+  IFS=',' read -r -a EPSILON_ITEMS <<< "${EPSILONS}"
+  while IFS=$'\t' read -r case_item task_id init_index direction window step_start step_end sequence_json; do
+    [ -n "${case_item}" ] || continue
+    window_args=()
+    if [ "${step_start}" != "-" ] && [ "${step_end}" != "-" ]; then
+      window_args=(--action-perturb-step-start "${step_start}" --action-perturb-step-end "${step_end}")
+    fi
+    for epsilon in "${EPSILON_ITEMS[@]}"; do
+      eps_tag="$(epsilon_tag "${epsilon}")"
+      tag="${TAG_PREFIX}_case_t${task_id}_i${init_index}_dir_${direction}_win_${window}_eps_${eps_tag}"
+      append_manifest "${tag}" "perturb" "${case_item}" "${case_item}" "${task_id}" "${init_index}" \
+        "${direction}" "sequence" "${window}" "${step_start/-/}" "${step_end/-/}" "${epsilon}" "${TRACE_ROOT}/${tag}"
+      run_eval \
+        "${tag}" \
+        "${case_item}" \
+        --action-perturb-sequence-json "${sequence_json}" \
+        --action-perturb-amplitude "${epsilon}" \
+        --action-perturb-sign "${ACTION_PERTURB_SIGN}" \
+        "${window_args[@]}"
+    done
+  done < <("${PYTHON_BIN}" toy_quantvla/phase39_same_observation_drift_sequences.py \
+    --input-json "${REAL_SEQUENCE_JSON}" \
     --emit-runner-tsv \
     --case-list "${CASE_LIST}" \
     --windows "${WINDOWS}")
