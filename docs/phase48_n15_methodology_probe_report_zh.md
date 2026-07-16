@@ -1,6 +1,14 @@
 # Phase48: N1.5 Methodology Transfer Probe
 
-Phase48 是 N1.5 checkpoint 上的方法论迁移 probe。它使用一个新的 15-case slice，检查 CLSG-TS v2 的候选组织方式是否仍然产生可解释的 speed-risk / repair-regression 结构。
+Phase48 切回 GR00T N1.5 LIBERO long-horizon checkpoint，在一个新的 15-case slice 上复用 CLSG-TS v2 的 tactic set。目标不是寻找最终 N1.5 最优 tactic，而是检验“迁移的是搜索/验证流程，不是固定窗口或固定 layer island”这一方法论判断。
+
+本轮结果有一个很有价值的现象：三个加速 tactic 都没有相对 FP16 引入 paired regression，并且都把 FP16 的 `7/15` 提高到 `9/15`。但它们修复的是不同 case：
+
+- `speed_only` 修复 `1:23` 和 `8:23`；
+- `window_0_120` 修复 `1:23` 和 `4:22`；
+- `combo_blocks0_3_window_0_120` 同样修复 `1:23` 和 `4:22`。
+
+这说明 N1.5 的这个 slice 上，后端扰动仍然在重新分配闭环轨迹 basin；不同 tactic 的 repair profile 不同，支持 task-conditioned tactic search 的必要性。
 
 ## 实验设计
 
@@ -28,6 +36,14 @@ Phase48 是 N1.5 checkpoint 上的方法论迁移 probe。它使用一个新的 
 | window_0_120 vs speed_only | 15 | 1 | 1 | 0 | 4:22 | 8:23 |
 | combo_blocks0_3_window_0_120 vs speed_only | 15 | 1 | 1 | 0 | 4:22 | 8:23 |
 
+## 方法论判读
+
+1. `speed_only` 是本轮最快候选：`1.98x` p50 speedup，且没有 FP16 regression。在这个小 slice 上它可以作为 speed-first incumbent。
+2. `window_0_120` 速度略慢：`1.88x`，但它修复的是 `4:22`，而不是 `speed_only` 修复的 `8:23`。这说明 duration protection 改变的是 task-specific repair profile。
+3. `combo_blocks0_3_window_0_120` 与 `window_0_120` outcome 完全一致，但 p50 只有 `1.25x`，说明在这个 slice 上额外的 early-block eager island 没带来行为收益，反而牺牲速度。
+4. task 6 和 task 8 仍然是弱 slice：task 6 全部失败；task 8 只有 `speed_only` 修复了 `8:23`。这提示下一轮若做 task-conditioned search，应优先围绕 task 6/8 扩 candidate。
+5. Phase48 没有推翻 Phase47，反而补了一种互补情况：有时 global speed tactic 在某个 slice 上确实最好，但其他 tactic 仍然修复不同 basin。因此最终方法仍应是 speed-risk frontier + task-aware held-out validation，而不是固定相信某个 tactic。
+
 ## Per-case outcomes
 
 | case | baseline | speed_only | window_0_120 | combo_blocks0_3_window_0_120 |
@@ -50,9 +66,9 @@ Phase48 是 N1.5 checkpoint 上的方法论迁移 probe。它使用一个新的 
 
 ## 判读方式
 
-- 如果 `speed_only` 继续在 held-out set 上胜出，它就是当前 checkpoint/task distribution 的工程 incumbent。
-- 如果组合候选胜出，则说明 layer x duration sensitivity-guided refinement 能超过 naive compile。
-- 如果所有候选都出现大量 regression，下一步应扩大 candidate pool，而不是固定追某个 window。
+- 如果 `speed_only` 继续在更大 held-out set 上胜出，它可以作为当前 checkpoint/task distribution 的 speed-first incumbent。
+- 如果 `window_0_120` 或 combo 在更多 task-4-like slice 上稳定修复 `speed_only` 失败，则它们适合作为 routed/task-conditioned candidate，而不是全局替代。
+- 如果下一轮出现 regression，应优先用 paired repair/regression 和 per-task profile 调整 selector，而不是只按 aggregate success 选 tactic。
 
 ## 产物
 
