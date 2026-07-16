@@ -56,6 +56,7 @@ warm-start window probes
 后续队列计划: [`docs/phase44_45_n17_hybrid_followup_queue_plan_zh.md`](phase44_45_n17_hybrid_followup_queue_plan_zh.md)
 总结: [`docs/phase43_45_hybrid_bo_summary_zh.md`](phase43_45_hybrid_bo_summary_zh.md)
 Phase46 confirmation: [`docs/phase46_confirmation_summary_zh.md`](phase46_confirmation_summary_zh.md)
+Phase47 methodology validation: [`docs/phase47_methodology_v2_validation_report_zh.md`](phase47_methodology_v2_validation_report_zh.md)
 
 Phase43 将 BO 从二维 duration-window search 扩展到 hybrid tactic search：
 
@@ -109,6 +110,8 @@ Phase43 10-case hybrid probe
 
 当前判断：hybrid CLSG-BO 有价值，但不是 oracle。早期 block island 可以改变 repair/regression profile；mid/late block island 明显更危险；`blocks0_3_window_2_12` 是有趣候选，但 Phase46 暴露出 slice-dependent regressions。更本质的结论是：duration/window sensitivity 与 task 结构强相关，BO 在一个 task/init slice 上找到的窗口不能默认跨 task 迁移。当前更稳的写法是：`window_0_20` 偏 behavior-first，`window_2_12` 是更稳定的 speed-risk compromise；最终贡献应写成 task-aware search/validation protocol，而不是某个固定 tactic。
 
+Phase47 进一步把这件事整理成离线方法论验证：用 Phase43-45 作为 train/search 数据、Phase46 作为 confirmation fold。结果显示，Phase43-45 的 global behavior-first selector 会选 `blocks0_3_window_2_12`，但 Phase46 上只有 `24/30`；task-conditioned selector 达到 `27/30`、`1.08x`、`1` repair / `1` regression；Phase46 task oracle upper bound 达到 `29/30`、`1.14x`、`0` regression。这说明 routed/task-aware tactic policy 的解空间真实存在，但当前 probe 还不足以稳定找准每个 task 的 tactic。下一步迁移到新模型时，应复用流程而不是复用固定窗口。
+
 ## Phase39 closed-loop perturbation budget
 
 报告:
@@ -151,6 +154,7 @@ A2 的关键意义是把 controlled perturbation 和真实后端误差接上了�
 8. 当前最稳的候选不是最快的候选。`blocks0-3 + window 0-120` 在 Phase32 上逐 case 复现 FP16 outcome，`0` repair / `0` regression，同时 p50 仍有 `1.75x` 加速；它是目前最强的 behavior-preserving candidate，但还需要回测 Phase30 或第三组 held-out 才能写成最终推荐 tactic。
 9. Phase34 multi-fold selection 把 Phase30 和 Phase32 作为两个 validation folds 后，结论变成一个 trade-off：行为优先选 `blocks0-3 + window 0-120`，但它的 worst-fold speedup 只有 `1.07x`；若要求 worst-fold speedup >= `1.5x`，当前更均衡的是 `window 0-120`。
 10. BO/active search 不应被解释为能从少量 probe 中找出跨 task 通用 tactic。Phase46 显示，window 对应的闭环阶段敏感性与 task 强绑定；同一个 step window 在不同任务中可能对应完全不同的语义阶段。更合理的产物是 task-aware tactic search，或在部署上使用 routed policy，在 behavior budget 内为不同 task 选择不同后端策略。
+11. Phase47 证明 methodology v2 的重点不是“BO 找到了最优点”，而是“BO/search 产生候选，task-aware selector 组织候选，held-out confirmation 验收候选”。这也是换模型时应该迁移的部分。
 
 ## Phase28A: 15-case proxy-guided probe
 

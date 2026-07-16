@@ -1,0 +1,3418 @@
+{
+  "train_paths": [
+    "toy_quantvla/results/phase43_n17_hybrid_bo_probe_10case_v1_summary.json",
+    "toy_quantvla/results/phase44_n17_hybrid_heldout_15case_v1_summary.json",
+    "toy_quantvla/results/phase45_n17_hybrid_alltask_stress_20case_v1_summary.json"
+  ],
+  "test_path": "toy_quantvla/results/phase46_n17_alltask_confirmation_30case_v1_summary.json",
+  "candidate_tactics": [
+    "fp16",
+    "speed_only",
+    "window_0_20",
+    "window_2_12",
+    "blocks0_3_window_2_12"
+  ],
+  "baseline_p50_ms": 92.618333,
+  "train_global_ranking": [
+    {
+      "tactic": "blocks0_3_window_2_12",
+      "task_id": null,
+      "count": 45,
+      "successes": 40,
+      "success_rate": 0.888889,
+      "avg_p50_ms": 83.699056,
+      "repairs": 4,
+      "regressions": 3,
+      "common": 45,
+      "fold_count": 3,
+      "fold_stats": [
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": null,
+          "count": 10,
+          "successes": 9,
+          "success_rate": 0.9,
+          "avg_p50_ms": 80.411,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 10,
+          "repaired_cases": [
+            "8:33"
+          ],
+          "regressed_cases": [
+            "0:34"
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": null,
+          "count": 15,
+          "successes": 13,
+          "success_rate": 0.866667,
+          "avg_p50_ms": 86.202667,
+          "repairs": 3,
+          "regressions": 1,
+          "common": 15,
+          "repaired_cases": [
+            "0:37",
+            "8:35",
+            "8:37"
+          ],
+          "regressed_cases": [
+            "6:35"
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": null,
+          "count": 20,
+          "successes": 18,
+          "success_rate": 0.9,
+          "avg_p50_ms": 84.4835,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 20,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "8:38"
+          ]
+        }
+      ]
+    },
+    {
+      "tactic": "window_2_12",
+      "task_id": null,
+      "count": 45,
+      "successes": 39,
+      "success_rate": 0.866667,
+      "avg_p50_ms": 83.906111,
+      "repairs": 4,
+      "regressions": 4,
+      "common": 45,
+      "fold_count": 3,
+      "fold_stats": [
+        {
+          "tactic": "window_2_12",
+          "task_id": null,
+          "count": 10,
+          "successes": 9,
+          "success_rate": 0.9,
+          "avg_p50_ms": 83.852,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 10,
+          "repaired_cases": [
+            "8:33"
+          ],
+          "regressed_cases": [
+            "6:33"
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": null,
+          "count": 15,
+          "successes": 13,
+          "success_rate": 0.866667,
+          "avg_p50_ms": 81.879333,
+          "repairs": 3,
+          "regressions": 1,
+          "common": 15,
+          "repaired_cases": [
+            "0:37",
+            "8:35",
+            "8:37"
+          ],
+          "regressed_cases": [
+            "4:36"
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": null,
+          "count": 20,
+          "successes": 17,
+          "success_rate": 0.85,
+          "avg_p50_ms": 85.987,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 20,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "6:39",
+            "8:38"
+          ]
+        }
+      ]
+    },
+    {
+      "tactic": "speed_only",
+      "task_id": null,
+      "count": 45,
+      "successes": 36,
+      "success_rate": 0.8,
+      "avg_p50_ms": 80.616556,
+      "repairs": 2,
+      "regressions": 5,
+      "common": 45,
+      "fold_count": 3,
+      "fold_stats": [
+        {
+          "tactic": "speed_only",
+          "task_id": null,
+          "count": 10,
+          "successes": 9,
+          "success_rate": 0.9,
+          "avg_p50_ms": 77.292,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 10,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": null,
+          "count": 15,
+          "successes": 10,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 82.136667,
+          "repairs": 2,
+          "regressions": 3,
+          "common": 15,
+          "repaired_cases": [
+            "0:37",
+            "8:37"
+          ],
+          "regressed_cases": [
+            "1:37",
+            "6:35",
+            "6:37"
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": null,
+          "count": 20,
+          "successes": 17,
+          "success_rate": 0.85,
+          "avg_p50_ms": 82.421,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 20,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "8:38",
+            "8:39"
+          ]
+        }
+      ]
+    },
+    {
+      "tactic": "window_0_20",
+      "task_id": null,
+      "count": 45,
+      "successes": 35,
+      "success_rate": 0.777778,
+      "avg_p50_ms": 88.229667,
+      "repairs": 3,
+      "regressions": 7,
+      "common": 45,
+      "fold_count": 3,
+      "fold_stats": [
+        {
+          "tactic": "window_0_20",
+          "task_id": null,
+          "count": 10,
+          "successes": 8,
+          "success_rate": 0.8,
+          "avg_p50_ms": 85.766,
+          "repairs": 1,
+          "regressions": 2,
+          "common": 10,
+          "repaired_cases": [
+            "8:33"
+          ],
+          "regressed_cases": [
+            "0:34",
+            "4:34"
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": null,
+          "count": 15,
+          "successes": 9,
+          "success_rate": 0.6,
+          "avg_p50_ms": 88.356,
+          "repairs": 2,
+          "regressions": 4,
+          "common": 15,
+          "repaired_cases": [
+            "0:37",
+            "8:36"
+          ],
+          "regressed_cases": [
+            "1:37",
+            "4:36",
+            "6:35",
+            "6:37"
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": null,
+          "count": 20,
+          "successes": 18,
+          "success_rate": 0.9,
+          "avg_p50_ms": 90.567,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 20,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "8:38"
+          ]
+        }
+      ]
+    }
+  ],
+  "selected_global_behavior_first": "blocks0_3_window_2_12",
+  "test_fixed_results": [
+    {
+      "policy": "fixed:fp16",
+      "choices": {
+        "global": "fp16"
+      },
+      "tactic": "fp16",
+      "task_id": null,
+      "count": 30,
+      "successes": 27,
+      "success_rate": 0.9,
+      "avg_p50_ms": 92.618333,
+      "repairs": 0,
+      "regressions": 0,
+      "common": 30,
+      "repaired_cases": [],
+      "regressed_cases": [],
+      "speedup_vs_fp16_p50": 1.0
+    },
+    {
+      "policy": "fixed:speed_only",
+      "choices": {
+        "global": "speed_only"
+      },
+      "tactic": "speed_only",
+      "task_id": null,
+      "count": 30,
+      "successes": 25,
+      "success_rate": 0.833333,
+      "avg_p50_ms": 83.494667,
+      "repairs": 1,
+      "regressions": 3,
+      "common": 30,
+      "repaired_cases": [
+        "5:40"
+      ],
+      "regressed_cases": [
+        "5:41",
+        "8:41",
+        "8:42"
+      ],
+      "speedup_vs_fp16_p50": 1.109272
+    },
+    {
+      "policy": "fixed:window_0_20",
+      "choices": {
+        "global": "window_0_20"
+      },
+      "tactic": "window_0_20",
+      "task_id": null,
+      "count": 30,
+      "successes": 28,
+      "success_rate": 0.933333,
+      "avg_p50_ms": 91.833,
+      "repairs": 2,
+      "regressions": 1,
+      "common": 30,
+      "repaired_cases": [
+        "5:40",
+        "9:42"
+      ],
+      "regressed_cases": [
+        "4:40"
+      ],
+      "speedup_vs_fp16_p50": 1.008552
+    },
+    {
+      "policy": "fixed:window_2_12",
+      "choices": {
+        "global": "window_2_12"
+      },
+      "tactic": "window_2_12",
+      "task_id": null,
+      "count": 30,
+      "successes": 27,
+      "success_rate": 0.9,
+      "avg_p50_ms": 87.851,
+      "repairs": 1,
+      "regressions": 1,
+      "common": 30,
+      "repaired_cases": [
+        "5:40"
+      ],
+      "regressed_cases": [
+        "8:41"
+      ],
+      "speedup_vs_fp16_p50": 1.054266
+    },
+    {
+      "policy": "fixed:blocks0_3_window_2_12",
+      "choices": {
+        "global": "blocks0_3_window_2_12"
+      },
+      "tactic": "blocks0_3_window_2_12",
+      "task_id": null,
+      "count": 30,
+      "successes": 24,
+      "success_rate": 0.8,
+      "avg_p50_ms": 87.262,
+      "repairs": 1,
+      "regressions": 4,
+      "common": 30,
+      "repaired_cases": [
+        "5:40"
+      ],
+      "regressed_cases": [
+        "2:40",
+        "4:40",
+        "4:41",
+        "5:41"
+      ],
+      "speedup_vs_fp16_p50": 1.061382
+    }
+  ],
+  "task_conditioned_ranking": [
+    {
+      "task_id": 0,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 0,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 71.255556,
+          "repairs": 1,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 69.3,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 0,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 72.596667,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "0:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 71.87,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 0,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 79.868333,
+          "repairs": 1,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.0,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 0,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 69.4,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "0:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.205,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 0,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 76.417778,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 0,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 56.945,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "0:34"
+              ]
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 0,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 88.683333,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "0:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 83.625,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 0,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 85.911667,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 0,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 80.785,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "0:34"
+              ]
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 0,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 87.29,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "0:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 0,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 89.66,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 1,
+      "selected": "window_2_12",
+      "ranking": [
+        {
+          "tactic": "window_2_12",
+          "task_id": 1,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 81.945556,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 83.19,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 1,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 78.346667,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 84.3,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 1,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 83.867222,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 81.055,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 1,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 83.916667,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 86.63,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 1,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 71.148333,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 69.04,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 1,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 71.91,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "1:37"
+              ]
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 72.495,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 1,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 85.775,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.605,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 1,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 83.64,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "1:37"
+              ]
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 1,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 88.08,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 2,
+      "selected": "window_2_12",
+      "ranking": [
+        {
+          "tactic": "window_2_12",
+          "task_id": 2,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 79.835,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 2,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 79.835,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 2,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 87.48,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 2,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 87.48,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 2,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 91.795,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 2,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 91.795,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 2,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 99.305,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 2,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 99.305,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 3,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 3,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 79.85,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 3,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 79.85,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 3,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 81.36,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 3,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 81.36,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 3,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 85.22,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 3,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.22,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 3,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 93.34,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 3,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 93.34,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 4,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 4,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 74.425,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 71.12,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 4,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 82.06,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 70.095,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 4,
+          "count": 7,
+          "successes": 7,
+          "success_rate": 1.0,
+          "avg_p50_ms": 86.718333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 87.81,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 4,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 87.76,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 84.585,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 4,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 85.524444,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 81.235,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 4,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 86.033333,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "4:36"
+              ]
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 89.305,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 4,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 86.148333,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 4,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 86.61,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "4:34"
+              ]
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 4,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 86.34,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "4:36"
+              ]
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 4,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.495,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 5,
+      "selected": "window_2_12",
+      "ranking": [
+        {
+          "tactic": "window_2_12",
+          "task_id": 5,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 79.205,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 5,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 79.205,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 5,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 84.115,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 5,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 84.115,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 5,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 84.36,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 5,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 84.36,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 5,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 86.165,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 5,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 86.165,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 6,
+      "selected": "blocks0_3_window_2_12",
+      "ranking": [
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 6,
+          "count": 7,
+          "successes": 6,
+          "success_rate": 0.857143,
+          "avg_p50_ms": 86.013889,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 90.355,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 6,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 85.436667,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "6:35"
+              ]
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 82.25,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 6,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 89.644444,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 6,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 89.21,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "6:33"
+              ]
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 6,
+              "count": 3,
+              "successes": 3,
+              "success_rate": 1.0,
+              "avg_p50_ms": 90.613333,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 6,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 89.11,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "6:39"
+              ]
+            }
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 6,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 91.309444,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 87.84,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 6,
+              "count": 3,
+              "successes": 1,
+              "success_rate": 0.333333,
+              "avg_p50_ms": 93.703333,
+              "repairs": 0,
+              "regressions": 2,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "6:35",
+                "6:37"
+              ]
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 92.385,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 6,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 92.314444,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 89.9,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 6,
+              "count": 3,
+              "successes": 1,
+              "success_rate": 0.333333,
+              "avg_p50_ms": 91.373333,
+              "repairs": 0,
+              "regressions": 2,
+              "common": 3,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "6:35",
+                "6:37"
+              ]
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 6,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 95.67,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 7,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 7,
+          "count": 2,
+          "successes": 1,
+          "success_rate": 0.5,
+          "avg_p50_ms": 79.85,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 7,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 79.85,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 7,
+          "count": 2,
+          "successes": 1,
+          "success_rate": 0.5,
+          "avg_p50_ms": 80.71,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 7,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 80.71,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 7,
+          "count": 2,
+          "successes": 1,
+          "success_rate": 0.5,
+          "avg_p50_ms": 94.945,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 7,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 94.945,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 7,
+          "count": 2,
+          "successes": 1,
+          "success_rate": 0.5,
+          "avg_p50_ms": 96.645,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 7,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 96.645,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 8,
+      "selected": "window_2_12",
+      "ranking": [
+        {
+          "tactic": "window_2_12",
+          "task_id": 8,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 83.917778,
+          "repairs": 3,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 8,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 80.625,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [
+                "8:33"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 8,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 85.003333,
+              "repairs": 2,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "8:35",
+                "8:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_2_12",
+              "task_id": 8,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 86.125,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "8:38"
+              ]
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 8,
+          "count": 7,
+          "successes": 5,
+          "success_rate": 0.714286,
+          "avg_p50_ms": 84.135556,
+          "repairs": 3,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 8,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.89,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [
+                "8:33"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 8,
+              "count": 3,
+              "successes": 2,
+              "success_rate": 0.666667,
+              "avg_p50_ms": 85.216667,
+              "repairs": 2,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "8:35",
+                "8:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 8,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 81.3,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "8:38"
+              ]
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 8,
+          "count": 7,
+          "successes": 4,
+          "success_rate": 0.571429,
+          "avg_p50_ms": 88.822222,
+          "repairs": 2,
+          "regressions": 1,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 8,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 85.93,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [
+                "8:33"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 8,
+              "count": 3,
+              "successes": 1,
+              "success_rate": 0.333333,
+              "avg_p50_ms": 93.136667,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "8:36"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "window_0_20",
+              "task_id": 8,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 87.4,
+              "repairs": 0,
+              "regressions": 1,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "8:38"
+              ]
+            }
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 8,
+          "count": 7,
+          "successes": 2,
+          "success_rate": 0.285714,
+          "avg_p50_ms": 89.417778,
+          "repairs": 1,
+          "regressions": 2,
+          "common": 7,
+          "fold_count": 3,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 8,
+              "count": 2,
+              "successes": 1,
+              "success_rate": 0.5,
+              "avg_p50_ms": 89.16,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 8,
+              "count": 3,
+              "successes": 1,
+              "success_rate": 0.333333,
+              "avg_p50_ms": 90.413333,
+              "repairs": 1,
+              "regressions": 0,
+              "common": 3,
+              "repaired_cases": [
+                "8:37"
+              ],
+              "regressed_cases": []
+            },
+            {
+              "tactic": "speed_only",
+              "task_id": 8,
+              "count": 2,
+              "successes": 0,
+              "success_rate": 0.0,
+              "avg_p50_ms": 88.68,
+              "repairs": 0,
+              "regressions": 2,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": [
+                "8:38",
+                "8:39"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 9,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 9,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 83.515,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "speed_only",
+              "task_id": 9,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 83.515,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 9,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 88.675,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "blocks0_3_window_2_12",
+              "task_id": 9,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 88.675,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 9,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 90.48,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_2_12",
+              "task_id": 9,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 90.48,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 9,
+          "count": 2,
+          "successes": 2,
+          "success_rate": 1.0,
+          "avg_p50_ms": 93.47,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 2,
+          "fold_count": 1,
+          "fold_stats": [
+            {
+              "tactic": "window_0_20",
+              "task_id": 9,
+              "count": 2,
+              "successes": 2,
+              "success_rate": 1.0,
+              "avg_p50_ms": 93.47,
+              "repairs": 0,
+              "regressions": 0,
+              "common": 2,
+              "repaired_cases": [],
+              "regressed_cases": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "task_conditioned_choices": {
+    "0": "speed_only",
+    "1": "window_2_12",
+    "2": "window_2_12",
+    "3": "speed_only",
+    "4": "speed_only",
+    "5": "window_2_12",
+    "6": "blocks0_3_window_2_12",
+    "7": "speed_only",
+    "8": "window_2_12",
+    "9": "speed_only"
+  },
+  "oracle_task_ranking": [
+    {
+      "task_id": 0,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 0,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 78.543333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 0,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 84.46,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 0,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 91.636667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 0,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 92.85,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    },
+    {
+      "task_id": 1,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 1,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 60.033333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 1,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 80.473333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 1,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 83.886667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 1,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 90.576667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    },
+    {
+      "task_id": 2,
+      "selected": "window_0_20",
+      "ranking": [
+        {
+          "tactic": "window_0_20",
+          "task_id": 2,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 89.28,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 2,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 93.733333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 2,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 98.213333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 2,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 86.163333,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "2:40"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 3,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 3,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 77.756667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 3,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 87.49,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 3,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 90.093333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 3,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 94.843333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    },
+    {
+      "task_id": 4,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 4,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 77.783333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 4,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 79.603333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 4,
+          "count": 3,
+          "successes": 1,
+          "success_rate": 0.333333,
+          "avg_p50_ms": 95.056667,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "4:40"
+          ]
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 4,
+          "count": 3,
+          "successes": 0,
+          "success_rate": 0.0,
+          "avg_p50_ms": 75.366667,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "4:40",
+            "4:41"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 5,
+      "selected": "window_2_12",
+      "ranking": [
+        {
+          "tactic": "window_2_12",
+          "task_id": 5,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 89.26,
+          "repairs": 1,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [
+            "5:40"
+          ],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 5,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 95.13,
+          "repairs": 1,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [
+            "5:40"
+          ],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 5,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 90.733333,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 3,
+          "repaired_cases": [
+            "5:40"
+          ],
+          "regressed_cases": [
+            "5:41"
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 5,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 91.69,
+          "repairs": 1,
+          "regressions": 1,
+          "common": 3,
+          "repaired_cases": [
+            "5:40"
+          ],
+          "regressed_cases": [
+            "5:41"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 6,
+      "selected": "speed_only",
+      "ranking": [
+        {
+          "tactic": "speed_only",
+          "task_id": 6,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 85.206667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 6,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 88.97,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 6,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 89.656667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 6,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 95.37,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    },
+    {
+      "task_id": 7,
+      "selected": "blocks0_3_window_2_12",
+      "ranking": [
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 7,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 84.89,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 7,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 89.563333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 7,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 91.463333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 7,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 92.926667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    },
+    {
+      "task_id": 8,
+      "selected": "blocks0_3_window_2_12",
+      "ranking": [
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 8,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 78.776667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_0_20",
+          "task_id": 8,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 94.646667,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 8,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 90.09,
+          "repairs": 0,
+          "regressions": 1,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "8:41"
+          ]
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 8,
+          "count": 3,
+          "successes": 1,
+          "success_rate": 0.333333,
+          "avg_p50_ms": 91.25,
+          "repairs": 0,
+          "regressions": 2,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": [
+            "8:41",
+            "8:42"
+          ]
+        }
+      ]
+    },
+    {
+      "task_id": 9,
+      "selected": "window_0_20",
+      "ranking": [
+        {
+          "tactic": "window_0_20",
+          "task_id": 9,
+          "count": 3,
+          "successes": 3,
+          "success_rate": 1.0,
+          "avg_p50_ms": 93.393333,
+          "repairs": 1,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [
+            "9:42"
+          ],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "speed_only",
+          "task_id": 9,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 81.543333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "window_2_12",
+          "task_id": 9,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 87.513333,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        },
+        {
+          "tactic": "blocks0_3_window_2_12",
+          "task_id": 9,
+          "count": 3,
+          "successes": 2,
+          "success_rate": 0.666667,
+          "avg_p50_ms": 94.49,
+          "repairs": 0,
+          "regressions": 0,
+          "common": 3,
+          "repaired_cases": [],
+          "regressed_cases": []
+        }
+      ]
+    }
+  ],
+  "oracle_task_choices": {
+    "0": "speed_only",
+    "1": "speed_only",
+    "2": "window_0_20",
+    "3": "speed_only",
+    "4": "speed_only",
+    "5": "window_2_12",
+    "6": "speed_only",
+    "7": "blocks0_3_window_2_12",
+    "8": "blocks0_3_window_2_12",
+    "9": "window_0_20"
+  },
+  "policy_results": [
+    {
+      "policy": "global_behavior_first_from_phase43_45",
+      "choices": {
+        "global": "blocks0_3_window_2_12"
+      },
+      "tactic": "blocks0_3_window_2_12",
+      "task_id": null,
+      "count": 30,
+      "successes": 24,
+      "success_rate": 0.8,
+      "avg_p50_ms": 87.262,
+      "repairs": 1,
+      "regressions": 4,
+      "common": 30,
+      "repaired_cases": [
+        "5:40"
+      ],
+      "regressed_cases": [
+        "2:40",
+        "4:40",
+        "4:41",
+        "5:41"
+      ],
+      "speedup_vs_fp16_p50": 1.061382
+    },
+    {
+      "policy": "task_conditioned_behavior_first_from_phase43_45",
+      "choices": {
+        "0": "speed_only",
+        "1": "window_2_12",
+        "2": "window_2_12",
+        "3": "speed_only",
+        "4": "speed_only",
+        "5": "window_2_12",
+        "6": "blocks0_3_window_2_12",
+        "7": "speed_only",
+        "8": "window_2_12",
+        "9": "speed_only"
+      },
+      "count": 30,
+      "successes": 27,
+      "success_rate": 0.9,
+      "avg_p50_ms": 85.748,
+      "speedup_vs_fp16_p50": 1.080122,
+      "repairs": 1,
+      "regressions": 1,
+      "repaired_cases": [
+        "5:40"
+      ],
+      "regressed_cases": [
+        "8:41"
+      ],
+      "per_task": {
+        "0": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "1": {
+          "tactic": "window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "2": {
+          "tactic": "window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "3": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "4": {
+          "tactic": "speed_only",
+          "successes": 2,
+          "count": 3
+        },
+        "5": {
+          "tactic": "window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "6": {
+          "tactic": "blocks0_3_window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "7": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "8": {
+          "tactic": "window_2_12",
+          "successes": 2,
+          "count": 3
+        },
+        "9": {
+          "tactic": "speed_only",
+          "successes": 2,
+          "count": 3
+        }
+      },
+      "selected_cases": [
+        {
+          "case": "0:40",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 83.86
+        },
+        {
+          "case": "0:41",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 75.31
+        },
+        {
+          "case": "0:42",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 76.46
+        },
+        {
+          "case": "1:40",
+          "task_id": 1,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 79.83
+        },
+        {
+          "case": "1:41",
+          "task_id": 1,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 87.91
+        },
+        {
+          "case": "1:42",
+          "task_id": 1,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 73.68
+        },
+        {
+          "case": "2:40",
+          "task_id": 2,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 94.36
+        },
+        {
+          "case": "2:41",
+          "task_id": 2,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 96.68
+        },
+        {
+          "case": "2:42",
+          "task_id": 2,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.16
+        },
+        {
+          "case": "3:40",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 61.09
+        },
+        {
+          "case": "3:41",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 86.39
+        },
+        {
+          "case": "3:42",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 85.79
+        },
+        {
+          "case": "4:40",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 74.93
+        },
+        {
+          "case": "4:41",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 74.58
+        },
+        {
+          "case": "4:42",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": false,
+          "fp16_success": false,
+          "server_p50_ms": 83.84
+        },
+        {
+          "case": "5:40",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": false,
+          "server_p50_ms": 88.35
+        },
+        {
+          "case": "5:41",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 89.38
+        },
+        {
+          "case": "5:42",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.05
+        },
+        {
+          "case": "6:40",
+          "task_id": 6,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 93.62
+        },
+        {
+          "case": "6:41",
+          "task_id": 6,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 89.5
+        },
+        {
+          "case": "6:42",
+          "task_id": 6,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 102.99
+        },
+        {
+          "case": "7:40",
+          "task_id": 7,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 95.61
+        },
+        {
+          "case": "7:41",
+          "task_id": 7,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 85.26
+        },
+        {
+          "case": "7:42",
+          "task_id": 7,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 97.91
+        },
+        {
+          "case": "8:40",
+          "task_id": 8,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 89.95
+        },
+        {
+          "case": "8:41",
+          "task_id": 8,
+          "tactic": "window_2_12",
+          "success": false,
+          "fp16_success": true,
+          "server_p50_ms": 93.5
+        },
+        {
+          "case": "8:42",
+          "task_id": 8,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 86.82
+        },
+        {
+          "case": "9:40",
+          "task_id": 9,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.71
+        },
+        {
+          "case": "9:41",
+          "task_id": 9,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 77.33
+        },
+        {
+          "case": "9:42",
+          "task_id": 9,
+          "tactic": "speed_only",
+          "success": false,
+          "fp16_success": false,
+          "server_p50_ms": 76.59
+        }
+      ]
+    },
+    {
+      "policy": "phase46_task_oracle_upper_bound",
+      "choices": {
+        "0": "speed_only",
+        "1": "speed_only",
+        "2": "window_0_20",
+        "3": "speed_only",
+        "4": "speed_only",
+        "5": "window_2_12",
+        "6": "speed_only",
+        "7": "blocks0_3_window_2_12",
+        "8": "blocks0_3_window_2_12",
+        "9": "window_0_20"
+      },
+      "count": 30,
+      "successes": 29,
+      "success_rate": 0.966667,
+      "avg_p50_ms": 81.492333,
+      "speedup_vs_fp16_p50": 1.136528,
+      "repairs": 2,
+      "regressions": 0,
+      "repaired_cases": [
+        "5:40",
+        "9:42"
+      ],
+      "regressed_cases": [],
+      "per_task": {
+        "0": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "1": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "2": {
+          "tactic": "window_0_20",
+          "successes": 3,
+          "count": 3
+        },
+        "3": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "4": {
+          "tactic": "speed_only",
+          "successes": 2,
+          "count": 3
+        },
+        "5": {
+          "tactic": "window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "6": {
+          "tactic": "speed_only",
+          "successes": 3,
+          "count": 3
+        },
+        "7": {
+          "tactic": "blocks0_3_window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "8": {
+          "tactic": "blocks0_3_window_2_12",
+          "successes": 3,
+          "count": 3
+        },
+        "9": {
+          "tactic": "window_0_20",
+          "successes": 3,
+          "count": 3
+        }
+      },
+      "selected_cases": [
+        {
+          "case": "0:40",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 83.86
+        },
+        {
+          "case": "0:41",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 75.31
+        },
+        {
+          "case": "0:42",
+          "task_id": 0,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 76.46
+        },
+        {
+          "case": "1:40",
+          "task_id": 1,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 55.63
+        },
+        {
+          "case": "1:41",
+          "task_id": 1,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 73.03
+        },
+        {
+          "case": "1:42",
+          "task_id": 1,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 51.44
+        },
+        {
+          "case": "2:40",
+          "task_id": 2,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.45
+        },
+        {
+          "case": "2:41",
+          "task_id": 2,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 86.84
+        },
+        {
+          "case": "2:42",
+          "task_id": 2,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.55
+        },
+        {
+          "case": "3:40",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 61.09
+        },
+        {
+          "case": "3:41",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 86.39
+        },
+        {
+          "case": "3:42",
+          "task_id": 3,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 85.79
+        },
+        {
+          "case": "4:40",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 74.93
+        },
+        {
+          "case": "4:41",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 74.58
+        },
+        {
+          "case": "4:42",
+          "task_id": 4,
+          "tactic": "speed_only",
+          "success": false,
+          "fp16_success": false,
+          "server_p50_ms": 83.84
+        },
+        {
+          "case": "5:40",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": false,
+          "server_p50_ms": 88.35
+        },
+        {
+          "case": "5:41",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 89.38
+        },
+        {
+          "case": "5:42",
+          "task_id": 5,
+          "tactic": "window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 90.05
+        },
+        {
+          "case": "6:40",
+          "task_id": 6,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 89.94
+        },
+        {
+          "case": "6:41",
+          "task_id": 6,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 92.42
+        },
+        {
+          "case": "6:42",
+          "task_id": 6,
+          "tactic": "speed_only",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 73.26
+        },
+        {
+          "case": "7:40",
+          "task_id": 7,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 95.69
+        },
+        {
+          "case": "7:41",
+          "task_id": 7,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 75.59
+        },
+        {
+          "case": "7:42",
+          "task_id": 7,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 83.39
+        },
+        {
+          "case": "8:40",
+          "task_id": 8,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 76.94
+        },
+        {
+          "case": "8:41",
+          "task_id": 8,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 77.87
+        },
+        {
+          "case": "8:42",
+          "task_id": 8,
+          "tactic": "blocks0_3_window_2_12",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 81.52
+        },
+        {
+          "case": "9:40",
+          "task_id": 9,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 96.17
+        },
+        {
+          "case": "9:41",
+          "task_id": 9,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": true,
+          "server_p50_ms": 93.58
+        },
+        {
+          "case": "9:42",
+          "task_id": 9,
+          "tactic": "window_0_20",
+          "success": true,
+          "fp16_success": false,
+          "server_p50_ms": 90.43
+        }
+      ]
+    }
+  ]
+}
