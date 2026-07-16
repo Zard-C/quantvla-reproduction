@@ -6,6 +6,10 @@ set -euo pipefail
 # multi-fold studies. It is a model-transfer check for the methodology, not a
 # final deployment benchmark.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
+export PYTHONPATH="${REPO_ROOT}/toy_quantvla/compat_stubs:${PYTHONPATH:-}"
+
 export TAG_PREFIX="${TAG_PREFIX:-phase48_n15_methodology_probe_15case_v1}"
 export CASE_LIST="${CASE_LIST:-0:21,0:22,0:23,1:21,1:22,1:23,4:21,4:22,4:23,6:21,6:22,6:23,8:21,8:22,8:23}"
 export POLICY_SEED_BASE="${POLICY_SEED_BASE:-20260716}"
