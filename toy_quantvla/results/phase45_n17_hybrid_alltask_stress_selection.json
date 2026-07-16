@@ -1,0 +1,52 @@
+{
+  "summary_json": "toy_quantvla/results/phase44_n17_hybrid_heldout_15case_v1_summary.json",
+  "selected_tactics": [
+    "fp16",
+    "speed_only",
+    "window_0_20",
+    "window_2_12",
+    "blocks0_3_window_2_12",
+    "blocks0_3"
+  ],
+  "base_tactics": [
+    "fp16",
+    "speed_only",
+    "window_0_20",
+    "window_2_12"
+  ],
+  "candidate_prefix": "blocks",
+  "max_tactics": 6,
+  "min_speedup": 1.15,
+  "ranked_candidates": [
+    {
+      "tactic": "blocks0_3_window_2_12",
+      "success": 13,
+      "complete": 15,
+      "success_rate": 0.867,
+      "speedup": 1.03,
+      "repairs": 3,
+      "regressions": 1,
+      "speed_feasible": false
+    },
+    {
+      "tactic": "blocks0_3",
+      "success": 12,
+      "complete": 15,
+      "success_rate": 0.8,
+      "speedup": 1.24,
+      "repairs": 3,
+      "regressions": 2,
+      "speed_feasible": true
+    },
+    {
+      "tactic": "blocks0_3_window_0_20",
+      "success": 9,
+      "complete": 15,
+      "success_rate": 0.6,
+      "speedup": 1.04,
+      "repairs": 1,
+      "regressions": 3,
+      "speed_feasible": false
+    }
+  ]
+}

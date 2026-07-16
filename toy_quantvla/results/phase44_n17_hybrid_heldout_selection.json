@@ -1,0 +1,73 @@
+{
+  "summary_json": "toy_quantvla/results/phase43_n17_hybrid_bo_probe_10case_v1_summary.json",
+  "selected_tactics": [
+    "fp16",
+    "speed_only",
+    "window_0_20",
+    "window_2_12",
+    "blocks0_3_window_0_20",
+    "blocks0_3",
+    "blocks0_3_window_2_12"
+  ],
+  "base_tactics": [
+    "fp16",
+    "speed_only",
+    "window_0_20",
+    "window_2_12"
+  ],
+  "candidate_prefix": "blocks",
+  "max_tactics": 7,
+  "min_speedup": 1.2,
+  "ranked_candidates": [
+    {
+      "tactic": "blocks0_3_window_0_20",
+      "success": 9,
+      "complete": 10,
+      "success_rate": 0.9,
+      "speedup": 0.97,
+      "repairs": 0,
+      "regressions": 0,
+      "speed_feasible": false
+    },
+    {
+      "tactic": "blocks0_3",
+      "success": 9,
+      "complete": 10,
+      "success_rate": 0.9,
+      "speedup": 1.27,
+      "repairs": 1,
+      "regressions": 1,
+      "speed_feasible": true
+    },
+    {
+      "tactic": "blocks0_3_window_2_12",
+      "success": 9,
+      "complete": 10,
+      "success_rate": 0.9,
+      "speedup": 1.09,
+      "repairs": 1,
+      "regressions": 1,
+      "speed_feasible": false
+    },
+    {
+      "tactic": "blocks16_31_window_2_12",
+      "success": 7,
+      "complete": 10,
+      "success_rate": 0.7,
+      "speedup": 1.06,
+      "repairs": 1,
+      "regressions": 3,
+      "speed_feasible": false
+    },
+    {
+      "tactic": "blocks8_15_window_2_12",
+      "success": 7,
+      "complete": 10,
+      "success_rate": 0.7,
+      "speedup": 1.05,
+      "repairs": 1,
+      "regressions": 3,
+      "speed_feasible": false
+    }
+  ]
+}

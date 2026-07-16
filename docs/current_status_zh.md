@@ -50,10 +50,11 @@ warm-start window probes
 3. `window_4_9` / `window_6_11` 说明 BO proposal 不能跳过 held-out validation。surrogate 可以提出候选，但最终选择仍要靠 paired rollout validation。
 4. 论文主线可以从“我们做了一堆窗口实验”升级为：closed-loop sensitivity-guided BO/active search 能更高效地探索 VLA inference tactic 的 speed-risk frontier。
 
-## 下一步：Phase43 hybrid CLSG-BO probe
+## 最新阶段：Phase43-45 hybrid CLSG-BO probe and follow-up
 
 计划: [`docs/phase43_n17_hybrid_bo_probe_plan_zh.md`](phase43_n17_hybrid_bo_probe_plan_zh.md)
 后续队列计划: [`docs/phase44_45_n17_hybrid_followup_queue_plan_zh.md`](phase44_45_n17_hybrid_followup_queue_plan_zh.md)
+总结: [`docs/phase43_45_hybrid_bo_summary_zh.md`](phase43_45_hybrid_bo_summary_zh.md)
 
 Phase43 将 BO 从二维 duration-window search 扩展到 hybrid tactic search：
 
@@ -87,9 +88,7 @@ blocks8_15_window_2_12
 blocks16_31_window_2_12
 ```
 
-核心问题：`blocks0_3_window_2_12` 这类 layer × duration 组合能否在保持 `window_2_12` 速度优势的同时进一步减少 paired regression；如果不能，说明当前 N1.7 的有效搜索维度主要还是 duration，而不是 layer island。
-
-已准备自动 follow-up queue：
+Phase43-45 已完成：
 
 ```text
 Phase43 10-case hybrid probe
@@ -97,7 +96,15 @@ Phase43 10-case hybrid probe
 -> Phase45 20-case all-task stress check，自动选择最多 6 个 tactic
 ```
 
-自动选择规则：保留 `fp16/speed_only/window_0_20/window_2_12` anchor，再按 paired regression、success、speedup 从 `blocks*` hybrid tactic 中选 follow-up 候选。这样 GPU 不会空跑，同时避免完全手工猜下一批。
+关键结果：
+
+| phase | best behavior/speed-risk signal | 结论 |
+| --- | --- | --- |
+| Phase43 | `blocks0_3` 速度 `1.27x`，但 `1` regression；mid/late block hybrid 都是 `7/10` | layer 维度确实敏感，mid/late 组合危险 |
+| Phase44 | `window_2_12` 和 `blocks0_3_window_2_12` 都是 `13/15`、`3` repairs / `1` regression | hybrid 没明显胜过 duration-only |
+| Phase45 | `blocks0_3_window_2_12` 达到 `18/20`、`1.06x`、`0` repair / `1` regression | all-task stress 上比 `window_2_12` 更稳，比 `window_0_20` 更快 |
+
+当前判断：hybrid CLSG-BO 有价值，但不是 oracle。早期 block island 可以改变 repair/regression profile；mid/late block island 明显更危险；`blocks0_3_window_2_12` 是当前最值得继续确认的 hybrid candidate。
 
 ## Phase39 closed-loop perturbation budget
 
