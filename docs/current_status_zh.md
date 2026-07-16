@@ -57,6 +57,7 @@ warm-start window probes
 总结: [`docs/phase43_45_hybrid_bo_summary_zh.md`](phase43_45_hybrid_bo_summary_zh.md)
 Phase46 confirmation: [`docs/phase46_confirmation_summary_zh.md`](phase46_confirmation_summary_zh.md)
 Phase47 methodology validation: [`docs/phase47_methodology_v2_validation_report_zh.md`](phase47_methodology_v2_validation_report_zh.md)
+Phase48 N1.5 transfer probe: [`docs/phase48_n15_methodology_probe_report_zh.md`](phase48_n15_methodology_probe_report_zh.md)
 
 Phase43 将 BO 从二维 duration-window search 扩展到 hybrid tactic search：
 
@@ -111,6 +112,8 @@ Phase43 10-case hybrid probe
 当前判断：hybrid CLSG-BO 有价值，但不是 oracle。早期 block island 可以改变 repair/regression profile；mid/late block island 明显更危险；`blocks0_3_window_2_12` 是有趣候选，但 Phase46 暴露出 slice-dependent regressions。更本质的结论是：duration/window sensitivity 与 task 结构强相关，BO 在一个 task/init slice 上找到的窗口不能默认跨 task 迁移。当前更稳的写法是：`window_0_20` 偏 behavior-first，`window_2_12` 是更稳定的 speed-risk compromise；最终贡献应写成 task-aware search/validation protocol，而不是某个固定 tactic。
 
 Phase47 进一步把这件事整理成离线方法论验证：用 Phase43-45 作为 train/search 数据、Phase46 作为 confirmation fold。结果显示，Phase43-45 的 global behavior-first selector 会选 `blocks0_3_window_2_12`，但 Phase46 上只有 `24/30`；task-conditioned selector 达到 `27/30`、`1.08x`、`1` repair / `1` regression；Phase46 task oracle upper bound 达到 `29/30`、`1.14x`、`0` regression。这说明 routed/task-aware tactic policy 的解空间真实存在，但当前 probe 还不足以稳定找准每个 task 的 tactic。下一步迁移到新模型时，应复用流程而不是复用固定窗口。
+
+Phase48 把流程切回 N1.5 checkpoint，在 `tasks 0/1/4/6/8 x init 21/22/23` 的 15-case 新 slice 上验证方法迁移。结果是 FP16 `7/15`，`speed_only`、`window_0_120`、`combo_blocks0_3_window_0_120` 都是 `9/15`，且相对 FP16 都是 `2` repairs / `0` regressions。速度上 `speed_only` 最快，p50 `75.40 ms`、`1.98x`；`window_0_120` 为 `79.38 ms`、`1.88x`；combo 为 `119.07 ms`、`1.25x`。更重要的是修复 case 不同：`speed_only` 修复 `1:23, 8:23`，而 duration/ combo 修复 `1:23, 4:22`。这继续支持“同一加速扰动会重分配 trajectory basin，task/case-conditioned 结构比单一 global tactic 更重要”。
 
 ## Phase39 closed-loop perturbation budget
 
